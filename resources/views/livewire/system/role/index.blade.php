@@ -9,8 +9,7 @@
     <!-- Content Row -->
     <div class="row">
         <div class="col-md-12 p-2">
-            <div class="card">
-                <div class="card-body">
+
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -33,8 +32,7 @@
 
                         @include('livewire.system.role.update')
                     @include('livewire.system.role.create')
-                </div>
-            </div>
+
         </div>
         <div class="col-md-12 mb-2">
             <div class="card">
