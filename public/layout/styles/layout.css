@@ -309,25 +309,25 @@ td{border-width:0 1px;}
 /* Colours
 --------------------------------------------------------------------------------------------------------------- */
 body{color:#A5A6AA; background-color:#282E39;}
-a{color:#97A9BD;}
+a{color:#b0560c;}
 a:active, a:focus{background:transparent !important;}/* IE10 + 11 Bugfix - prevents grey background */
 hr, .borderedbox{border-color:#D7D7D7;}
 label span{color:#FF0000; background-color:inherit;}
-input:focus, textarea:focus, *:required:focus{border-color:#97A9BD !important;}
+input:focus, textarea:focus, *:required:focus{border-color:#b0560c !important;}
 
 .overlay{color:#FFFFFF; background-color:inherit;}
 .overlay::after{color:inherit; background-color:rgba(40,46,57,.7);/* #282E39 */}
-.overlay.light::after{background-color:rgba(151,169,189,.7);/* #97A9BD */}
+.overlay.light::after{background-color:rgba(151,169,189,.7);/* #b0560c */}
 
 .gradient{color:#474747; background:linear-gradient(to bottom, #F4F4F4 55%, #FFFFFF 50%, #FFFFFF 100%);}/* Overlap dark to make a hard transition */
 @media screen and (max-width:750px){/* Only the colours height has been changed */
 	.gradient{background:linear-gradient(to bottom, #F4F4F4 24%, #FFFFFF 19%, #FFFFFF 100%);}
 }
 
-.btn, .btn.inverse:hover{color:#FFFFFF; background-color:#97A9BD; border-color:#97A9BD;}
-.btn:hover, .btn.inverse{color:inherit; background-color:transparent; border-color:inherit;}
+.btn, .btn.inverse:hover{color:#FFFFFF; background-color:#e79217; border-color:#b0560c;}
+.btn:hover, .btn.inverse{color:inherit; background-color:transparent; border-color:#b0560c;}
 
-.imgover:hover::before{background-color:rgba(151,169,189,.5);/* #97A9BD */}
+.imgover:hover::before{background-color:rgba(151,169,189,.5);/* #b0560c */}
 .imgover, .imgover:hover::after{color:#FFFFFF;}
 
 .logoname a{color:#FFFFFF;}
@@ -341,7 +341,7 @@ input:focus, textarea:focus, *:required:focus{border-color:#97A9BD !important;}
 .row3{color:#474747; background-color:#FFFFFF;}
 .row4{color:#A5A6AA; background-color:#000000;}
 .row5, .row5 a{color:#A5A6AA; background-color:#282E39;}
-.coloured{color:#FFFFFF; background-color:#97A9BD;}
+.coloured{color:#FFFFFF; background-color:#b0560c;}
 
 
 /* Header */
@@ -354,15 +354,15 @@ input:focus, textarea:focus, *:required:focus{border-color:#97A9BD !important;}
 
 /* Content Area */
 .elements article{color:#474747; background-color:#FFFFFF; box-shadow:0px 0px 15px rgba(0,0,0,.3);}
-.elements article:hover{color:#FFFFFF; background-color:#97A9BD;}/* Default */
-.elements article a i{color:#FFFFFF; background-color:#97A9BD;}/* Default */
-.elements article:hover a i{color:#97A9BD; background-color:#FFFFFF;}/* Default */
+.elements article:hover{color:#FFFFFF; background-color:#b0560c;}/* Default */
+.elements article a i{color:#FFFFFF; background-color:#b0560c;}/* Default */
+.elements article:hover a i{color:#b0560c; background-color:#FFFFFF;}/* Default */
 
 /* ###### DELETE THE FOLLOWING IF ONLY THE DEFAULT COLOUR IS REQUIRED ###### */
-#introblocks .elements li article{color:#FFFFFF; background-color:#97A9BD;}/* Blue */
-#introblocks .elements li article a i{color:#97A9BD; background-color:#FFFFFF;}/* Blue */
+#introblocks .elements li article{color:#FFFFFF; background-color:#b0560c;}/* Blue */
+#introblocks .elements li article a i{color:#b0560c; background-color:#FFFFFF;}/* Blue */
 #introblocks .elements li article:hover{color:#474747; background-color:#FFFFFF !important;}
-#introblocks .elements li article:hover a i{color:#FFFFFF !important; background-color:#97A9BD;}
+#introblocks .elements li article:hover a i{color:#FFFFFF !important; background-color:#b0560c;}
 #introblocks .elements li:nth-child(2) article, #introblocks .elements li:nth-child(2) article:hover a i{background-color:#A197BD;}/* Purple */
 #introblocks .elements li:nth-child(2) article a i{color:#A197BD;}/* Purple */
 #introblocks .elements li:nth-child(3) article, #introblocks .elements li:nth-child(3) article:hover a i{background-color:#BDA697;}/* Brown */
@@ -372,8 +372,8 @@ input:focus, textarea:focus, *:required:focus{border-color:#97A9BD !important;}
 /* ###### END DELETE ###### */
 
 .shout figure figcaption a{color:inherit; background-color:inherit; border-color:#D7D7D7;}
-.shout figure:hover figcaption a, .shout figure figcaption a::after{color:#FFFFFF; background-color:#97A9BD; border-color:#97A9BD;}
-.shout figure:hover figcaption a::after{color:#97A9BD; background-color:#FFFFFF;}
+.shout figure:hover figcaption a, .shout figure figcaption a::after{color:#FFFFFF; background-color:#b0560c; border-color:#b0560c;}
+.shout figure:hover figcaption a::after{color:#b0560c; background-color:#FFFFFF;}
 
 .team figure figcaption{color:#474747; background-color:#FFFFFF; border-color:#D7D7D7;}
 
@@ -388,8 +388,8 @@ input:focus, textarea:focus, *:required:focus{border-color:#97A9BD !important;}
 /* Contact Details */
 #ctdetails figure > ul li{color:inherit; background-color:#FFFFFF;}
 #ctdetails figure > ul li:hover a{color:#FFFFFF;}
-#ctdetails figure > ul li:hover, #ctdetails figure > ul li a i{color:#FFFFFF; background-color:#97A9BD;}/* Default */
-#ctdetails figure > ul li:hover a i{color:#97A9BD; background-color:#FFFFFF;}/* Default */
+#ctdetails figure > ul li:hover, #ctdetails figure > ul li a i{color:#FFFFFF; background-color:#b0560c;}/* Default */
+#ctdetails figure > ul li:hover a i{color:#b0560c; background-color:#FFFFFF;}/* Default */
 
 /* ###### DELETE THE FOLLOWING IF ONLY THE DEFAULT COLOUR IS REQUIRED ###### */
 #ctdetails figure > ul li:hover, #ctdetails figure > ul li a i{color:#FFFFFF; background-color:#A197BD;}
@@ -402,7 +402,7 @@ input:focus, textarea:focus, *:required:focus{border-color:#97A9BD !important;}
 
 #ctdetails input, #ctdetails button{border-color:transparent;}
 #ctdetails input{color:#474747; background-color:#FFFFFF;}
-#ctdetails button{color:#FFFFFF; background-color:#97A9BD;}
+#ctdetails button{color:#FFFFFF; background-color:#b0560c;}
 #ctdetails button:hover{color:inherit; background-color:transparent; border-color:inherit;}
 
 
@@ -413,21 +413,21 @@ input:focus, textarea:focus, *:required:focus{border-color:#97A9BD !important;}
 
 /* Navigation */
 #mainav li a{color:inherit;}
-#mainav .active a, #mainav a:hover, #mainav li:hover > a{color:#97A9BD; background-color:inherit;}
-#mainav li li a, #mainav .active li a{color:#FFFFFF; background-color:rgba(151,169,189,.5); border-color:rgba(151,169,189,.5);/* #97A9BD */}
-#mainav li li:hover > a, #mainav .active .active > a{color:#FFFFFF; background-color:#97A9BD;}
+#mainav .active a, #mainav a:hover, #mainav li:hover > a{color:#b0560c; background-color:inherit;}
+#mainav li li a, #mainav .active li a{color:#FFFFFF; background-color:rgba(151,169,189,.5); border-color: rgb(231, 146, 23);/* #b0560c */}
+#mainav li li:hover > a, #mainav .active .active > a{color:#FFFFFF; background-color:#b0560c;}
 #mainav form select{color:#474747; background-color:#FFFFFF;}
 
 #breadcrumb a{color:inherit; background-color:inherit;}
-#breadcrumb li:last-child a{color:#97A9BD;}
+#breadcrumb li:last-child a{color:#b0560c;}
 
 .container .sidebar nav a{color:inherit; border-color:#D7D7D7;}
-.container .sidebar nav a:hover{color:#97A9BD;}
+.container .sidebar nav a:hover{color:#b0560c;}
 
 .pagination a, .pagination strong{border-color:#D7D7D7;}
-.pagination .current *{color:#FFFFFF; background-color:#97A9BD;}
+.pagination .current *{color:#FFFFFF; background-color:#b0560c;}
 
-#backtotop{color:#FFFFFF; background-color:#97A9BD;}
+#backtotop{color:#FFFFFF; background-color:#b0560c;}
 
 
 /* Tables + Comments */

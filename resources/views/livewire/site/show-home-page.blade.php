@@ -10,7 +10,7 @@
                 <h3 class="heading">Faucibus porttitor metus</h3>
                 <p>In nibh nullam egestas velit laoreet nullam elementum ipsum pharetra suscipit leo augue pretium felis
                     nisl vitae ipsum curabitur quis libero.</p>
-                <footer><a class="btn" href="#">Tristique vehicula</a></footer>
+                <footer><a class="btn" href="#">Audio Bible</a></footer>
             </article>
             <!-- ################################################################################################ -->
         </div>
