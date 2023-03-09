@@ -1,7 +1,7 @@
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="bgded overlay row4" style="background-image:url('images/demo/backgrounds/01.png');">
+<div class="bgded overlay row4" style="background-image:url('{{asset('layout/images/demo/backgrounds/01.png')}}');">
     <footer id="footer" class="hoc clear">
         <!-- ################################################################################################ -->
         <div class="one_quarter first">
@@ -27,15 +27,15 @@
         <div class="one_quarter">
             <h6 class="heading">Translation Projects</h6>
             <ul class="nospace clear latestimg">
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
-                <li><a class="imgover" href="#"><img src="images/demo/100x100.png" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
+                <li><a class="imgover" href="#"><img src="{{asset('layout/images/demo/100x100.png')}}" alt=""></a></li>
             </ul>
         </div>
         <div class="one_quarter">
