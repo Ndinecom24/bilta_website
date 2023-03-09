@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/welcome', function () {
+Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
@@ -24,7 +24,7 @@ Auth::routes();
 /// SITE
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Route::get('/', \App\Http\Livewire\Site\ShowHomePage::class)->name('site.home');
+Route::get('/home', \App\Http\Livewire\Site\ShowHomePage::class)->name('site.home');
 Route::prefix('bilta/site')->group(function () {
 //    Route::get('home', \App\Http\Livewire\Site\ShowHomePage::class)->name('site.home');
 });

@@ -40,7 +40,6 @@ Licence URI: https://www.os-templates.com/template-terms
 
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 
-@livewireScripts
 <!-- JAVASCRIPTS -->
 <script src="{{asset('layout/scripts/jquery.min.js')}}"></script>
 <script src="{{asset('layout/scripts/jquery.backtotop.js')}}"></script>
@@ -52,6 +51,7 @@ Licence URI: https://www.os-templates.com/template-terms
 
 @stack('custom-scripts')
 
+@livewireScripts
 
 </body>
 </html>
