@@ -17,7 +17,7 @@
                         <li><a class="faicon-facebook" href="https://www.facebook.com/groups/5905684942783644"><i class="fab fa-facebook"></i></a></li>
 {{--                        <li><a class="faicon-chart" href="#"><i class="fab fa-linkedin"></i></a></li>--}}
                         <li><a class="faicon-twitter" href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a class="faicon-vk" href="https://www.youtube.com/@SengaBible"><i class="fab fa-youtube"></i></a></li>
+                        <li><a class="faicon-youtube" href="https://www.youtube.com/@SengaBible"><i class="fab fa-youtube"></i></a></li>
                     </ul>
 
                 </footer>
