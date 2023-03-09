@@ -11,6 +11,15 @@
         <div class="col-md-12 p-2">
             <div class="card">
                 <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     @if(session()->has('success'))
                         <div class="alert alert-success" user="alert">
                             {{ session()->get('success') }}
