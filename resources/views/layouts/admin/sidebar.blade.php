@@ -1,11 +1,11 @@
 <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center bg-gradient-warning" href="{{route('admin.home')}}">
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-bible"></i>
+    <a class="sidebar-brand d-flex align-items-center justify-content-center bg-white" href="{{route('admin.home')}}">
+        <div class="sidebar-brand-icon ">
+            <img style="width: 150px" src="{{asset('layout/images/bilta_logo_one.png')}}">
         </div>
-        <div class="sidebar-brand-text mx-3">BiLTA <sup></sup></div>
+        <div class="sidebar-brand-text mx-3 text-danger">BiLTA <sup></sup></div>
     </a>
 
     <!-- Divider -->

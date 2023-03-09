@@ -34,9 +34,15 @@ Licence URI: https://www.os-templates.com/template-terms
 <div class="wrapper row1">
     <header id="header" class="hoc clear">
         <div id="logo" class="fl_left">
-            <!-- ################################################################################################ -->
-            <h1 class="logoname"><a href="{{route('site.home')}}">BiLTA</a></h1>
-            <!-- ################################################################################################ -->
+            <div class="row">
+             <div class="col-12" style="display: flex">
+                 <img style="width: 150px" src="{{asset('layout/images/bilta_logo_one.png')}}">
+                 <!-- ################################################################################################ -->
+                 <h1 class="logoname"><a href="{{route('site.home')}}">BiLTA</a></h1>
+                 <!-- ################################################################################################ -->
+             </div>
+            </div>
+
         </div>
         @if(auth()->check())
         @else
