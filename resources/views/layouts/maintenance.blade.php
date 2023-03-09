@@ -15,7 +15,7 @@ Licence URI: https://www.os-templates.com/template-terms
     <link href="{{asset('layout/styles/layout.css')}}" rel="stylesheet" type="text/css" media="all">
 
     @stack('custom-styles')
-    <livewire:styles/>
+    @livewireStyles
 
 </head>
 <body id="top">
@@ -39,6 +39,8 @@ Licence URI: https://www.os-templates.com/template-terms
 @endif
 
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
+
+@livewireScripts
 <!-- JAVASCRIPTS -->
 <script src="{{asset('layout/scripts/jquery.min.js')}}"></script>
 <script src="{{asset('layout/scripts/jquery.backtotop.js')}}"></script>
@@ -50,7 +52,6 @@ Licence URI: https://www.os-templates.com/template-terms
 
 @stack('custom-scripts')
 
-<livewire:scripts/>
 
 </body>
 </html>
