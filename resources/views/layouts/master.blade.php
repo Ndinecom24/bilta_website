@@ -24,6 +24,7 @@ Licence URI: https://www.os-templates.com/template-terms
 
     @stack('custom-styles')
 
+{{--        <livewire:styles/>--}}
     @livewireStyles
 
 </head>
@@ -35,11 +36,11 @@ Licence URI: https://www.os-templates.com/template-terms
     <header id="header" class="hoc clear">
         <div id="logo" class="fl_left">
             <div class="row">
-             <div class="col-12" style="display: flex">
-                 <img style="width: 150px" src="{{asset('layout/images/bilta_logo_one.png')}}">
+             <div class="col-12" style="display: flex ;" >
                  <!-- ################################################################################################ -->
-                 <h1 class="logoname"><a href="{{route('site.home')}}">BiLTA</a></h1>
+                 <h1 class="logoname ml-1 mr-1"><a href="{{route('site.home')}}"> BiLTA </a></h1>
                  <!-- ################################################################################################ -->
+                 <img style="width: 150px;  background-color: #ffffff ; border-radius: 20px; margin-bottom: 4px ; margin-top: -6px ; margin-left: 6px "  src="{{asset('layout/images/bilta_logo_one.png')}}">
              </div>
             </div>
 
@@ -62,6 +63,12 @@ Licence URI: https://www.os-templates.com/template-terms
 @include('layouts.webpages.footer')
 @endif
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
+
+
+{{--<livewire:scripts/>--}}
+@livewireScripts
+
+
 <!-- JAVASCRIPTS -->
 <script src="{{asset('layout/scripts/jquery.min.js')}}"></script>
 <script src="{{asset('layout/scripts/jquery.backtotop.js')}}"></script>
@@ -72,8 +79,6 @@ Licence URI: https://www.os-templates.com/template-terms
 
 
 @stack('custom-scripts')
-
-@livewireScripts
 
 </body>
 </html>

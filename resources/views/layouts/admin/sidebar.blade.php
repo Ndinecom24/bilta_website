@@ -27,6 +27,35 @@
     </div>
 
 
+    <!-- Nav Item - company Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCompany"
+           aria-expanded="true" aria-controls="collapseCompany">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>General Details</span>
+        </a>
+        <div id="collapseCompany" class="collapse" aria-labelledby="headingCompany"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Company Details:</h6>
+                <a class="collapse-item" href="{{route('admin.company.about-us')}}">About Us</a>
+                <a class="collapse-item" href="{{route('admin.company.values')}}">Our Values</a>
+                <a class="collapse-item" href="{{route('admin.company.services')}}">Our Services</a>
+                <a class="collapse-item" href="{{route('admin.company.contact-us')}}">Contact Us</a>
+                <a class="collapse-item" href="{{route('admin.page.our-team')}}">Our Team</a>
+                <h6 class="collapse-header">Other Pages:</h6>
+                <a class="collapse-item" href="{{route('admin.company.faqs')}}">FAQs</a>
+                <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Weekly Prayer Points</a>
+                <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">News</a>
+                <a class="collapse-item" href="{{route('admin.page.testimonies')}}">Testimonies</a>
+                <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Gallery</a>
+                <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Videos</a>
+                <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Projects</a>
+            </div>
+        </div>
+    </li>
+
+
 
     <!-- Divider -->
     <hr class="sidebar-divider">

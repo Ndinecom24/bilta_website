@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin\HomePage;
+namespace App\Http\Livewire\Admin\Company;
 
 use Livewire\Component;
 

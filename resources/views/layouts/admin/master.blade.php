@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="ndinecom">
 
     <title>BiLTA - Dashboard</title>
 
@@ -21,7 +21,9 @@
     <link href="{{asset('/admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
 
     @stack('custom-styles')
-    <livewire:styles/>
+
+{{--    <livewire:styles/>--}}
+    @livewireStyles
 
 </head>
 
@@ -79,7 +81,8 @@
 
 
 
-<livewire:scripts/>
+{{--<livewire:scripts/>--}}
+@livewireScripts
 
 
 @stack('custom-scripts')

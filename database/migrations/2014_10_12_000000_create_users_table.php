@@ -23,9 +23,11 @@ class CreateUsersTable extends Migration
             $table->integer('status_id');
             $table->integer('login')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('uuid');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

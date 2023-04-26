@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\System\Status;
 use App\Permissions\HasPermissionsTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +21,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'uuid',
         'name',
         'email',
         'password',
@@ -27,7 +29,6 @@ class User extends Authenticatable
         'logins',
         'last_login',
         'status_id',
-        'login'
     ];
 
     /**
@@ -48,4 +49,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function status(){
+        return $this->belongsTo(Status::class);
+    }
 }

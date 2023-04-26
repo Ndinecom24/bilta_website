@@ -30,7 +30,6 @@
                         </div>
                     @endif
 
-                        @include('livewire.system.user.update')
                     @include('livewire.system.user.create')
 
         </div>
@@ -59,6 +58,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Roles</th>
+                                <th>Status</th>
                                 <th>Logins</th>
                                 <th>Action</th>
                             </tr>
@@ -80,6 +80,9 @@
                                             {{$user->phone}}
                                         </td>
                                         <td>
+                                            {{$user->status->name ?? "--"}}
+                                        </td>
+                                        <td>
                                             {{$user->roles->count()}}
                                         </td>
                                         <td>
@@ -89,15 +92,14 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <a href="{{route('system.users.show', $user)}}"
-                                                            class="btn btn-success btn-sm">View
+                                                       onclick="event.preventDefault();  document.getElementById('user-profile-form{{auth()->user()->id ?? "0"}}').submit();"
+                                                       class="btn btn-success btn-sm">View
                                                     </a>
-                                                    <button wire:click="edit({{$user->id}})"
-                                                            data-toggle="modal" data-target="#updateModal"
-                                                            class="btn btn-primary btn-sm">Edit
-                                                    </button>
-                                                    <button onclick="deleteRole({{$user->id}})"
-                                                            class="btn btn-danger btn-sm">Delete
-                                                    </button>
+
+                                                    <form id="user-profile-form{{auth()->user()->id ?? "0"}}" action="{{ route('system.users.show',auth()->user()->id ?? "0") }}" method="POST" class="d-none">
+                                                        @csrf
+                                                    </form>
+
                                                 </div>
                                             </div>
                                         </td>
@@ -118,11 +120,5 @@
         </div>
     </div>
 
-    <script>
-        function deleteRole(id) {
-            if (confirm("Are you sure to delete this record?"))
-                window.livewire.emit('deleteRole', id);
-        }
-    </script>
 
 </div>

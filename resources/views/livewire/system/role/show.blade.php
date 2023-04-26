@@ -9,29 +9,26 @@
     <!-- Content Row -->
     <div class="row">
         <div class="col-md-12 p-2">
-            <div class="card">
-                <div class="card-body">
-                    @if(session()->has('success'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session()->get('success') }}
-                        </div>
-                    @endif
-                    @if(session()->has('error'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ session()->get('error') }}
-                        </div>
-                    @endif
-
-                        @include('livewire.system.permission.attach')
+            @if(session()->has('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session()->get('success') }}
                 </div>
-            </div>
+            @endif
+            @if(session()->has('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session()->get('error') }}
+                </div>
+            @endif
+
+            @include('livewire.system.permission.attach')
         </div>
         <div class="col-md-6 col-lg-6 col-sm-12 mb-2">
             <div class="card">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-sm-6">
-                            <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#permissionModal"
+                            <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal"
+                                    data-target="#permissionModal"
                                     wire:click="roleAttachButton()">
                                 <i class="fa fa-plus">Attach</i>
                             </button>
@@ -47,7 +44,7 @@
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Name  </th>
+                                <th>Name</th>
                                 <th>Description</th>
                                 <th>Action</th>
                             </tr>
@@ -93,7 +90,7 @@
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Name  </th>
+                                <th>Name</th>
                                 <th>Email</th>
                                 <th>Action</th>
                             </tr>
@@ -138,6 +135,7 @@
             if (confirm("Are you sure to detach this record?"))
                 window.livewire.emit('detachPermission', id);
         }
+
         function detachUser(id) {
             if (confirm("Are you sure to detach this user?"))
                 window.livewire.emit('detachUser', id);

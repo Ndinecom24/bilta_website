@@ -3,14 +3,16 @@
 namespace App\Http\Livewire\System;
 
 use App\Models\System\Role;
+use App\Models\System\Status;
 use App\Models\User;
 use Livewire\Component;
 
 class UsersShow extends Component
 {
-    public $user ;
+    public $user , $phone , $name , $email, $status_id  ;
     public $all_roles = [];
     public $selectedRoles = [] ;
+    public $statuses = [] ;
 
     protected $listeners = [
         'detachRole'=>'detachRole',
@@ -19,6 +21,11 @@ class UsersShow extends Component
     public function mount(User $user){
         $user->load('roles');
         $this->user = $user ;
+        $this->phone= $user->phone ;
+        $this->email= $user->email ;
+        $this->name= $user->name ;
+        $this->status_id= $user->status_id ;
+        $this->statuses = Status::select('id', 'name')->get();
     }
 
     public function render()

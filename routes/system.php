@@ -10,5 +10,5 @@ Route::prefix('system')->group(function () {
     Route::get('roles', \App\Http\Livewire\System\RolesIndex::class)->name('system.roles');
     Route::get('roles/{role}', \App\Http\Livewire\System\RolesShow::class)->name('system.roles.show');
     Route::get('users', \App\Http\Livewire\System\UsersIndex::class)->name('system.users');
-    Route::get('users/{user}', \App\Http\Livewire\System\UsersShow::class)->name('system.users.show');
+    Route::post('users/{user}', \App\Http\Livewire\System\UsersShow::class)->name('system.users.show');
 });
