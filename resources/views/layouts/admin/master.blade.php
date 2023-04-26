@@ -22,8 +22,8 @@
 
     @stack('custom-styles')
 
-    <livewire:styles/>
-{{--    @livewireStyles--}}
+{{--    <livewire:styles/>--}}
+    @livewireStyles
 
 </head>
 
@@ -81,8 +81,8 @@
 
 
 
-<livewire:scripts/>
-{{--@livewireScripts--}}
+{{--<livewire:scripts/>--}}
+@livewireScripts
 
 
 @stack('custom-scripts')
