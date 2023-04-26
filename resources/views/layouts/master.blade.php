@@ -24,8 +24,8 @@ Licence URI: https://www.os-templates.com/template-terms
 
     @stack('custom-styles')
 
-{{--        <livewire:styles/>--}}
-    @livewireStyles
+        <livewire:styles/>
+{{--    @livewireStyles--}}
 
 </head>
 <body id="top">
@@ -65,8 +65,8 @@ Licence URI: https://www.os-templates.com/template-terms
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 
 
-{{--<livewire:scripts/>--}}
-@livewireScripts
+<livewire:scripts/>
+{{--@livewireScripts--}}
 
 
 <!-- JAVASCRIPTS -->
