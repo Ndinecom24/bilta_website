@@ -9,7 +9,8 @@ use Livewire\Component;
 
 class UsersShow extends Component
 {
-    public $user , $phone , $name , $email, $status_id  ;
+    public $user , $user_id, $email, $name, $phone, $status_id, $password , $password_change, $role_id ;
+
     public $all_roles = [];
     public $selectedRoles = [] ;
     public $statuses = [] ;
@@ -18,7 +19,8 @@ class UsersShow extends Component
         'detachRole'=>'detachRole',
     ];
 
-    public function mount(User $user){
+    public function mount( $uuid){
+        $user = User::where('uuid', $uuid)->first();
         $user->load('roles');
         $this->user = $user ;
         $this->phone= $user->phone ;
@@ -30,7 +32,9 @@ class UsersShow extends Component
 
     public function render()
     {
-        return view('livewire.system.user.show');
+        $roles = Role::get();
+        $statuses = Status::get();
+        return view('livewire.system.user.show')->with(compact('roles', 'statuses'));
     }
 
     public function roleAttachButton (){

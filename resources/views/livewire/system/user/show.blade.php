@@ -21,7 +21,7 @@
             @endif
 
             @include('livewire.system.role.attach')
-{{--                @include('livewire.system.user.update')--}}
+                @include('livewire.system.user.update')
 
         </div>
 

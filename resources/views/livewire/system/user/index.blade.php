@@ -92,14 +92,12 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <a href="{{route('system.users.show', $user)}}"
-                                                       onclick="event.preventDefault();  document.getElementById('user-profile-form{{auth()->user()->id ?? "0"}}').submit();"
+                                                       onclick="event.preventDefault();  document.getElementById('user-profile-form{{auth()->user()->uuid ?? "0"}}').submit();"
                                                        class="btn btn-success btn-sm">View
                                                     </a>
-
-                                                    <form id="user-profile-form{{auth()->user()->id ?? "0"}}" action="{{ route('system.users.show',auth()->user()->id ?? "0") }}" method="POST" class="d-none">
+                                                    <form id="user-profile-form{{auth()->user()->uuid ?? "0"}}" action="{{ route('system.users.show',auth()->user()->uuid ?? "0") }}" method="POST" class="d-none">
                                                         @csrf
                                                     </form>
-
                                                 </div>
                                             </div>
                                         </td>
@@ -108,7 +106,7 @@
                             @else
                                 <tr>
                                     <td colspan="3" align="center">
-                                        No Categories Found.
+                                        No Users Found.
                                     </td>
                                 </tr>
                             @endif

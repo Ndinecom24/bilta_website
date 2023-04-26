@@ -11,54 +11,78 @@
             </div>
             <form>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <input hidden type="text"  class="form-control" id="exampleFormControlInput3"  wire:model="user_id">
-                            <div class="form-group">
-                                <label for="nameInput">Name</label>
-                                <input type="text" class="form-control" id="nameInput" placeholder="Enter Name" wire:model="name">
-                                @error('name') <span class="text-danger error">{{ $message }}</span>@enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label for="emailInput">Email</label>
-                                <input type="email" class="form-control" id="emailInput" wire:model="email" placeholder="Enter Email">
-                                @error('email') <span class="text-danger error">{{ $message }}</span>@enderror
-                            </div>
+                    <div class="row mb-3">
+                        <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+
+                        <div class="col-md-6">
+                            <input id="name" type="text"
+                                   class="form-control @error('name') is-invalid @enderror" name="name"
+                                   wire:model="name" required autocomplete="name" autofocus>
+
+                            @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label for="phoneInput">Phone</label>
-                                <input type="text" class="form-control" id="phoneInput" placeholder="Enter Phone" wire:model="phone">
-                                @error('phone') <span class="text-danger error">{{ $message }}</span>@enderror
-                            </div>
+                    <div class="row mb-3">
+                        <label for="email"
+                               class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+
+                        <div class="col-md-6">
+                            <input id="email" type="email"
+                                   class="form-control @error('email') is-invalid @enderror" name="email"
+                                   wire:model="email" required autocomplete="email">
+
+                            @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label for="statusInput">Status</label>
-                                <select  class="form-control" id="statusInput" wire:model="status_id">
-                                    <option value="{{$status_id}}">{{$user->status->name ?? "--"}}</option>
-                                    @foreach($statuses as $status)
-                                        <option value="{{$status->id}}">{{$status->name}}</option>
-                                    @endforeach
-                                @error('status_id') <span class="text-danger error">{{ $message }}</span>@enderror
-                            </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="phone"
+                               class="col-md-4 col-form-label text-md-end">{{ __('Phone') }}</label>
+
+                        <div class="col-md-6">
+                            <input id="phone" type="text"
+                                   class="form-control @error('phone') is-invalid @enderror" name="phone"
+                                   wire:model="phone" required autocomplete="phone">
+
+                            @error('phone')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="phone"
+                               class="col-md-4 col-form-label text-md-end">{{ __('Status') }}</label>
+                        <div class="col-md-6">
+                            <select required  wire:model="status_id"  class="form-control @error('status_id') is-invalid @enderror">
+                                @foreach($statuses as $status)
+                                    <option value="{{$status->id}}">{{$status->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('status_id')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
                         </div>
                     </div>
 
 
                 </div>
-
-
                 <div class="modal-footer">
-                    <button wire:click.prevent="update()" class="btn btn-success ">Save</button>
-                    <button wire:click.prevent="cancel()" class="btn btn-danger">Cancel</button>
+                    <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
+                    <button wire:click.prevent="store()" class="btn btn-primary close-modal">Create</button>
                 </div>
             </form>
         </div>
