@@ -94,31 +94,5 @@ class UsersIndex extends Component
         $this->updateUser = false;
         $this->resetFields();
     }
-    public function update(){
-        // Validate request
-        $this->validate();
-        try{
-            // Update user
-            User::find($this->user_id)->fill([
-                'name'=>$this->name,
-                'email'=>$this->email,
-                'phone'=>$this->phone,
-                'status_id'=>$this->status_id,
-            ])->save();
-            session()->flash('success','User Updated Successfully!!');
 
-            $this->cancel();
-        }catch(\Exception $e){
-            session()->flash('error','Something goes wrong while updating user!!');
-            $this->cancel();
-        }
-    }
-    public function destroy($id){
-        try{
-            User::find($id)->delete();
-            session()->flash('success',"User Deleted Successfully!!");
-        }catch(\Exception $e){
-            session()->flash('error',"Something goes wrong while deleting user!!");
-        }
-    }
 }

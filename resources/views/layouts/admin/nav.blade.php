@@ -47,7 +47,7 @@
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Profile
                 </a>
-                <form id="user-profile-form{{auth()->user()->id ?? "0"}}" action="{{ route('system.users.show',auth()->user()->id ?? "0") }}" method="POST" class="d-none">
+                <form id="user-profile-form{{auth()->user()->id ?? "0"}}" action="{{ route('system.users.show',auth()->user()->uuid ?? "0") }}" method="POST" class="d-none">
                     @csrf
                 </form>
                 <a class="dropdown-item" href="#">

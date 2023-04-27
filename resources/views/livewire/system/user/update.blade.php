@@ -82,7 +82,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                    <button wire:click.prevent="store()" class="btn btn-primary close-modal">Create</button>
+                    <button wire:click.prevent="update()" class="btn btn-warning close-modal">Update</button>
                 </div>
             </form>
         </div>

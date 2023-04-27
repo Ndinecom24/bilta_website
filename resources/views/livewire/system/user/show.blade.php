@@ -9,6 +9,15 @@
     <!-- Content Row -->
     <div class="row">
         <div class="col-md-12 p-2">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             @if(session()->has('success'))
                 <div class="alert alert-success" role="alert">
                     {{ session()->get('success') }}
@@ -22,6 +31,7 @@
 
             @include('livewire.system.role.attach')
                 @include('livewire.system.user.update')
+                @include('livewire.system.user.updatePassword')
 
         </div>
 
@@ -50,6 +60,9 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-ld-12 col-md-12 col-sm-12">
+                            <button data-toggle="modal" data-target="#updatePasswordModal"
+                                    class="btn btn-warning btn-sm">Password Change
+                            </button>
                             <button data-toggle="modal" data-target="#updateModal"
                                     class="btn btn-primary btn-sm">Edit
                             </button>

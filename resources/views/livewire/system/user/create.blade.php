@@ -121,7 +121,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                    <button wire:click.prevent="store()" class="btn btn-primary close-modal">Create</button>
+                    <button wire:click.prevent="store()" class="btn btn-success close-modal">Create</button>
                 </div>
             </form>
         </div>
