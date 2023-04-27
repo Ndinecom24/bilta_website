@@ -19,6 +19,8 @@ class CreateAboutUsTable extends Migration
             $table->string('vision');
             $table->string('objective');
             $table->string('description');
+            $table->string('who_we_are');
+            $table->string('what_is');
             $table->integer('created_by');
             $table->timestamps();
             $table->softDeletes();

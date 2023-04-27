@@ -18,6 +18,7 @@ class CreateContactUsTable extends Migration
             $table->string('phone');
             $table->string('email');
             $table->string('address');
+            $table->string('message');
             $table->string('google_maps');
             $table->integer('created_by');
             $table->string('facebook_url')->nullable();

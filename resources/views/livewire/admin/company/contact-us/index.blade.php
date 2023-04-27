@@ -57,6 +57,7 @@
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Address</th>
+                                <th>Message</th>
                                 <th>Maps</th>
                                 <th>Whatsapp Link</th>
                                 <th>Youtube</th>
@@ -78,6 +79,9 @@
                                         </td>
                                         <td>
                                             {{$contact_details->address ?? "-"}}
+                                        </td>
+                                        <td>
+                                            {{$contact_details->message ?? "-"}}
                                         </td>
                                         <td>
                                             {{$contact_details->google_maps ?? "-"}}

@@ -45,6 +45,17 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
+                                <label for="contactUsFormControlInput19">Message</label>
+                                <textarea rows="3" class="form-control" id="contactUsFormControlInput19" wire:model="message"
+                                          placeholder="Enter Address"></textarea>
+                                @error('message') <span
+                                    class="form-check-label text-danger ">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group">
                                 <label for="contactUsFormControlInput2">Google Maps</label>
                                 <textarea rows="3" class="form-control" id="contactUsFormControlInput2" wire:model="google_maps"
                                           placeholder="Enter Google Maps"></textarea>

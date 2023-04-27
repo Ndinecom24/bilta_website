@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 class ShowAboutUs extends Component
 {
     use WithPagination ;
-    public  $about_us_id, $vision, $mission , $objective , $description;
+    public  $about_us_id, $vision, $mission , $objective , $description, $what_is, $who_we_are;
 
     public $updateAboutUs = false;
     protected $listeners = [
@@ -21,11 +21,13 @@ class ShowAboutUs extends Component
         'vision'=>'required',
         'objective' => 'required',
         'description' => 'required',
+        'what_is' => 'required',
+        'who_we_are' => 'required',
     ];
 
     public function render()
     {
-        $about_uses = AboutUs::select('id','mission','vision', 'objective', 'description')->paginate(20);
+        $about_uses = AboutUs::select('id','mission','vision', 'objective', 'description', 'what_is', 'who_we_are')->paginate(20);
         return view('livewire.admin.company.about-us.index')->with(compact('about_uses'));
     }
 
@@ -34,6 +36,8 @@ class ShowAboutUs extends Component
         $this->vision = '';
         $this->objective = '';
         $this->description = '';
+        $this->what_is = '';
+        $this->who_we_are = '';
     }
     public function store(){
         // Validate Form Request
@@ -50,6 +54,8 @@ class ShowAboutUs extends Component
                     'vision'=>$this->vision,
                     'objective'=>$this->objective,
                     'description'=>$this->description,
+                    'what_is'=>$this->what_is,
+                    'who_we_are'=>$this->who_we_are,
                 ]
 
             );
@@ -73,6 +79,8 @@ class ShowAboutUs extends Component
         $this->vision = $about_us->vision;
         $this->objective = $about_us->objective;
         $this->description = $about_us->description;
+        $this->what_is = $about_us->what_is;
+        $this->who_we_are = $about_us->who_we_are;
         $this->about_us_id = $about_us->id;
         $this->updateAboutUs = true;
     }
@@ -91,6 +99,8 @@ class ShowAboutUs extends Component
                 'vision'=>$this->vision,
                 'objective'=>$this->objective,
                 'description'=>$this->description,
+                'what_is'=>$this->what_is,
+                'who_we_are'=>$this->who_we_are,
             ])->save();
             session()->flash('success','About Us Updated Successfully!!');
 

@@ -53,12 +53,34 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label for="aboutUsFormControlInput5">What is Bilta</label>
+                                <textarea rows="3"  class="form-control" id="aboutUsFormControlInput5" wire:model="what_is"
+                                          placeholder="Enter What Bilta is"></textarea>
+                                @error('what_is') <span
+                                    class="form-check-label text-danger ">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label for="aboutUsFormControlInput6">Who we are</label>
+                                <textarea rows="3"  class="form-control" id="aboutUsFormControlInput6" wire:model="who_we_are"
+                                          placeholder="Enter Who we are details"></textarea>
+                                @error('who_we_are') <span
+                                    class="form-check-label text-danger ">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
 
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                    <button wire:click.prevent="store()" class="btn btn-primary close-modal">Save changes</button>
+                    <button wire:click.prevent="store()" class="btn btn-primary close-modal"  data-dismiss="modal">Save changes</button>
                 </div>
             </form>
         </div>

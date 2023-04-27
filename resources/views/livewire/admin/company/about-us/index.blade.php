@@ -58,6 +58,8 @@
                                 <th>Mission</th>
                                 <th>Objective</th>
                                 <th>Description</th>
+                                <th>What is</th>
+                                <th>Who we are</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -76,6 +78,12 @@
                                         </td>
                                         <td>
                                             {{$about_us->description}}
+                                        </td>
+                                        <td>
+                                            {{$about_us->what_is}}
+                                        </td>
+                                        <td>
+                                            {{$about_us->who_we_are}}
                                         </td>
                                         <td>
                                             <div class="row">

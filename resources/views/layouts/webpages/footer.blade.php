@@ -6,12 +6,13 @@
         <!-- ################################################################################################ -->
         <div class="one_quarter first">
             <h1 class="logoname"><a href="index.html">Bilta</a></h1>
-            <p>Scelerisque facilisis sapien turpis facilisis libero eu viverra purus dui ac leo sed vitae diam morbi sed nibh in eget dolor phasellus rhoncus odio morbi elit nunc id elit donec elementum [<a href="#">&hellip;</a>]</p>
+            <p>{{$about_us->what_is ?? "--"}} [<a href="#">&hellip;</a>]</p>
             <ul class="faico clear">
-                <li><a class="faicon-facebook" href="#"><i class="fab fa-facebook"></i></a></li>
-                <li><a class="faicon-linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>
-                <li><a class="faicon-twitter" href="#"><i class="fab fa-twitter"></i></a></li>
-                <li><a class="faicon-vk" href="#"><i class="fab fa-youtube"></i></a></li>
+                <li><a title="facebook link" class="faicon-facebook" href="{{$contact_us->facebook_url ?? "#"}}"><i class="fab fa-facebook"></i></a></li>
+                <li><a title="linkedin link"  class="faicon-linkedin" href="{{$contact_us->linkedin_url ?? "#"}}"><i class="fab fa-linkedin"></i></a></li>
+                <li><a title="twitter link" class="faicon-twitter" href="{{$contact_us->twitter_url ?? "#"}}"><i class="fab fa-twitter"></i></a></li>
+                <li><a title="youtube link" class="faicon-vk" href="{{$contact_us->youtube ?? "#"}}"><i class="fab fa-youtube"></i></a></li>
+                <li><a title="whatsapp link" class="faicon-vk" href="{{$contact_us->whatsapp_link ?? "#"}}"><i class="fab fa-youtube"></i></a></li>
             </ul>
         </div>
         <div class="one_quarter">

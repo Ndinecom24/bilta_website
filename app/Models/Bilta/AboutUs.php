@@ -16,6 +16,8 @@ class AboutUs extends Model
         'vision',
         'objective',
         'description',
+        'who_we_are',
+        'what_is',
         'created_by'
     ];
 }

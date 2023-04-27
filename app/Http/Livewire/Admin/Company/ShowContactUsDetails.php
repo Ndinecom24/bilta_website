@@ -10,7 +10,7 @@ class ShowContactUsDetails  extends Component
 {
     use WithPagination ;
 
-    public  $contact_us_id, $phone, $email, $address , $google_maps , $facebook_url,
+    public  $contact_us_id, $phone, $email, $address , $message, $google_maps , $facebook_url,
         $linkedin_url,
         $twitter_url,
         $youtube,
@@ -30,7 +30,7 @@ class ShowContactUsDetails  extends Component
 
     public function render()
     {
-        $contact_details = ContactUs::select('id','email','phone', 'address', 'google_maps', 'facebook_url', 'linkedin_url', 'twitter_url', 'youtube', 'whatsapp_link', )
+        $contact_details = ContactUs::select('id','email','phone', 'address','message', 'google_maps', 'facebook_url', 'linkedin_url', 'twitter_url', 'youtube', 'whatsapp_link', )
             ->first();
         return view('livewire.admin.company.contact-us.index')->with(compact('contact_details'));
     }
@@ -38,6 +38,7 @@ class ShowContactUsDetails  extends Component
     public function resetFields(){
         $this->email = '';
         $this->phone = '';
+        $this->message = '';
         $this->address = '';
         $this->google_maps = '';
         $this->youtube = '';
@@ -62,6 +63,7 @@ class ShowContactUsDetails  extends Component
                     'phone'=>$this->phone,
                     'address'=>$this->address,
                     'google_maps'=>$this->google_maps,
+                    'message' =>$this->message,
                     'whatsapp_link'=>$this->whatsapp_link,
                     'youtube'=>$this->youtube,
                     'facebook_url'=>$this->facebook_url,
@@ -90,6 +92,7 @@ class ShowContactUsDetails  extends Component
         $this->email = $contact_us->email;
         $this->phone = $contact_us->phone;
         $this->address = $contact_us->address;
+        $this->message = $contact_us->message;
         $this->google_maps = $contact_us->google_maps;
         $this->linkedin_url = $contact_us->linkedin_url;
         $this->facebook_url = $contact_us->facebook_url;
@@ -113,6 +116,7 @@ class ShowContactUsDetails  extends Component
                 'email'=>$this->email,
                 'phone'=>$this->phone,
                 'address'=>$this->address,
+                'message' =>$this->message,
                 'google_maps'=>$this->google_maps,
                 'whatsapp_link'=>$this->whatsapp_link,
                 'youtube'=>$this->youtube,
