@@ -2,11 +2,13 @@
 
 use App\Http\Livewire\Admin\Company\ShowAboutUs;
 use App\Http\Livewire\Admin\Company\ShowContactUsDetails;
-use App\Http\Livewire\Admin\Company\ShowHome;
+use App\Http\Livewire\Admin\Company\ShowAdminHome;
+use App\Http\Livewire\Admin\Company\ShowHomeIntro;
 use App\Http\Livewire\Admin\Company\ShowLeadershipTeam;
 use App\Http\Livewire\Admin\Company\ShowServices;
 use App\Http\Livewire\Admin\Company\ShowValues;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
+use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonies;
 use App\Http\Livewire\Site\ShowFAQs;
 use App\Http\Livewire\Site\ShowHomePage;
@@ -46,7 +48,7 @@ Route::prefix('bilta/site')->group(function () {
 
 Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
     Route::prefix('home')->group(function () {
-        Route::get('/', ShowHome::class)->name('admin.home');
+        Route::get('/', ShowAdminHome::class)->name('admin.home');
         Route::get('/company/about-us', ShowAboutUs::class)->name('admin.company.about-us');
         Route::get('/company/services', ShowServices::class)->name('admin.company.services');
         Route::get('/company/values', ShowValues::class)->name('admin.company.values');
@@ -55,5 +57,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/page/weekly-prayer-points', ShowPrayerPoints::class)->name('admin.page.weekly-prayer-points');
         Route::get('/page/our-team', ShowLeadershipTeam::class)->name('admin.page.our-team');
         Route::get('/page/testimonies', ShowTestimonies::class)->name('admin.page.testimonies');
+        Route::get('/page/testimonial', ShowTestimonialsPage::class)->name('admin.page.testimonial');
+        Route::get('/company/intro', ShowHomeIntro::class)->name('admin.page.intro');
     });
 });

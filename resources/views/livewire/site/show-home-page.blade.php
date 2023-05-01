@@ -1,4 +1,10 @@
 
+@push('custom-styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="style.css" />
+
+@endpush
+
 <div>
     <!-- ################################################################################################ -->
     <!-- ################################################################################################ -->
@@ -7,10 +13,10 @@
         <div id="pageintro" class="hoc clear">
             <!-- ################################################################################################ -->
             <article>
-                <h3 class="heading">Faucibus porttitor metus</h3>
+                <h3 class="heading" style="color: #e79217">Bible and Literature Translation Association.</h3>
                 <p>In nibh nullam egestas velit laoreet nullam elementum ipsum pharetra suscipit leo augue pretium felis
                     nisl vitae ipsum curabitur quis libero.</p>
-                <footer><a class="btn" href="#">Audio Bible</a></footer>
+{{--                <footer><a class="btn" href="#">Audio Bible</a></footer>--}}
             </article>
             <!-- ################################################################################################ -->
         </div>
@@ -26,25 +32,25 @@
                 <ul class="nospace group btmspace-80 elements elements-four">
                     <li class="one_quarter">
                         <article><a href="#"><i class="fas fa-hand-rock"></i></a>
-                            <h6 class="heading">Feugiat fermentum</h6>
+                            <h6 class="heading">Bible Translation</h6>
                             <p>Ac orci proin porttitor lacus eget mi pellentesque non.</p>
                         </article>
                     </li>
                     <li class="one_quarter">
                         <article><a href="#"><i class="fas fa-dove"></i></a>
-                            <h6 class="heading">Malesuada accumsan</h6>
+                            <h6 class="heading">Literature Translation</h6>
                             <p>Sapien sed metus congue sodales vivamus scelerisque.</p>
                         </article>
                     </li>
                     <li class="one_quarter">
                         <article><a href="#"><i class="fas fa-history"></i></a>
-                            <h6 class="heading">Mauris placerat</h6>
+                            <h6 class="heading">Audio Bible</h6>
                             <p>Et interdum vulputate purus nisl fringilla sapien quis.</p>
                         </article>
                     </li>
                     <li class="one_quarter">
                         <article><a href="#"><i class="fas fa-heartbeat"></i></a>
-                            <h6 class="heading">Elementum rhoncus</h6>
+                            <h6 class="heading">Gospel Film</h6>
                             <p>Sollicitudin dui mauris dui nunc lorem tortor pharetra.</p>
                         </article>
                     </li>
@@ -52,12 +58,11 @@
             </section>
             <!-- ################################################################################################ -->
             <section class="group shout">
-                <figure class="one_half first"><img src="{{asset('layout/images/demo/546x356.png')}}" alt="">
-                    <figcaption class="heading"><a href="#">Accumsan placerat</a></figcaption>
+                @foreach($our_values as $key=>$values)
+                <figure class="one_half @if( $key % 2 === 0) first @endif" >
+                    <figcaption class="heading"><a href="#">{{$values->title}}</a></figcaption>
                 </figure>
-                <figure class="one_half"><img src="{{asset('layout/images/demo/546x356.png')}}" alt="">
-                    <figcaption class="heading"><a href="#">Scelerisque etiam</a></figcaption>
-                </figure>
+                @endforeach
             </section>
             <!-- ################################################################################################ -->
             <!-- / main body -->
@@ -72,7 +77,7 @@
         <section id="services" class="hoc container clear">
             <!-- ################################################################################################ -->
             <div class="sectiontitle">
-                <p class="nospace font-xs">Quis leo hendrerit lectus morbi</p>
+                <p class="nospace font-xs">Gallery</p>
                 <h6 class="heading font-x2">Justo mauris tempus pharetra</h6>
             </div>
             <ul class="nospace group elements elements-three">
@@ -125,63 +130,23 @@
     <!-- ################################################################################################ -->
     <!-- ################################################################################################ -->
     <!-- ################################################################################################ -->
-    <div class="wrapper row3">
-        <section class="hoc container clear">
-            <!-- ################################################################################################ -->
-            <div class="sectiontitle">
-                <p class="nospace font-xs">Rutrum erat nec mollis augue mauris</p>
-                <h6 class="heading font-x2">Ac pede phasellus commodo</h6>
-            </div>
-            <ul class="pr-charts nospace group center">
-                <li class="pr-chart-ctrl" data-animate="false">
-                    <div class="pr-chart" data-percent="25"><i></i></div>
-                    <p>Porttitor</p>
-                </li>
-                <li class="pr-chart-ctrl" data-animate="false">
-                    <div class="pr-chart" data-percent="50"><i></i></div>
-                    <p>Condimentum</p>
-                </li>
-                <li class="pr-chart-ctrl" data-animate="false">
-                    <div class="pr-chart" data-percent="75"><i></i></div>
-                    <p>Sollicitudin</p>
-                </li>
-                <li class="pr-chart-ctrl" data-animate="false">
-                    <div class="pr-chart" data-percent="100"><i></i></div>
-                    <p>Venenatis</p>
-                </li>
-            </ul>
-            <!-- ################################################################################################ -->
-        </section>
-    </div>
-    <!-- ################################################################################################ -->
-    <!-- ################################################################################################ -->
-    <!-- ################################################################################################ -->
     <div class="wrapper gradient">
         <div class="hoc container clear">
             <!-- ################################################################################################ -->
             <div class="sectiontitle">
-                <p class="nospace font-xs">Purus ut mi sed velit urna ut</p>
-                <h6 class="heading font-x2">Sapien posuere in iaculis</h6>
+                <p class="nospace font-xs">Our Team</p>
+                <h6 class="heading font-x2">Meet Our Executive Committee</h6>
             </div>
             <ul class="nospace group team">
-                <li class="one_third first">
-                    <figure><a class="imgover" href="#"><img src="{{asset('layout/images/demo/348x400.png')}}"
-                                                             alt=""></a>
-                        <figcaption><strong>A. Doe</strong> <em>Euismod nec hendrerit</em></figcaption>
+                @foreach($our_teams as $key=>$our_team)
+                <li class="one_third @if($key==0) first @endif">
+                    <figure><a class="imgover" href="#">
+                            <img  src="{{ $our_team->getFirstMedia('team_images')->getUrl()  }}"
+                                                               title="{{ $our_team->getFirstMedia('team_images')->name }}"></a>
+                        <figcaption><strong>{{$our_team->name ?? "--"}}</strong> <em>{{$our_team->position ?? "--"}}</em></figcaption>
                     </figure>
                 </li>
-                <li class="one_third">
-                    <figure><a class="imgover" href="#"><img src="{{asset('layout/images/demo/348x400.png')}}"
-                                                             alt=""></a>
-                        <figcaption><strong>B. Doe</strong> <em>Vel velit aliquam massa</em></figcaption>
-                    </figure>
-                </li>
-                <li class="one_third">
-                    <figure><a class="imgover" href="#"><img src="{{asset('layout/images/demo/348x400.png')}}"
-                                                             alt=""></a>
-                        <figcaption><strong>C. Doe</strong> <em>Vulputate aliquet purus</em></figcaption>
-                    </figure>
-                </li>
+                @endforeach
             </ul>
             <!-- ################################################################################################ -->
         </div>
@@ -193,31 +158,37 @@
         <section id="testimonials" class="hoc container clear">
             <!-- ################################################################################################ -->
             <div class="sectiontitle">
-                <p class="nospace font-xs">Maecenas ultrices faucibus felis</p>
-                <h6 class="heading font-x2">Nunc lacus nulla luctus duis</h6>
+                <p class="nospace font-xs">Testimonials</p>
+                <h6 class="heading font-x2">Stories from around the world</h6>
             </div>
-            <article class="one_half first">
-                <figure class="clear"><img src="{{asset('layout/images/demo/100x100.png')}}" alt="">
-                    <figcaption>
-                        <h6 class="heading">D. Doe</h6>
-                        <em>Adipiscing fusce eu velit</em></figcaption>
-                </figure>
-                <blockquote>Pulvinar tortor quis nisi in hac habitasse platea dictumst donec ac tellus fusce venenatis
-                    laoreet elit sed est tortor molestie in consectetuer fringilla suscipit ut odio ut ac.
-                </blockquote>
-            </article>
-            <article class="one_half">
-                <figure class="clear"><img src="{{asset('layout/images/demo/100x100.png')}}" alt="">
-                    <figcaption>
-                        <h6 class="heading">E. Doe</h6>
-                        <em>Mauris erat aliquam leo</em></figcaption>
-                </figure>
-                <blockquote>Orci vitae dolor scelerisque blandit morbi eu dui sed volutpat etiam leo leo bibendum vel
-                    dictum sed sollicitudin a mi pellentesque ligula nulla facilisi sed bibendum ornare.
-                </blockquote>
-            </article>
+
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    @foreach($testimonials as $key=>$testimonial)
+                        <div class="swiper-slide card">
+                        <article class="one_half  first ">
+                            <figure class="clear"><img  src="https://tinypic.host/images/2022/12/19/img_avatar.png" alt="">
+                                <figcaption>
+                                    <h6 class="heading">{{$testimonial->name}}</h6>
+                                    <em>{{$testimonial->title}}</em></figcaption>
+                            </figure>
+                            <blockquote>{{$testimonial->testimonial}}
+                            </blockquote>
+                        </article>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+
             <!-- ################################################################################################ -->
         </section>
+
+
+
+
     </div>
     <!-- ################################################################################################ -->
     <!-- ################################################################################################ -->
@@ -226,7 +197,7 @@
         <section id="testimonies" class="hoc container clear">
             <!-- ################################################################################################ -->
             <div class="sectiontitle">
-                <p class="nospace font-xs">Lorem aenean nunc aenean sagittis</p>
+                <p class="nospace font-xs">Latest News</p>
                 <h6 class="heading font-x2">Imperdiet massa maecenas</h6>
             </div>
             <ul id="latest" class="nospace group">
@@ -310,3 +281,29 @@
     </div>
 
 </div>
+
+@push('custom-scripts')
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+
+    <script>
+        let swiper = new Swiper(".swiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                600: {
+                    slidesPerView: 2,
+                },
+            },
+        });
+    </script>
+
+@endpush
+

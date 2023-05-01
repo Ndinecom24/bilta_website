@@ -38,6 +38,7 @@
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Company Details:</h6>
+                <a class="collapse-item" href="{{route('admin.page.intro')}}">Home Intro</a>
                 <a class="collapse-item" href="{{route('admin.company.about-us')}}">About Us</a>
                 <a class="collapse-item" href="{{route('admin.company.values')}}">Our Values</a>
                 <a class="collapse-item" href="{{route('admin.company.services')}}">Our Services</a>
@@ -48,6 +49,7 @@
                 <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Weekly Prayer Points</a>
                 <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">News</a>
                 <a class="collapse-item" href="{{route('admin.page.testimonies')}}">Testimonies</a>
+                <a class="collapse-item" href="{{route('admin.page.testimonial')}}">Testimonial</a>
                 <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Gallery</a>
                 <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Videos</a>
                 <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Projects</a>
