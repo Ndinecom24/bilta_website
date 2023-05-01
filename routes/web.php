@@ -36,6 +36,7 @@ Auth::routes();
 /// SITE
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+Route::get('/', ShowHomePage::class)->name('site.home');
 Route::get('/home', ShowHomePage::class)->name('site.home');
 Route::prefix('bilta/site')->group(function () {
 //    Route::get('home', \App\Http\Livewire\Site\ShowHomePage::class)->name('site.home');
