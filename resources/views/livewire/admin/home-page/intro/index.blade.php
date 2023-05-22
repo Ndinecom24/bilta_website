@@ -55,6 +55,7 @@
                         <table class="table">
                             <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Name</th>
                                 <th>Short Description</th>
                                 <th>Long Description</th>
@@ -62,9 +63,14 @@
                             </tr>
                             </thead>
                             <tbody>
-{{--                            @if ( isset($home_intro->id) )--}}
+                            @if ( isset($home_intro->id) )
 
                                     <tr>
+                                        <td>
+                                            <img  src="{{ $home_intro->getFirstMedia('home_intro_images')->getUrl()  }}"
+                                                  style="width:100%; height: 60px "
+                                                  title="{{ $home_intro->getFirstMedia('home_intro_images')->name }}">
+                                        </td>
 
                                         <td>
                                             {{$home_intro->name ?? ""}}
@@ -78,26 +84,26 @@
                                         <td>
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <button wire:click="edit({{$ome_intro->id ?? 0}})"
+                                                    <button wire:click="edit({{$home_intro->id ?? 0}})"
                                                             data-toggle="modal" data-target="#updateModal"
                                                             class="btn btn-primary btn-sm m-2">Edit
                                                     </button>
                                                 </div>
                                                 <div class="col-6">
-                                                    <button onclick="deleteHomeIntro({{$ome_intro->id ?? 0}})"
+                                                    <button onclick="deleteHomeIntro({{$home_intro->id ?? 0}})"
                                                             class="btn btn-danger btn-sm  m-2">Delete
                                                     </button>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
-{{--                            @else--}}
-{{--                                <tr>--}}
-{{--                                    <td colspan="3" align="center">--}}
-{{--                                        No  Found.--}}
-{{--                                    </td>--}}
-{{--                                </tr>--}}
-{{--                            @endif--}}
+                            @else
+                                <tr>
+                                    <td colspan="3" align="center">
+                                        No  Found.
+                                    </td>
+                                </tr>
+                            @endif
                             </tbody>
                         </table>
                     </div>

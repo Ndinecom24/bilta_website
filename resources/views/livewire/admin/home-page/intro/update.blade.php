@@ -41,21 +41,21 @@
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="contactUsFormControlInput10">Current Image</label>
-                                @if(isset($team))
-                                    <img  src="{{ $team->getFirstMedia('team_images')->getUrl()  }}"
+                                @if(isset($home_intro))
+                                    <img  src="{{ $home_intro->getFirstMedia('home_intro_images')->getUrl()  }}"
                                             style="width:100%; height: 150px "
-                                            title="{{ $team->getFirstMedia('team_images')->name }}">
+                                            title="{{ $home_intro->getFirstMedia('home_intro_images')->name }}">
 
                                 @endif
-                                @error('user_image') <span class="text-danger ">{{ $message }}</span>@enderror
+                                @error('intro_image') <span class="text-danger ">{{ $message }}</span>@enderror
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="contactUsFormControlInput10">User Image</label>
+                                <label for="contactUsFormControlInput10">Intro Image</label>
                                 <input type="file" class="form-control" id="contactUsFormControlInput10"
-                                       placeholder="Enter Image" wire:model="user_image">
-                                @error('user_image') <span class="text-danger ">{{ $message }}</span>@enderror
+                                       placeholder="Enter Image" wire:model="intro_image">
+                                @error('intro_image') <span class="text-danger ">{{ $message }}</span>@enderror
                             </div>
                         </div>
                     </div>

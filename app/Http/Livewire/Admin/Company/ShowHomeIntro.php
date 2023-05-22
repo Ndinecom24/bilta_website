@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Company;
 
 use App\Models\Bilta\HomeIntro;
+use Exception;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -15,8 +16,8 @@ class ShowHomeIntro extends Component
 
     public $our_home_intro_id, $long_description, $name, $short_description, $home_intro;
     public $intro_image;
-
     public $updateHomeIntro = false;
+
     protected $listeners = [
         'deleteHomeIntro' => 'destroy'
     ];
@@ -25,15 +26,13 @@ class ShowHomeIntro extends Component
         'name' => 'required',
         'long_description' => 'required',
         'short_description' => 'required',
-
         'intro_image' => 'image|max:3072', // 1MB Max
 
     ];
 
     public function render()
     {
-        $this->home_intro = HomeIntro::select('id', 'name', 'long_description', 'short_description', 'created_by',)->first();
-
+        $this->home_intro = HomeIntro::first();
         return view('livewire.admin.home-page.intro.index');
     }
 
@@ -81,6 +80,7 @@ class ShowHomeIntro extends Component
         $this->name = '';
         $this->long_description = '';
         $this->short_description = '';
+        $this->intro_image = '';
     }
 
     public function edit($id)
@@ -99,24 +99,32 @@ class ShowHomeIntro extends Component
         // Validate request
         try {
             // Update our_home_intro
-            $home_intro = HomeIntro::find($this->our_home_intro_id)->fill(
-                [
-                    'name' => $this->name,
-                    'long_description' => $this->long_description,
-                    'short_description' => $this->short_description,
-                    'created_by' => auth()->user()->id
-                ]
-            )->save();
+            HomeIntro::find($this->our_home_intro_id)
+                ->fill(
+                    [
+                        'name' => $this->name,
+                        'long_description' => $this->long_description,
+                        'short_description' => $this->short_description,
+                        'created_by' => auth()->user()->id
+                    ]
+                )->save();
+
+            $home_intro = HomeIntro::find($this->our_home_intro_id);
 
             if (isset($this->intro_image)) {
-                $home_intro->clearMediaCollection('home_intro_images');
-                $home_intro->addMedia($this->intro_image)
-                    ->toMediaCollection('home_intro_images');
+                try {
+                    $home_intro->clearMediaCollection('home_intro_images');
+                    $home_intro->addMedia($this->intro_image)
+                        ->toMediaCollection('home_intro_images');
+                    session()->flash('error', 'Something goes wrong while updating Home Intro!!');
+                    $this->cancel();
+                } catch (Exception $e) {
+                }
+
             }
 
 
             session()->flash('success', 'Home Intro Updated Successfully!!');
-
             $this->cancel();
         } catch (Exception $e) {
             session()->flash('error', 'Something goes wrong while updating Home Intro!!');

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Site;
 
 use App\Models\Bilta\AboutUs;
 use App\Models\Bilta\ContactUs;
+use App\Models\Bilta\HomeIntro;
 use App\Models\Bilta\OurTeam;
 use App\Models\Bilta\OurValues;
 use App\Models\Bilta\Testimonial;
@@ -20,7 +21,9 @@ class ShowHomePage extends Component
             'details',
             'position')->get();
         $our_values = OurValues::get();
+        $home_intro = HomeIntro::first();
 
-        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values'));
+        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro'));
+
     }
 }

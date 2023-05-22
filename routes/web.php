@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Livewire\Admin\Company\ShowAboutUs;
-use App\Http\Livewire\Admin\Company\ShowContactUsDetails;
 use App\Http\Livewire\Admin\Company\ShowAdminHome;
+use App\Http\Livewire\Admin\Company\ShowContactUsDetails;
 use App\Http\Livewire\Admin\Company\ShowHomeIntro;
 use App\Http\Livewire\Admin\Company\ShowLeadershipTeam;
 use App\Http\Livewire\Admin\Company\ShowServices;
@@ -10,6 +10,11 @@ use App\Http\Livewire\Admin\Company\ShowValues;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonies;
+use App\Http\Livewire\ShowAbout;
+use App\Http\Livewire\ShowGallery;
+use App\Http\Livewire\ShowHome;
+use App\Http\Livewire\ShowVideos;
+use App\Http\Livewire\ShowWeeklyPrayerPoints;
 use App\Http\Livewire\Site\ShowFAQs;
 use App\Http\Livewire\Site\ShowHomePage;
 use Illuminate\Support\Facades\Route;
@@ -36,10 +41,16 @@ Auth::routes();
 /// SITE
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Route::get('/', ShowHomePage::class)->name('site.home');
-Route::get('/home', ShowHomePage::class)->name('site.home');
+Route::get('/', ShowHome::class)->name('site.home');
+Route::get('/home', ShowHome::class)->name('site.home');
 Route::prefix('bilta/site')->group(function () {
-//    Route::get('home', \App\Http\Livewire\Site\ShowHomePage::class)->name('site.home');
+    Route::get('/about', ShowAbout::class)->name('about');
+    Route::get('/videos', ShowVideos::class)->name('videos');
+    Route::get('/Gallery', ShowGallery::class)->name('gallery');
+    Route::get('/Faqs', \App\Http\Livewire\ShowFaqs::class)->name('faqs');
+    Route::get('/Testimonies', \App\Http\Livewire\ShowTestimonies::class)->name('testimonies');
+    Route::get('/WeeklyPrayerPoint', ShowWeeklyPrayerPoints::class)->name('weekly-prayer-points');
+
 });
 
 
