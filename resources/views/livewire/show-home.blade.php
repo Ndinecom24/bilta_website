@@ -5,7 +5,6 @@
 {{--    @endpush--}}
 {{--     --}}
 
-          <main id="main">
 
               <!-- ======= Hero Section ======= -->
               @if( $home_intro->id ?? '00' != '00')
@@ -301,8 +300,8 @@
               </div>
             </section><!-- End Contact Section -->
 
-          </main><!-- End #main -->
 
-{{--          <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>--}}
+
+          <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   </div>
