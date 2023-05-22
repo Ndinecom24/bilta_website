@@ -63,8 +63,8 @@
         <nav id="navbar" class="navbar">
             <ul>
                 <li><a class="nav-link scrollto" href="{{route('site.home')}}">Home</a></li>
-                <li><a class="nav-link scrollto" href="#translation-projects">Translation Projects</a></li>
-                <li class="dropdown"><a href="#"><span>News | Media</span> <i class="bi bi-chevron-down"></i></a>
+                <li><a class="nav-link scrollto" href="{{route('site.home')}}#translation-projects">Translation Projects</a></li>
+                <li class="dropdown"><a href="{{route('site.home')}}#"><span>News | Media</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
                         <li><a href="{{route('gallery')}}">Gallery</a></li>
 
@@ -76,11 +76,11 @@
                 </li>
                 <li><a class="nav-link scrollto" href="{{route('about')}}">About</a></li>
                 {{-- <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li> --}}
-                <li><a class="nav-link scrollto" href="#team">Team</a></li>
+                <li><a class="nav-link scrollto" href="{{route('site.home')}}#team">Team</a></li>
                 {{-- <li><a class="nav-link scrollto" href="#pricing">Pricing</a></li> --}}
                 {{-- <li><a href="blog.html">Blog</a></li> --}}
 
-                <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                <li><a class="nav-link scrollto" href="{{route('site.home')}}#contact">Contact</a></li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav><!-- .navbar -->
