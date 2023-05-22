@@ -16,6 +16,7 @@
     <!-- Favicons -->
     <link href="{{asset('assets/img/favicon.png')}}" rel="icon">
     <link href="{{asset('assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+    <link href={{asset("assets/css/style.css")}} rel="stylesheet">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -35,6 +36,7 @@
 {{--    @livewireStyles--}}
     <livewire:styles/>
 </head>
+
 <body>
 <!-- ======= Top Bar ======= -->
 <section id="topbar" class="d-flex align-items-center">
@@ -100,8 +102,6 @@
 
 @if(auth()->check())
 @else
-{{--    @include('layouts.webpages.footer')--}}
-
 
 
 <footer id="footer">
@@ -176,14 +176,13 @@
         </div>
     </div>
 </footer><!-- End Footer -->
+
 @endif
 
 
 
 {{--@livewireScripts--}}
 <livewire:scripts/>
-@yield('scripts')
-
 
 <!-- Vendor JS Files -->
 <script src="{{asset('assets/vendor/aos/aos.js')}}"></script>

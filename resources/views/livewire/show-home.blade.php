@@ -1,9 +1,10 @@
 
 <div>
-    @push('custom-styles')
-    <link href={{asset("assets/css/style.css")}} rel="stylesheet">
-    @endpush
-      <body>
+{{--    @push('custom-styles')--}}
+{{--    <link href={{asset("assets/css/style.css")}} rel="stylesheet">--}}
+{{--    @endpush--}}
+{{--     --}}
+
           <main id="main">
 
               <!-- ======= Hero Section ======= -->
@@ -302,12 +303,6 @@
 
           </main><!-- End #main -->
 
+{{--          <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>--}}
 
-
-          <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-        @push('custom-scripts')
-
-        @endpush
-        </body>
   </div>
