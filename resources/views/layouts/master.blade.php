@@ -32,7 +32,8 @@
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
 
     @stack('custom-styles')
-    @livewireStyles
+{{--    @livewireStyles--}}
+    <livewire:styles/>
 </head>
 <body>
 <!-- ======= Top Bar ======= -->
@@ -179,7 +180,8 @@
 
 
 
-@livewireScripts
+{{--@livewireScripts--}}
+<livewire:scripts/>
 @yield('scripts')
 
 
