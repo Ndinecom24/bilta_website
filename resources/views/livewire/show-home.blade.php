@@ -132,33 +132,33 @@
             </section><!-- End About Section -->
 
 
-{{--            <!-- ======= Testimonials Section ======= -->--}}
-{{--            <section id="testimonials" class="testimonials">--}}
-{{--              <div class="container position-relative" data-aos="fade-up">--}}
+            <!-- ======= Testimonials Section ======= -->
+            <section id="testimonials" class="testimonials">
+              <div class="container position-relative" data-aos="fade-up">
 
-{{--                <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">--}}
-{{--                  <div class="swiper-wrapper">--}}
+                <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
+                  <div class="swiper-wrapper">
 
-{{--                      @foreach($testimonials as $testimonial)--}}
-{{--                    <div class="swiper-slide">--}}
-{{--                      <div class="testimonial-item">--}}
-{{--                        <img src="assets/img/testimonials/testimonies.jpg" class="testimonial-img" alt="">--}}
-{{--                        <h3>{{$testimonial->name ?? "--" }}</h3>--}}
-{{--                        <h4> {{$testimonial->title ?? "--" }} </h4>--}}
-{{--                        <p>--}}
-{{--                          <i class="bx bxs-quote-alt-left quote-icon-left"></i>--}}
-{{--                            {{$testimonial->testimonial ?? "--" }}--}}
-{{--                          <i class="bx bxs-quote-alt-right quote-icon-right"></i>--}}
-{{--                        </p>--}}
-{{--                      </div>--}}
-{{--                    </div><!-- End testimonial item -->--}}
-{{--                      @endforeach--}}
-{{--                  </div>--}}
-{{--                  <div class="swiper-pagination"></div>--}}
-{{--                </div>--}}
+                      @foreach($testimonials as $testimonial)
+                    <div class="swiper-slide">
+                      <div class="testimonial-item">
+                        <img src="assets/img/testimonials/testimonies.jpg" class="testimonial-img" alt="">
+                        <h3>{{$testimonial->name ?? "--" }}</h3>
+                        <h4> {{$testimonial->title ?? "--" }} </h4>
+                        <p>
+                          <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                            {{$testimonial->testimonial ?? "--" }}
+                          <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                        </p>
+                      </div>
+                    </div><!-- End testimonial item -->
+                      @endforeach
+                  </div>
+                  <div class="swiper-pagination"></div>
+                </div>
 
-{{--              </div>--}}
-{{--            </section><!-- End Testimonials Section -->--}}
+              </div>
+            </section><!-- End Testimonials Section -->
 
 
 
