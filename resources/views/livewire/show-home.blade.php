@@ -5,6 +5,7 @@
 {{--    @endpush--}}
 {{--     --}}
 
+          <main id="main">
 
               <!-- ======= Hero Section ======= -->
               @if( $home_intro->id ?? '00' != '00')
@@ -131,53 +132,53 @@
             </section><!-- End About Section -->
 
 
-            <!-- ======= Testimonials Section ======= -->
-            <section id="testimonials" class="testimonials">
-              <div class="container position-relative" data-aos="fade-up">
+{{--            <!-- ======= Testimonials Section ======= -->--}}
+{{--            <section id="testimonials" class="testimonials">--}}
+{{--              <div class="container position-relative" data-aos="fade-up">--}}
 
-                <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
-                  <div class="swiper-wrapper">
+{{--                <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">--}}
+{{--                  <div class="swiper-wrapper">--}}
 
-                      @foreach($testimonials as $testimonial)
-                    <div class="swiper-slide">
-                      <div class="testimonial-item">
-                        <img src="assets/img/testimonials/testimonies.jpg" class="testimonial-img" alt="">
-                        <h3>{{$testimonial->name ?? "--" }}</h3>
-                        <h4> {{$testimonial->title ?? "--" }} </h4>
-                        <p>
-                          <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                            {{$testimonial->testimonial ?? "--" }}
-                          <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                        </p>
-                      </div>
-                    </div><!-- End testimonial item -->
-                      @endforeach
-                  </div>
-                  <div class="swiper-pagination"></div>
-                </div>
+{{--                      @foreach($testimonials as $testimonial)--}}
+{{--                    <div class="swiper-slide">--}}
+{{--                      <div class="testimonial-item">--}}
+{{--                        <img src="assets/img/testimonials/testimonies.jpg" class="testimonial-img" alt="">--}}
+{{--                        <h3>{{$testimonial->name ?? "--" }}</h3>--}}
+{{--                        <h4> {{$testimonial->title ?? "--" }} </h4>--}}
+{{--                        <p>--}}
+{{--                          <i class="bx bxs-quote-alt-left quote-icon-left"></i>--}}
+{{--                            {{$testimonial->testimonial ?? "--" }}--}}
+{{--                          <i class="bx bxs-quote-alt-right quote-icon-right"></i>--}}
+{{--                        </p>--}}
+{{--                      </div>--}}
+{{--                    </div><!-- End testimonial item -->--}}
+{{--                      @endforeach--}}
+{{--                  </div>--}}
+{{--                  <div class="swiper-pagination"></div>--}}
+{{--                </div>--}}
 
-              </div>
-            </section><!-- End Testimonials Section -->
+{{--              </div>--}}
+{{--            </section><!-- End Testimonials Section -->--}}
 
 
 
-            <!-- ======= Team Section ======= -->
-            <section id="team" class="team section-bg">
-              <div class="container">
+{{--            <!-- ======= Team Section ======= -->--}}
+{{--            <section id="team" class="team section-bg">--}}
+{{--              <div class="container">--}}
 
-                <div class="section-title">
-                  <h2 data-aos="fade-up">Team</h2>
-                  <p data-aos="fade-up">"Welcome to our team! At BiLTA, we are proud to have a diverse and talented group of individuals working together to
-                     achieve our goals.<br> Our team is made up of passionate professionals who bring a wealth of experience and expertise to the table.</p>
-                </div>
+{{--                <div class="section-title">--}}
+{{--                  <h2 data-aos="fade-up">Team</h2>--}}
+{{--                  <p data-aos="fade-up">"Welcome to our team! At BiLTA, we are proud to have a diverse and talented group of individuals working together to--}}
+{{--                     achieve our goals.<br> Our team is made up of passionate professionals who bring a wealth of experience and expertise to the table.</p>--}}
+{{--                </div>--}}
 
-                <div class="row">
-                    @foreach($our_teams as $our_team)
-                  <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up">
-                    <div class="member">
-                      <div class="member-img">
-                          <img class="img-fluid" src="{{ $our_team->getFirstMedia('team_images')->getUrl()  }}"
-                                title="{{ $our_team->getFirstMedia('team_images')->name }}">
+{{--                <div class="row">--}}
+{{--                    @foreach($our_teams as $our_team)--}}
+{{--                  <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up">--}}
+{{--                    <div class="member">--}}
+{{--                      <div class="member-img">--}}
+{{--                          <img class="img-fluid" src="{{ $our_team->getFirstMedia('team_images')->getUrl()  }}"--}}
+{{--                                title="{{ $our_team->getFirstMedia('team_images')->name }}">--}}
 
 {{--                          <div class="social">--}}
 {{--                              <a href=""><i class="bi bi-twitter"></i></a>--}}
@@ -185,37 +186,37 @@
 {{--                              <a href=""><i class="bi bi-instagram"></i></a>--}}
 {{--                              <a href=""><i class="bi bi-linkedin"></i></a>--}}
 {{--                          </div>--}}
-                      </div>
-                      <div class="member-info">
-                        <h4>{{$our_team->name ?? "--"}}</h4>
-                        <span>{{$our_team->position ?? "--"}}</span>
-                      </div>
-                        <div class="member-info">
-                            <div class="row">
-                                <div class="col-12">
-                                    {{$our_team->details ?? "--"}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-                    @endforeach
-                </div>
+{{--                      </div>--}}
+{{--                      <div class="member-info">--}}
+{{--                        <h4>{{$our_team->name ?? "--"}}</h4>--}}
+{{--                        <span>{{$our_team->position ?? "--"}}</span>--}}
+{{--                      </div>--}}
+{{--                        <div class="member-info">--}}
+{{--                            <div class="row">--}}
+{{--                                <div class="col-12">--}}
+{{--                                    {{$our_team->details ?? "--"}}--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                  </div>--}}
+{{--                    @endforeach--}}
+{{--                </div>--}}
 
-              </div>
-            </section><!-- End Team Section -->
+{{--              </div>--}}
+{{--            </section><!-- End Team Section -->--}}
 
 
-            <!-- ======= Clients Section ======= -->
+{{--            <!-- ======= Clients Section ======= -->--}}
 
-            <section id="clients" class="clients">
-              <div class="text-center mb-3">
-                <h2 data-aos="fade-up">Our Partners</h2>
-            </div>
-               <div class="container" data-aos="fade-up">
+{{--            <section id="clients" class="clients">--}}
+{{--              <div class="text-center mb-3">--}}
+{{--                <h2 data-aos="fade-up">Our Partners</h2>--}}
+{{--            </div>--}}
+{{--               <div class="container" data-aos="fade-up">--}}
 
-                 <div class="clients-slider swiper">
-                   <div class="swiper-wrapper align-items-center">
+{{--                 <div class="clients-slider swiper">--}}
+{{--                   <div class="swiper-wrapper align-items-center">--}}
 {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-1.png" class="img-fluid" alt=""></div>--}}
 {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-2.png" class="img-fluid" alt=""></div>--}}
 {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-3.png" class="img-fluid" alt=""></div>--}}
@@ -224,83 +225,83 @@
 {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-6.png" class="img-fluid" alt=""></div>--}}
 {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-7.png" class="img-fluid" alt=""></div>--}}
 {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-8.png" class="img-fluid" alt=""></div>--}}
-                   </div>
-                   <div class="swiper-pagination"></div>
-                 </div>
+{{--                   </div>--}}
+{{--                   <div class="swiper-pagination"></div>--}}
+{{--                 </div>--}}
 
-               </div>
-             </section><!-- End Clients Section -->
-
-
-            <!-- ======= Contact Section ======= -->
-            <section id="contact" class="contact">
-              <div class="container">
-
-                <div class="section-title">
-                  <h2 data-aos="fade-up">Contact</h2>
-                  <p data-aos="fade-up">We value open communication and are always eager to connect with our clients,
-                    partners, and stakeholders. If you have any questions,<br>
-                    inquiries, or would like to discuss a potential collaboration, our team is here to assist you.</p>
-                </div>
-
-                <div class="row justify-content-center">
-
-                  <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up">
-                    <div class="info-box">
-                      <i class="bx bx-map"></i>
-                      <h3>Our Address</h3>
-                      <p>{{$contact_us->address ?? "--"}}</p>
-                    </div>
-                  </div>
-
-                  <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="info-box">
-                      <i class="bx bx-envelope"></i>
-                      <h3>Email Us</h3>
-                      <p>{{$contact_us->email ?? "info@bilta.org"}}</p>
-                    </div>
-                  </div>
-                  <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="info-box">
-                      <i class="bx bx-phone-call"></i>
-                      <h3>Call Us</h3>
-                      <p>{{$contact_us->phone ?? "000-000-000"}}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
-                  <div class="col-xl-9 col-lg-12 mt-4">
-                    <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-                      <div class="row">
-                        <div class="col-md-6 form-group">
-                          <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
-                        </div>
-                        <div class="col-md-6 form-group mt-3 mt-md-0">
-                          <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
-                        </div>
-                      </div>
-                      <div class="form-group mt-3">
-                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-                      </div>
-                      <div class="form-group mt-3">
-                        <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-                      </div>
-                      <div class="my-3">
-                        <div class="loading">Loading</div>
-                        <div class="error-message"></div>
-                        <div class="sent-message">Your message has been sent. Thank you!</div>
-                      </div>
-                      <div class="text-center"><button type="submit">Send Message</button></div>
-                    </form>
-                  </div>
-
-                </div>
-
-              </div>
-            </section><!-- End Contact Section -->
+{{--               </div>--}}
+{{--             </section><!-- End Clients Section -->--}}
 
 
+{{--            <!-- ======= Contact Section ======= -->--}}
+{{--            <section id="contact" class="contact">--}}
+{{--              <div class="container">--}}
+
+{{--                <div class="section-title">--}}
+{{--                  <h2 data-aos="fade-up">Contact</h2>--}}
+{{--                  <p data-aos="fade-up">We value open communication and are always eager to connect with our clients,--}}
+{{--                    partners, and stakeholders. If you have any questions,<br>--}}
+{{--                    inquiries, or would like to discuss a potential collaboration, our team is here to assist you.</p>--}}
+{{--                </div>--}}
+
+{{--                <div class="row justify-content-center">--}}
+
+{{--                  <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up">--}}
+{{--                    <div class="info-box">--}}
+{{--                      <i class="bx bx-map"></i>--}}
+{{--                      <h3>Our Address</h3>--}}
+{{--                      <p>{{$contact_us->address ?? "--"}}</p>--}}
+{{--                    </div>--}}
+{{--                  </div>--}}
+
+{{--                  <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up" data-aos-delay="100">--}}
+{{--                    <div class="info-box">--}}
+{{--                      <i class="bx bx-envelope"></i>--}}
+{{--                      <h3>Email Us</h3>--}}
+{{--                      <p>{{$contact_us->email ?? "info@bilta.org"}}</p>--}}
+{{--                    </div>--}}
+{{--                  </div>--}}
+{{--                  <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up" data-aos-delay="200">--}}
+{{--                    <div class="info-box">--}}
+{{--                      <i class="bx bx-phone-call"></i>--}}
+{{--                      <h3>Call Us</h3>--}}
+{{--                      <p>{{$contact_us->phone ?? "000-000-000"}}</p>--}}
+{{--                    </div>--}}
+{{--                  </div>--}}
+{{--                </div>--}}
+
+{{--                <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">--}}
+{{--                  <div class="col-xl-9 col-lg-12 mt-4">--}}
+{{--                    <form action="forms/contact.php" method="post" role="form" class="php-email-form">--}}
+{{--                      <div class="row">--}}
+{{--                        <div class="col-md-6 form-group">--}}
+{{--                          <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-md-6 form-group mt-3 mt-md-0">--}}
+{{--                          <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>--}}
+{{--                        </div>--}}
+{{--                      </div>--}}
+{{--                      <div class="form-group mt-3">--}}
+{{--                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>--}}
+{{--                      </div>--}}
+{{--                      <div class="form-group mt-3">--}}
+{{--                        <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>--}}
+{{--                      </div>--}}
+{{--                      <div class="my-3">--}}
+{{--                        <div class="loading">Loading</div>--}}
+{{--                        <div class="error-message"></div>--}}
+{{--                        <div class="sent-message">Your message has been sent. Thank you!</div>--}}
+{{--                      </div>--}}
+{{--                      <div class="text-center"><button type="submit">Send Message</button></div>--}}
+{{--                    </form>--}}
+{{--                  </div>--}}
+
+{{--                </div>--}}
+
+{{--              </div>--}}
+{{--            </section><!-- End Contact Section -->--}}
+
+          </main><!-- End #main -->
 
           <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
