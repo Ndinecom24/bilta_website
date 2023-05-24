@@ -99,7 +99,7 @@ class ShowHomeIntro extends Component
         // Validate request
         try {
             // Update our_home_intro
-            HomeIntro::find($this->our_home_intro_id)
+            $home_intro = HomeIntro::find($this->our_home_intro_id)
                 ->fill(
                     [
                         'name' => $this->name,
@@ -108,8 +108,6 @@ class ShowHomeIntro extends Component
                         'created_by' => auth()->user()->id
                     ]
                 )->save();
-
-            $home_intro = HomeIntro::find($this->our_home_intro_id);
 
             if (isset($this->intro_image)) {
                 try {

@@ -153,7 +153,6 @@ class ShowLeadershipTeam extends Component
                     ->toMediaCollection('team_images');
             }
 
-
             session()->flash('success', 'Leadership Member Updated Successfully!!');
 
             $this->cancel();
