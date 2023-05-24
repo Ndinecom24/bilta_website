@@ -28,8 +28,8 @@ class ShowLeadershipTeam extends Component
         'position' => 'required',
         'email' => 'required',
         'phone' => 'required',
-
-        'user_image' => 'image|max:3072', // 1MB Max
+        'user_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
+//        'user_image' => 'image|max:3072', // 1MB Max
 
     ];
 
