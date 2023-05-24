@@ -99,7 +99,7 @@ class ShowHomeIntro extends Component
         // Validate request
         try {
             // Update our_home_intro
-            $home_intro = HomeIntro::find($this->our_home_intro_id)
+            HomeIntro::find($this->our_home_intro_id)
                 ->fill(
                     [
                         'name' => $this->name,
@@ -109,14 +109,16 @@ class ShowHomeIntro extends Component
                     ]
                 )->save();
 
+            $home_intro = HomeIntro::find($this->our_home_intro_id);
+
             if (isset($this->intro_image)) {
                 try {
                     $home_intro->clearMediaCollection('home_intro_images');
                     $home_intro->addMedia($this->intro_image)
                         ->toMediaCollection('home_intro_images');
-                    session()->flash('error', 'Something goes wrong while updating Home Intro!!');
                     $this->cancel();
                 } catch (Exception $e) {
+                    session()->flash('error', 'Something goes wrong while updating Home Intro!!');
                 }
 
             }
