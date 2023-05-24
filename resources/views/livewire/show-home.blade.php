@@ -162,49 +162,49 @@
 
 
 
-{{--            <!-- ======= Team Section ======= -->--}}
-{{--            <section id="team" class="team section-bg">--}}
-{{--              <div class="container">--}}
+            <!-- ======= Team Section ======= -->
+            <section id="team" class="team section-bg">
+              <div class="container">
 
-{{--                <div class="section-title">--}}
-{{--                  <h2 data-aos="fade-up">Team</h2>--}}
-{{--                  <p data-aos="fade-up">"Welcome to our team! At BiLTA, we are proud to have a diverse and talented group of individuals working together to--}}
-{{--                     achieve our goals.<br> Our team is made up of passionate professionals who bring a wealth of experience and expertise to the table.</p>--}}
-{{--                </div>--}}
+                <div class="section-title">
+                  <h2 data-aos="fade-up">Team</h2>
+                  <p data-aos="fade-up">"Welcome to our team! At BiLTA, we are proud to have a diverse and talented group of individuals working together to
+                     achieve our goals.<br> Our team is made up of passionate professionals who bring a wealth of experience and expertise to the table.</p>
+                </div>
 
-{{--                <div class="row">--}}
-{{--                    @foreach($our_teams as $our_team)--}}
-{{--                  <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up">--}}
-{{--                    <div class="member">--}}
-{{--                      <div class="member-img">--}}
-{{--                          <img class="img-fluid" src="{{ $our_team->getFirstMedia('team_images')->getUrl()  }}"--}}
-{{--                                title="{{ $our_team->getFirstMedia('team_images')->name }}">--}}
+                <div class="row">
+                    @foreach($our_teams as $our_team)
+                  <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up">
+                    <div class="member">
+                      <div class="member-img">
+                          <img class="img-fluid" src="{{ $our_team->getFirstMedia('team_images')->getUrl()  }}"
+                                title="{{ $our_team->getFirstMedia('team_images')->name }}">
 
-{{--                          <div class="social">--}}
-{{--                              <a href=""><i class="bi bi-twitter"></i></a>--}}
-{{--                              <a href=""><i class="bi bi-facebook"></i></a>--}}
-{{--                              <a href=""><i class="bi bi-instagram"></i></a>--}}
-{{--                              <a href=""><i class="bi bi-linkedin"></i></a>--}}
-{{--                          </div>--}}
-{{--                      </div>--}}
-{{--                      <div class="member-info">--}}
-{{--                        <h4>{{$our_team->name ?? "--"}}</h4>--}}
-{{--                        <span>{{$our_team->position ?? "--"}}</span>--}}
-{{--                      </div>--}}
-{{--                        <div class="member-info">--}}
-{{--                            <div class="row">--}}
-{{--                                <div class="col-12">--}}
-{{--                                    {{$our_team->details ?? "--"}}--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                  </div>--}}
-{{--                    @endforeach--}}
-{{--                </div>--}}
+                          <div class="social">
+                              <a href=""><i class="bi bi-twitter"></i></a>
+                              <a href=""><i class="bi bi-facebook"></i></a>
+                              <a href=""><i class="bi bi-instagram"></i></a>
+                              <a href=""><i class="bi bi-linkedin"></i></a>
+                          </div>
+                      </div>
+                      <div class="member-info">
+                        <h4>{{$our_team->name ?? "--"}}</h4>
+                        <span>{{$our_team->position ?? "--"}}</span>
+                      </div>
+                        <div class="member-info">
+                            <div class="row">
+                                <div class="col-12">
+                                    {{$our_team->details ?? "--"}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                    @endforeach
+                </div>
 
-{{--              </div>--}}
-{{--            </section><!-- End Team Section -->--}}
+              </div>
+            </section><!-- End Team Section -->
 
 
 {{--            <!-- ======= Clients Section ======= -->--}}
