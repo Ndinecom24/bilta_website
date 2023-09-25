@@ -13,7 +13,7 @@ class ShowPrayerPoints extends Component
 
     use WithPagination;
 
-    public $weekly_prayer_point_id, $details, $title, $status_id , $post_date, $scriptures;
+    public $weekly_prayer_point_id, $details, $title, $status_id , $post_date, $scriptures, $year, $month, $week, $day;
 
     public $updateWeeklyPrayerPoint = false;
     protected $listeners = [
@@ -31,7 +31,7 @@ class ShowPrayerPoints extends Component
     public function render()
     {
         $statuses = Status::all();
-        $weekly_prayer_points = WeeklyPrayerPoints::select('id', 'title', 'details', 'status_id', 'post_date','scriptures', 'created_by')->paginate(20);
+        $weekly_prayer_points = WeeklyPrayerPoints::select('id', 'title', 'details', 'status_id', 'post_date','scriptures', 'created_by', 'year', 'month', 'week', 'day')->paginate(20);
         return view('livewire.admin.prayer-points-page.index')->with(compact('weekly_prayer_points', 'statuses'));
     }
 
@@ -46,6 +46,8 @@ class ShowPrayerPoints extends Component
 
     public function store()
     {
+        $date = date_parse_from_format('Y-m-d W', $this->post_date);
+
         // Validate Form Request
         $this->validate();
         try {
@@ -62,7 +64,11 @@ class ShowPrayerPoints extends Component
                     'post_date' => $this->post_date,
                     'scriptures' => $this->scriptures,
                     'status_id' => $this->status_id,
-                    'created_by' => auth()->user()->id
+                    'created_by' => auth()->user()->id ,
+                    'year'=> $date['year'],
+                    'month' => $date['month'],
+                    'week' =>  date("W", strtotime($this->post_date )) ,
+                    'day' => $date['day'],
                 ]
 
             );
@@ -89,6 +95,10 @@ class ShowPrayerPoints extends Component
         $this->post_date = $weekly_prayer_point->post_date;
         $this->scriptures = $weekly_prayer_point->scriptures;
         $this->status_id = $weekly_prayer_point->status_id;
+        $this->year = $weekly_prayer_point->year;
+        $this->month = $weekly_prayer_point->month;
+        $this->week = $weekly_prayer_point->week;
+        $this->day = $weekly_prayer_point->day;
         $this->weekly_prayer_point_id = $weekly_prayer_point->id;
         $this->updateWeeklyPrayerPoint = true;
     }
@@ -104,6 +114,7 @@ class ShowPrayerPoints extends Component
         // Validate request
         $this->validate();
         try {
+            $date = date_parse_from_format('Y-m-d W', $this->post_date);
             // Update weekly_prayer_point
             WeeklyPrayerPoints::find($this->weekly_prayer_point_id)->fill([
                 'title' => $this->title,
@@ -111,7 +122,11 @@ class ShowPrayerPoints extends Component
                 'post_date' => $this->post_date,
                 'scriptures' => $this->scriptures,
                 'status_id' => $this->status_id,
-                'created_by' => auth()->user()->id
+                'created_by' => auth()->user()->id,
+                'year'=> $date['year'],
+                'month' => $date['month'],
+                'week' =>  date("W", strtotime($this->post_date )) ,
+                'day' => $date['day'],
             ])->save();
             session()->flash('success', 'Weekly Prayer Point Updated Successfully!!');
 

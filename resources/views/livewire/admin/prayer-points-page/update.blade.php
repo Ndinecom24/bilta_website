@@ -4,15 +4,13 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateModalLabel">Update FAQs</h5>
+                <h5 class="modal-title" id="updateModalLabel">Update Weekly Prayer Points</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span>×</span>
                 </button>
             </div>
             <form>
                 <div class="modal-body">
-
-
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
@@ -50,7 +48,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="faqFormControlInput4">Post Date</label>
-                                <input type="date" class="form-control" id="faqFormControlInput4" wire:model="post_date"
+                                <input type="text" class="form-control" id="faqFormControlInput4" wire:model="post_date"
                                        placeholder="Enter Post Date">
                                 @error('post_date') <span
                                     class="form-check-label text-danger ">{{ $message }}</span>@enderror
@@ -76,7 +74,7 @@
 
                 <div class="modal-footer">
                     <button wire:click.prevent="update()" class="btn btn-success ">Save</button>
-                    <button wire:click.prevent="cancel()" class="btn btn-danger">Cancel</button>
+                    <button wire:click.prevent="cancel()"  data-dismiss="modal" class="btn btn-danger">Cancel</button>
                 </div>
             </form>
         </div>

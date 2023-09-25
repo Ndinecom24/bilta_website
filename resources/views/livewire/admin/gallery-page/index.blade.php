@@ -3,7 +3,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">FAQs</h1>
+        <h1 class="h3 mb-0 text-gray-800">Gallery Item</h1>
     </div>
 
     <!-- Content Row -->
@@ -30,8 +30,8 @@
                 </div>
             @endif
 
-            @include('livewire.admin.faqs-page.update')
-            @include('livewire.admin.faqs-page.create')
+            @include('livewire.admin.gallery-page.update')
+            @include('livewire.admin.gallery-page.create')
 
         </div>
         <div class="col-md-12 mb-2">
@@ -45,7 +45,7 @@
                             </button>
                         </div>
                         <div class="col-lg-10 col-md-10 col-sm-6">
-                            <h5>Frequently Asked Questions</h5>
+                            <h5>Gallery Item</h5>
                         </div>
 
                     </div>
@@ -55,33 +55,43 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>Question</th>
-                                <th>Answer</th>
+                                <th>Gallery Item</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Category</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @if (count($faqs) > 0)
-                                @foreach ($faqs as $key=>$faq)
+                            @if (count($gallery_items) > 0)
+                                @foreach ($gallery_items as $key=>$gallery_item)
                                     <tr>
-                                        <td>
-                                            {{$faq->question}}
+                                        <td >
+                                            <img  src="{{ $gallery_item->getFirstMedia('gallery_images')->getUrl()  }}"
+                                                  style="width:100%; height: 60px "
+                                                  title="{{ $gallery_item->getFirstMedia('gallery_images')->name }}">
                                         </td>
                                         <td>
-                                            {{$faq->answer}}
+                                            {{$gallery_item->name}}
                                         </td>
                                         <td>
-                                            {{$faq->status->name ??""}}
+                                            {{$gallery_item->description}}
+                                        </td>
+                                        <td>
+                                            {{$gallery_item->category->name ?? "-"}}
+                                        </td>
+                                        <td>
+                                            {{$gallery_item->status->name ??""}}
                                         </td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <button wire:click="edit({{$faq->id}})"
+                                                    <button wire:click="edit({{$gallery_item->id}})"
                                                             data-toggle="modal" data-target="#updateModal"
                                                             class="btn btn-primary btn-sm">Edit
                                                     </button>
-                                                    <button onclick="+({{$faq->id}})"
+                                                    <button onclick="deleteGalleryItem({{$gallery_item->id}})"
                                                             class="btn btn-danger btn-sm">Delete
                                                     </button>
                                                 </div>
@@ -92,7 +102,7 @@
                             @else
                                 <tr>
                                     <td colspan="3" align="center">
-                                        No FAQs Found.
+                                        No Gallery Item Found.
                                     </td>
                                 </tr>
                             @endif
@@ -105,9 +115,9 @@
     </div>
 
     <script>
-        function deleteFAQ(id) {
+        function deleteGalleryItem(id) {
             if (confirm("Are you sure to delete this record?"))
-                window.livewire.emit('deleteFAQ', id);
+                window.livewire.emit('deleteGalleryItem', id);
         }
     </script>
 

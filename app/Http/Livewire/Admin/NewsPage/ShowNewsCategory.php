@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Livewire\Admin\FaqsPage;
+namespace App\Http\Livewire\Admin\NewsPage;
 
 use App\Models\Bilta\FAQs;
 use App\Models\System\Status;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class ShowFaqs extends Component
+class ShowNewsCategory extends Component
 {
     use WithPagination;
 
-    public $faq_id, $answer, $question, $status_id ;
+    public $news_category_id, $name, $description, $status_id ;
 
     public $updateFAQs = false;
     protected $listeners = [
@@ -19,22 +19,22 @@ class ShowFaqs extends Component
     ];
     // Validation Rules
     protected $rules = [
-        'question' => 'required',
-        'answer' => 'required',
+        'description' => 'required',
+        'name' => 'required',
         'status_id' => 'required',
     ];
 
     public function render()
     {
         $statuses = Status::select('id', 'name')->get();
-        $faqs = FAQs::select('id', 'question', 'answer', 'status_id')->paginate(20);
-        return view('livewire.admin.faqs-page.index')->with(compact('faqs', 'statuses'));
+        $news_categorys = FAQs::select('id', 'description', 'name', 'status_id')->paginate(20);
+        return view('livewire.admin.news_categorys-page.index')->with(compact('news_categorys', 'statuses'));
     }
 
     public function resetFields()
     {
-        $this->question = '';
-        $this->answer = '';
+        $this->description = '';
+        $this->name = '';
         $this->status_id = '';
     }
 
@@ -45,12 +45,12 @@ class ShowFaqs extends Component
         try {
             // Create FAQs
             FAQs::updateOrCreate([
-                'question' => $this->question,
-                'answer' => $this->answer,
+                'description' => $this->description,
+                'name' => $this->name,
             ],
                 [
-                    'question' => $this->question,
-                    'answer' => $this->answer,
+                    'description' => $this->description,
+                    'name' => $this->name,
                     'status_id' => $this->status_id,
                     'created_by' => auth()->user()->id
                 ]
@@ -73,11 +73,11 @@ class ShowFaqs extends Component
 
     public function edit($id)
     {
-        $faq = FAQs::findOrFail($id);
-        $this->question = $faq->question;
-        $this->answer = $faq->answer;
-        $this->status_id = $faq->status_id;
-        $this->faq_id = $faq->id;
+        $news_category = FAQs::findOrFail($id);
+        $this->description = $news_category->description;
+        $this->name = $news_category->name;
+        $this->status_id = $news_category->status_id;
+        $this->news_category_id = $news_category->id;
         $this->updateFAQs = true;
     }
 
@@ -92,10 +92,10 @@ class ShowFaqs extends Component
         // Validate request
         $this->validate();
         try {
-            // Update faq
-            FAQs::find($this->faq_id)->fill([
-                'question' => $this->question,
-                'answer' => $this->answer,
+            // Update news_category
+            News::find($this->news_category_id)->fill([
+                'description' => $this->description,
+                'name' => $this->name,
                 'status_id' => $this->status_id,
                 'created_by' => auth()->user()->id
             ])->save();
@@ -103,7 +103,7 @@ class ShowFaqs extends Component
 
             $this->cancel();
         } catch (\Exception $e) {
-            session()->flash('error', 'Something goes wrong while updating faq!!');
+            session()->flash('error', 'Something goes wrong while updating news category!!');
             $this->cancel();
         }
     }
@@ -114,7 +114,7 @@ class ShowFaqs extends Component
             FAQs::find($id)->delete();
             session()->flash('success', "FAQs Deleted Successfully!!");
         } catch (\Exception $e) {
-            session()->flash('error', "Something goes wrong while deleting faq!!");
+            session()->flash('error', "Something goes wrong while deleting news category!!");
         }
     }
 

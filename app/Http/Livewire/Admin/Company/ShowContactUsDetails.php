@@ -10,7 +10,14 @@ class ShowContactUsDetails  extends Component
 {
     use WithPagination ;
 
-    public  $contact_us_id, $phone, $email, $address , $message, $google_maps , $facebook_url,
+    public
+        $contact_us_id,
+        $phone,
+        $email,
+        $address ,
+        $message,
+        $google_maps ,
+        $facebook_url,
         $linkedin_url,
         $twitter_url,
         $youtube,

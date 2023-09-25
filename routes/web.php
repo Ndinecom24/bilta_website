@@ -7,6 +7,9 @@ use App\Http\Livewire\Admin\Company\ShowHomeIntro;
 use App\Http\Livewire\Admin\Company\ShowLeadershipTeam;
 use App\Http\Livewire\Admin\Company\ShowServices;
 use App\Http\Livewire\Admin\Company\ShowValues;
+use App\Http\Livewire\Admin\FaqsPage\ShowFaqs;
+use App\Http\Livewire\Admin\GalleryPage\ShowItemGallery;
+use App\Http\Livewire\Admin\Other\ShowItemCategory;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonies;
@@ -15,8 +18,6 @@ use App\Http\Livewire\ShowGallery;
 use App\Http\Livewire\ShowHome;
 use App\Http\Livewire\ShowVideos;
 use App\Http\Livewire\ShowWeeklyPrayerPoints;
-use App\Http\Livewire\Site\ShowFAQs;
-use App\Http\Livewire\Site\ShowHomePage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,11 +66,13 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/company/services', ShowServices::class)->name('admin.company.services');
         Route::get('/company/values', ShowValues::class)->name('admin.company.values');
         Route::get('/company/contact-us', ShowContactUsDetails::class)->name('admin.company.contact-us');
-        Route::get('/company/faqs', ShowFAQs::class)->name('admin.company.faqs');
+        Route::get('/company/faqs', ShowFaqs::class)->name('admin.company.faqs');
         Route::get('/page/weekly-prayer-points', ShowPrayerPoints::class)->name('admin.page.weekly-prayer-points');
         Route::get('/page/our-team', ShowLeadershipTeam::class)->name('admin.page.our-team');
         Route::get('/page/testimonies', ShowTestimonies::class)->name('admin.page.testimonies');
         Route::get('/page/testimonial', ShowTestimonialsPage::class)->name('admin.page.testimonial');
         Route::get('/company/intro', ShowHomeIntro::class)->name('admin.page.intro');
+        Route::get('/item/categories', ShowItemCategory::class)->name('admin.page.item.category');
+        Route::get('/item/gallery', ShowItemGallery::class)->name('admin.page.item.gallery');
     });
 });

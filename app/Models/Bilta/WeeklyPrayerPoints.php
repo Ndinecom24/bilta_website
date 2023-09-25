@@ -18,6 +18,9 @@ class WeeklyPrayerPoints extends Model
         'details',
         'title',
         'scriptures',
+        'year',
+        'month',
+        'week',
         'created_by'
     ];
 
@@ -25,6 +28,6 @@ class WeeklyPrayerPoints extends Model
         'status'
     ];
     public function status (){
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 }

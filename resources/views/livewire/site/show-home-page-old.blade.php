@@ -33,8 +33,7 @@
                 <article>
                     <h3 class="heading" style="color: #e79217">Bible and Literature Translation Association.</h3>
                     <p>In nibh nullam egestas velit laoreet nullam elementum ipsum pharetra suscipit leo augue pretium felis
-                        nisl vitae ipsum curabitur quis libero.</p>
-                    {{--                <footer><a class="btn" href="#">Audio Bible</a></footer>--}}
+                        nisl vitae ipsum curabitur quis libero. </p>
                 </article>
                 <!-- ################################################################################################ -->
             </div>
