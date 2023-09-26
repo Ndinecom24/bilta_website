@@ -13,6 +13,7 @@ use App\Http\Livewire\Admin\Other\ShowItemCategory;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonies;
+use App\Http\Livewire\Admin\VideosPage\ShowItemVidoes;
 use App\Http\Livewire\ShowAbout;
 use App\Http\Livewire\ShowGallery;
 use App\Http\Livewire\ShowHome;
@@ -74,5 +75,6 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/company/intro', ShowHomeIntro::class)->name('admin.page.intro');
         Route::get('/item/categories', ShowItemCategory::class)->name('admin.page.item.category');
         Route::get('/item/gallery', ShowItemGallery::class)->name('admin.page.item.gallery');
+        Route::get('/item/videos', ShowItemVidoes::class)->name('admin.page.item.videos');
     });
 });

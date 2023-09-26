@@ -51,7 +51,7 @@
                 <a class="collapse-item" href="{{route('admin.page.testimonies')}}">Testimonies</a>
                 <a class="collapse-item" href="{{route('admin.page.testimonial')}}">Testimonial</a>
                 <a class="collapse-item" href="{{route('admin.page.item.gallery')}}">Gallery</a>
-                <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Videos</a>
+                <a class="collapse-item" href="{{route('admin.page.item.videos')}}">Videos</a>
                 <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Projects</a>
                 <a class="collapse-item" href="{{route('admin.page.item.category')}}">Item Category</a>
             </div>
