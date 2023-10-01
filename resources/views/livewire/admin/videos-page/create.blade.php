@@ -48,6 +48,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="faqFormControlInput2">Type</label>
+                                <option>--Choose--</option>
                                 <select  required class="form-control" id="faqFormControlInput3" wire:model.defer="type" >
                                    <option value="Videos">Videos</option>
                                 </select>

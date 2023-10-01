@@ -7,7 +7,7 @@ use App\Models\System\Status;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class ShowNewsCategory extends Component
+class ShowNewsItemDetails extends Component
 {
     use WithPagination;
 

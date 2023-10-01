@@ -9,6 +9,8 @@ use App\Http\Livewire\Admin\Company\ShowServices;
 use App\Http\Livewire\Admin\Company\ShowValues;
 use App\Http\Livewire\Admin\FaqsPage\ShowFaqs;
 use App\Http\Livewire\Admin\GalleryPage\ShowItemGallery;
+use App\Http\Livewire\Admin\NewsPage\ShowNewsItem;
+use App\Http\Livewire\Admin\NewsPage\ShowNewsItemDetails;
 use App\Http\Livewire\Admin\Other\ShowItemCategory;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
@@ -76,5 +78,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/categories', ShowItemCategory::class)->name('admin.page.item.category');
         Route::get('/item/gallery', ShowItemGallery::class)->name('admin.page.item.gallery');
         Route::get('/item/videos', ShowItemVidoes::class)->name('admin.page.item.videos');
+        Route::get('/item/news', ShowNewsItem::class)->name('admin.page.item.news');
+        Route::get('/item/news/{item}/details', ShowNewsItemDetails::class)->name('admin.page.item.news.details');
     });
 });

@@ -47,7 +47,7 @@
                 <h6 class="collapse-header">Other Pages:</h6>
                 <a class="collapse-item" href="{{route('admin.company.faqs')}}">FAQs</a>
                 <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Weekly Prayer Points</a>
-                <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">News</a>
+                <a class="collapse-item" href="{{route('admin.page.item.news')}}">News</a>
                 <a class="collapse-item" href="{{route('admin.page.testimonies')}}">Testimonies</a>
                 <a class="collapse-item" href="{{route('admin.page.testimonial')}}">Testimonial</a>
                 <a class="collapse-item" href="{{route('admin.page.item.gallery')}}">Gallery</a>

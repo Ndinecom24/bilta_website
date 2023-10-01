@@ -3,7 +3,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">FAQs</h1>
+        <h1 class="h3 mb-0 text-gray-800">News</h1>
     </div>
 
     <!-- Content Row -->
@@ -30,8 +30,8 @@
                 </div>
             @endif
 
-            @include('livewire.admin.faqs-page.update')
-            @include('livewire.admin.faqs-page.create')
+            @include('livewire.admin.news-page.update')
+            @include('livewire.admin.news-page.create')
 
         </div>
         <div class="col-md-12 mb-2">
@@ -45,7 +45,7 @@
                             </button>
                         </div>
                         <div class="col-lg-10 col-md-10 col-sm-6">
-                            <h5>Frequently Asked Questions</h5>
+                            <h5>News Items</h5>
                         </div>
 
                     </div>
@@ -77,7 +77,7 @@
                                                             data-toggle="modal" data-target="#updateModal"
                                                             class="btn btn-primary btn-sm">Edit
                                                     </button>
-                                                    <button onclick="deleteFAQ({{$faq->id}})"
+                                                    <button onclick="deleteNews({{$faq->id}})"
                                                             class="btn btn-danger btn-sm">Delete
                                                     </button>
                                                 </div>
@@ -88,7 +88,7 @@
                             @else
                                 <tr>
                                     <td colspan="3" align="center">
-                                        No FAQs Found.
+                                        No News Found.
                                     </td>
                                 </tr>
                             @endif
@@ -101,9 +101,9 @@
     </div>
 
     <script>
-        function deleteFAQ(id) {
+        function deleteNews(id) {
             if (confirm("Are you sure to delete this record?"))
-                window.livewire.emit('deleteFAQ', id);
+                window.livewire.emit('deleteNews', id);
         }
     </script>
 
