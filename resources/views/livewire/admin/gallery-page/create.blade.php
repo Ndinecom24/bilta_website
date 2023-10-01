@@ -48,8 +48,9 @@
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="faqFormControlInput2">Type</label>
-                                <option>--Choose--</option>
+
                                 <select  required class="form-control" id="faqFormControlInput3" wire:model="type" >
+                                    <option>--Choose--</option>
                                    <option value="Images">Images</option>
                                 </select>
                                 @error('type') <span
