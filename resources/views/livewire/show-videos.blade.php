@@ -14,7 +14,7 @@
 
               <div class="row">
                   @foreach( $video_items as $video)
-                      <div class="col-md-6 d-flex align-items-stretch" data-aos="fade-up">
+                      <div class="col-md-6 col-sm-12 d-flex align-items-stretch" data-aos="fade-up">
                           <div class="card">
                       <a href="https://www.youtube.com/embed/{{$video->video_link}}" class="media-1 m-2" data-fancybox="gallery">
 

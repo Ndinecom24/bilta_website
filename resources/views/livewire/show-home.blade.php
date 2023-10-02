@@ -8,7 +8,7 @@
           <main id="main">
 
               <!-- ======= Hero Section ======= -->
-              @if( $home_intro->id ?? '00' != '00')
+              @if( $home_intro->getFirstMedia('home_intro_images') ?? '00' != '00')
                   <section id="hero"
                            style="background-image:url('{{ $home_intro->getFirstMedia('home_intro_images')->getUrl() ?? ""  }}')"
                            class="d-flex flex-column justify-content-center align-items-center">

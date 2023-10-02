@@ -8,7 +8,7 @@
             organization's incredible <br> work in translating and promoting Bible and literary texts across different cultures
 
          <div class="row" data-aos="fade-up" data-aos-delay="100">
-           <div class="col-lg-12 d-flex justify-content-center">
+           <div class="col-lg-12 col-sm-12  d-flex justify-content-center">
              <ul id="portfolio-flters">
                <li data-filter="*" class="filter-active">All</li>
                  @foreach($categories as $category)
