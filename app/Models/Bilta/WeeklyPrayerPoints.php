@@ -21,6 +21,7 @@ class WeeklyPrayerPoints extends Model
         'year',
         'month',
         'week',
+        'day',
         'created_by'
     ];
 

@@ -46,7 +46,16 @@ class ShowPrayerPoints extends Component
 
     public function store()
     {
-        $date = date_parse_from_format('Y-m-d W', $this->post_date);
+        $date = date_parse_from_format('Y-m-d', $this->post_date);
+
+       // $date_info = $date ;
+//        if ($date_info['error_count'] === 0 && $date_info['warning_count'] === 0) {
+//            $week_number = date('W', mktime(0, 0, 0, $date_info['month'], $date_info['day'], $date_info['year']));
+//        } else {
+//            $week_number = 0 ;
+//        }
+//        dd([  date("W", strtotime($this->post_date )) , $week_number]);
+
 
         // Validate Form Request
         $this->validate();
@@ -67,7 +76,7 @@ class ShowPrayerPoints extends Component
                     'created_by' => auth()->user()->id ,
                     'year'=> $date['year'],
                     'month' => $date['month'],
-                    'week' =>  date("W", strtotime($this->post_date )) ,
+                    'week' =>  date("W", strtotime($this->post_date ))  ,
                     'day' => $date['day'],
                 ]
 

@@ -4,11 +4,34 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <div class="row">
+                    <div class="col-12">
                 <h5 class="modal-title" id="updateModalLabel">Update Weekly Prayer Points</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span>×</span>
-                </button>
             </div>
+            <div class="col-12">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                @if(session()->has('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session()->get('success') }}
+                    </div>
+                @endif
+                @if(session()->has('error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session()->get('error') }}
+                    </div>
+                @endif
+            </div>
+        </div>
+
+    </div>
             <form>
                 <div class="modal-body">
                     <div class="row">

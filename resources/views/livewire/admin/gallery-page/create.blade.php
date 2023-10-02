@@ -4,10 +4,32 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="faqModalLabel">Create Gallery Item</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true close-btn">×</span>
-                </button>
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="modal-title" id="faqModalLabel">Create Gallery Item</h5>
+                    </div>
+                    <div class="col-12">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if(session()->has('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session()->get('success') }}
+                            </div>
+                        @endif
+                        @if(session()->has('error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ session()->get('error') }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
             <form>
                 <div class="modal-body">
@@ -28,7 +50,7 @@
                             <div class="form-group">
                                 <label for="faqFormControlInput1">Name</label>
                                 <input type="text" class="form-control" id="faqFormControlInput1"
-                                          placeholder="Enter Name" wire:model="name">
+                                       placeholder="Enter Name" wire:model="name">
                                 @error('name') <span class="text-danger ">{{ $message }}</span>@enderror
                             </div>
                         </div>
@@ -37,7 +59,8 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="faqFormControlInput2">Description</label>
-                                <textarea rows="3" class="form-control" id="faqFormControlInput2" wire:model="description"
+                                <textarea rows="3" class="form-control" id="faqFormControlInput2"
+                                          wire:model="description"
                                           placeholder="Enter Description"></textarea>
                                 @error('description') <span
                                     class="form-check-label text-danger ">{{ $message }}</span>@enderror
@@ -49,9 +72,9 @@
                             <div class="form-group">
                                 <label for="faqFormControlInput2">Type</label>
 
-                                <select  required class="form-control" id="faqFormControlInput3" wire:model="type" >
+                                <select required class="form-control" id="faqFormControlInput3" wire:model="type">
                                     <option>--Choose--</option>
-                                   <option value="Images">Images</option>
+                                    <option value="Images">Images</option>
                                 </select>
                                 @error('type') <span
                                     class="form-check-label text-danger ">{{ $message }}</span>@enderror
@@ -61,7 +84,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="item_category_id">Category</label>
-                                <select  class="form-control" id="item_category_id" wire:model="item_category_id" >
+                                <select class="form-control" id="item_category_id" wire:model="item_category_id">
                                     <option>--Choose--</option>
                                     @foreach($item_categories as $item_category )
                                         <option value="{{$item_category->id}}">{{$item_category->name}}</option>
@@ -72,9 +95,9 @@
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12">
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="status_id">Status</label>
-                                <select  class="form-control" id="status_id" wire:model="status_id" >
+                                <select class="form-control" id="status_id" wire:model="status_id">
                                     <option>--Choose--</option>
                                     @foreach($statuses as $status )
                                         <option value="{{$status->id}}">{{$status->name}}</option>
