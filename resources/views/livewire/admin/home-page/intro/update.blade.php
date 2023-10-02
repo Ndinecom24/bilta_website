@@ -42,9 +42,11 @@
                             <div class="form-group">
                                 <label for="contactUsFormControlInput10">Current Image</label>
                                 @if(isset($home_intro))
+                                    @if( $home_intro->getFirstMedia('home_intro_images') ?? '00' != '00')
                                     <img  src="{{ $home_intro->getFirstMedia('home_intro_images')->getUrl()  }}"
                                             style="width:100%; height: 150px "
                                             title="{{ $home_intro->getFirstMedia('home_intro_images')->name }}">
+                                    @endif
 
                                 @endif
                                 @error('intro_image') <span class="text-danger ">{{ $message }}</span>@enderror

@@ -24,7 +24,7 @@
                       </div>
                   </section> <!-- End Hero -->
               @else
-                  <section id="hero" style="background: url( {{asset('assets/img/hero-bg3.jpg')}}  )  "
+                  <section id="hero" style="background: url( {{asset('assets/img/biblee017c8414_1920.png')}}  )  "
                            class="d-flex flex-column justify-content-center align-items-center">
                       <div class="container" data-aos="fade-in">
                           <h1>Welcome to BiLTA</h1>

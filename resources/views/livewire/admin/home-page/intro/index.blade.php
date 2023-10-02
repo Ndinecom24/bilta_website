@@ -67,9 +67,11 @@
 
                                     <tr>
                                         <td>
+                                            @if( $home_intro->getFirstMedia('home_intro_images') ?? '00' != '00')
                                             <img  src="{{ $home_intro->getFirstMedia('home_intro_images')->getUrl()  }}"
                                                   style="width:100%; height: 60px "
                                                   title="{{ $home_intro->getFirstMedia('home_intro_images')->name }}">
+                                                @endif
                                         </td>
 
                                         <td>
