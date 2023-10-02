@@ -20,7 +20,7 @@ class ShowItemVidoes extends Component
 
     public $updateVideos = false;
     protected $listeners = [
-        'deleteVideos' => 'destroy'
+        'deleteVideoItem' => 'destroy'
     ];
     // Validation Rules
     protected $rules = [

@@ -21,7 +21,7 @@ class ShowItemGallery extends Component
 
     public $updateGallery = false;
     protected $listeners = [
-        'deleteGallery' => 'destroy'
+        'deleteGalleryItem' => 'destroy'
     ];
     // Validation Rules
     protected $rules = [
