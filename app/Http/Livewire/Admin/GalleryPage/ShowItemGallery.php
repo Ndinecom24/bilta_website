@@ -75,9 +75,9 @@ class ShowItemGallery extends Component
                 ]
 
             );
+            
 
-            $gallery_item->addMedia($this->gallery_image)
-                ->toMediaCollection('gallery_images');
+            $gallery_item->addMedia($this->gallery_image)->toMediaCollection('gallery_images');
 
             // Set Flash Message
             session()->flash('success', 'Item Category Created Successfully!!');
@@ -134,7 +134,6 @@ class ShowItemGallery extends Component
                 $team->addMedia($this->gallery_image)
                     ->toMediaCollection('gallery_images');
             }
-
 
             session()->flash('success', 'Gallery Updated Successfully!!');
 

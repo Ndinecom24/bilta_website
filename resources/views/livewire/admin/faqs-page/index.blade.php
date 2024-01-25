@@ -81,7 +81,7 @@
                                                             data-toggle="modal" data-target="#updateModal"
                                                             class="btn btn-primary btn-sm">Edit
                                                     </button>
-                                                    <button onclick="+({{$faq->id}})"
+                                                    <button onclick="deleteFAQ({{$faq->id}})"
                                                             class="btn btn-danger btn-sm">Delete
                                                     </button>
                                                 </div>
@@ -104,11 +104,15 @@
         </div>
     </div>
 
+
+
     <script>
         function deleteFAQ(id) {
             if (confirm("Are you sure to delete this record?"))
                 window.livewire.emit('deleteFAQ', id);
         }
     </script>
+
+
 
 </div>

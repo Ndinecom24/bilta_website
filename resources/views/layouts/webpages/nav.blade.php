@@ -9,6 +9,7 @@
                 <li><a href="pages/sidebar-left.html">FAQs</a></li>
                 <li><a href="pages/sidebar-right.html">Weekly Prayer Points</a></li>
                 <li><a href="pages/basic-grid.html">Testimonies</a></li>
+                <li><a href="pages/basic-grid.html">Testimonials</a></li>
             </ul>
         </li>
         <li><a href="#testimonies">Translation Projects</a></li>

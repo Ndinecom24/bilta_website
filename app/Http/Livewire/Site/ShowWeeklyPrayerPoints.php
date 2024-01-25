@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Site;
 
 use App\Models\Bilta\WeeklyPrayerPoints;
 use Livewire\Component;

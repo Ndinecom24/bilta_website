@@ -2,42 +2,48 @@
 
 namespace App\Http\Livewire\Admin\NewsPage;
 
+use App\Models\Bilta\ItemCategory;
 use App\Models\Bilta\News;
 use App\Models\System\Status;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 
 class ShowNewsItem extends Component
 {
 
-
     use WithPagination;
+    use WithFileUploads;
 
-    public $faq_id, $answer, $question, $status_id ;
+    public $our_news_id, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id;
+    public $news_image;
 
-    public $updateNews = false;
+    public $updateNewsItem = false;
     protected $listeners = [
         'deleteNews' => 'destroy'
     ];
     // Validation Rules
     protected $rules = [
-        'question' => 'required',
-        'answer' => 'required',
-        'status_id' => 'required',
+        'title' => 'required',
+        'details' => 'required',
+        'short_description' => 'required',
+        'post_date' => 'required',
+        'author' => 'required',
+        'news_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
+//        'news_image' => 'image|max:3072', // 1MB Max
+
     ];
 
     public function render()
     {
-        $statuses = Status::select('id', 'name')->get();
-        $faqs = News::select('id', 'question', 'answer', 'status_id')->paginate(20);
-        return view('livewire.admin.news-page.index')->with(compact('faqs', 'statuses'));
-    }
+        $our_news_items = News::select('id', 'title', 'details', 'short_description', 'post_date', 'author',
+         'created_by',
+            'status_id',
+        )->paginate(20);
+        $statuses = Status::get();
+        $categories = ItemCategory::where('type', 'News')->get();
 
-    public function resetFields()
-    {
-        $this->question = '';
-        $this->answer = '';
-        $this->status_id = '';
+            return view('livewire.admin.news-page.index')->with(compact('our_news_items', 'statuses', 'categories'));
     }
 
     public function store()
@@ -45,79 +51,128 @@ class ShowNewsItem extends Component
         // Validate Form Request
         $this->validate();
         try {
-            // Create News
-            News::updateOrCreate([
-                'question' => $this->question,
-                'answer' => $this->answer,
-            ],
+
+            // Create NewsItem
+            $news = News::updateOrCreate(
                 [
-                    'question' => $this->question,
-                    'answer' => $this->answer,
+                    'title' => $this->title,
+                    'details' => $this->details,
+                    'post_date' => $this->post_date,
+                    'author' => $this->author,
+                    'short_description' => $this->short_description,
+                ],
+                [
+                    'title' => $this->title,
+                    'details' => $this->details,
+                    'post_date' => $this->post_date,
+                    'author' => $this->author,
+                    'short_description' => $this->short_description,
+                    'category_id' => $this->category_id,
                     'status_id' => $this->status_id,
                     'created_by' => auth()->user()->id
                 ]
 
             );
 
+            $news->addMedia($this->news_image)
+                -> toMediaCollection('news_images');
+
             // Set Flash Message
-            session()->flash('success', 'News Created Successfully!!');
-            // Reset Form Fields After Creating News
+            session()->flash('success', 'News Item Created Successfully!!');
+            // Reset Form Fields After Creating NewsItem
             $this->resetFields();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             // Set Flash Message
-            session()->flash('error', 'Something goes wrong while creating about us!!' . $e->getMessage());
-            // Reset Form Fields After Creating News
+            session()->flash('error', 'Something goes wrong while creating news item!!' . $e->getMessage());
+            // Reset Form Fields After Creating NewsItem
             $this->resetFields();
         }
+    }
+
+    public function resetFields()
+    {
+        $this->title = '';
+        $this->details = '';
+        $this->short_description = '';
+        $this->post_date = '';
+        $this->author = '';
+        $this->category_id = '';
+        $this->status_id = '';
+        $this->news_image = null ;
     }
 
     public function edit($id)
     {
-        $faq = News::findOrFail($id);
-        $this->question = $faq->question;
-        $this->answer = $faq->answer;
-        $this->status_id = $faq->status_id;
-        $this->faq_id = $faq->id;
-        $this->updateNews = true;
-    }
+        $our_news = News::findOrFail($id);
 
-    public function cancel()
-    {
-        $this->updateNews = false;
-        $this->resetFields();
+     
+        $this->news = $our_news;
+        $this->title = $our_news->title;
+        $this->details = $our_news->details;
+        $this->post_date = $our_news->post_date;
+        $this->author = $our_news->author;
+        $this->short_description = $our_news->short_description;
+        $this->category_id = $our_news->category_id;
+        $this->status_id = $our_news->status_id;
+        $this->our_news_id = $our_news->id;
+        $this->updateNewsItem = true;
     }
 
     public function update()
     {
+
         // Validate request
-        $this->validate();
+//        $this->validate();
         try {
-            // Update faq
-            News::find($this->faq_id)->fill([
-                'question' => $this->question,
-                'answer' => $this->answer,
-                'status_id' => $this->status_id,
-                'created_by' => auth()->user()->id
-            ])->save();
-            session()->flash('success', 'News Updated Successfully!!');
+            // Update our_news
+            News::find($this->our_news_id)->fill(
+                [
+                    'title' => $this->title,
+                    'details' => $this->details,
+                    'post_date' => $this->post_date,
+                    'author' => $this->author,
+                    'short_description' => $this->short_description,
+                    'category_id' => $this->category_id,
+                    'status_id' => $this->status_id,
+                    'created_by' => auth()->user()->id
+                ]
+            )->save();
+
+            $news = News::find($this->our_news_id) ;
+
+            if (isset($this->news_image) && $this->news_image->fileExists()) {
+                $news->clearMediaCollection('news_images');
+              $news->addMedia( $this->news_image )
+                    -> toMediaCollection('news_images');
+            }
+
+            session()->flash('success', 'News Item Updated Successfully!!');
 
             $this->cancel();
-        } catch (\Exception $e) {
-            session()->flash('error', 'Something goes wrong while updating faq!!');
+        } catch (Exception $e) {
+            session()->flash('error', 'Something goes wrong while updating news item!!');
             $this->cancel();
         }
     }
+
+    public function cancel()
+    {
+        $this->updateNewsItem = false;
+        $this->resetFields();
+    }
+
 
     public function destroy($id)
     {
         try {
             News::find($id)->delete();
-            session()->flash('success', "News Deleted Successfully!!");
-        } catch (\Exception $e) {
-            session()->flash('error', "Something goes wrong while deleting faq!!");
+            session()->flash('success', "News Item Deleted Successfully!!");
+        } catch (Exception $e) {
+            session()->flash('error', "Something goes wrong while deleting news item!!");
         }
+
     }
 
 }

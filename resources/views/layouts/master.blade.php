@@ -6,6 +6,7 @@
 
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <meta name="google-site-verification" content="zEabVLZ5N_dEO0PcCoEhDelHwpDzMbLgc14jLRA1IRE" />
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -75,6 +76,8 @@
                         <li><a href="{{route('faqs')}}">Faq's</a></li>
                             <li><a href="{{route('weekly-prayer-points')}}">Weekly Prayer Points</a></li>
                         <li><a href="{{route('testimonies')}}">Testimonies</a></li>
+                        <li><a href="{{route('testimonies')}}">Testimonies</a></li>
+                        <li><a href="{{route('news', '0')}}">News</a></li>  
                     </ul>
                 </li>
                 <li><a class="nav-link scrollto" href="{{route('about')}}">About</a></li>

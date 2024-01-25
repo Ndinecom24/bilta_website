@@ -45,7 +45,7 @@
                             </button>
                         </div>
                         <div class="col-lg-10 col-md-10 col-sm-6">
-                            <h5>Frequently Asked Questions</h5>
+                            <h5>Testimonies</h5>
                         </div>
 
                     </div>
@@ -55,8 +55,9 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>Question</th>
-                                <th>Answer</th>
+                                <th>Name</th>
+                                <th>Title</th>
+                                <th>Description</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -65,10 +66,13 @@
                                 @foreach ($testimonies as $key=>$testimony)
                                     <tr>
                                         <td>
-                                            {{$testimony->question}}
+                                            {{$testimony->name}}
                                         </td>
                                         <td>
-                                            {{$testimony->answer}}
+                                            {{$testimony->title}}
+                                        </td>
+                                        <td>
+                                            {{$testimony->description}}
                                         </td>
                                         <td>
                                             <div class="row">

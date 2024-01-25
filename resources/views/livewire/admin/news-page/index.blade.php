@@ -3,7 +3,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">News</h1>
+        <h1 class="h3 mb-0 text-gray-800">Our News Items</h1>
     </div>
 
     <!-- Content Row -->
@@ -38,14 +38,16 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
+
                         <div class="col-lg-2 col-md-2 col-sm-6">
                             <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal"
                                     data-target="#createModal">
                                 <i class="fa fa-plus">Add</i>
                             </button>
                         </div>
+
                         <div class="col-lg-10 col-md-10 col-sm-6">
-                            <h5>News Items</h5>
+                            <h5>Our News Items</h5>
                         </div>
 
                     </div>
@@ -55,30 +57,61 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>Question</th>
-                                <th>Answer</th>
+                                <th>Image</th>
+                                <th>Title</th>
+                                <th>Short Description</th>
+                                <th>Post_date</th>
+                                <th>Author</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                                <th>Category</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @if (count($faqs) > 0)
-                                @foreach ($faqs as $key=>$faq)
+                            @if (count($our_news_items) > 0)
+                                @foreach ($our_news_items as $key=>$our_news_item)
                                     <tr>
-                                        <td>
-                                            {{$faq->question}}
+                                        <td >
+                                        @if ( $our_news_item->getFirstMedia('news_images') != null )
+                                               <img  src="{{ $our_news_item->getFirstMedia('news_images')->getUrl()  }}"
+                                                  style="width:100%; height: 60px "
+                                                  title="{{ $our_news_item->getFirstMedia('news_images')->short_description }}">
+                                        @endif
                                         </td>
                                         <td>
-                                            {{$faq->answer}}
+                                            {{$our_news_item->title}}
                                         </td>
+                                        <td>
+                                         {{ Str::limit(   $our_news_item->short_description , '200' , '...') }}
+                                        </td>
+                                        <td>
+                                            {{$our_news_item->post_date}}
+                                        </td>
+                                        <td>
+                                            {{$our_news_item->author}}
+                                        </td>
+                                        <td>
+                                            {{ Str::limit( $our_news_item->details , '200' , '...') }}
+                                        </td>
+                                        <td>
+                                            {{$our_news_item->status->name ?? "-"}}
+                                        </td>
+                                        <td>
+                                            {{$our_news_item->myCategory->name   ?? "-"}}
+                                        </td>
+                                      
                                         <td>
                                             <div class="row">
-                                                <div class="col-12">
-                                                    <button wire:click="edit({{$faq->id}})"
+                                                <div class="col-6">
+                                                    <button wire:click="edit({{$our_news_item->id}})"
                                                             data-toggle="modal" data-target="#updateModal"
-                                                            class="btn btn-primary btn-sm">Edit
+                                                            class="btn btn-primary btn-sm m-2">Edit
                                                     </button>
-                                                    <button onclick="deleteNews({{$faq->id}})"
-                                                            class="btn btn-danger btn-sm">Delete
+                                                </div>
+                                                <div class="col-6">
+                                                    <button onclick="deleteOurNewsItem({{$our_news_item->id}})"
+                                                            class="btn btn-danger btn-sm  m-2">Delete
                                                     </button>
                                                 </div>
                                             </div>
@@ -87,8 +120,8 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="3" align="center">
-                                        No News Found.
+                                    <td colspan="3" aligne="center">
+                                        No News Item Found.
                                     </td>
                                 </tr>
                             @endif
@@ -101,8 +134,8 @@
     </div>
 
     <script>
-        function deleteNews(id) {
-            if (confirm("Are you sure to delete this record?"))
+        function deleteOurNewsItem(id) {
+            if (confirm("Are you sure status_id delete this record?"))
                 window.livewire.emit('deleteNews', id);
         }
     </script>

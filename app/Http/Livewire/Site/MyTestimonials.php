@@ -4,10 +4,10 @@ namespace App\Http\Livewire\Site;
 
 use Livewire\Component;
 
-class ShowFAQs extends Component
+class MyTestimonials extends Component
 {
     public function render()
     {
-        return view('livewire.site.show-f-a-qs');
+        return view('livewire.site.show-testimonies');
     }
 }

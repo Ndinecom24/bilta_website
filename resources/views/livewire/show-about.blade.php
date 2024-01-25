@@ -1,7 +1,7 @@
 <div>
 
        <!-- ======= Services Section ======= -->
-       <section id="services" class="services section-bg" style="margin-bottom:200px; margin-top:100px;">
+       <section id="services" class="services section-bg"  >
         <div class="container">
 
           <div class="section-title" data-aos="fade-up">

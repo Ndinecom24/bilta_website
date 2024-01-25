@@ -15,13 +15,16 @@ class CreateNewsItemTable extends Migration
     {
         Schema::create('news_item', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description');
-            $table->string('video_link');
+            $table->string('title');
+            $table->string('short_description');
+            $table->string('post_date');
+            $table->string('author');
+            $table->string('details');
             $table->integer('created_by');
             $table->integer('status_id');
-            $table->integer('item_category_id');
-            $table->string('type');
+            $table->integer('category_id');
+
+
             $table->timestamps();
             $table->softDeletes();
         });

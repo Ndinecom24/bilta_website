@@ -78,7 +78,7 @@
                                     class="form-check-label text-danger ">{{ $message }}</span>@enderror
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="col-lg-6 col-md-6 col-sm-12">v
                             <div class="form-group">
                                 <label for="faqFormControlInput5">Status</label>
                                 <select required type="date" class="form-control" id="faqFormControlInput5" wire:model="status_id" >

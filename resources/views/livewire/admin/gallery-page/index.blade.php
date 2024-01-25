@@ -67,7 +67,7 @@
                             @if (count($gallery_items) > 0)
                                 @foreach ($gallery_items as $key=>$gallery_item)
                                     <tr>
-                                        <td >
+                                        <td>
                                             <img  src="{{ $gallery_item->getFirstMedia('gallery_images')->getUrl()  }}"
                                                   style="width:100%; height: 60px "
                                                   title="{{ $gallery_item->getFirstMedia('gallery_images')->name }}">

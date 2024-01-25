@@ -16,11 +16,17 @@ use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonies;
 use App\Http\Livewire\Admin\VideosPage\ShowItemVidoes;
-use App\Http\Livewire\ShowAbout;
-use App\Http\Livewire\ShowGallery;
-use App\Http\Livewire\ShowHome;
-use App\Http\Livewire\ShowVideos;
-use App\Http\Livewire\ShowWeeklyPrayerPoints;
+use App\Http\Livewire\Site\Company\ShowAbout;
+use App\Http\Livewire\Site\MyNewsDetails;
+use App\Http\Livewire\Site\MyNewsSearch;
+use App\Http\Livewire\Site\ShowGallery;
+use App\Http\Livewire\Site\ShowHome;
+use App\Http\Livewire\Site\ShowVideos;
+use App\Http\Livewire\Site\MyFaqs;
+use App\Http\Livewire\Site\MyTestimonials;
+use App\Http\Livewire\Site\MyTestimonies;
+use App\Http\Livewire\Site\MyNewsList;
+use App\Http\Livewire\Site\ShowWeeklyPrayerPoints;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,8 +57,11 @@ Route::prefix('bilta/site')->group(function () {
     Route::get('/about', ShowAbout::class)->name('about');
     Route::get('/videos', ShowVideos::class)->name('videos');
     Route::get('/Gallery', ShowGallery::class)->name('gallery');
-    Route::get('/Faqs', \App\Http\Livewire\ShowFaqs::class)->name('faqs');
-    Route::get('/Testimonies', \App\Http\Livewire\ShowTestimonies::class)->name('testimonies');
+    Route::get('/Faqs', MyFaqs::class)->name('faqs');
+    Route::get('/Testimonies', MyTestimonies::class)->name('testimonies');
+    Route::get('/Testimonials', MyTestimonials::class)->name('testimonials');
+    Route::get('/news/details/{news}', MyNewsDetails::class)->name('news.details');
+    Route::get('/news/{category_id}', MyNewsList::class)->name('news');
     Route::get('/WeeklyPrayerPoint', ShowWeeklyPrayerPoints::class)->name('weekly-prayer-points');
 
 });

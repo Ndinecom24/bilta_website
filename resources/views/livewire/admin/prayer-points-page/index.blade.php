@@ -45,7 +45,7 @@
                             </button>
                         </div>
                         <div class="col-lg-10 col-md-10 col-sm-6">
-                            <h5>Frequently Asked Questions</h5>
+                            <h5> Weekly Prayer Points</h5>
                         </div>
 
                     </div>

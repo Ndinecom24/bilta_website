@@ -2,15 +2,13 @@
 
 namespace App\Http\Livewire\Site;
 
-use App\Models\Bilta\AboutUs;
-use App\Models\Bilta\ContactUs;
 use App\Models\Bilta\HomeIntro;
 use App\Models\Bilta\OurTeam;
 use App\Models\Bilta\OurValues;
 use App\Models\Bilta\Testimonial;
 use Livewire\Component;
 
-class ShowHomePage extends Component
+class ShowHome extends Component
 {
     public function render()
     {
@@ -23,7 +21,7 @@ class ShowHomePage extends Component
         $our_values = OurValues::get();
         $home_intro = HomeIntro::first();
 
-        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro'));
+        return view('livewire.show-home')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro'));
 
     }
 }

@@ -16,9 +16,11 @@ class ShowPrayerPoints extends Component
     public $weekly_prayer_point_id, $details, $title, $status_id , $post_date, $scriptures, $year, $month, $week, $day;
 
     public $updateWeeklyPrayerPoint = false;
+    
     protected $listeners = [
-        'deleteFAQ' => 'destroy'
+        'deleteWeeklyPrayerPoint' => 'destroy'
     ];
+
     // Validation Rules
     protected $rules = [
         'title' => 'required',

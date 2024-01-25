@@ -37,24 +37,48 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="faqFormControlInput1">Question</label>
+                                <label for="faqFormControlInput1">Name</label>
                                 <input type="text" class="form-control" id="faqFormControlInput1"
-                                       placeholder="Enter Question" wire:model="question">
-                                @error('question') <span class="text-danger ">{{ $message }}</span>@enderror
+                                       placeholder="Enter Name" wire:model="name">
+                                @error('name') <span class="text-danger ">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label for="faqFormControlInput2">Title</label>
+                                <textarea rows="3" class="form-control" id="faqFormControlInput2" wire:model="title"
+                                          placeholder="Enter Title"></textarea>
+                                @error('title') <span
+                                    class="form-check-label text-danger ">{{ $message }}</span>@enderror
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="faqFormControlInput2">Answer</label>
-                                <textarea rows="3" class="form-control" id="faqFormControlInput2" wire:model="answer"
-                                          placeholder="Enter Answer"></textarea>
-                                @error('answer') <span
+                                <label for="faqFormControlInput2">Description</label>
+                                <textarea rows="3" class="form-control" id="faqFormControlInput2" wire:model="description"
+                                          placeholder="Enter Description"></textarea>
+                                @error('description') <span
                                     class="form-check-label text-danger ">{{ $message }}</span>@enderror
                             </div>
                         </div>
                     </div>
+                     <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="faqFormControlInput5">Status</label>
+                                <select required type="date" class="form-control" id="faqFormControlInput5" wire:model="status_id" >
+                                    <option>--Choose</option>
+                                    @foreach($statuses as $status)
+                                        <option value="{{$status->id}}" >{{$status->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('status_id') <span
+                                    class="form-check-label text-danger ">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
                 </div>
 
 

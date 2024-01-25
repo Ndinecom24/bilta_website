@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Site;
 
 use App\Models\Bilta\FAQs;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class ShowFaqs extends Component
+class MyFaqs extends Component
 {
     use WithPagination;
 

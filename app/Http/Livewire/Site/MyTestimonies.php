@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Site;
 
 use Livewire\Component;
 
-class ShowTestimonies extends Component
+class MyTestimonies extends Component
 {
     public function render()
     {

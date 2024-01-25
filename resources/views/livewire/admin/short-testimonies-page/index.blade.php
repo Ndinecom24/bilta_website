@@ -58,6 +58,7 @@
                                 <th>Name</th>
                                 <th>Title</th>
                                 <th>Testimony</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
