@@ -21,7 +21,7 @@ class ShowHome extends Component
         $our_values = OurValues::get();
         $home_intro = HomeIntro::first();
 
-        return view('livewire.show-home')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro'));
+        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro'));
 
     }
 }

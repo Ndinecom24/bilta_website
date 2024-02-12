@@ -137,10 +137,10 @@
                                 <div class="form-group">
                                     <label for="contactUsFormControlInput10">Current Image</label>
                                     @if (isset($news))
-                                        @if ($news->getFirstMedia('news_images') != null)
-                                            <img src="{{ $news->getFirstMedia('news_images')->getUrl() }}"
+                                        @if ($news->getFirstMedia('news_title_images') != null)
+                                            <img src="{{ $news->getFirstMedia('news_title_images')->getUrl() }}"
                                                 style="width:100%; height: 150px "
-                                                title="{{ $news->getFirstMedia('news_images')->name }}">
+                                                title="{{ $news->getFirstMedia('news_title_images')->name }}">
                                         @endif
                                     @endif
                                 </div>
@@ -149,9 +149,22 @@
                                 <div class="form-group">
                                     <label for="contactUsFormControlInputnewsImage">News Image</label>
                                     <input type="file" class="form-control" id="contactUsFormControlInputnewsImage"
-                                        placeholder="Enter Image" wire:model="news_image">
-                                    @error('news_image')
+                                        placeholder="Enter Image" wire:model="news_title_image">
+                                    @error('news_title_image')
                                         <span class="text-danger ">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label for="contactUsFormControlInput121">Add More News Images</label>
+                                    <input type="file" class="form-control" id="contactUsFormControlInput121"
+                                        multiple placeholder="Enter News Images" wire:model="news_image">
+                                    @error('news_image')
+                                        <span class="text-danger "> {{ $message }} </span>
                                     @enderror
                                 </div>
                             </div>
@@ -168,6 +181,38 @@
                 </div>
 
             </form>
+
+            
+            <div class="card card-body">
+
+
+                <div class="row">
+                    <label for="ew">Remove News Images</label>
+                    </div>
+                      <div class="row">
+                    @if (isset($news))
+                        @foreach ($news->getMedia('news_images') as $item)
+                            <div class="col-lg-8 col-md-8 col-sm-12 m-1">
+                                @if ($item != null)
+                                    <img src="{{ $item->getUrl() }}" style="width:100%; height: 150px "
+                                        title="{{ $item->name }}">
+                                @endif
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 m-1">
+                                <div class="modal-footer">
+                                    <button wire:click.prevent="removeImage({{ $item->id }})"
+                                        class="btn btn-sm btn-outline-danger">Remove</button>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+
+
+                </div>
+
+            </div>
+
+
         </div>
     </div>
 </div>

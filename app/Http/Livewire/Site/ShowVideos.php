@@ -11,6 +11,6 @@ class ShowVideos extends Component
     {
         $video_items = Videos::get();
         $categories= $video_items->pluck('category')->unique() ;
-        return view('livewire.show-videos')->with(compact('video_items', 'categories'));
+        return view('livewire.site.show-videos')->with(compact('video_items', 'categories'));
     }
 }

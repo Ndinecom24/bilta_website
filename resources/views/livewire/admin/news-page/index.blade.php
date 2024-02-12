@@ -65,6 +65,7 @@
                                 <th>Details</th>
                                 <th>Status</th>
                                 <th>Category</th>
+                                <th>Images</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -73,10 +74,10 @@
                                 @foreach ($our_news_items as $key=>$our_news_item)
                                     <tr>
                                         <td >
-                                        @if ( $our_news_item->getFirstMedia('news_images') != null )
-                                               <img  src="{{ $our_news_item->getFirstMedia('news_images')->getUrl()  }}"
+                                        @if ( $our_news_item->getFirstMedia('news_title_images') != null )
+                                               <img  src="{{ $our_news_item->getFirstMedia('news_title_images')->getUrl()  }}"
                                                   style="width:100%; height: 60px "
-                                                  title="{{ $our_news_item->getFirstMedia('news_images')->short_description }}">
+                                                  title="{{ $our_news_item->getFirstMedia('news_title_images')->short_description }}">
                                         @endif
                                         </td>
                                         <td>
@@ -100,6 +101,25 @@
                                         <td>
                                             {{$our_news_item->myCategory->name   ?? "-"}}
                                         </td>
+
+                                         <td>
+
+                                                <div class="row">
+                                                   
+                                                        @foreach ($our_news_item->getMedia('news_images') as $item)
+                                                         <div class="col-12 m-1">
+                                                            @if ($item != null)
+                                                                <img src="{{ $item->getUrl() }}"
+                                                                    style="width:100%; height: 60px "
+                                                                    title="{{ $item->name }}">
+                                                            @endif
+                                                             </div>
+                                                        @endforeach
+
+                                                   
+                                                </div>
+
+                                            </td>
                                       
                                         <td>
                                             <div class="row">

@@ -52,7 +52,7 @@
                 <a class="collapse-item" href="{{route('admin.page.testimonial')}}">Testimonial</a>
                 <a class="collapse-item" href="{{route('admin.page.item.gallery')}}">Gallery</a>
                 <a class="collapse-item" href="{{route('admin.page.item.videos')}}">Videos</a>
-                <a class="collapse-item" href="{{route('admin.page.weekly-prayer-points')}}">Projects</a>
+                <a class="collapse-item" href="{{route('admin.page.item.projects')}}">Projects</a>
                 <a class="collapse-item" href="{{route('admin.page.item.category')}}">Item Category</a>
             </div>
         </div>

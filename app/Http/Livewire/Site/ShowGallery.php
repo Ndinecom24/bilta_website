@@ -14,6 +14,6 @@ class ShowGallery extends Component
     {
         $gallery_items = Gallery::get();
         $categories= $gallery_items->pluck('category')->unique() ;
-        return view('livewire.show-gallery')->with(compact('gallery_items', 'categories'));
+        return view('livewire.site.show-gallery')->with(compact('gallery_items', 'categories'));
     }
 }

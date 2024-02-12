@@ -14,7 +14,7 @@ class ShowWeeklyPrayerPoints extends Component
             ->where('status_id', config('constants.status.active'))
             ->paginate(20);
 
-        return view('livewire.show-weekly-prayer-points')->with(compact('dataset'));
+        return view('livewire.site.show-prayer-points')->with(compact('dataset'));
     }
 
     public function search(){

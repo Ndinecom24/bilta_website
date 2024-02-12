@@ -15,12 +15,18 @@ use App\Http\Livewire\Admin\Other\ShowItemCategory;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonies;
+use App\Http\Livewire\Admin\TranslationProjectsPage\DetailTranslationProjects;
+use App\Http\Livewire\Admin\TranslationProjectsPage\ShowTranslationProjects;
 use App\Http\Livewire\Admin\VideosPage\ShowItemVidoes;
 use App\Http\Livewire\Site\Company\ShowAbout;
 use App\Http\Livewire\Site\MyNewsDetails;
 use App\Http\Livewire\Site\MyNewsSearch;
+use App\Http\Livewire\Site\MyTranslationProjectDetails;
+use App\Http\Livewire\Site\MyTranslationProjectsIndex;
+use App\Http\Livewire\Site\MyTranslationProjectsList;
 use App\Http\Livewire\Site\ShowGallery;
 use App\Http\Livewire\Site\ShowHome;
+use App\Http\Livewire\Site\ShowTranslationProjectDetails;
 use App\Http\Livewire\Site\ShowVideos;
 use App\Http\Livewire\Site\MyFaqs;
 use App\Http\Livewire\Site\MyTestimonials;
@@ -62,6 +68,8 @@ Route::prefix('bilta/site')->group(function () {
     Route::get('/Testimonials', MyTestimonials::class)->name('testimonials');
     Route::get('/news/details/{news}', MyNewsDetails::class)->name('news.details');
     Route::get('/news/{category_id}', MyNewsList::class)->name('news');
+    Route::get('/projects/details/{project}', MyTranslationProjectDetails::class)->name('projects.details');
+    Route::get('/projects/{category_id}', MyTranslationProjectsList::class)->name('projects');
     Route::get('/WeeklyPrayerPoint', ShowWeeklyPrayerPoints::class)->name('weekly-prayer-points');
 
 });
@@ -89,5 +97,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/videos', ShowItemVidoes::class)->name('admin.page.item.videos');
         Route::get('/item/news', ShowNewsItem::class)->name('admin.page.item.news');
         Route::get('/item/news/{item}/details', ShowNewsItemDetails::class)->name('admin.page.item.news.details');
+        Route::get('/item/projects', ShowTranslationProjects::class)->name('admin.page.item.projects');
+        Route::get('/item/projects/{item}/details', DetailTranslationProjects::class)->name('admin.page.item.projects.details');
     });
 });

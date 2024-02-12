@@ -6,7 +6,7 @@
             <div class="modal-header">
                 <div class="row">
                     <div class="col-12">
-                        <h5 class="modal-title" id="faqModalLabel">Create News Item</h5>
+                        <h5 class="modal-title" id="faqModalLabel">Create Projects Item</h5>
                     </div>
                     <div class="col-12">
                         @if ($errors->any())
@@ -51,7 +51,7 @@
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group">
-                                    <label for="faqFormControlInput2">Short_description</label>
+                                    <label for="faqFormControlInput2">Short Description</label>
                                     <textarea rows="3" class="form-control" id="faqFormControlInput2" placeholder="Enter Short_description"
                                         wire:model="short_description"></textarea>
                                     @error('short_description')
@@ -96,13 +96,14 @@
                             </div>
                         </div>
 
+
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="faqFormControlInput6">Status</label>
                                     <select required class="form-control" id="faqFormControlInput6"
                                         wire:model="status_id">
-                                        <option>--Choose</option>
+                                        <option>--Choose--</option>
                                         @foreach ($statuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
                                         @endforeach
@@ -118,7 +119,7 @@
                                     <label for="contactUsFormControlInput7">Category </label>
                                     <select required class="form-control" id="faqFormControlInput7"
                                         wire:model="category_id">
-                                        <option>--Choose</option>
+                                        <option>--Choose--</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
@@ -130,39 +131,71 @@
                             </div>
                         </div>
 
+
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group">
-                                    <label for="contactUsFormControlInput10">News Title Image</label>
-                                    <input type="file" class="form-control" id="contactUsFormControlInput10"
-                                        placeholder="Enter Image" wire:model="news_title_image">
-                                    @error('news_title_image')
+                                    <label for="faqFormControlInput14">Location</label>
+                                    <input type="text" class="form-control" id="faqFormControlInput14"
+                                        placeholder="Enter Author" wire:model="location">
+                                    @error('location')
+                                        <span class="text-danger ">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label for="faqFormControlInput15">Location Map</label>
+                                    <input type="text" class="form-control" id="faqFormControlInput15"
+                                        placeholder="Enter Post Date" wire:model="location_map">
+                                    @error('location')
                                         <span class="text-danger ">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                         </div>
 
-                          <div class="row">
+                        <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group">
-                                    <label for="contactUsFormControlInput10">News Images</label>
+                                    <label for="contactUsFormControlInput10">Project Title Image</label>
+                                    <input type="file" class="form-control" id="contactUsFormControlInput10"
+                                        placeholder="Enter Image" wire:model="title_image">
+                                    @error('title_image')
+                                        <span class="text-danger ">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label for="contactUsFormControlInput10">Projects Images</label>
                                     <input type="file" class="form-control" id="contactUsFormControlInput11"
-                                        multiple placeholder="Enter News Images" wire:model="news_image">
-                                    @error('news_image')
+                                        multiple placeholder="Enter Project Images" wire:model="project_image">
+                                    @error('project_image')
                                         <span class="text-danger "> {{ $message }} </span>
                                     @enderror
                                 </div>
                             </div>
                         </div>
 
-
                     </div>
                 </div>
+
                 <div class="modal-footer">
+                 <div wire:loading>
+                        <div class="spinner-border text-success" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <span class="text-sm text-info">Loading...</span>
+                    </div>
                     <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
+                   
                     <button wire:click.prevent="store()" class="btn btn-primary close-modal">Save changes</button>
                 </div>
+
             </form>
         </div>
     </div>

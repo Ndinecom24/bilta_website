@@ -13,6 +13,6 @@ class MyFaqs extends Component
     public function render()
     {
         $faqs = FAQs::select('id', 'question', 'answer')->where('status_id', config('constants.status.active'))->paginate(20);
-        return view('livewire.show-faqs')->with(compact('faqs'));
+        return view('livewire.site.show-f-a-qs')->with(compact('faqs'));
     }
 }
