@@ -73,7 +73,7 @@
                     <ul>
                         <li><a class="nav-link scrollto" href="{{ route('site.home') }}">Home</a></li>
                         <li><a class="nav-link scrollto"
-                                href="{{ route('site.home') }}#translation-projects">Translation Projects</a></li>
+                                href="{{ route('projects', '0') }}">Translation Projects</a></li>
                         <li class="dropdown"><a href="{{ route('site.home') }}#"><span>News | Media</span> <i
                                     class="bi bi-chevron-down"></i></a>
                             <ul>
@@ -87,7 +87,9 @@
                                 <li><a href="{{ route('news', '0') }}">News</a></li>
                             </ul>
                         </li>
-                        <li><a class="nav-link scrollto" href="{{ route('about') }}">About</a></li>
+                        {{-- <li><a class="nav-link scrollto" href="{{ route('about') }}">About</a></li> --}}
+                        
+                        <li><a class="nav-link scrollto"  href="{{ route('site.home') }}#translation-projects">About</a></li>
                         {{-- <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li> --}}
                         <li><a class="nav-link scrollto" href="{{ route('site.home') }}#team">Team</a></li>
                         {{-- <li><a class="nav-link scrollto" href="#pricing">Pricing</a></li> --}}
