@@ -11,7 +11,7 @@ class ShowItemCategory extends Component
 {
     use WithPagination;
 
-    public $item_category_id, $name, $description, $status_id, $type ;
+    public $item_category_id, $name, $description, $status_id, $type;
 
     public $updateItemCategory = false;
     protected $listeners = [
@@ -46,11 +46,12 @@ class ShowItemCategory extends Component
         $this->validate();
         try {
             // Create ItemCategory
-            ItemCategory::updateOrCreate([
-                'description' => $this->description,
-                'name' => $this->name,
-                'type' => $this->type,
-            ],
+            ItemCategory::updateOrCreate(
+                [
+                    'description' => $this->description,
+                    'name' => $this->name,
+                    'type' => $this->type,
+                ],
                 [
                     'description' => $this->description,
                     'name' => $this->name,

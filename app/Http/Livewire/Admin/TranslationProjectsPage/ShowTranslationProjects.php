@@ -34,9 +34,9 @@ class ShowTranslationProjects extends Component
         'author' => 'required',
         'location' => 'required',
         'location_map' => 'required',
-        'title_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
-        'project_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
-        'project_file' =>  'required|mimes:pdf,PDF|max:3072', // 3MB Max,
+        'title_image' =>  'required|max:3072', // 3MB Max,
+        'project_image' =>  'required|max:3072', // 3MB Max,
+        'project_file' =>  'required|max:3072', // 3MB Max,
 //        'title_image' => 'image|max:3072', // 1MB Max
 
     ];

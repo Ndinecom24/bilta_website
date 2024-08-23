@@ -46,11 +46,12 @@ class ShowTestimonialsPage extends Component
         $this->validate();
         try {
             // Create Testimonial
-            Testimonial::updateOrCreate([
-                'testimonial' => $this->testimonial,
-                'title' => $this->title,
-                'name' => $this->name,
-            ],
+            Testimonial::updateOrCreate(
+                [
+                    'testimonial' => $this->testimonial,
+                    'title' => $this->title,
+                    'name' => $this->name,
+                ],
                 [
                     'testimonial' => $this->testimonial,
                     'title' => $this->title,

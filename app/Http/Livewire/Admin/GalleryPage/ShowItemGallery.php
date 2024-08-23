@@ -16,8 +16,8 @@ class ShowItemGallery extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $gallery_item_id, $item_category_id, $name, $description, $status_id, $type ;
-    public $gallery_image  , $gallery_item  , $gallery_image_update ;
+    public $gallery_item_id, $item_category_id, $name, $description, $status_id, $type;
+    public $gallery_image, $gallery_item, $gallery_image_update;
 
     public $updateGallery = false;
     protected $listeners = [
@@ -30,16 +30,16 @@ class ShowItemGallery extends Component
         'status_id' => 'required',
         'type' => 'required',
         'item_category_id' => 'required',
-        'gallery_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
+        'gallery_image' => 'required|max:3072', // 3MB Max,
 
     ];
 
     public function render()
     {
         $statuses = Status::select('id', 'name')->get();
-        $item_categories = ItemCategory::where('type','Images')->get();
+        $item_categories = ItemCategory::where('type', 'Images')->get();
         $gallery_items = Gallery::select('item_category_id', 'id', 'description', 'name', 'status_id', 'type')->paginate(20);
-          return view('livewire.admin.gallery-page.index')
+        return view('livewire.admin.gallery-page.index')
             ->with(compact('gallery_items', 'statuses', 'item_categories'));
     }
 
@@ -60,11 +60,12 @@ class ShowItemGallery extends Component
         $this->validate();
         try {
             // Create Gallery
-          $gallery_item =  Gallery::updateOrCreate([
-                'description' => $this->description,
-                'name' => $this->name,
-                'type' => $this->type,
-            ],
+            $gallery_item = Gallery::updateOrCreate(
+                [
+                    'description' => $this->description,
+                    'name' => $this->name,
+                    'type' => $this->type,
+                ],
                 [
                     'description' => $this->description,
                     'name' => $this->name,
@@ -75,7 +76,7 @@ class ShowItemGallery extends Component
                 ]
 
             );
-            
+
 
             $gallery_item->addMedia($this->gallery_image)->toMediaCollection('gallery_images');
 
@@ -95,7 +96,7 @@ class ShowItemGallery extends Component
 
     public function edit($id)
     {
-        $gallery_item= Gallery::findOrFail($id);
+        $gallery_item = Gallery::findOrFail($id);
         $this->description = $gallery_item->description;
         $this->name = $gallery_item->name;
         $this->status_id = $gallery_item->status_id;
@@ -104,7 +105,7 @@ class ShowItemGallery extends Component
         $this->gallery_item_id = $gallery_item->id;
 
         $this->updateGallery = true;
-        $this->gallery_item = $gallery_item ;
+        $this->gallery_item = $gallery_item;
     }
 
     public function cancel()
@@ -119,7 +120,7 @@ class ShowItemGallery extends Component
         $this->validate();
         try {
             // Update item_category
-            $team =  Gallery::find($this->item_category_id)->fill([
+            $team = Gallery::find($this->item_category_id)->fill([
                 'description' => $this->description,
                 'name' => $this->name,
                 'status_id' => $this->status_id,

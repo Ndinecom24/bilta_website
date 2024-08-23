@@ -15,8 +15,8 @@ class ShowItemVidoes extends Component
 
     use WithPagination;
 
-    public $video_item_id, $item_category_id, $name, $description, $status_id, $type ;
-    public $video_link  , $video_item  , $gallery_image_update ;
+    public $video_item_id, $item_category_id, $name, $description, $status_id, $type;
+    public $video_link, $video_item, $gallery_image_update;
 
     public $updateVideos = false;
     protected $listeners = [
@@ -29,14 +29,14 @@ class ShowItemVidoes extends Component
         'status_id' => 'required',
         'type' => 'required',
         'item_category_id' => 'required',
-        'video_link' =>  'required', // ,
+        'video_link' => 'required', // ,
 
     ];
 
     public function render()
     {
         $statuses = Status::select('id', 'name')->get();
-        $item_categories = ItemCategory::where('type','Images')->get();
+        $item_categories = ItemCategory::where('type', 'Images')->get();
         $video_items = Videos::select('item_category_id', 'id', 'description', 'name', 'status_id', 'type', 'video_link')->paginate(20);
         return view('livewire.admin.videos-page.index')
             ->with(compact('video_items', 'statuses', 'item_categories'));
@@ -60,18 +60,19 @@ class ShowItemVidoes extends Component
         $this->validate();
         try {
             // Create Videos
-            $video_item =  Videos::updateOrCreate([
-                'description' => $this->description,
-                'name' => $this->name,
-                'type' => $this->type,
-                'video_link' => $this->video_link ,
-            ],
+            $video_item = Videos::updateOrCreate(
+                [
+                    'description' => $this->description,
+                    'name' => $this->name,
+                    'type' => $this->type,
+                    'video_link' => $this->video_link,
+                ],
                 [
                     'description' => $this->description,
                     'name' => $this->name,
                     'status_id' => $this->status_id,
                     'type' => $this->type,
-                    'video_link' => $this->video_link ,
+                    'video_link' => $this->video_link,
                     'item_category_id' => $this->item_category_id,
                     'created_by' => auth()->user()->id
                 ]
@@ -94,17 +95,17 @@ class ShowItemVidoes extends Component
 
     public function edit($id)
     {
-        $video_item= Videos::findOrFail($id);
+        $video_item = Videos::findOrFail($id);
         $this->description = $video_item->description;
         $this->name = $video_item->name;
-        $this->video_link = $video_item->video_link ;
+        $this->video_link = $video_item->video_link;
         $this->status_id = $video_item->status_id;
         $this->type = $video_item->type;
         $this->item_category_id = $video_item->item_category_id;
         $this->video_item_id = $video_item->id;
 
         $this->updateVideos = true;
-        $this->video_item = $video_item ;
+        $this->video_item = $video_item;
     }
 
     public function cancel()
@@ -119,7 +120,7 @@ class ShowItemVidoes extends Component
         $this->validate();
         try {
             // Update item_category
-            $team =  Videos::find($this->item_category_id)->fill([
+            $team = Videos::find($this->item_category_id)->fill([
                 'description' => $this->description,
                 'name' => $this->name,
                 'status_id' => $this->status_id,

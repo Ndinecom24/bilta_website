@@ -11,7 +11,7 @@ class ShowNewsItemDetails extends Component
 {
     use WithPagination;
 
-    public $news_category_id, $name, $description, $status_id ;
+    public $news_category_id, $name, $description, $status_id;
 
     public $updateFAQs = false;
     protected $listeners = [
@@ -44,10 +44,11 @@ class ShowNewsItemDetails extends Component
         $this->validate();
         try {
             // Create FAQs
-            FAQs::updateOrCreate([
-                'description' => $this->description,
-                'name' => $this->name,
-            ],
+            FAQs::updateOrCreate(
+                [
+                    'description' => $this->description,
+                    'name' => $this->name,
+                ],
                 [
                     'description' => $this->description,
                     'name' => $this->name,

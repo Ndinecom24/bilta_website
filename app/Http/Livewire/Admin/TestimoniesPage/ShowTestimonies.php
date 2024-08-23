@@ -11,8 +11,8 @@ class ShowTestimonies extends Component
 {
     use WithPagination;
 
-    public $testimonies_id,  $name, $title, $description, $status_id;
-    public $statuses = [] ;
+    public $testimonies_id, $name, $title, $description, $status_id;
+    public $statuses = [];
 
     public $updateTestimonies = false;
     protected $listeners = [
@@ -20,15 +20,15 @@ class ShowTestimonies extends Component
     ];
     // Validation Rules
     protected $rules = [
-        'name' => 'required' ,
-        'title' => 'required' ,
-        'description' => 'required' ,
-        'status_id' => 'required' ,
+        'name' => 'required',
+        'title' => 'required',
+        'description' => 'required',
+        'status_id' => 'required',
     ];
 
     public function render()
     {
-        $testimonies = Testimonies::select('id','name', 'title', 'description' , 'status_id')->paginate(20);
+        $testimonies = Testimonies::select('id', 'name', 'title', 'description', 'status_id')->paginate(20);
         $this->statuses = Status::get();
         return view('livewire.admin.testimonies-page.index')->with(compact('testimonies'));
     }
@@ -47,17 +47,18 @@ class ShowTestimonies extends Component
         $this->validate();
         try {
             // Create Testimonies
-            Testimonies::updateOrCreate([
-                'name' => $this->name,
-                'title' => $this->title,
-                'description' => $this->description,
-                'status_id' => $this->status_id,
-            ],
+            Testimonies::updateOrCreate(
                 [
                     'name' => $this->name,
-                'title' => $this->title,
-                'description' => $this->description,
-                'status_id' => $this->status_id,
+                    'title' => $this->title,
+                    'description' => $this->description,
+                    'status_id' => $this->status_id,
+                ],
+                [
+                    'name' => $this->name,
+                    'title' => $this->title,
+                    'description' => $this->description,
+                    'status_id' => $this->status_id,
                     'created_by' => auth()->user()->id
                 ]
 

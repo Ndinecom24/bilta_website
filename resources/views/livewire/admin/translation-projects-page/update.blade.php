@@ -185,7 +185,7 @@
                         </div>
 
 
-                         <div class="row">
+                        <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group">
                                     <label for="contactUsFormControlInput121">Add More Projects Images</label>
@@ -199,7 +199,7 @@
                         </div>
 
 
-                         <div class="row">
+                        <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-group">
                                     <label for="contactUsFormControlInput133">Add More Projects Files</label>
@@ -236,8 +236,8 @@
 
                 <div class="row">
                     <label for="ew">Remove Projects Images</label>
-                    </div>
-                      <div class="row">
+                </div>
+                <div class="row">
                     @if (isset($project))
                         @foreach ($project->getMedia('project_images') as $item)
                             <div class="col-lg-8 col-md-8 col-sm-12 m-1">
@@ -261,17 +261,27 @@
 
                 </div>
 
-                   <div class="row mt-3">
+                <div class="row mt-3">
                     <label for="ew">Remove Projects Files</label>
                     <hr>
-                        </div>
-                      <div class="row">
+                </div>
+                <div class="row">
                     @if (isset($project))
                         @foreach ($project->getMedia('project_files') as $item)
                             <div class="col-lg-8 col-md-8 col-sm-12 m-1">
                                 @if ($item != null)
-                                    <img src="{{ $item->getUrl() }}" style="width:100%; height: 150px "
-                                        title="{{ $item->name }}">
+                                    @if ($item->mime_type === 'application/pdf' || $project_file->getExtensionAttribute() === 'pdf')
+                                        <a href="{{ $item->getUrl() }}" target="_blank">
+                                            <iframe src="{{ $item->getUrl() }}" height="100px" frameborder="0">
+                                            </iframe>
+                                            <span class="text-sm">open</span>
+                                        </a>
+                                    @else
+                                        @if ($item != null)
+                                            <img src="{{ $item->getUrl() }}" style="width:100%; height: 150px "
+                                                title="{{ $item->name }}">
+                                        @endif
+                                    @endif
                                 @endif
                             </div>
 

@@ -11,7 +11,7 @@ class ShowFaqs extends Component
 {
     use WithPagination;
 
-    public $faq_id, $answer, $question, $status_id ;
+    public $faq_id, $answer, $question, $status_id;
 
     public $updateFAQs = false;
     protected $listeners = [
@@ -44,10 +44,11 @@ class ShowFaqs extends Component
         $this->validate();
         try {
             // Create FAQs
-            FAQs::updateOrCreate([
-                'question' => $this->question,
-                'answer' => $this->answer,
-            ],
+            FAQs::updateOrCreate(
+                [
+                    'question' => $this->question,
+                    'answer' => $this->answer,
+                ],
                 [
                     'question' => $this->question,
                     'answer' => $this->answer,

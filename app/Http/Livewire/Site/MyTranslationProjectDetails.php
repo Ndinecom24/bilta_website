@@ -11,7 +11,8 @@ class MyTranslationProjectDetails extends Component
 {
     use WithPagination;
 
-    public $project, $project_id ;
+    public $project, $project_id , $title ;
+
     public $categories = [] ;
 
     public function mount(Projects $project){
@@ -21,6 +22,7 @@ class MyTranslationProjectDetails extends Component
     public function render()
     {
 
+        $this->__issettitle =  $this->project->title ; 
         // $this->project_categories = ItemCategory::select('*')->where('type',  'Project')->get()  ;
         $this->categories = Projects::selectRaw('category_id, count(*) as total')->where('status_id', config('constants.status.active'))->groupBy('category_id')->get() ;
       

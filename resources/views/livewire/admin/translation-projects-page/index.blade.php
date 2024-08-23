@@ -32,6 +32,7 @@
 
             @include('livewire.admin.translation-projects-page.update')
             @include('livewire.admin.translation-projects-page.create')
+            @include('livewire.admin.translation-projects-page.show-project')
 
         </div>
         <div class="col-md-12 mb-2">
@@ -65,10 +66,10 @@
                                     <th>Details</th>
                                     <th>Status</th>
                                     <th>Location</th>
-                                    <th>Location Map</th>
-                                    <th>Category</th>
-                                    <th>Images</th>
-                                    <th>Files</th>
+                                    {{-- <th>Location Map</th> --}}
+                                    {{-- <th>Category</th> --}}
+                                    {{-- <th>Images</th>
+                                    <th>Files</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -104,60 +105,79 @@
                                             <td>
                                                 {{ $translation_project->location ?? '-' }}
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 {{ $translation_project->location_map ?? '-' }}
-                                            </td>
-                                            <td>
+                                            </td> --}}
+                                            {{-- <td>
                                                 {{ $translation_project->myCategory->name ?? '-' }}
-                                            </td>
+                                            </td> --}}
 
-                                            <td>
+                                            {{-- <td>
 
                                                 <div class="row">
-                                                   
-                                                        @foreach ($translation_project->getMedia('project_images') as $item)
-                                                         <div class="col-12 m-1">
+
+                                                    @foreach ($translation_project->getMedia('project_images') as $item)
+                                                        <div class="col-12 m-1">
                                                             @if ($item != null)
                                                                 <img src="{{ $item->getUrl() }}"
                                                                     style="width:100%; height: 60px "
                                                                     title="{{ $item->name }}">
                                                             @endif
-                                                             </div>
-                                                        @endforeach
+                                                        </div>
+                                                    @endforeach
 
-                                                   
+
                                                 </div>
 
-                                            </td>
+                                            </td> --}}
+
+                                            {{-- <td> --}}
+
+                                            {{-- <div class="row"> --}}
+
+
+
+                                            {{-- @foreach ($translation_project->getMedia('project_files') as $item)
+                                                        <div class="col-12 m-1">
+                                                            @if ($item->mime_type === 'application/pdf' || $project_file->getExtensionAttribute() === 'pdf')
+                                                            <a href="{{ $item->getUrl() }}" target="_blank"> 
+                                                                <iframe src="{{ $item->getUrl() }}" height="100px"
+                                                                    frameborder="0"> 
+                                                                </iframe>
+                                                                <span class="text-sm">open</span>
+                                                            </a>
+                                                            @else
+                                                                @if ($item != null)
+                                                                    <img src="{{ $item->getUrl() }}"
+                                                                        style="width:100%; height: 60px "
+                                                                        title="{{ $item->name }}">
+                                                                @endif
+                                                        </div>
+                                                    @endif
+                                    @endforeach --}}
+
+
+                                            {{-- </div>
+
+                    </td> --}}
 
                                             <td>
-
                                                 <div class="row">
-                                                   
-                                                        @foreach ($translation_project->getMedia('project_files') as $item)
-                                                         <div class="col-12 m-1">
-                                                            @if ($item != null)
-                                                                <img src="{{ $item->getUrl() }}"
-                                                                    style="width:100%; height: 60px "
-                                                                    title="{{ $item->name }}">
-                                                            @endif
-                                                             </div>
-                                                        @endforeach
-
-                                                   
-                                                </div>
-
-                                            </td>
-
-                                            <td>
-                                                <div class="row">
-                                                    <div class="col-6">
+                                                    <div>
+                                                        <div class="col-3">
+                                                            <button wire:click="edit({{ $translation_project->id }})"
+                                                                data-toggle="modal" data-target="#showModal"
+                                                                class="btn btn-primary btn-sm m-2">Show
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
                                                         <button wire:click="edit({{ $translation_project->id }})"
                                                             data-toggle="modal" data-target="#updateModal"
                                                             class="btn btn-primary btn-sm m-2">Edit
                                                         </button>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-3">
                                                         <button
                                                             onclick="deleteOurProjectsItem({{ $translation_project->id }})"
                                                             class="btn btn-danger btn-sm  m-2">Delete

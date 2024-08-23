@@ -180,6 +180,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label for="contactUsFormControlInput10">Projects Files</label>
+                                    <input type="file" class="form-control" id="contactUsFormControlInput11"
+                                        multiple placeholder="Enter Project Images" wire:model="project_file">
+                                    @error('project_file')
+                                        <span class="text-danger "> {{ $message }} </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

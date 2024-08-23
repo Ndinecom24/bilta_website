@@ -28,19 +28,27 @@ class ShowLeadershipTeam extends Component
         'position' => 'required',
         'email' => 'required',
         'phone' => 'required',
-        'user_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
-//        'user_image' => 'image|max:3072', // 1MB Max
+        // 'user_image' => 'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
+        'user_image' => 'image|max:3072', // 1MB Max
 
     ];
 
     public function render()
     {
-        $our_teams = OurTeam::select('id', 'name', 'details', 'position', 'email', 'phone', 'created_by',
+        $our_teams = OurTeam::select(
+            'id',
+            'name',
+            'details',
+            'position',
+            'email',
+            'phone',
+            'created_by',
             'from',
             'to',
             'facebook_url',
             'linkedin_url',
-            'twitter_url')->paginate(20);
+            'twitter_url'
+        )->paginate(20);
 
         return view('livewire.admin.company.our-team.index')->with(compact('our_teams'));
     }
