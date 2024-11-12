@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Site\ContactController;
 use App\Http\Livewire\Admin\Company\ShowAboutUs;
 use App\Http\Livewire\Admin\Company\ShowAdminHome;
 use App\Http\Livewire\Admin\Company\ShowContactUsDetails;
@@ -11,6 +12,7 @@ use App\Http\Livewire\Admin\FaqsPage\ShowFaqs;
 use App\Http\Livewire\Admin\GalleryPage\ShowItemGallery;
 use App\Http\Livewire\Admin\NewsPage\ShowNewsItem;
 use App\Http\Livewire\Admin\NewsPage\ShowNewsItemDetails;
+use App\Http\Livewire\Admin\Other\ShowEmails;
 use App\Http\Livewire\Admin\Other\ShowItemCategory;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
@@ -73,6 +75,7 @@ Route::prefix('bilta/site')->group(function () {
     Route::get('/WeeklyPrayerPoint', ShowWeeklyPrayerPoints::class)->name('weekly-prayer-points');
 
 });
+Route::post('/contact', [ContactController::class,  'store'])->name('contact.store');
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +99,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/gallery', ShowItemGallery::class)->name('admin.page.item.gallery');
         Route::get('/item/videos', ShowItemVidoes::class)->name('admin.page.item.videos');
         Route::get('/item/news', ShowNewsItem::class)->name('admin.page.item.news');
+        Route::get('/contact/emails', ShowEmails::class)->name('admin.page.contact.emails');
         Route::get('/item/news/{item}/details', ShowNewsItemDetails::class)->name('admin.page.item.news.details');
         Route::get('/item/projects', ShowTranslationProjects::class)->name('admin.page.item.projects');
         Route::get('/item/projects/{item}/details', DetailTranslationProjects::class)->name('admin.page.item.projects.details');

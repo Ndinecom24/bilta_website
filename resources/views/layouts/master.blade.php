@@ -74,7 +74,7 @@
                         <li><a class="nav-link scrollto" href="{{ route('site.home') }}">Home</a></li>
                         <li><a class="nav-link scrollto"
                                 href="{{ route('projects', '0') }}">Translation Projects</a></li>
-                        <li class="dropdown"><a href="{{ route('site.home') }}#"><span>News | Media</span> <i
+                        <li class="dropdown"><a href="{{ route('site.home') }}#"><span>News | Updates</span> <i
                                     class="bi bi-chevron-down"></i></a>
                             <ul>
 
@@ -83,7 +83,7 @@
                                 <li><a href="{{ route('videos') }}">Videos</a></li>
                                 <li><a href="{{ route('testimonies') }}">Testimonies</a></li>
                                 <li><a href="{{ route('weekly-prayer-points') }}">Weekly Prayer Points</a></li>
-                                <li><a href="{{ route('projects', '0') }}">Translation Projects</a></li>
+                                {{-- <li><a href="{{ route('projects', '0') }}">Translation Projects</a></li> --}}
                                 <li><a href="{{ route('news', '0') }}">News</a></li>
                             </ul>
                         </li>

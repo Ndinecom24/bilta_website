@@ -34,9 +34,11 @@
                                     <div class="projects-item">
                                         <div class="projects-item-img">
                                             @if ($item->getFirstMedia('project_title_images') != null)
-                                                <img src="{{ $item->getFirstMedia('project_title_images')->getUrl() }}"
-                                                    title="{{ $item->getFirstMedia('project_title_images')->name }}"
-                                                    class="img-fluid" alt="">
+                                            <img src="{{ $item->getFirstMedia('project_title_images')->getUrl() }}"
+                                            title="{{ $item->getFirstMedia('project_title_images')->name }}"
+                                            class="img-fluid"
+                                            style="height: 200px; width: 100%; object-fit: cover;"
+                                            alt="">
                                             @endif
                                         </div>
                                         <div class="projects-item-info">
@@ -44,6 +46,7 @@
                                             <span> Post Date : {{ $item->post_date ?? '-' }} | Author :
                                                 {{ $item->author ?? '-' }} </span>
                                             <p> {{ $item->short_description ?? '-' }}</p>
+                                            <p> {{ Str::limit($item->details, 200, '...') ?? '-' }}</p>
                                             <div class="projects-item-btn">
                                                 <a href="{{ route('projects.details', $item) }}"
                                                     class=" btn btn-sm btn-outline-secondary">More..</a>

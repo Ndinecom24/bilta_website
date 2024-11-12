@@ -21,6 +21,37 @@
             bottom: 0;
             left: 0;
         }
+
+        /* Title */
+.project-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Meta information */
+.project-meta {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: gray;
+    font-size: 0.9em;
+}
+
+/* Short Description */
+.project-short-description {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #333;
+}
+
+/* Details */
+.project-details {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1em;
+    color: #555;
+}
+
     </style>
     <section id="projects" class="projects section-bg">
         <div class="container">
@@ -59,11 +90,13 @@
                             @endif
                         </div>
                         <div class="projects-item-info">
-                            <h4>{{ $project->title ?? '-' }}</h4>
-                            <span> Post Date : {{ $project->post_date ?? '-' }} | Author :
+                            <h4 class="project-title">{{ $project->title ?? '-' }}</h4>
+                            <span class="project-meta"> Post Date : {{ $project->post_date ?? '-' }} | Author :
                                 {{ $project->author ?? '-' }} </span>
-                            <p> {{ $project->short_description ?? '-' }}</p>
+                            <p class="project-short-description"> {{ $project->short_description ?? '-' }}</p>
+                            <div class="project-details"> {{ $project->details ?? '' }}</div>
                         </div>
+                        
                     </div>
                 </div>
 

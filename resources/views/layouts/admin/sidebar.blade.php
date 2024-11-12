@@ -43,6 +43,7 @@
                 <a class="collapse-item" href="{{route('admin.company.values')}}">Our Values</a>
                 <a class="collapse-item" href="{{route('admin.company.services')}}">Our Services</a>
                 <a class="collapse-item" href="{{route('admin.company.contact-us')}}">Contact Us</a>
+                <a class="collapse-item" href="{{route('admin.page.contact.emails')}}">Email Messages</a>             
                 <a class="collapse-item" href="{{route('admin.page.our-team')}}">Our Team</a>
                 <h6 class="collapse-header">Other Pages:</h6>
                 <a class="collapse-item" href="{{route('admin.company.faqs')}}">FAQs</a>

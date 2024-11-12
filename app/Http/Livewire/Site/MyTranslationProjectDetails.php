@@ -22,7 +22,7 @@ class MyTranslationProjectDetails extends Component
     public function render()
     {
 
-        $this->__issettitle =  $this->project->title ; 
+        $this->title =  $this->project->title ; 
         // $this->project_categories = ItemCategory::select('*')->where('type',  'Project')->get()  ;
         $this->categories = Projects::selectRaw('category_id, count(*) as total')->where('status_id', config('constants.status.active'))->groupBy('category_id')->get() ;
       

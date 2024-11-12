@@ -2,7 +2,7 @@
     <!-- ################################################################################################ -->
     <ul class="clear">
         <li class="active"><a href="{{route('site.home')}}">Home</a></li>
-        <li><a class="drop" href="#">News / Media</a>
+        <li><a class="drop" href="#">News / Updates</a>
             <ul>
                 <li><a href="pages/gallery.html">Gallery</a></li>
                 <li><a href="pages/full-width.html">Videos</a></li>
