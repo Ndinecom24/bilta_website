@@ -186,7 +186,7 @@
                             <div class="member">
                                 <div class="member-img">
                                     <img class="img-fluid" src="{{ $our_team->getFirstMedia('team_images')->getUrl() }}"
-                                        style="height: 300px; width: 100%; object-fit: cover;"
+                                        style="height: 330px; width: 100%; object-fit: cover;"
                                         title="{{ $our_team->getFirstMedia('team_images')->name }}">
 
                                     <div class="social">
