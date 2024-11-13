@@ -50,38 +50,10 @@
                                 We hold the Scriptures in reverence, cherishing them as a divine
                                 gift that illuminates our path <br> and guides us in our spiritual journey.
                             </p>
-                            {{-- <div class="text-center">
-                        <a href="#" class="more-btn">Learn More <i class="bx bx-chevron-right"></i></a>
-                      </div> --}}
+                          
                         </div>
                     </div>
-                    {{-- <div class="col-xl-8 col-lg-7 d-flex">
-                    <div class="icon-boxes d-flex flex-column justify-content-center">
-                      <div class="row">
-                        <div class="col-xl-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-                          <div class="icon-box mt-4 mt-xl-0">
-                            <i class="bx bx-receipt"></i>
-                            <h4>Corporis voluptates sit</h4>
-                            <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip</p>
-                          </div>
-                        </div>
-                        <div class="col-xl-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
-                          <div class="icon-box mt-4 mt-xl-0">
-                            <i class="bx bx-cube-alt"></i>
-                            <h4>Ullamco laboris ladore pan</h4>
-                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt</p>
-                          </div>
-                        </div>
-                        <div class="col-xl-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
-                          <div class="icon-box mt-4 mt-xl-0">
-                            <i class="bx bx-images"></i>
-                            <h4>Labore consequatur</h4>
-                            <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> --}}
+                  
                 </div>
 
             </div>
@@ -216,30 +188,6 @@
         </section><!-- End Team Section -->
 
 
-        {{--            <!-- ======= Clients Section ======= --> --}}
-
-        {{--            <section id="clients" class="clients"> --}}
-        {{--              <div class="text-center mb-3"> --}}
-        {{--                <h2 data-aos="fade-up">Our Partners</h2> --}}
-        {{--            </div> --}}
-        {{--               <div class="container" data-aos="fade-up"> --}}
-
-        {{--                 <div class="clients-slider swiper"> --}}
-        {{--                   <div class="swiper-wrapper align-items-center"> --}}
-        {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-1.png" class="img-fluid" alt=""></div> --}}
-        {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-2.png" class="img-fluid" alt=""></div> --}}
-        {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-3.png" class="img-fluid" alt=""></div> --}}
-        {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-4.png" class="img-fluid" alt=""></div> --}}
-        {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-5.png" class="img-fluid" alt=""></div> --}}
-        {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-6.png" class="img-fluid" alt=""></div> --}}
-        {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-7.png" class="img-fluid" alt=""></div> --}}
-        {{--                     <div class="swiper-slide"><img src="assets/img/clients/client-8.png" class="img-fluid" alt=""></div> --}}
-        {{--                   </div> --}}
-        {{--                   <div class="swiper-pagination"></div> --}}
-        {{--                 </div> --}}
-
-        {{--               </div> --}}
-        {{--             </section><!-- End Clients Section --> --}}
 
 
         <!-- ======= Contact Section ======= -->
