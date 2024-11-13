@@ -93,8 +93,8 @@
                             <h4 class="project-title">{{ $project->title ?? '-' }}</h4>
                             <span class="project-meta"> Post Date : {{ $project->post_date ?? '-' }} | Author :
                                 {{ $project->author ?? '-' }} </span>
-                            <p class="project-short-description"> {{ $project->short_description ?? '-' }}</p>
-                            <div class="project-details"> {{ $project->details ?? '' }}</div>
+                            {{-- <p class="project-short-description"> {{ $project->short_description ?? '-' }}</p> --}}
+                            <div class="project-details"> {!! $project->details ?? '' !!}</div>
                         </div>
                         
                     </div>
