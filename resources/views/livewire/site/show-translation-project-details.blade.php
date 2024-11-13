@@ -145,7 +145,7 @@
                     <div class="projects-item">
                         <div class="projects-item-img">
                             @if ($project->getFirstMedia('project_title_images') != null)
-                                <img src="{{ $project->getFirstMedia('project_title_images')->getUrl() }}"
+                                <img   loading="lazy"  src="{{ $project->getFirstMedia('project_title_images')->getUrl() }}"
                                     title="{{ $project->getFirstMedia('project_title_images')->name }}"
                                     class="img-fluid" alt="">
                             @endif
@@ -171,7 +171,7 @@
                         @foreach ($project->getMedia('project_images') as $gallery_item)
                             <div
                                 class="col-lg-4 col-md-6 portfolio-item filter-{{ $gallery_item->item_category_id ?? '' }}">
-                                <img src="{{ $gallery_item->getUrl() }}" class="img-fluid" alt="">
+                                <img   loading="lazy"  src="{{ $gallery_item->getUrl() }}" class="img-fluid" alt="">
                                 <div class="portfolio-info">
                                     <h4>{{ $gallery_item->name }}</h4>
                                     <p>{{ $gallery_item->description ?? '-' }}</p>
@@ -211,7 +211,7 @@
                                         </a>
                                     </div>
                                 @else
-                                    <img src="{{ $project_file->getUrl() }}" width="100%" class="img-fluid"
+                                    <img   loading="lazy"  src="{{ $project_file->getUrl() }}" width="100%" class="img-fluid"
                                         alt="">
                                     <div class="portfolio-info">
                                         <h4>{{ $project_file->name }}</h4>

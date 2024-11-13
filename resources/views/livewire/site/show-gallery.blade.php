@@ -26,7 +26,7 @@
                         @foreach ($gallery_items as $gallery_item)
                             <div
                                 class="col-lg-4 col-md-6 portfolio-item filter-{{ $gallery_item->item_category_id ?? '' }}">
-                                <img src="{{ $gallery_item->getFirstMedia('gallery_images')->getUrl() }}" width="100%"
+                                <img   loading="lazy"  src="{{ $gallery_item->getFirstMedia('gallery_images')->getUrl() }}" width="100%"
                                     class="img-fluid" alt="">
                                 <div class="portfolio-info">
                                     <h4>{{ $gallery_item->name }}</h4>

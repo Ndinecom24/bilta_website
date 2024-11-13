@@ -33,7 +33,7 @@
 
                         <div class="news-item-img">
                             @if ($news->getFirstMedia('news_images') != null)
-                                <img src="{{ $news->getFirstMedia('news_images')->getUrl() }}"
+                                <img   loading="lazy"  src="{{ $news->getFirstMedia('news_images')->getUrl() }}"
                                     title="{{ $news->getFirstMedia('news_images')->name }}" class="img-fluid"
                                     alt="">
                             @endif
@@ -56,7 +56,7 @@
                         @foreach ($news->getMedia('news_images') as $gallery_item)
                             <div
                                 class="col-lg-4 col-md-6 portfolio-item filter-{{ $gallery_item->item_category_id ?? '' }}">
-                                <img src="{{ $gallery_item->getUrl() }}" width="100%" class="img-fluid"
+                                <img   loading="lazy"  src="{{ $gallery_item->getUrl() }}" width="100%" class="img-fluid"
                                     alt="">
                                 <div class=" portfolio-info">
                                     <h4>{{ $gallery_item->name }}</h4>

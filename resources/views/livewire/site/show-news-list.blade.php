@@ -35,7 +35,7 @@
                     
                                         <div class="news-item-img">
                                             @if ($item->getFirstMedia('news_images') != null)
-                                                <img src="{{ $item->getFirstMedia('news_images')->getUrl() }}"
+                                                <img   loading="lazy"  src="{{ $item->getFirstMedia('news_images')->getUrl() }}"
                                                     title="{{ $item->getFirstMedia('news_images')->name }}"
                                                     class="img-fluid" alt="">
                                             @endif

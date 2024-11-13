@@ -66,7 +66,7 @@
                 <div class="row">
                     <div class="col-xl-5 col-lg-6 d-flex justify-content-center align-items-stretch position-relative"
                         data-aos="fade-right">
-                        <img src="assets/img/project-translation.jpg" class="img-fluid" alt="">
+                        <img   loading="lazy"  src="assets/img/project-translation.jpg" class="img-fluid" alt="">
                     </div>
 
                     <div
@@ -119,7 +119,7 @@
                         @foreach ($testimonials as $testimonial)
                             <div class="swiper-slide">
                                 <div class="testimonial-item">
-                                    <img src="assets/img/testimonials/testimonies.jpg" class="testimonial-img"
+                                    <img   loading="lazy"  src="assets/img/testimonials/testimonies.jpg" class="testimonial-img"
                                         alt="">
                                     <h3>{{ $testimonial->name ?? '--' }}</h3>
                                     <h4> {{ $testimonial->title ?? '--' }} </h4>
@@ -157,7 +157,7 @@
                         <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up">
                             <div class="member">
                                 <div class="member-img">
-                                    <img class="img-fluid" src="{{ $our_team->getFirstMedia('team_images')->getUrl() }}"
+                                    <img   loading="lazy"  class="img-fluid" src="{{ $our_team->getFirstMedia('team_images')->getUrl() }}"
                                         style="height: 350px; width: 100%; object-fit: cover;"
                                         title="{{ $our_team->getFirstMedia('team_images')->name }}">
 

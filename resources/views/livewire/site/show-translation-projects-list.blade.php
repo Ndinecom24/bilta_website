@@ -34,7 +34,7 @@
                                     <div class="projects-item">
                                         <div class="projects-item-img">
                                             @if ($item->getFirstMedia('project_title_images') != null)
-                                            <img src="{{ $item->getFirstMedia('project_title_images')->getUrl() }}"
+                                            <img   loading="lazy"  src="{{ $item->getFirstMedia('project_title_images')->getUrl() }}"
                                             title="{{ $item->getFirstMedia('project_title_images')->name }}"
                                             class="img-fluid"
                                             style="height: 200px; width: 100%; object-fit: cover;"
