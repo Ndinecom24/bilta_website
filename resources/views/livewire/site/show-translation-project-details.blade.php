@@ -23,35 +23,96 @@
         }
 
         /* Title */
-.project-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #333;
-}
+        .project-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
 
-/* Meta information */
-.project-meta {
-    font-family: 'Source Sans Pro', sans-serif;
-    color: gray;
-    font-size: 0.9em;
-}
+        /* Meta information */
+        .project-meta {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: gray;
+            font-size: 0.9em;
+        }
 
-/* Short Description */
-.project-short-description {
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 600;
-    font-size: 1.1em;
-    color: #333;
-}
+        /* Short Description */
+        .project-short-description {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #333;
+        }
 
-/* Details */
-.project-details {
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 1em;
-    color: #555;
-}
+        /* Details */
+        .project-details {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 1em;
+            color: #555;
+        }
 
+
+        .project-details {
+            line-height: 1.6;
+            /* Adjust line height for readability */
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .project-details p {
+            margin-bottom: 15px;
+            /* Add space between paragraphs */
+        }
+
+        .project-details b,
+        .project-details strong {
+            font-weight: bold;
+            /* Ensure bold text is styled properly */
+        }
+
+        .project-details i,
+        .project-details em {
+            font-style: italic;
+            /* Ensure italic text is styled properly */
+        }
+
+        .project-details u {
+            text-decoration: underline;
+            /* Ensure underline is applied */
+        }
+
+        .portfolio-item img {
+            height: 250px;
+            /* Set a desired fixed height */
+            width: 100%;
+            /* Ensure the width fills the container */
+            object-fit: cover;
+            /* Crop the image to fit the fixed height */
+        }
+
+        .preview-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #007bff;
+            /* Customize the button color */
+            color: white;
+            font-size: 1.5em;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .preview-link:hover {
+            background-color: #0056b3;
+            /* Darker shade for hover effect */
+        }
+
+
+        /* Adjust for other formatting needs */
     </style>
     <section id="projects" class="projects section-bg">
         <div class="container">
@@ -93,10 +154,8 @@
                             <h4 class="project-title">{{ $project->title ?? '-' }}</h4>
                             <span class="project-meta"> Post Date : {{ $project->post_date ?? '-' }} | Author :
                                 {{ $project->author ?? '-' }} </span>
-                            {{-- <p class="project-short-description"> {{ $project->short_description ?? '-' }}</p> --}}
                             <div class="project-details"> {!! $project->details ?? '' !!}</div>
                         </div>
-                        
                     </div>
                 </div>
 
@@ -112,8 +171,7 @@
                         @foreach ($project->getMedia('project_images') as $gallery_item)
                             <div
                                 class="col-lg-4 col-md-6 portfolio-item filter-{{ $gallery_item->item_category_id ?? '' }}">
-                                <img src="{{ $gallery_item->getUrl() }}" width="100%" class="img-fluid"
-                                    alt="">
+                                <img src="{{ $gallery_item->getUrl() }}" class="img-fluid" alt="">
                                 <div class="portfolio-info">
                                     <h4>{{ $gallery_item->name }}</h4>
                                     <p>{{ $gallery_item->description ?? '-' }}</p>
@@ -127,6 +185,7 @@
                         @endforeach
                     </div>
                 </div>
+
 
                 <!-- Project Files Header -->
                 <div class="col-lg-12 offset-lg-3 mt-lg-4">
