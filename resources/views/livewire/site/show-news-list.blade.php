@@ -1,5 +1,15 @@
 <div>
 
+    <style>
+        .news-item-img img.news-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    </style>
+    
+
     <body>
 
         <section id="news" class="news section-bg">
@@ -34,13 +44,19 @@
                                     <div class="news-item">
                     
                                         <div class="news-item-img">
-                                            @if ($item->getFirstMedia('news_images') != null)
-                                                <img   loading="lazy"  src="{{ $item->getFirstMedia('news_images')->getUrl() }}"
-                                                    title="{{ $item->getFirstMedia('news_images')->name }}"
-                                                    class="img-fluid" alt="">
-                                            @endif
+                                            @php
+                                                $image = $item->getFirstMedia('news_images') 
+                                                        ? $item->getFirstMedia('news_images')->getUrl() 
+                                                        : 'https://via.placeholder.com/300x200?text=News+Image';
+                                            @endphp
+                                            <img 
+                                                loading="lazy" 
+                                                src="{{ $image }}" 
+                                                title="{{ $item->getFirstMedia('news_images')->name ?? 'Placeholder Image' }}" 
+                                                class="img-fluid news-image" 
+                                                alt="{{ $item->getFirstMedia('news_images')->name ?? 'Placeholder Image' }}">
                                         </div>
-                    
+                                        
                                         <div class="news-item-info">
                                             <h4>{{ $item->title ?? '-' }}</h4>
                                             <span> Post Date : {{ $item->post_date ?? '-' }} | Author :

@@ -1,5 +1,29 @@
 <div>
 
+    <style>
+        .news-item-info {
+    text-align: left; /* Ensures the text is aligned to the left */
+    font-style: normal; /* Removes any italic styling */
+}
+
+.news-item-info h4 {
+    margin: 0 0 5px 0; /* Adds spacing below the title */
+    font-weight: bold; /* Ensures the title is bold */
+}
+
+.news-item-info span {
+    display: block; /* Ensures the span takes up its own line */
+    margin-bottom: 10px; /* Adds spacing below the metadata */
+    font-size: 14px; /* Adjusts font size for readability */
+    color: #555; /* Optional: Subtle color for metadata */
+}
+
+.news-item-info .news-details {
+    font-size: 16px; /* Adjusts font size for the details */
+    line-height: 1.5; /* Improves readability with line spacing */
+}
+
+    </style>
 
 
     <section id="news" class="news section-bg">
@@ -27,27 +51,33 @@
                     </div>
                 </div>
 
-
                 <div class="col-lg-9 col-md-9 d-flex align-items-stretch" data-aos="fade-up">
                     <div class="news-item">
-
+                
                         <div class="news-item-img">
-                            @if ($news->getFirstMedia('news_images') != null)
-                                <img   loading="lazy"  src="{{ $news->getFirstMedia('news_images')->getUrl() }}"
-                                    title="{{ $news->getFirstMedia('news_images')->name }}" class="img-fluid"
-                                    alt="">
-                            @endif
+                            @php
+                                $image = $news->getFirstMedia('news_images') 
+                                        ? $news->getFirstMedia('news_images')->getUrl() 
+                                        : 'https://via.placeholder.com/300x200?text=News+Image';
+                            @endphp
+                            <img 
+                                loading="lazy" 
+                                src="{{ $image }}" 
+                                title="{{ $news->getFirstMedia('news_images')->name ?? 'Placeholder Image' }}" 
+                                alt="{{ $news->getFirstMedia('news_images')->name ?? 'Placeholder Image' }}"
+                                class="img-fluid" 
+                                style="width: 100%; height: auto; object-fit: cover; border-radius: 5px;">
                         </div>
-
+                
                         <div class="news-item-info">
                             <h4>{{ $news->title ?? '-' }}</h4>
-                            <span> Post Date : {{ $news->post_date ?? '-' }} | Author :
-                                {{ $news->author ?? '-' }} </span>
-                                 {!! $news->details ?? '' !!}
-
+                            <span>Post Date: {{ $news->post_date ?? '-' }} | Author: {{ $news->author ?? '-' }}</span>
+                            <div class="news-details">{!! $news->details ?? '' !!}</div>
                         </div>
+                        
                     </div>
                 </div>
+                
 
                 <div class="col-lg-3 col-md-3"> </div>
 
