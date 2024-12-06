@@ -32,18 +32,18 @@ class ShowNewsItem extends Component
         'author' => 'required',
         'news_title_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
 //        'news_title_image' => 'image|max:3072', // 1MB Max
-
     ];
 
     public function render()
     {
-        $our_news_items = News::select('id', 'title', 'details', 'short_description', 'post_date', 'author',
+        $our_news_items = News::select('id', 'title', 'details','category_id', 'short_description', 'post_date', 'author',
          'created_by',
             'status_id',
         )->paginate(20);
         $statuses = Status::get();
         $categories = ItemCategory::where('type', 'News')->get();
 
+       
             return view('livewire.admin.news-page.index')->with(compact('our_news_items', 'statuses', 'categories'));
     }
 
@@ -97,7 +97,7 @@ class ShowNewsItem extends Component
             // Reset Form Fields After Creating NewsItem
             $this->resetFields();
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
 
             // Set Flash Message
             session()->flash('error', 'Something goes wrong while creating news item!!' . $e->getMessage());
@@ -137,9 +137,7 @@ class ShowNewsItem extends Component
 
     public function update()
     {
-
         // Validate request
-//        $this->validate();
         try {
             // Update our_news
             News::find($this->our_news_id)->fill(

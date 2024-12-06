@@ -28,14 +28,14 @@ class News extends Model implements HasMedia
 
     protected $with = [
         'status',
-        'myCategory'
+        'category'
     ];
 
     public function status (){
         return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 
-    public function myCategory (){
+    public function category (){
         return $this->belongsTo( ItemCategory::class, 'category_id', 'id');
     }
 

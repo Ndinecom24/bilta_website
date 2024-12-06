@@ -99,7 +99,7 @@
                                             {{$our_news_item->status->name ?? "-"}}
                                         </td>
                                         <td>
-                                            {{$our_news_item->myCategory->name   ?? "-"}}
+                                            {{$our_news_item->category->name  ?? "-"   }}
                                         </td>
 
                                          <td>
