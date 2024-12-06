@@ -155,6 +155,7 @@ class ShowLeadershipTeam extends Component
                 ]
             )->save();
 
+            $team = OurTeam::find($this->our_team_id);
             if (isset($this->user_image)) {
                 $team->clearMediaCollection('team_images');
                 $team->addMedia($this->user_image)
