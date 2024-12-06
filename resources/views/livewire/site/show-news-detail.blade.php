@@ -41,8 +41,8 @@
                         <h4>News Categories</h4>
                         @foreach ($categories as $item)
                             <ul>
-                                <li><a href="{{ route('news', $item->myCategory->id ?? '0') }}">
-                                        {{ $item->myCategory->name ?? '-' }} ( {{ $item->total ?? '-' }}
+                                <li><a href="{{ route('news', $item->category->id ?? '0') }}">
+                                        {{ $item->category->name ?? '-' }} ( {{ $item->total ?? '-' }}
                                         )
                                     </a>
                                 </li>

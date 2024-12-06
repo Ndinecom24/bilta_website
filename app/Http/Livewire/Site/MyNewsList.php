@@ -38,6 +38,9 @@ class MyNewsList extends Component
 
         $this->categories = News::selectRaw('category_id, count(*) as total')->where('status_id', config('constants.status.active'))->groupBy('category_id')->get() ;
 
+        
+
+       // dd(  $this->categories[0]->category->name );
         return view('livewire.site.show-news-list')->with(compact('news'));
     }
 

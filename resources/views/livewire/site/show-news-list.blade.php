@@ -25,10 +25,10 @@
                     <div class="col-lg-3 col-md-3 d-flex align-items-stretch" data-aos="fade-up">
                         <div class="card card-body">
                             <h4>News Categories</h4>
-                            @foreach ($categories as $item)
+                            @foreach ($categories as $item1)
                                 <ul>
-                                    <li><a href="{{ route('news', $item->myCategory->id ?? '0') }}">
-                                            {{ $item->myCategory->name ?? '-' }} ( {{ $item->total ?? '-' }}
+                                    <li><a href="{{ route('news', $item1->category->id ?? '0') }}">
+                                            {{ $item1->category->name  ?? '-' }} ( {{ $item1->total ?? '-' }}
                                             )
                                         </a>
                                     </li>
