@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Livewire\Admin\Company\ShowAboutUs;
 use App\Http\Livewire\Admin\Company\ShowAdminHome;
@@ -76,7 +77,7 @@ Route::prefix('bilta/site')->group(function () {
 
 });
 Route::post('/contact', [ContactController::class,  'store'])->name('contact.store');
-
+Route::post('/clear-cache', [HomeController::class, 'clearCache']);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// ADMIN

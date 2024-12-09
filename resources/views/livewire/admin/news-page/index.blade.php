@@ -124,6 +124,11 @@
                                         <td>
                                             <div class="row">
                                                 <div class="col-6">
+                                                    <a href="{{  route('admin.page.item.news.details')  }}" 
+                                                            class="btn btn-primary btn-sm m-2">Show
+                                                    </a>
+                                                </div>
+                                                <div class="col-6">
                                                     <button wire:click="edit({{$our_news_item->id}})"
                                                             data-toggle="modal" data-target="#updateModal"
                                                             class="btn btn-primary btn-sm m-2">Edit

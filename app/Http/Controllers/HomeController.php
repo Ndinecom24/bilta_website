@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Artisan;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,5 +25,17 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+
+    public function clearCache()
+    {
+        try {
+            // Run the Artisan command to clear cache
+            Artisan::call('optimize:clear');
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
 }

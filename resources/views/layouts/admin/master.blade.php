@@ -21,8 +21,6 @@
     <link href="{{asset('/admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
 
     @stack('custom-styles')
-
-{{--    <livewire:styles/>--}}
     @livewireStyles
 
 </head>
