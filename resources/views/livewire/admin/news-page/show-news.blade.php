@@ -82,7 +82,7 @@
                     <p><strong>Short Description:</strong></p>
                     <p>{{ $our_news_item->short_description }}</p>
                     <p><strong>Details:</strong></p>
-                    <p>{{ $our_news_item->details }}</p>
+                    <p>{!! $our_news_item->details !!}</p>
                 </div>
                 <div class="card-footer">
                     <a href="{{ route('admin.page.item.news') }}" class="btn btn-secondary">Back to News List</a>
