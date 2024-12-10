@@ -141,7 +141,7 @@
                     @if (isset($news))
                         @foreach ($news->getMedia('news_images') as $item)
                             <div class="col-md-8 m-1">
-                                <img src="{{ $item->getUrl() }}" style="width:100%; height: 150px;" title="{{ $item->name }}">
+                                <img src="{{ $item->getUrl() }}" style="width:100%; height: 40%;" title="{{ $item->name }}">
                             </div>
                             <div class="col-md-3 m-1">
                                 <button wire:click.prevent="removeImage({{ $item->id }})" class="btn btn-sm btn-outline-danger">Remove</button>
