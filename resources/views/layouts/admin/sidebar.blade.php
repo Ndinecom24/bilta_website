@@ -50,7 +50,7 @@
                 <a class="collapse-item" href="{{ route('admin.page.testimonial') }}"><i class="fas fa-comment-dots"></i> Testimonial</a>
                 <a class="collapse-item" href="{{ route('admin.page.item.gallery') }}"><i class="fas fa-images"></i> Gallery</a>
                 <a class="collapse-item" href="{{ route('admin.page.item.videos') }}"><i class="fas fa-video"></i> Videos</a>
-                <a class="collapse-item" href="{{ route('admin.page.item.audio') }}"><i class="fas fa-audio"></i> Audio</a>
+                <a class="collapse-item" href="{{ route('admin.page.item.audio') }}"><i class="fas fa-music"></i> Audio</a>
                 <a class="collapse-item" href="{{ route('admin.page.item.projects') }}"><i class="fas fa-project-diagram"></i> Projects</a>
                 <a class="collapse-item" href="{{ route('admin.page.item.category') }}"><i class="fas fa-tags"></i> Item Category</a>
             </div>
