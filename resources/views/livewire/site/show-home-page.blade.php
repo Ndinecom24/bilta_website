@@ -228,7 +228,7 @@
                                     <!-- The checkbox used to toggle details -->
                                     <input type="checkbox" id="toggleDetails{{ $our_team->id }}" class="toggle-details" style="display: none;">
                                     <!-- Label for the 'More' button -->
-                                    <label for="toggleDetails{{ $our_team->id }}" class="btn btn-sm btn-outline-info more-btn"></label>
+                                    <label for="toggleDetails{{ $our_team->id }}" class="btn btn-sm btn-outline-secondary more-btn"></label>
                                     
                                     <!-- The details content that will be shown/hidden based on the checkbox -->
                                     <div class="details-content">
