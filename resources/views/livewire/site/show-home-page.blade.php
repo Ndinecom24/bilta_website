@@ -305,11 +305,16 @@
                                 <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
                             </div>
                             <div class="my-3">
-                                <div class="loading" style="display: none;">Loading...</div>
-                                <div class="error-message" style="display: none; "></div>
-                                <div class="sent-message" style="display: none; ">Your message has been
-                                    sent. Thank you!</div>
+                                <!-- Loading indicator -->
+                                <div class="loading1" style="display: none;">Loading...</div>
+                            
+                                <!-- Success message, hidden by default -->
+                                <div class="sent-message1" style="color: green; display: none;"></div>
+                            
+                                <!-- Error message, hidden by default -->
+                                <div class="error-message1" style="color: red; display: none;"></div>
                             </div>
+                            
                             <div class="text-center"><button type="submit">Send Message</button></div>
                         </form>
 
@@ -326,46 +331,57 @@
             class="bi bi-arrow-up-short"></i></a>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    
     <script>
         $(document).ready(function() {
             $('.php-email-form').on('submit', function(e) {
                 e.preventDefault();
-
+    
+                // Show the loading indicator
+                $('.loading1').show();
+    
                 $.ajax({
                     url: "{{ route('contact.store') }}",
                     type: "POST",
                     data: $(this).serialize(),
                     success: function(response) {
-                        // Show success message and hide error message
-                        $('.sent-message').text(response.success).show();
-                        $('.error-message').hide();
-                    },
-                    error: function(response) {
-                        // Handle error response from the backend
-                        if (response.responseJSON && response.responseJSON.errors) {
-                            // Collect all validation errors
-                            let errors = response.responseJSON.errors;
-                            let errorText = "";
-                            for (let key in errors) {
-                                errorText += errors[key][0] +
-                                "<br>"; // Display first error message for each field
-                            }
-                            $('.error-message').html(errorText).show();
-                        } else if (response.responseJSON && response.responseJSON.error) {
-                            // Display general error message
-                            $('.error-message').html(response.responseJSON.error).show();
-                        } else {
-                            // Default error message if response is unexpected
-                            $('.error-message').html(
-                                    'An unexpected error occurred. Please try again later.')
-                                .show();
+                        // Hide the loading indicator
+                        $('.loading1').hide();
+    
+                        // Show the success message and hide the error message
+                        if (response.success) {
+                            $('.sent-message1').text(response.success).show();
+                            $('.error-message1').hide(); // Hide error message if successful
                         }
-                        $('.sent-message').hide(); // Hide the success message
+                    },
+                    error: function(xhr, status, error) {
+                        // Hide the loading indicator
+                        $('.loading1').hide();
+    
+                        // Handle error response
+                        let errorText = 'An unexpected error occurred. Please try again later.';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            // Collect and display validation errors
+                            let errors = xhr.responseJSON.errors;
+                            errorText = "";
+                            for (let key in errors) {
+                                errorText += errors[key][0] + "<br>"; // Display first error message for each field
+                            }
+                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
+                            // Display general error message
+                            errorText = xhr.responseJSON.error;
+                        }
+    
+                        // Show the error message and hide the success message
+                        $('.error-message1').html(errorText).show();
+                        $('.sent-message1').hide(); // Hide success message if there's an error
                     }
                 });
             });
         });
     </script>
-
+    
+   
 
 </div>

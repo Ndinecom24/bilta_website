@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Contact Message</title>
+    <title>New Contact Us Message</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,7 +55,7 @@
 </head>
 <body>
     <div class="email-container">
-        <h2>New Contact Message</h2>
+        <h2>New Contact Us Message</h2>
 
         <p><span class="label">Name:</span> {{ $contactMessage->name }}</p>
         <p><span class="label">Email:</span> {{ $contactMessage->email }}</p>
@@ -67,8 +67,7 @@
         <p>{{ $contactMessage->message }}</p>
 
         <div class="footer">
-            <p>Thank you for your message. We will get back to you as soon as possible.</p>
-            <p class="website">This message was sent via the <a href="https://bilta.org" target="_blank">Bilta.org Contact Us</a> form.</p>
+            <p class="website">This message was sent via the <a href="{{   route('site.home') }}" target="_blank">bilta.org Contact Us</a> form.</p>
         </div>
     </div>
 </body>
