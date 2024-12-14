@@ -6,37 +6,91 @@
 
     <main id="main">
 
-        <!-- ======= Hero Section ======= -->
-        @if ($home_intro->getFirstMedia('home_intro_images') ?? '00' != '00')
-            <section id="hero"
-                style="background-image:url('{{ $home_intro->getFirstMedia('home_intro_images')->getUrl() ?? '' }}')"
-                class="d-flex flex-column justify-content-center align-items-center">
-                <div class="container" data-aos="fade-in">
-                    <h1>Welcome to <span style="color: #b25e1d">BiLTA</span></h1>
-                    <h2 id="bilta-intro-text" class="text-justify">A place where faith and literary
-                        exploration<br>
-                        intertwine to enrich our spiritual journeys.</h2>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bx bxs-bible get-started-icon"></i>
-                        <a href="" class="btn-get-started scrollto">Play Audio Bible</a>
-                    </div>
+   <!-- ======= Hero Section ======= -->
+@if ($home_intro->getFirstMedia('home_intro_images') ?? '00' != '00')
+<section id="hero"
+    style="background-image:url('{{ $home_intro->getFirstMedia('home_intro_images')->getUrl() ?? '' }}')"
+    class="d-flex flex-column justify-content-center align-items-center">
+    <div class="container" data-aos="fade-in">
+        <h1>Welcome to <span style="color: #b25e1d">BiLTA</span></h1>
+        <h2 id="bilta-intro-text" class="text-justify">A place where faith and literary
+            exploration<br>
+            intertwine to enrich our spiritual journeys.</h2>
+        <div class="d-flex align-items-center mb-3">
+            <i class="bx bxs-bible get-started-icon"></i>
+            <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal" data-bs-target="#audioModal">Play Audio Bible</a>
+        </div>
+    </div>
+</section>
+@else
+<section id="hero" style="background: url( {{ asset('assets/img/biblee017c8414_1920.png') }} )"
+    class="d-flex flex-column justify-content-center align-items-center">
+    <div class="container" data-aos="fade-in">
+        <h1>Welcome to BiLTA</h1>
+        <h2 id="bilta-intro-text" class="text-justify">A place where faith and literary
+            exploration<br>
+            intertwine to enrich our spiritual journeys.</h2>
+        <div class="d-flex align-items-center">
+            <i class="bx bxs-bible get-started-icon"></i>
+            <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal" data-bs-target="#audioModal">Play Audio Bible</a>
+        </div>
+    </div>
+</section>
+@endif
+
+<!-- Audio Modal -->
+<div  wire:ignore.self  class="modal fade" id="audioModal" tabindex="-1" aria-labelledby="audioModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="audioModalLabel">Select an Audio File</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <input type="text" class="form-control mb-3" placeholder="Search audio files..." wire:model="search" wire:loading.attr="disabled">
+            
+                <div wire:loading class="text-primary mb-2">
+                    Loading audio files...
                 </div>
-            </section> <!-- End Hero -->
-        @else
-            <section id="hero" style="background: url( {{ asset('assets/img/biblee017c8414_1920.png') }}  )  "
-                class="d-flex flex-column justify-content-center align-items-center">
-                <div class="container" data-aos="fade-in">
-                    <h1>Welcome to BiLTA</h1>
-                    <h2 id="bilta-intro-text" class="text-justify">A place where faith and literary
-                        exploration<br>
-                        intertwine to enrich our spiritual journeys.</h2>
-                    <div class="d-flex align-items-center">
-                        <i class="bx bxs-bible get-started-icon"></i>
-                        <a href="" class="btn-get-started scrollto">Play Audio Bible</a>
-                    </div>
+            
+                <ul class="list-group">
+                    @forelse ($audioFiles as $audio)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ $audio->title }}</strong><br>
+                                <small>Project| {{ $audio->project->myCategory->name ?? "" }} : {{ $audio->project->title ?? "" }}</small>
+                            </div>
+            
+                            <div>
+                                @if ($audio && $audio->getFirstMediaUrl('audio_files'))
+                                    <audio controls aria-label="Play audio">
+                                        <source src="{{ $audio->getFirstMediaUrl('audio_files') }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                @else
+                                    <p class="text-muted mb-0">No audio file available.</p>
+                                @endif
+                            </div>
+                        </li>
+                    @empty
+                        <li class="list-group-item text-center text-muted">
+                            No audio files found.
+                        </li>
+                    @endforelse
+                </ul>
+            
+                <div class="mt-3">
+                    {{ $audioFiles->links() }}
                 </div>
-            </section> <!-- End Hero -->
-        @endif
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+</div>
+
 
         <!-- ======= Why Us Section ======= -->
         <section id="why-us" class="why-us">

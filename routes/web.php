@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Site\ContactController;
+use App\Http\Livewire\Admin\AudioPage\ShowItemAudio;
 use App\Http\Livewire\Admin\Company\ShowAboutUs;
 use App\Http\Livewire\Admin\Company\ShowAdminHome;
 use App\Http\Livewire\Admin\Company\ShowContactUsDetails;
@@ -99,6 +100,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/categories', ShowItemCategory::class)->name('admin.page.item.category');
         Route::get('/item/gallery', ShowItemGallery::class)->name('admin.page.item.gallery');
         Route::get('/item/videos', ShowItemVidoes::class)->name('admin.page.item.videos');
+        Route::get('/item/audio', ShowItemAudio::class)->name('admin.page.item.audio');
         Route::get('/item/news', ShowNewsItem::class)->name('admin.page.item.news');
         Route::get('/contact/emails', ShowEmails::class)->name('admin.page.contact.emails');
         Route::get('/item/news/{id}/details', ShowNewsItemDetails::class)->name('admin.page.item.news.details');
