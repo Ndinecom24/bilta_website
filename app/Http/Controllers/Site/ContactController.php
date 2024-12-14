@@ -23,14 +23,14 @@ class ContactController extends Controller
         // Prepare additional data
         $validated['status_id'] = 1;
         $validated['created_by'] = 0;
-        $validated['recipient'] = "admin@bilta.org";
+        $validated['recipient'] = "info@bilta.org";
 
         try {
             // Save the message to the database
             $contactMessage = ContactMessage::updateOrCreate($validated, $validated);
 
             // Send the email (ensure the ContactMessageMail mailable is set up)
-            Mail::to('admin@example.com')->send(new \App\Mail\ContactMessageMail($contactMessage));
+            Mail::to('info@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
 
             // Return success response
             return response()->json(['success' => 'Your message has been sent successfully.']);
