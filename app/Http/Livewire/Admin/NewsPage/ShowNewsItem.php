@@ -39,7 +39,8 @@ class ShowNewsItem extends Component
         $our_news_items = News::select('id', 'title', 'details','category_id', 'short_description', 'post_date', 'author',
          'created_by',
             'status_id',
-        )->paginate(20);
+        )
+        ->orderBy('created_at', 'desc')->paginate(20);
         $statuses = Status::get();
         $categories = ItemCategory::where('type', 'News')->get();
 
