@@ -1,27 +1,35 @@
 <div>
 
     <style>
-        .news-item-info {
-    text-align: left; /* Ensures the text is aligned to the left */
-    font-style: normal; /* Removes any italic styling */
+ .news-item {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+.news-item-info {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
 }
 
 .news-item-info h4 {
-    margin: 0 0 5px 0; /* Adds spacing below the title */
-    font-weight: bold; /* Ensures the title is bold */
+    font-size: 24px;
+    font-weight: bold;
+    color: #2d2d2d;
 }
 
 .news-item-info span {
-    display: block; /* Ensures the span takes up its own line */
-    margin-bottom: 10px; /* Adds spacing below the metadata */
-    font-size: 14px; /* Adjusts font size for readability */
-    color: #555; /* Optional: Subtle color for metadata */
+    font-size: 14px;
+    color: #777;
 }
 
-.news-item-info .news-details {
-    font-size: 16px; /* Adjusts font size for the details */
-    line-height: 1.5; /* Improves readability with line spacing */
+.news-details {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #555;
 }
+
 
     </style>
 
@@ -52,7 +60,7 @@
                 </div>
 
                 <div class="col-lg-9 col-md-9 d-flex align-items-stretch" data-aos="fade-up">
-                    <div class="news-item">
+                    <div class="news-item" style="font-family: 'Arial', sans-serif; color: #333; line-height: 1.6;">
                 
                         <div class="news-item-img">
                             @php
@@ -69,14 +77,15 @@
                                 style="width: 100%; height: auto; object-fit: cover; border-radius: 5px;">
                         </div>
                 
-                        <div class="news-item-info">
-                            <h4>{{ $news->title ?? '-' }}</h4>
-                            <span>Post Date: {{ $news->post_date ?? '-' }} | Author: {{ $news->author ?? '-' }}</span>
-                            <div class="news-details1">{!! $news->details ?? '' !!}</div>
+                        <div class="news-item-info" style="padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
+                            <h4 style="font-size: 24px; font-weight: bold; color: #2d2d2d;">{{ $news->title ?? '-' }}</h4>
+                            <span style="font-size: 14px; color: #777;">Post Date: {{ $news->post_date ?? '-' }} | Author: {{ $news->author ?? '-' }}</span>
+                            <div class="news-details" style="margin-top: 10px; font-size: 16px; color: #555;">{!! $news->details ?? '' !!}</div>
                         </div>
                         
                     </div>
                 </div>
+                
                 
 
                 <div class="col-lg-3 col-md-3"> </div>
