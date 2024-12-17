@@ -1,35 +1,43 @@
 <div>
 
     <style>
- .news-item {
-    font-family: 'Arial', sans-serif;
-    color: #333;
-    line-height: 1.6;
-}
-
-.news-item-info {
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+    .news-item-info {
+    text-align: left; /* Ensures the text is aligned to the left */
+    font-style: normal; /* Removes any italic styling */
 }
 
 .news-item-info h4 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2d2d2d;
+    margin: 0 0 5px 0; /* Adds spacing below the title */
+    font-weight: bold; /* Ensures the title is bold */
 }
 
 .news-item-info span {
-    font-size: 14px;
-    color: #777;
+    display: block; /* Ensures the span takes up its own line */
+    margin-bottom: 10px; /* Adds spacing below the metadata */
+    font-size: 14px; /* Adjusts font size for readability */
+    color: #555; /* Optional: Subtle color for metadata */
 }
 
-.news-details {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #555;
+.news-item-info .news-details {
+    font-size: 16px; /* Adjusts font size for the details */
+    line-height: 1.5; /* Improves readability with line spacing */
 }
 
+/* New CSS for <p> elements */
+.news-item-info .news-details p {
+    font-size: 16px; /* Adjust font size */
+    line-height: 1.5; /* Improve readability with line spacing */
+    color: #333; /* Optional: Change text color */
+    margin-bottom: 15px; /* Adds space below each paragraph */
+    font-style: normal; /* Removes italic styling */
+}
+.news-item-info .news-details ul {
+    font-size: 16px; /* Adjust font size */
+    line-height: 1.5; /* Improve readability with line spacing */
+    color: #333; /* Optional: Change text color */
+    margin-bottom: 15px; /* Adds space below each paragraph */
+    font-style: normal; /* Removes italic styling */
+}
 
     </style>
 
