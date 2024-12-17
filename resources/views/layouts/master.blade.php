@@ -6,7 +6,6 @@
     <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
     <head>
-
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KNTJTXGCG"></script>
         <script>
@@ -151,7 +150,7 @@
                 </nav><!-- .navbar -->
 
 
-              
+
 
             </div>
         </header><!-- End Header -->
@@ -162,30 +161,28 @@
             @yield('content')
         @endif
 
-        <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="donateModalLabel">Support Us with a Donation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex justify-content-center align-items-center">
-                    <!-- PayPal Script and Container -->
-                    <script
-                        src="https://www.paypal.com/sdk/js?client-id=BAANEWBe_GCODxYELBmUPu5L9O196AdBbBAl4T6aGF_-9XsMPzPXQ6t5j7sZZCE24hFJNYC4F6jy8DSv9Q&components=hosted-buttons&disable-funding=venmo&currency=USD">
-                    </script>
-                    <div id="paypal-container-WP56E5J4AML4W"></div>
-                    <script>
-                        paypal.HostedButtons({
-                            hostedButtonId: "WP56E5J4AML4W",
-                        }).render("#paypal-container-WP56E5J4AML4W")
-                    </script>
+        <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="donateModalLabel">Support Us with a Donation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center align-items-center">
+                        <!-- PayPal Script and Container -->
+                        <script
+                            src="https://www.paypal.com/sdk/js?client-id=BAANEWBe_GCODxYELBmUPu5L9O196AdBbBAl4T6aGF_-9XsMPzPXQ6t5j7sZZCE24hFJNYC4F6jy8DSv9Q&components=hosted-buttons&disable-funding=venmo&currency=USD">
+                        </script>
+                        <div id="paypal-container-WP56E5J4AML4W"></div>
+                        <script>
+                            paypal.HostedButtons({
+                                hostedButtonId: "WP56E5J4AML4W",
+                            }).render("#paypal-container-WP56E5J4AML4W")
+                        </script>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
         <!-- ======= Footer ======= -->
