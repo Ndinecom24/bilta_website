@@ -8,14 +8,17 @@
     <head>
 
         <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3KNTJTXGCG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KNTJTXGCG"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'G-3KNTJTXGCG');
-</script>
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+
+            gtag('config', 'G-3KNTJTXGCG');
+        </script>
 
 
         <meta name="google-site-verification" content="zEabVLZ5N_dEO0PcCoEhDelHwpDzMbLgc14jLRA1IRE" />
@@ -47,38 +50,36 @@
         <!-- Template Main CSS File -->
         <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
-        <style>.btn-donate {
-            background-color: #b36227;
-            color: #f8f7f5;
-            font-weight: bold;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .btn-donate i {
-            font-size: 1rem;
-        }
-        
-        .btn-donate:hover {
-            background-color: #e74a3b;
-            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
-            color: #faf9f9;
-        }
+        <style>
+            .btn-donate {
+                background-color: #b36227;
+                color: #f8f7f5;
+                font-weight: bold;
+                border: none;
+                border-radius: 20px;
+                padding: 6px 12px;
+                font-size: 0.9rem;
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            }
 
-        
-        
+            .btn-donate i {
+                font-size: 1rem;
+            }
+
+            .btn-donate:hover {
+                background-color: #e74a3b;
+                box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+                color: #faf9f9;
+            }
         </style>
-  
+
 
         @stack('custom-styles')
         {{--    @livewireStyles --}}
         <livewire:styles />
     </head>
 
-    
+
 
     <body>
         <!-- ======= Top Bar ======= -->
@@ -138,7 +139,8 @@
 
                         <li><a class="nav-link scrollto" href="{{ route('site.home') }}#contact">Contact</a></li>
                         <li class="nav-link scrollto">
-                            <button class="btn btn-warning btn-donate btn-sm m-1" data-bs-toggle="modal" data-bs-target="#donateModal">
+                            <button class="btn btn-warning btn-donate btn-sm m-1" data-bs-toggle="modal"
+                                data-bs-target="#donateModal">
                                 <i class="bi bi-cash me-1"></i> Donate
                             </button>
                         </li>
@@ -149,31 +151,7 @@
                 </nav><!-- .navbar -->
 
 
-                <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="donateModalLabel">Support Us with a Donation</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close" ></button>
-                            </div>
-                            <div class="modal-body d-flex justify-content-center align-items-center">
-                                <!-- PayPal Script and Container -->
-                                <script
-                                    src="https://www.paypal.com/sdk/js?client-id=BAANEWBe_GCODxYELBmUPu5L9O196AdBbBAl4T6aGF_-9XsMPzPXQ6t5j7sZZCE24hFJNYC4F6jy8DSv9Q&components=hosted-buttons&disable-funding=venmo&currency=USD">
-                                </script>
-                                <div id="paypal-container-WP56E5J4AML4W"></div>
-                                <script>
-                                    paypal.HostedButtons({
-                                        hostedButtonId: "WP56E5J4AML4W",
-                                    }).render("#paypal-container-WP56E5J4AML4W")
-                                </script>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+              
 
             </div>
         </header><!-- End Header -->
@@ -183,6 +161,32 @@
         @else
             @yield('content')
         @endif
+
+        <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="donateModalLabel">Support Us with a Donation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    <!-- PayPal Script and Container -->
+                    <script
+                        src="https://www.paypal.com/sdk/js?client-id=BAANEWBe_GCODxYELBmUPu5L9O196AdBbBAl4T6aGF_-9XsMPzPXQ6t5j7sZZCE24hFJNYC4F6jy8DSv9Q&components=hosted-buttons&disable-funding=venmo&currency=USD">
+                    </script>
+                    <div id="paypal-container-WP56E5J4AML4W"></div>
+                    <script>
+                        paypal.HostedButtons({
+                            hostedButtonId: "WP56E5J4AML4W",
+                        }).render("#paypal-container-WP56E5J4AML4W")
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
         <!-- ======= Footer ======= -->
 
