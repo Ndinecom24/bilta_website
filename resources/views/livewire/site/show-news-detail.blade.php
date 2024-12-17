@@ -72,7 +72,7 @@
                         <div class="news-item-info">
                             <h4>{{ $news->title ?? '-' }}</h4>
                             <span>Post Date: {{ $news->post_date ?? '-' }} | Author: {{ $news->author ?? '-' }}</span>
-                            <div class="news-details">{!! $news->details ?? '' !!}</div>
+                            <div class="news-details1">{!! $news->details ?? '' !!}</div>
                         </div>
                         
                     </div>
