@@ -70,7 +70,7 @@ Route::prefix('bilta/site')->group(function () {
     Route::get('/Faqs', MyFaqs::class)->name('faqs');
     Route::get('/Testimonies', MyTestimonies::class)->name('testimonies');
     Route::get('/Testimonials', MyTestimonials::class)->name('testimonials');
-    Route::get('/news/details/{news}', MyNewsDetails::class)->name('news.details');
+    Route::get('/news/details/{news}/{name}', MyNewsDetails::class)->name('news.details');
     Route::get('/news/{category_id}', MyNewsList::class)->name('news');
     Route::get('/projects/details/{project}', MyTranslationProjectDetails::class)->name('projects.details');
     Route::get('/projects/{category_id}', MyTranslationProjectsList::class)->name('projects');

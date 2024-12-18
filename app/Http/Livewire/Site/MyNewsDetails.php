@@ -14,7 +14,7 @@ class MyNewsDetails extends Component
     public $news, $news_id ;
     public $categories = [] ;
 
-    public function mount(News $news){
+    public function mount(News $news, $name){
         $this->news = $news ;
     }
 
