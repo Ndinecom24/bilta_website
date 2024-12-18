@@ -64,7 +64,7 @@
                                             <p> {{ Str::limit($item->short_description, 200, '...') ?? '-' }}</p>
                     
                                             <div class="news-item-btn">
-                                                <a href="{{ route('news.details',['news' =>$item, 'name'=>$item->name] ) }}"
+                                                <a href="{{ route('news.details',['news' =>$item, 'name'=>$item->title] ) }}"
                                                     class="btn btn-sm btn-outline-secondary">More..</a>
                                             </div>
                                         </div> 
