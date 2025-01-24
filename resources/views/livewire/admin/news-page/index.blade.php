@@ -98,14 +98,9 @@
                                         </td>
 
                                          <td>
-
                                                 <div class="row">
-                                                   
-                                                        {{ sizeOf($our_news_item->getMedia('news_images')) }} More Images
-
-                                                   
+                                                     {{ sizeOf($our_news_item->getMedia('news_images')) }} More Images
                                                 </div>
-
                                             </td>
                                       
                                         <td>
@@ -115,17 +110,6 @@
                                                             class="btn btn-primary btn-sm m-2">Show
                                                     </a>
                                                 </div>
-                                                {{-- <div class="col-6">
-                                                    <button wire:click="edit({{$our_news_item->id}})"
-                                                            data-toggle="modal" data-target="#updateModal"
-                                                            class="btn btn-primary btn-sm m-2">Edit
-                                                    </button>
-                                                </div>
-                                                <div class="col-6">
-                                                    <button onclick="deleteOurNewsItem({{$our_news_item->id}})"
-                                                            class="btn btn-danger btn-sm  m-2">Delete
-                                                    </button>
-                                                </div> --}}
                                             </div>
                                         </td>
                                     </tr>

@@ -13,9 +13,8 @@
     class="d-flex flex-column justify-content-center align-items-center">
     <div class="container" data-aos="fade-in">
         <h1>Welcome to <span style="color: #b25e1d">BiLTA</span></h1>
-        <h2 id="bilta-intro-text" class="text-justify">A place where faith and literary
-            exploration<br>
-            intertwine to enrich our spiritual journeys.</h2>
+        <h2 id="bilta-intro-text" class="text-justify">Called to empower our people to translate <br>
+            the word of God into their own languages.</h2>
         <div class="d-flex align-items-center mb-3">
             <i class="bx bxs-bible get-started-icon"></i>
             <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal" data-bs-target="#audioModal">Play Audio Bible</a>
@@ -27,9 +26,8 @@
     class="d-flex flex-column justify-content-center align-items-center">
     <div class="container" data-aos="fade-in">
         <h1>Welcome to BiLTA</h1>
-        <h2 id="bilta-intro-text" class="text-justify">A place where faith and literary
-            exploration<br>
-            intertwine to enrich our spiritual journeys.</h2>
+        <h2 id="bilta-intro-text" class="text-justify">Called to empower our people to translate <br>
+            the word of God into their own languages.</h2>
         <div class="d-flex align-items-center">
             <i class="bx bxs-bible get-started-icon"></i>
             <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal" data-bs-target="#audioModal">Play Audio Bible</a>
@@ -115,7 +113,6 @@
         <!-- ======= About Section ======= -->
         <section id="translation-projects" class="about section-bg">
             <div class="container">
-
                 <div class="row">
                     <div class="col-xl-5 col-lg-6 d-flex justify-content-center align-items-stretch position-relative"
                         data-aos="fade-right">
@@ -157,12 +154,6 @@
 
                     </div>
                 </div>
-
-            
-
-
-               
-
             </div>
         </section><!-- End About Section -->
 
