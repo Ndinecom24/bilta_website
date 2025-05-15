@@ -13,7 +13,8 @@
                 class="d-flex flex-column justify-content-center align-items-center">
                 <div class="container" data-aos="fade-in">
                     <h1>Welcome to <span style="color: #b25e1d">BiLTA</span></h1>
-                    <h2 id="bilta-intro-text" class="text-justify">A dedicated translation association committed to advancing the translation of the Bible and other essential literature into local languages.</h2>
+                    <h2 id="bilta-intro-text" class="text-justify">A dedicated translation association committed to
+                        advancing the translation of the Bible and other essential literature into local languages.</h2>
                     <div class="d-flex align-items-center mb-3">
                         <i class="bx bxs-bible get-started-icon"></i>
                         <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
@@ -26,12 +27,13 @@
                 class="d-flex flex-column justify-content-center align-items-center">
                 <div class="container" data-aos="fade-in">
                     <h1>Welcome to BiLTA</h1>
-                    <h2 id="bilta-intro-text" class="text-justify">A dedicated translation association committed to advancing the translation of the Bible and other essential literature into local languages
-                    <div class="d-flex align-items-center">
-                        <i class="bx bxs-bible get-started-icon"></i>
-                        <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
-                            data-bs-target="#audioModal">Play Audio Bible</a>
-                    </div>
+                    <h2 id="bilta-intro-text" class="text-justify">A dedicated translation association committed to
+                        advancing the translation of the Bible and other essential literature into local languages
+                        <div class="d-flex align-items-center">
+                            <i class="bx bxs-bible get-started-icon"></i>
+                            <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
+                                data-bs-target="#audioModal">Play Audio Bible</a>
+                        </div>
                 </div>
             </section>
         @endif
@@ -94,7 +96,7 @@
 
 
 
-       
+
 
 
         <!-- ======= Why Us Section ======= -->
@@ -106,10 +108,13 @@
                         <div class="content">
                             <h3>Bible and Literature Translation Association.</h3>
                             <p>
-                            We are committed to building the capacity of local communities by equipping them with the skills and tools needed to translate the Bible and essential literature
-                             into their heart languages. 
-                             <br> Ensuring the message of the Gospel is communicated in a way that is both meaningful and culturally relevant, 
-                              ultimately fostering more effective evangelism and deeper discipleship among their own people
+                                We are committed to building the capacity of local communities by equipping them with
+                                the skills and tools needed to translate the Bible and essential literature
+                                into their heart languages.
+                                <br> Ensuring the message of the Gospel is communicated in a way that is both meaningful
+                                and culturally relevant,
+                                ultimately fostering more effective evangelism and deeper discipleship among their own
+                                people
                             </p>
 
                         </div>
@@ -121,8 +126,8 @@
         </section><!-- End Why Us Section -->
 
 
-         <!-- ======= Chairman's Message Section ======= -->
-         <section id="chairman-message" class="about">
+        <!-- ======= Chairman's Message Section ======= -->
+        <section id="chairman-message" class="about">
             <div class="container">
                 <div class="section-title" data-aos="fade-up">
                     <h2>Chairperson's Message</h2>
@@ -130,17 +135,16 @@
                 <div class="row content">
                     <div class="col-lg-4 text-center" data-aos="fade-right">
                         @if ($chairman && $chairman->getFirstMediaUrl('chairman_photo'))
-                        <img loading="lazy" 
-                        src="{{ $chairman->getFirstMediaUrl('chairman_photo') }}"
-                        class="img-fluid rounded mb-3"
-                        style="width: 300px; height: 300px; object-fit: cover;"
-                        alt="{{ $chairman->name ?? 'Chairperson' }}">
+                            <img loading="lazy" src="{{ $chairman->getFirstMediaUrl('chairman_photo') }}"
+                                class="img-fluid rounded mb-3" style="width: 300px; height: 300px; object-fit: cover;"
+                                alt="{{ $chairman->name ?? 'Chairperson' }}">
                         @endif
                         <h4>{{ $chairman->name ?? 'Chairperson' }}</h4>
                         <p><em>{{ $chairman->title ?? '' }}</em></p>
                     </div>
                     <div class="col-lg-8 pt-4 pt-lg-0" data-aos="fade-left">
-                        <div style="font-family: 'Open Sans', sans-serif; font-size: 18px; line-height: 1.8; color: #333;">
+                        <div
+                            style="font-family: 'Open Sans', sans-serif; font-size: 18px; line-height: 1.8; color: #333;">
                             {!! $chairman->message ?? '<p>No message provided yet.</p>' !!}
                         </div>
                     </div>
@@ -442,7 +446,7 @@
                             errorText = "";
                             for (let key in errors) {
                                 errorText += errors[key][0] +
-                                "<br>"; // Display first error message for each field
+                                    "<br>"; // Display first error message for each field
                             }
                         } else if (xhr.responseJSON && xhr.responseJSON.error) {
                             // Display general error message
