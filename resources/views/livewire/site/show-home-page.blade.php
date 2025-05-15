@@ -13,8 +13,7 @@
                 class="d-flex flex-column justify-content-center align-items-center">
                 <div class="container" data-aos="fade-in">
                     <h1>Welcome to <span style="color: #b25e1d">BiLTA</span></h1>
-                    <h2 id="bilta-intro-text" class="text-justify">Called to empower our people to translate <br>
-                        the word of God into their own languages.</h2>
+                    <h2 id="bilta-intro-text" class="text-justify">Making available the word of God and essential literature in local languages.</h2>
                     <div class="d-flex align-items-center mb-3">
                         <i class="bx bxs-bible get-started-icon"></i>
                         <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
@@ -27,8 +26,7 @@
                 class="d-flex flex-column justify-content-center align-items-center">
                 <div class="container" data-aos="fade-in">
                     <h1>Welcome to BiLTA</h1>
-                    <h2 id="bilta-intro-text" class="text-justify">Called to empower our people to translate <br>
-                        the word of God into their own languages.</h2>
+                    <h2 id="bilta-intro-text" class="text-justify">Making available the word of God and essential literature in local languages.</h2>
                     <div class="d-flex align-items-center">
                         <i class="bx bxs-bible get-started-icon"></i>
                         <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
@@ -108,8 +106,8 @@
                         <div class="content">
                             <h3>Bible and Literature Translation Association.</h3>
                             <p>
-                                We hold the Scriptures in reverence, cherishing them as a divine
-                                gift that illuminates our path <br> and guides us in our spiritual journey.
+                            We build capacity of the local people to translate the Bible and essential literature 
+                            <br> into their heart languages for effective evangelism and discipleship
                             </p>
 
                         </div>
