@@ -125,7 +125,7 @@
          <section id="chairman-message" class="about">
             <div class="container">
                 <div class="section-title" data-aos="fade-up">
-                    <h2>Chairman's Message</h2>
+                    <h2>Chairperson's Message</h2>
                 </div>
                 <div class="row content">
                     <div class="col-lg-4 text-center" data-aos="fade-right">
@@ -134,9 +134,9 @@
                         src="{{ $chairman->getFirstMediaUrl('chairman_photo') }}"
                         class="img-fluid rounded mb-3"
                         style="width: 300px; height: 300px; object-fit: cover;"
-                        alt="{{ $chairman->name ?? 'Chairman' }}">
+                        alt="{{ $chairman->name ?? 'Chairperson' }}">
                         @endif
-                        <h4>{{ $chairman->name ?? 'Chairman' }}</h4>
+                        <h4>{{ $chairman->name ?? 'Chairperson' }}</h4>
                         <p><em>{{ $chairman->title ?? '' }}</em></p>
                     </div>
                     <div class="col-lg-8 pt-4 pt-lg-0" data-aos="fade-left">
