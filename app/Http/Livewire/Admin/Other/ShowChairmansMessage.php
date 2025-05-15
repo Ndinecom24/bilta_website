@@ -88,7 +88,7 @@ class ShowChairmansMessage extends Component
             $this->resetFields();
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Something went wrong while creating chairmans message: ' );
+            session()->flash('error', 'Something went wrong while creating chairmans message: '. $e->getMessage() );
             $this->resetFields();
         }
     }
