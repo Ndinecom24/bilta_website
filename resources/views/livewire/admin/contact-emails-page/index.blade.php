@@ -17,12 +17,12 @@
                     </ul>
                 </div>
             @endif
-            @if(session()->has('success'))
+            @if (session()->has('success'))
                 <div class="alert alert-success" role="alert">
                     {{ session()->get('success') }}
                 </div>
             @endif
-            @if(session()->has('error'))
+            @if (session()->has('error'))
                 <div class="alert alert-danger" role="alert">
                     {{ session()->get('error') }}
                 </div>
@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-sm-6">
                             <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal"
-                                    data-target="#createEmailModal">
+                                data-target="#createEmailModal">
                                 <i class="fa fa-plus">Add</i>
                             </button>
                         </div>
@@ -52,48 +52,60 @@
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Subject</th>
-                                <th>Message</th>
-                                <th>Received At</th>
-                                <th>Action</th>
-                            </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Message</th>
+                                    <th>Received At</th>
+                                    <th>Action</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @if (count($emails) > 0)
-                                @foreach ($emails as $email)
-                                    <tr>
-                                        <td>{{ $email->name }}</td>
-                                        <td>{{ $email->email }}</td>
-                                        <td>{{ $email->subject }}</td>
-                                        <td>{{ $email->message }}</td>
-                                        <td>{{ $email->created_at }}</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <button wire:click="edit({{ $email->id }})"
+                                @if (count($emails) > 0)
+                                    @foreach ($emails as $email)
+                                        <tr>
+                                            <td>
+                                                @if ($email->spam)
+                                                    <span class="badge bg-danger text-white">Spam</span>
+                                                @else
+                                                    <span class="badge bg-success  text-white ">Okay</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $email->name }}</td>
+                                            <td>{{ $email->email }}</td>
+                                            <td>{{ $email->subject }}</td>
+                                            <td>{{ $email->message }}</td>
+                                            <td>{{ $email->created_at }}</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <button wire:click="edit({{ $email->id }})"
                                                             data-toggle="modal" data-target="#updateEmailModal"
                                                             class="btn btn-primary btn-sm">View
-                                                    </button>
-                                                    <button onclick="deleteEmail({{ $email->id }})"
+                                                        </button>
+                                                        <button onclick="deleteEmail({{ $email->id }})"
                                                             class="btn btn-danger btn-sm">Delete
-                                                    </button>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="5" align="center">
+                                            No Emails Found.
                                         </td>
                                     </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="5" align="center">
-                                        No Emails Found.
-                                    </td>
-                                </tr>
-                            @endif
+                                @endif
                             </tbody>
                         </table>
+                        {{-- Pagination --}}
+                        <div class="mt-2">
+                            {{ $emails->links() }}
+                        </div>
                     </div>
                 </div>
             </div>

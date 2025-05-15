@@ -13,8 +13,11 @@ class ShowEmails extends Component
 {
     use WithPagination;
 
-    public $email_id, $email, $subject, $message, $status_id, $name, $recipient;
+    public $email_id, $email, $subject, $message, $status_id, $name, $recipient, $spam;
     public $updateEmail = false;
+
+
+    public $showEditSection = false;
 
     protected $listeners = [
         'deleteEmail' => 'destroy'
@@ -31,7 +34,7 @@ class ShowEmails extends Component
     public function render()
     {
         $statuses = Status::select('id', 'name')->get();
-        $emails = ContactMessage::select('id', 'email', 'subject', 'message', 'status_id', 'name', 'recipient')->paginate(20);
+        $emails = ContactMessage::select('*')->paginate(20);
         return view('livewire.admin.contact-emails-page.index', compact('emails', 'statuses'));
     }
 
@@ -43,6 +46,7 @@ class ShowEmails extends Component
         $this->status_id = '';
         $this->name = '';
         $this->recipient = '';
+        $this->spam = '';
     }
 
     public function sendEmail()
@@ -51,25 +55,25 @@ class ShowEmails extends Component
         $this->validate();
         try {
             // Create or Update Email
-            $contactMessage =   ContactMessage::updateOrCreate(
+            $contactMessage = ContactMessage::updateOrCreate(
                 [
-                    'email' =>  auth()->user()->email   ,
-                    'recipient' =>  $this->recipient ,
+                    'email' => auth()->user()->email,
+                    'recipient' => $this->recipient,
                 ],
                 [
-                    'email' =>  auth()->user()->email ,
-                    'recipient' =>  $this->recipient ,
+                    'email' => auth()->user()->email,
+                    'recipient' => $this->recipient,
                     'subject' => $this->subject,
                     'message' => $this->message,
-                    'status_id' =>  1,
+                    'status_id' => 1,
                     'created_by' => auth()->user()->id,
                     'name' => auth()->user()->name,
                 ]
             );
 
-    
-        // Send the email (you'll need to set up a Mailable for this)
-        Mail::to( $this->recipient)->send(new \App\Mail\ContactMessageMail($contactMessage));
+
+            // Send the email (you'll need to set up a Mailable for this)
+            Mail::to($this->recipient)->send(new \App\Mail\ContactMessageMail($contactMessage));
 
 
             // Set Flash Message
@@ -93,6 +97,7 @@ class ShowEmails extends Component
         $this->status_id = $email->status_id;
         $this->name = $email->name;
         $this->email_id = $email->id;
+        $this->spam = $email->spam;
         $this->updateEmail = true;
     }
 
@@ -112,6 +117,7 @@ class ShowEmails extends Component
                 'subject' => $this->subject,
                 'message' => $this->message,
                 'status_id' => $this->status_id,
+                'spam' => $this->spam,
                 'updated_by' => auth()->user()->id,
                 'name' => auth()->user()->name,
             ])->save();
@@ -133,4 +139,23 @@ class ShowEmails extends Component
             session()->flash('error', "Something went wrong while deleting email!");
         }
     }
+
+
+    public function enableEditSection()
+    {
+        $this->showEditSection = true;
+    }
+
+    public function disableEditSection()
+    {
+        $this->showEditSection = false;
+    }
+
+
+    // Optional: reset page when searching or filtering
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
 }
