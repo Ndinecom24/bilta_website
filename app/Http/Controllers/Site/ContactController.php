@@ -54,7 +54,7 @@ class ContactController extends Controller
             $contactMessage = ContactMessage::updateOrCreate($validated, $validated);
 
             // Send the email (ensure the ContactMessageMail mailable is set up)
-          //  Mail::to('infor@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
+            Mail::to('infor@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
 
             // Return success response
             return response()->json(['success' => 'Your message has been sent successfully.'], 200 );
