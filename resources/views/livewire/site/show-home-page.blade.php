@@ -13,7 +13,7 @@
                 class="d-flex flex-column justify-content-center align-items-center">
                 <div class="container" data-aos="fade-in">
                     <h1>Welcome to <span style="color: #b25e1d">BiLTA</span></h1>
-                    <h2 id="bilta-intro-text" class="text-justify">Making available the word of God and essential literature in local languages.</h2>
+                    <h2 id="bilta-intro-text" class="text-justify">Making the Word of God and essential Christian literature available in local languages, ensuring that every individual has the opportunity to engage with Scripture in the language they understand best.</h2>
                     <div class="d-flex align-items-center mb-3">
                         <i class="bx bxs-bible get-started-icon"></i>
                         <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
@@ -26,7 +26,7 @@
                 class="d-flex flex-column justify-content-center align-items-center">
                 <div class="container" data-aos="fade-in">
                     <h1>Welcome to BiLTA</h1>
-                    <h2 id="bilta-intro-text" class="text-justify">Making available the word of God and essential literature in local languages.</h2>
+                    <h2 id="bilta-intro-text" class="text-justify">Making the Word of God and essential Christian literature available in local languages, ensuring that every individual has the opportunity to engage with Scripture in the language they understand best.</h2>
                     <div class="d-flex align-items-center">
                         <i class="bx bxs-bible get-started-icon"></i>
                         <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
@@ -106,8 +106,10 @@
                         <div class="content">
                             <h3>Bible and Literature Translation Association.</h3>
                             <p>
-                            We build capacity of the local people to translate the Bible and essential literature 
-                            <br> into their heart languages for effective evangelism and discipleship
+                         
+                            We are committed to building the capacity of local communities by equipping them with the skills and tools needed to translate the Bible and essential Christian literature
+                            <br>  into their heart languages. This ensures that the message of the Gospel is communicated in a way that is both meaningful and culturally relevant, 
+                            <br>  ultimately fostering more effective evangelism and deeper discipleship among their own people
                             </p>
 
                         </div>
