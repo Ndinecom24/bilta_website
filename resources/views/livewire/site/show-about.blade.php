@@ -94,10 +94,15 @@
       <!-- Map -->
       <div style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31741.4633847497!2d28.2443!3d-15.4167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1940b4a25d89fdd1%3A0x86f7d6a53e74b08e!2sLusaka%2C%20Zambia!5e0!3m2!1sen!2sus!4v1689964355731!5m2!1sen!2sus"
-          width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade" title="BiLTA Location Map">
-        </iframe>
+        src="https://www.google.com/maps?q=Chelston,+Lusaka,+Zambia&output=embed"
+        width="100%"
+        height="300"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="BiLTA Location Map">
+      </iframe>
       </div>
 
       <!-- Contact Info -->
