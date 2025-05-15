@@ -37,17 +37,24 @@ class ShowHome extends Component
         });
 
 
-        $audioFiles = AudioFile::query()
-            ->where('status_id', config('constants.status.active') )
-            ->where('title', 'like', '%' . $this->search . '%')
-            ->orWhereHas('project', function ($query) {
-                $query->where('title', 'like', '%' . $this->search . '%');
-            })
-            ->orWhereHas('project.myCategory', function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%');
-            })
-            ->paginate(10);
-
+        $searchKey = $this->search;
+        $page = request()->get('page', 1);
+        $cacheKey = 'audio_files_' . md5($searchKey . '_page_' . $page);
+        
+        $audioFiles = cache()->remember($cacheKey, now()->addHours(6), function () use ($searchKey) {
+            return AudioFile::query()
+                ->where('status_id', config('constants.status.active'))
+                ->where(function ($query) use ($searchKey) {
+                    $query->where('title', 'like', '%' . $searchKey . '%')
+                        ->orWhereHas('project', function ($query) use ($searchKey) {
+                            $query->where('title', 'like', '%' . $searchKey . '%');
+                        })
+                        ->orWhereHas('project.myCategory', function ($query) use ($searchKey) {
+                            $query->where('name', 'like', '%' . $searchKey . '%');
+                        });
+                })
+                ->paginate(10);
+        });
 
 
         return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro', 'audioFiles', 'chairman' ));
