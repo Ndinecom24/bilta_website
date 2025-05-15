@@ -14,6 +14,7 @@ use App\Http\Livewire\Admin\FaqsPage\ShowFaqs;
 use App\Http\Livewire\Admin\GalleryPage\ShowItemGallery;
 use App\Http\Livewire\Admin\NewsPage\ShowNewsItem;
 use App\Http\Livewire\Admin\NewsPage\ShowNewsItemDetails;
+use App\Http\Livewire\Admin\Other\ShowChairmansMessage;
 use App\Http\Livewire\Admin\Other\ShowEmails;
 use App\Http\Livewire\Admin\Other\ShowItemCategory;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
@@ -101,8 +102,9 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/gallery', ShowItemGallery::class)->name('admin.page.item.gallery');
         Route::get('/item/videos', ShowItemVidoes::class)->name('admin.page.item.videos');
         Route::get('/item/audio', ShowItemAudio::class)->name('admin.page.item.audio');
-        Route::get('/item/news', ShowNewsItem::class)->name('admin.page.item.news');
+        Route::get('/item/news', ShowNewsItem::class)->name('admin.page.item.news'); 
         Route::get('/contact/emails', ShowEmails::class)->name('admin.page.contact.emails');
+        Route::get('/chairmans/messages', ShowChairmansMessage::class)->name('admin.page.chairmans.messages');
         Route::get('/item/news/{id}/details', ShowNewsItemDetails::class)->name('admin.page.item.news.details');
         Route::get('/item/projects', ShowTranslationProjects::class)->name('admin.page.item.projects');
         Route::get('/item/projects/{item}/details', DetailTranslationProjects::class)->name('admin.page.item.projects.details');

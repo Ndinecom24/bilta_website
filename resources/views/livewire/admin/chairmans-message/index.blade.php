@@ -1,7 +1,7 @@
 <div>
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Contact Emails</h1>
+        <h1 class="h3 mb-0 text-gray-800">Chairman Message</h1>
     </div>
 
     <!-- Content Row -->
@@ -17,6 +17,7 @@
                     </ul>
                 </div>
             @endif
+
             @if (session()->has('success'))
                 <div class="alert alert-success" role="alert">
                     {{ session()->get('success') }}
@@ -28,9 +29,9 @@
                 </div>
             @endif
 
-            <!-- Optionally include modals for updating and creating emails -->
-            @include('livewire.admin.contact-emails-page.update')
-            @include('livewire.admin.contact-emails-page.create')
+            <!-- Optionally include modals for updating and creating message -->
+            @include('livewire.admin.chairmans-message.update')
+            @include('livewire.admin.chairmans-message.create')
 
         </div>
         <div class="col-md-12 mb-2">
@@ -39,12 +40,12 @@
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-sm-6">
                             <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal"
-                                data-target="#createEmailModal">
+                                data-target="#createChairmansMessageModal">
                                 <i class="fa fa-plus">Add</i>
                             </button>
                         </div>
                         <div class="col-lg-10 col-md-10 col-sm-6">
-                            <h5>Contact Emails</h5>
+                            <h5>Chairman's Message</h5>
                         </div>
                     </div>
                 </div>
@@ -53,39 +54,30 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Type</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Subject</th>
+                                    <th>Title</th>
                                     <th>Message</th>
                                     <th>Received At</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (count($emails) > 0)
-                                    @foreach ($emails as $email)
+                                @if (count($chairmansmessages) > 0)
+                                    @foreach ($chairmansmessages as $cmessage)
                                         <tr>
-                                            <td>
-                                                @if ($email->spam)
-                                                    <span class="badge bg-danger text-white">Spam</span>
-                                                @else
-                                                    <span class="badge bg-success  text-white ">Okay</span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $email->name }}</td>
-                                            <td>{{ $email->email }}</td>
-                                            <td>{{ $email->subject }}</td>
-                                            <td>{{ $email->message }}</td>
-                                            <td>{{ $email->created_at }}</td>
+                                            
+                                            <td>{{ $cmessage->name }}</td>
+                                            <td>{{ $cmessage->title }}</td>
+                                            <td>{{ $cmessage->message }}</td>
+                                            <td>{{ $cmessage->created_at }}</td>
                                             <td>
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <button wire:click="edit({{ $email->id }})"
-                                                            data-toggle="modal" data-target="#updateEmailModal"
+                                                        <button wire:click="edit({{ $cmessage->id }})"
+                                                            data-toggle="modal" data-target="#updateChairmansMessageModal"
                                                             class="btn btn-primary btn-sm">View
                                                         </button>
-                                                        <button onclick="deleteEmail({{ $email->id }})"
+                                                        <button onclick="deleteChairmansMessage({{ $cmessage->id }})"
                                                             class="btn btn-danger btn-sm">Delete
                                                         </button>
                                                     </div>
@@ -96,7 +88,7 @@
                                 @else
                                     <tr>
                                         <td colspan="5" align="center">
-                                            No Emails Found.
+                                            No Message Found.
                                         </td>
                                     </tr>
                                 @endif
@@ -104,7 +96,7 @@
                         </table>
                         {{-- Pagination --}}
                         <div class="mt-2">
-                            {{ $emails->links() }}
+                            {{ $chairmansmessages->links() }}
                         </div>
                     </div>
                 </div>
@@ -113,9 +105,9 @@
     </div>
 
     <script>
-        function deleteEmail(id) {
-            if (confirm("Are you sure to delete this email?"))
-                window.livewire.emit('deleteEmail', id);
+        function deleteChairmansMessage(id) {
+            if (confirm("Are you sure to delete this chairmansmessage?"))
+                window.livewire.emit('deleteChairmansMessage', id);
         }
     </script>
 </div>

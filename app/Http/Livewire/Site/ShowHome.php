@@ -7,6 +7,7 @@ use App\Models\Bilta\HomeIntro;
 use App\Models\Bilta\OurTeam;
 use App\Models\Bilta\OurValues;
 use App\Models\Bilta\Testimonial;
+use App\Models\Bilta\ChairmanMessage;
 use Livewire\Component;
 
 class ShowHome extends Component
@@ -31,6 +32,11 @@ class ShowHome extends Component
             return HomeIntro::first();
         });
 
+        $chairman = cache()->remember('chairman', now()->addHours(6), function () {
+            return ChairmanMessage::latest()->first(); 
+        });
+
+
         $audioFiles = AudioFile::query()
             ->where('status_id', config('constants.status.active') )
             ->where('title', 'like', '%' . $this->search . '%')
@@ -44,7 +50,7 @@ class ShowHome extends Component
 
 
 
-        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro', 'audioFiles'));
+        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro', 'audioFiles', 'chairman' ));
     }
 
 
