@@ -129,7 +129,7 @@
                         </li>
                         {{-- <li><a class="nav-link scrollto" href="{{ route('about') }}">About</a></li> --}}
 
-                        <li><a class="nav-link scrollto" href="{{ route('site.home') }}#translation-projects">About</a>
+                        <li><a class="nav-link scrollto"href="{{ route('about') }}" >About us</a>
                         </li>
                         {{-- <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li> --}}
                         <li><a class="nav-link scrollto" href="{{ route('site.home') }}#team">Team</a></li>
