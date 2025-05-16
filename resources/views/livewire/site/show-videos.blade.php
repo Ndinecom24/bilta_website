@@ -2,6 +2,7 @@
     <!-- ======= Videos Section ======= -->
     <section id="videos" class="videos py-5">
         <div class="container">
+            <!-- Section Header -->
             <div class="section-title text-center mb-5">
                 <h2 data-aos="fade-up">Videos</h2>
                 <p data-aos="fade-up">
@@ -10,7 +11,15 @@
                 </p>
             </div>
 
-            <div class="row">
+            <!-- Search Field -->
+            <div class="row mb-4 justify-content-center">
+                <div class="col-md-6">
+                    <input type="text" id="videoSearch" class="form-control" placeholder="Search videos...">
+                </div>
+            </div>
+
+            <!-- Video Grid -->
+            <div class="row" id="videoContainer">
                 @foreach ($video_items as $video)
                     @php
                         // Extract YouTube video ID from full URL
@@ -19,7 +28,9 @@
                     @endphp
 
                     @if ($videoId)
-                        <div class="col-lg-6 col-md-12 mb-4" data-aos="fade-up">
+                        <div class="col-lg-6 col-md-12 mb-4 video-card"
+                             data-title="{{ strtolower($video->name) }}"
+                             data-description="{{ strtolower($video->description) }}">
                             <div class="card shadow-sm border-0 h-100">
                                 <div class="ratio ratio-16x9">
                                     <iframe
@@ -41,4 +52,26 @@
             </div>
         </div>
     </section>
+
+<!-- Filter Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("videoSearch");
+        const cards = document.querySelectorAll(".video-card");
+
+        searchInput.addEventListener("keyup", function () {
+            const searchValue = this.value.toLowerCase();
+            cards.forEach(card => {
+                const title = card.dataset.title;
+                const description = card.dataset.description;
+                if (title.includes(searchValue) || description.includes(searchValue)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
+
 </div>
