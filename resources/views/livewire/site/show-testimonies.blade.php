@@ -18,14 +18,14 @@
         @php
             $image = $testimony->image 
                      ? asset('storage/' . $testimony->image) 
-                     : 'https://api.dicebear.com/9.x/croodles-neutral/svg?seed=Easton';
+                     : 'https://api.dicebear.com/9.x/thumbs/svg?seed=Maria';
     
             $name = $testimony->name ?? '--';
             $title = $testimony->title ?? '--';
             $desc = $testimony->description ?? '';
         @endphp
     
-        <div class="col-md-6 col-lg-6 mb-4 testimony-item" 
+        <div class="col-md-12 col-lg-12 mb-4 testimony-item" 
              data-name="{{ strtolower($name) }}" 
              data-title="{{ strtolower($title) }}" 
              data-description="{{ strtolower($desc) }}">
