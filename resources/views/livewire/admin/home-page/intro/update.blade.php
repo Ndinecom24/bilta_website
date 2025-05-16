@@ -54,12 +54,32 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="contactUsFormControlInput10">Intro Image</label>
+                                <label for="contactUsFormControlInput10">
+                                    Intro Image <small class="text-muted">(Max size: 1 MB)</small>
+                                </label>
                                 <input type="file" class="form-control" id="contactUsFormControlInput10"
-                                       placeholder="Enter Image" wire:model="intro_image">
+                                       placeholder="Enter Image" wire:model="intro_image" onchange="validateFileSize(this)">
                                 @error('intro_image') <span class="text-danger ">{{ $message }}</span>@enderror
+                                <small id="fileSizeError" class="text-danger" style="display:none;">File size must be 1 MB or less.</small>
                             </div>
                         </div>
+                        
+                        <script>
+                            function validateFileSize(input) {
+                                const file = input.files[0];
+                                const maxSize = 1 * 1024 * 1024; // 1 MB in bytes
+                                const errorMsg = document.getElementById('fileSizeError');
+                        
+                                if (file && file.size > maxSize) {
+                                    errorMsg.style.display = 'block';
+                                    input.value = '';  // Clear the input so user can try again
+                                    alert('File size must be 1 MB or less.');
+                                } else {
+                                    errorMsg.style.display = 'none';
+                                }
+                            }
+                        </script>
+                        
                     </div>
 
                 </div>

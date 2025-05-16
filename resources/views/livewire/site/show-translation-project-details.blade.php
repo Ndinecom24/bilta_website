@@ -1,235 +1,198 @@
 <div>
     <style>
         .section-header {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            position: relative;
-            padding-bottom: 10px;
-            /* Add padding to make space for the line */
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2d2d2d;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
         }
 
-        .section-header::after {
-            content: '';
-            display: block;
-            width: calc(100% - 10%);
-            /* Width of the line, leaving 200px space on the right */
-            height: 1px;
-            background-color: rgba(71, 50, 12, 0.133);
-            /* Color of the line */
-            position: absolute;
-            bottom: 0;
-            left: 0;
+        .card-light {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        /* Title */
         .project-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #333;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
         }
 
-        /* Meta information */
         .project-meta {
-            font-family: 'Source Sans Pro', sans-serif;
-            color: gray;
-            font-size: 0.9em;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 1rem;
         }
 
-        /* Short Description */
-        .project-short-description {
-            font-family: 'Source Sans Pro', sans-serif;
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #333;
-        }
-
-        /* Details */
         .project-details {
-            font-family: 'Source Sans Pro', sans-serif;
-            font-size: 1em;
             color: #555;
+            line-height: 1.7;
         }
 
-
-        .project-details {
-            line-height: 1.6;
-            /* Adjust line height for readability */
-            margin-top: 10px;
-            margin-bottom: 10px;
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
         }
 
-        .project-details p {
-            margin-bottom: 15px;
-            /* Add space between paragraphs */
+        .media-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+            background-color: #fafafa;
+            transition: transform 0.2s ease;
         }
 
-        .project-details b,
-        .project-details strong {
-            font-weight: bold;
-            /* Ensure bold text is styled properly */
+        .media-item:hover {
+            transform: scale(1.02);
         }
 
-        .project-details i,
-        .project-details em {
-            font-style: italic;
-            /* Ensure italic text is styled properly */
-        }
-
-        .project-details u {
-            text-decoration: underline;
-            /* Ensure underline is applied */
-        }
-
-        .portfolio-item img {
-            height: 250px;
-            /* Set a desired fixed height */
+        .media-item img,
+        .media-item iframe {
             width: 100%;
-            /* Ensure the width fills the container */
+            height: 200px;
             object-fit: cover;
-            /* Crop the image to fit the fixed height */
         }
 
-        .preview-link {
+        .media-info {
+            padding: 0.75rem 1rem;
+        }
+
+        .media-info h4 {
+            margin: 0 0 0.25rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .media-info p {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .preview-link,
+        .btn-outline-primary {
+            margin-top: 0.5rem;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #007bff;
-            /* Customize the button color */
-            color: white;
-            font-size: 1.5em;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            background-color: transparent;
+            border: 1px solid #007bff;
+            color: #007bff;
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            transition: all 0.2s;
         }
 
-        .preview-link:hover {
-            background-color: #0056b3;
-            /* Darker shade for hover effect */
+        .preview-link:hover,
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: white;
         }
-
-
-        /* Adjust for other formatting needs */
     </style>
-    <section id="projects" class="projects section-bg">
-        <div class="container">
 
-            <!-- Project Details -->
-            <div class="section-title">
-                <h2 data-aos="fade-up">Project Details</h2>
-                <span data-aos="fade-up">{{ $title ?? '' }}</span>
-            </div>
+    <section class="section-bg py-5">
+        <div class="container">
+            <div class="section-header">Project Details</div>
 
             <div class="row">
+                <!-- Categories -->
 
-                <!-- Project Categories -->
-                <div class="col-lg-3 col-md-3 d-flex align-items-stretch" data-aos="fade-up">
-                    <div class="card card-body">
-                        <h4>Projects Categories</h4>
-                        @foreach ($categories as $item)
-                            <ul>
-                                <li><a href="{{ route('projects', $item->myCategory->id ?? '0') }}">
-                                        {{ $item->myCategory->name ?? '-' }} ( {{ $item->total ?? '-' }} )
-                                    </a>
-                                </li>
+                <aside class="col-lg-3 mb-4" data-aos="fade-up">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Filter by Category</h5>
+                            <ul class="list-group list-group-flush">
+                                @foreach ($categories as $item)
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <a href="{{ route('projects', $item->myCategory->id ?? '0') }}"
+                                            class="text-decoration-none">
+                                            {{ $item->myCategory->name ?? '-' }}
+                                        </a>
+                                        <span class="badge bg-primary rounded-pill">{{ $item->total ?? '-' }}</span>
+                                    </li>
+                                @endforeach
                             </ul>
-                        @endforeach
-                    </div>
-                </div>
-
-                <!-- Project Main Details -->
-                <div class="col-lg-9 col-md-9 d-flex align-items-stretch" data-aos="fade-up">
-                    <div class="projects-item">
-                        <div class="projects-item-img">
-                            @if ($project->getFirstMedia('project_title_images') != null)
-                                <img   loading="lazy"  src="{{ $project->getFirstMedia('project_title_images')->getUrl() }}"
-                                    title="{{ $project->getFirstMedia('project_title_images')->name }}"
-                                    class="img-fluid" alt="">
-                            @endif
-                        </div>
-                        <div class="projects-item-info">
-                            <h4 class="project-title">{{ $project->title ?? '-' }}</h4>
-                            <span class="project-meta"> Post Date : {{ $project->post_date ?? '-' }} | Author :
-                                {{ $project->author ?? '-' }} </span>
-                            <div class="project-details"> {!! $project->details ?? '' !!}</div>
                         </div>
                     </div>
-                </div>
+                </aside>
 
-                <!-- Project Images Header -->
+                <!-- Main Details -->
+                <div class="col-lg-9">
+                    <div class="card-light">
+                        @if ($project->getFirstMedia('project_title_images'))
+                            <img src="{{ $project->getFirstMedia('project_title_images')->getUrl() }}"
+                                class="img-fluid rounded mb-3" loading="lazy">
+                        @endif
+                        <h2 class="project-title">{{ $project->title ?? '-' }}</h2>
+                        <div class="project-meta">
+                            Post Date: {{ $project->post_date ?? '-' }} | Author: {{ $project->author ?? '-' }}
+                        </div>
+                        <div class="project-details">{!! $project->details ?? '' !!}</div>
+                    </div>
 
-                <div class="col-lg-12 offset-lg-3 mt-lg-4">
-                    <h3 class="text-right section-header">Project Images</h3>
-                </div>
+                    <!-- Project Images -->
+                    @if ($project->getMedia('project_images')->count())
+                        <div class="section-header mt-5">Project Images</div>
+                        <div class="media-grid">
+                            <div class="row">
+                                @foreach ($project->getMedia('project_images') as $gallery_item)
+                                    <div class="col-lg-6 col-sm-12">
+                                        <div class="media-item">
+                                            <img src="{{ $gallery_item->getUrl() }}" alt="{{ $gallery_item->name }}"
+                                                loading="lazy">
+                                            <div class="media-info">
+                                                <h4>{{ $gallery_item->name }}</h4>
+                                                <p>{{ $gallery_item->description ?? '' }}</p>
+                                                <a href="{{ $gallery_item->getUrl() }}"
+                                                    class="btn btn-sm btn-outline-primary portfolio-lightbox"
+                                                    data-gallery="portfolioGallery" title="{{ $gallery_item->name }}">
+                                                    <i class="bx bx-plus"></i> View Image
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
-                <!-- Project Images -->
-                <div class="col-lg-9 offset-lg-3 d-flex align-items-stretch" data-aos="fade-up">
-                    <div class="row portfolio">
-                        @foreach ($project->getMedia('project_images') as $gallery_item)
-                            <div
-                                class="col-lg-4 col-md-6 portfolio-item filter-{{ $gallery_item->item_category_id ?? '' }}">
-                                <img   loading="lazy"  src="{{ $gallery_item->getUrl() }}" class="img-fluid" alt="">
-                                <div class="portfolio-info">
-                                    <h4>{{ $gallery_item->name }}</h4>
-                                    <p>{{ $gallery_item->description ?? '-' }}</p>
-                                    <a href="{{ $gallery_item->getUrl() }}" data-gallery="portfolioGallery"
-                                        class="portfolio-lightbox preview-link"
-                                        title="{{ $gallery_item->name }} <br> {{ $gallery_item->description }}">
-                                        <i class="bx bx-plus"></i>
-                                    </a>
+                    <!-- Project Files -->
+                    @if ($project->getMedia('project_files')->count())
+                        <div class="section-header mt-5">Project Files</div>
+                        <div class="media-grid">
+                            <div class="row">
+                            @foreach ($project->getMedia('project_files') as $project_file)
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="media-item">
+                                    @if ($project_file->mime_type === 'application/pdf' || $project_file->getExtensionAttribute() === 'pdf')
+                                        <iframe src="{{ $project_file->getUrl() }}" frameborder="0"></iframe>
+                                    @else
+                                        <img src="{{ $project_file->getUrl() }}" alt="{{ $project_file->name }}"
+                                            loading="lazy">
+                                    @endif
+                                    <div class="media-info">
+                                        <h4>{{ $project_file->name }}</h4>
+                                        <p>{{ $project_file->description ?? '' }}</p>
+                                        <a href="{{ $project_file->getUrl() }}" class="btn-outline-primary"
+                                            target="_blank">Open File</a>
+                                    </div>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
+                        </div>
+                    @endif
                 </div>
-
-
-                <!-- Project Files Header -->
-                <div class="col-lg-12 offset-lg-3 mt-lg-4">
-                    <h3 class="text-right section-header">Project Files</h3>
-                </div>
-
-                <!-- Project Files -->
-                <div class="col-lg-9 offset-lg-3 d-flex align-items-stretch" data-aos="fade-up">
-                    <div class="row portfolio">
-                        @foreach ($project->getMedia('project_files') as $project_file)
-                            <div
-                                class="col-lg-4 col-md-6 portfolio-item filter-{{ $project_file->item_category_id ?? '' }}">
-                                @if ($project_file->mime_type === 'application/pdf' || $project_file->getExtensionAttribute() === 'pdf')
-                                    <iframe src="{{ $project_file->getUrl() }}" height="300px"
-                                        frameborder="0"></iframe>
-                                    <div class="portfolio-info">
-                                        <h4>{{ $project_file->name }}</h4>
-                                        <p>{{ $project_file->description ?? '-' }}</p>
-                                        <a href="{{ $project_file->getUrl() }}" target="_blank"
-                                            class="btn btn-sm btn-outline-primary mt-2">
-                                            Open File
-                                            <i class="bx bx-right-arrow-alt"></i> <!-- Arrow icon -->
-                                        </a>
-                                    </div>
-                                @else
-                                    <img   loading="lazy"  src="{{ $project_file->getUrl() }}" width="100%" class="img-fluid"
-                                        alt="">
-                                    <div class="portfolio-info">
-                                        <h4>{{ $project_file->name }}</h4>
-                                        <p>{{ $project_file->description ?? '-' }}</p>
-                                        <a href="{{ $project_file->getUrl() }}" data-gallery="portfolioGallery"
-                                            class="portfolio-lightbox preview-link"
-                                            title="{{ $project_file->name }} <br> {{ $project_file->description }}">
-                                            <i class="bx bx-plus"></i>
-                                        </a>
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
             </div>
-
         </div>
     </section>
 </div>

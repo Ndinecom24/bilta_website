@@ -1,88 +1,102 @@
 <div>
 
     <style>
-        .news-item-img img.news-image {
-            width: 100%;
+        .news-image-wrapper {
             height: 200px;
+            overflow: hidden;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+
+        .news-image {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .news-image-wrapper:hover .news-image {
+            transform: scale(1.05);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
         }
     </style>
-    
+
 
     <body>
 
-        <section id="news" class="news section-bg">
+        <section id="news" class="py-5 bg-light">
             <div class="container">
-
-                <div class="section-title">
-                    <h2 data-aos="fade-up">News</h2>
-                     <span data-aos="fade-up">{{ $title ?? "-" }}</span>
+                <div class="section-title text-center mb-5">
+                    <h2 data-aos="fade-up" class="fw-bold">News</h2>
+                    <p data-aos="fade-up" class="text-muted">{{ $title ?? '-' }}</p>
                 </div>
 
                 <div class="row">
-
-                    <div class="col-lg-3 col-md-3 d-flex align-items-stretch" data-aos="fade-up">
-                        <div class="card card-body">
-                            <h4>News Categories</h4>
-                            @foreach ($categories as $item1)
-                                <ul>
-                                    <li><a href="{{ route('news', $item1->category->id ?? '0') }}">
-                                            {{ $item1->category->name  ?? '-' }} ( {{ $item1->total ?? '-' }}
-                                            )
+                    <!-- Categories Sidebar -->
+                    <div class="col-lg-3 mb-4">
+                        <div class="bg-white p-4 shadow-sm rounded">
+                            <h5 class="mb-3 fw-semibold">News Categories</h5>
+                            <ul class="list-unstyled">
+                                @foreach ($categories as $item1)
+                                    <li class="mb-2">
+                                        <a href="{{ route('news', $item1->category->id ?? '0') }}"
+                                            class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
+                                            {{ $item1->category->name ?? '-' }}
+                                            <span
+                                                class="badge bg-primary rounded-pill">{{ $item1->total ?? '-' }}</span>
                                         </a>
                                     </li>
-                                </ul>
-                            @endforeach
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
 
-                    <div class="col-lg-9 col-md-9 col-sm-12">
-                        <div class="row">
+                    <!-- News List -->
+                    <div class="col-lg-9">
+                        <div class="row g-4">
                             @foreach ($news as $item)
-                                <div class="col-lg-6 col-md-6 d-flex align-items-stretch" data-aos="fade-up">
-                                    <div class="news-item">
-                    
-                                        <div class="news-item-img">
-                                            @php
-                                                $image = $item->getFirstMedia('news_images') 
-                                                        ? $item->getFirstMedia('news_images')->getUrl() 
-                                                        : 'https://via.placeholder.com/300x200?text=News+Image';
-                                            @endphp
-                                            <img 
-                                                loading="lazy" 
-                                                src="{{ $image }}" 
-                                                title="{{ $item->getFirstMedia('news_images')->name ?? 'Placeholder Image' }}" 
-                                                class="img-fluid news-image" 
-                                                alt="{{ $item->getFirstMedia('news_images')->name ?? 'Placeholder Image' }}">
+                                @php
+                                    $image = $item->getFirstMedia('news_images')
+                                        ? $item->getFirstMedia('news_images')->getUrl()
+                                        : 'https://via.placeholder.com/300x200?text=News+Image';
+                                @endphp
+
+                                <div class="col-md-6">
+                                    <div class="card h-100 shadow-sm border-0">
+                                        <div class="news-image-wrapper">
+                                            <img src="{{ $image }}" class="card-img-top news-image"
+                                                alt="{{ $item->title ?? 'News Image' }}"
+                                                title="{{ $item->getFirstMedia('news_images')->name ?? 'Image' }}"
+                                                loading="lazy">
                                         </div>
-                                        
-                                        <div class="news-item-info">
-                                            <h4>{{ $item->title ?? '-' }}</h4>
-                                            <span> Post Date : {{ $item->post_date ?? '-' }} | Author :
-                                                {{ $item->author ?? '-' }} </span>
-                                            <p> {{ Str::limit($item->short_description, 200, '...') ?? '-' }}</p>
-                    
-                                            <div class="news-item-btn">
-                                                <a href="{{ route('news.details',['news' =>$item, 'name'=>$item->title] ) }}"
-                                                    class="btn btn-sm btn-outline-secondary">More..</a>
-                                            </div>
-                                        </div> 
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title fw-semibold">{{ $item->title ?? '-' }}</h5>
+                                            <small class="text-muted mb-2">
+                                                Posted: {{ $item->post_date ?? '-' }} | Author:
+                                                {{ $item->author ?? '-' }}
+                                            </small>
+                                            <p class="card-text text-muted flex-grow-1">
+                                                {{ Str::limit($item->short_description, 200, '...') ?? '-' }}
+                                            </p>
+                                            <a href="{{ route('news.details', ['news' => $item, 'name' => $item->title]) }}"
+                                                class="btn btn-sm btn-outline-primary mt-auto">Read More</a>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     </div>
-                    
                 </div>
-
             </div>
-</div>
+        </section>
 
-</section>
-<!-- End News Section -->
+        <!-- End News Section -->
 
 
-</body>
+    </body>
 
 </div>

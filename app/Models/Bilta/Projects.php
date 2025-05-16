@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 
+use Spatie\Image\Manipulations;
+
+
 class Projects  extends Model implements HasMedia
 {
     use \Spatie\MediaLibrary\InteractsWithMedia;
@@ -40,6 +43,13 @@ class Projects  extends Model implements HasMedia
 
     public function myCategory (){
         return $this->belongsTo( ItemCategory::class, 'category_id', 'id');
+    }
+
+    public function registerMediaConversions( $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->fit(Manipulations::FIT_CROP, 400, 300)
+            ->nonQueued(); // Optional: remove this if you queue conversions
     }
 
 }
