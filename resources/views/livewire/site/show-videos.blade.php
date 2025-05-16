@@ -11,10 +11,14 @@
                 </p>
             </div>
 
-            <!-- Search Field -->
+            <!-- Search & Control Row -->
             <div class="row mb-4 justify-content-center">
                 <div class="col-md-6">
                     <input type="text" id="videoSearch" class="form-control" placeholder="Search videos...">
+                </div>
+                <div class="col-md-3 mt-2 mt-md-0 text-md-start text-center">
+                    <button id="showAllBtn" class="btn btn-outline-secondary">Show All</button>
+                    <span id="resultsCount" class="ms-2 text-muted">Showing {{ count($video_items) }} results</span>
                 </div>
             </div>
 
@@ -22,7 +26,6 @@
             <div class="row" id="videoContainer">
                 @foreach ($video_items as $video)
                     @php
-                        // Extract YouTube video ID from full URL
                         preg_match("/(?:youtube\.com\/(?:[^\/]+\/.+|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^\"&?\/\s]{11})/", $video->video_link, $matches);
                         $videoId = $matches[1] ?? null;
                     @endphp
@@ -52,12 +55,20 @@
             </div>
         </div>
     </section>
+</div>
 
-<!-- Filter Script -->
+<!-- JS: Search, Count, Reset -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const searchInput = document.getElementById("videoSearch");
+        const showAllBtn = document.getElementById("showAllBtn");
+        const resultsCount = document.getElementById("resultsCount");
         const cards = document.querySelectorAll(".video-card");
+
+        function updateResultsCount() {
+            const visibleCount = [...cards].filter(card => card.style.display !== "none").length;
+            resultsCount.textContent = `Showing ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
+        }
 
         searchInput.addEventListener("keyup", function () {
             const searchValue = this.value.toLowerCase();
@@ -70,8 +81,16 @@
                     card.style.display = "none";
                 }
             });
+            updateResultsCount();
         });
+
+        showAllBtn.addEventListener("click", function () {
+            searchInput.value = "";
+            cards.forEach(card => card.style.display = "");
+            updateResultsCount();
+        });
+
+        // Initial count
+        updateResultsCount();
     });
 </script>
-
-</div>
