@@ -24,6 +24,8 @@ use App\Http\Livewire\Admin\TranslationProjectsPage\DetailTranslationProjects;
 use App\Http\Livewire\Admin\TranslationProjectsPage\ShowTranslationProjects;
 use App\Http\Livewire\Admin\VideosPage\ShowItemVidoes;
 use App\Http\Livewire\Site\Company\ShowAbout;
+use App\Http\Livewire\Site\MyAudioBibleDetails;
+use App\Http\Livewire\Site\MyAudioBibleList;
 use App\Http\Livewire\Site\MyNewsDetails;
 use App\Http\Livewire\Site\MyNewsSearch;
 use App\Http\Livewire\Site\MyTranslationProjectDetails;
@@ -76,6 +78,8 @@ Route::prefix('bilta/site')->group(function () {
     Route::get('/projects/details/{project}', MyTranslationProjectDetails::class)->name('projects.details');
     Route::get('/projects/{category_id}', MyTranslationProjectsList::class)->name('projects');
     Route::get('/WeeklyPrayerPoint', ShowWeeklyPrayerPoints::class)->name('weekly-prayer-points');
+    Route::get('/audio/bible', MyAudioBibleList::class)->name('audio.bible');
+    Route::get('/audio/bible/{item}/details', MyAudioBibleDetails::class)->name('audio.bible.details');
 
 });
 Route::post('/contact', [ContactController::class,  'store'])->name('contact.store');
@@ -108,5 +112,5 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/news/{id}/details', ShowNewsItemDetails::class)->name('admin.page.item.news.details');
         Route::get('/item/projects', ShowTranslationProjects::class)->name('admin.page.item.projects');
         Route::get('/item/projects/{item}/details', DetailTranslationProjects::class)->name('admin.page.item.projects.details');
-    });
+       });
 });

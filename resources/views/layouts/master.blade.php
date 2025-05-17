@@ -123,7 +123,7 @@
                                 <li><a href="{{ route('videos') }}">Videos</a></li>
                                 <li><a href="{{ route('testimonies') }}">Testimonies</a></li>
                                 <li><a href="{{ route('weekly-prayer-points') }}">Weekly Prayer Points</a></li>
-                                {{-- <li><a href="{{ route('projects', '0') }}">Translation Projects</a></li> --}}
+                                <li><a href="{{ route('audio.bible') }}">Audio Bible</a></li>
                                 <li><a href="{{ route('news', '0') }}">News</a></li>
                             </ul>
                         </li>
