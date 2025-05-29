@@ -254,10 +254,18 @@
                         <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up">
                             <div class="member">
                                 <div class="member-img">
+
+                                    @php
+                                    $media = $our_team->getFirstMedia('team_images');
+                                    $imageUrl = $media
+                                        ? $media->getUrl()
+                                        : asset('storage/defaults/default-team.png');
+                                @endphp
+
                                     <img loading="lazy" class="img-fluid"
-                                        src="{{ $our_team->getFirstMedia('team_images')->getUrl() }}"
+                                        src="{{ $imageUrl }}"
                                         style="height: 350px; width: 100%; object-fit: cover;"
-                                        title="{{ $our_team->getFirstMedia('team_images')->name }}">
+                                        title="{{ $media ? $media->name : 'Default Image' }}">
 
                                     <div class="social">
                                         <a href=""><i class="bi bi-twitter"></i></a>
