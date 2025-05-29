@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Site;
 
 use App\Models\Bilta\AudioFile;
 use App\Models\Bilta\ItemCategory; // only needed if AudioFiles use categories
+use App\Models\Bilta\Projects;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -11,17 +12,19 @@ class MyAudioBibleList extends Component
 {
     use WithPagination;
 
-    public $searchTerm, $category_id, $title;
+    public $searchTerm; 
+    public $project_id;
+    public $title;
     public $categories = [];
 
-    public function mount($category_id = null)
+    public function mount($project_id = null)
     {
-        $this->category_id = $category_id;
+        $this->project_id = $project_id;
     }
 
     public function render()
     {
-        $query = AudioFile::where('status_id', config('constants.status.active'));
+        $query = AudioFile::with('project')->where('status_id', config('constants.status.active'));
 
         // Search logic
         if (!is_null($this->searchTerm)) {
@@ -29,31 +32,27 @@ class MyAudioBibleList extends Component
             $this->title = 'Results for "' . $this->searchTerm . '"';
         }
 
-        // Filter by category if applicable
-        if (!empty($this->category_id) && $this->category_id != '0') {
+        // Filter by project if applicable
+        if (!empty($this->project_id) && $this->project_id != '0') {
             $query->whereHas('project', function ($q) {
-                $q->where('category_id', $this->category_id);
+                $q->where('project_id', $this->project_id);
             });
 
             try {
-                $this->title = 'Category: ' . (ItemCategory::find($this->category_id)->name ?? "Unknown");
+                $this->title = 'Project: ' . (Projects::find($this->project_id)->name ?? "Unknown");
             } catch (\Exception $e) {
-                $this->title = 'Unknown Category';
+                $this->title = 'Unknown Project';
             }
         }
 
         $audioFiles = $query->latest()->paginate(20);
 
         // Optional: Get categories based on projects associated with audio files
-        $this->categories = ItemCategory::whereIn('id', function ($q) {
-            $q->select('category_id')
-              ->from('projects')
-              ->whereIn('id', function ($sub) {
-                  $sub->select('project_id')
-                      ->from('audio_files')
-                      ->where('status_id', config('constants.status.active'));
-              });
-        })->get();
+        $this->categories = AudioFile::select('project_id' )
+        ->with('project')
+        ->selectRaw('project_id, COUNT(*) as audio_count')
+        ->groupBy('project_id')
+        ->get();
 
         return view('livewire.site.show-audio-bible-list')->with(compact('audioFiles'));
     }

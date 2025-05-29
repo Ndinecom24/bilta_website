@@ -11,14 +11,16 @@
             <aside class="col-lg-3 mb-4" data-aos="fade-up">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="card-title mb-3">Filter by Category</h5>
+                        <h5 class="card-title mb-3">Filter by Projects</h5>
                         <ul class="list-group list-group-flush">
+
                             @foreach ($categories as $item)
+                          
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('audio.bible', $item->myCategory->id ?? '0') }}" class="text-decoration-none">
-                                        {{ $item->myCategory->name ?? '-' }}
+                                    <a href="{{ route('audio.bible', $item->project->id ?? '0') }}" class="text-decoration-none">
+                                        {{ $item->project->title ?? '-' }}
                                     </a>
-                                    <span class="badge bg-primary rounded-pill">{{ $item->total ?? '0' }}</span>
+                                    <span class="badge bg-primary rounded-pill">{{ $item->audio_count ?? '0' }}</span>
                                 </li>
                             @endforeach
                         </ul>
@@ -28,6 +30,7 @@
 
             <!-- Main Content -->
             <div class="col-lg-9">
+
                 <!-- Search & Result Count -->
                 <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <input type="text" id="searchInput" class="form-control w-75" placeholder="Search audio titles or descriptions...">
@@ -47,10 +50,10 @@
                                     <div class="card-body d-flex flex-column">
                                         <h5 class="card-title">{{ $item->title ?? 'Untitled' }}</h5>
                                         <p class="text-muted small">
-                                            <i class="bi bi-calendar3"></i> {{ $item->post_date ?? '-' }} &nbsp;
-                                            <i class="bi bi-person-circle"></i> {{ $item->author ?? '-' }}
+                                            <i class="bi bi-folder2-open"></i> {{ $item->project->title ?? '-' }} &nbsp;
+                                            <i class="bi bi-tags"></i> {{ $item->project->myCategory->name ?? '-' }}
                                         </p>
-                                        <p class="card-text small">{{ $item->short_description ?? '-' }}</p>
+                                        <p class="card-text small">{{ $item->description ?? '-' }}</p>
 
                                         <audio controls class="w-100 my-2">
                                             <source src="{{ $media->getUrl() }}" type="{{ $media->mime_type }}">
@@ -58,6 +61,9 @@
                                         </audio>
 
                                         <div class="mt-auto">
+                                            <a href="{{ $media->getUrl() }}" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                                <i class="bi bi-eye"></i> View
+                                            </a>
                                             <a href="{{ $media->getUrl() }}" class="btn btn-sm btn-outline-primary" download>
                                                 <i class="bi bi-download"></i> Download
                                             </a>
@@ -65,6 +71,9 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                           
                         @endforeach
                     @empty
                         <div class="col-12">
