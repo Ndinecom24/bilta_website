@@ -315,7 +315,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content p-3">
                         <div class="modal-header">
-                            <h5 class="modal-title">Tell us how Bilta is impacting your life</h5>
+                            <h5 class="modal-title">Tell us how Bilta is impacting you or your community</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
@@ -335,7 +335,7 @@
                                 <div class="mb-3">
                                     <label>Testimonial</label>
                                     <textarea class="form-control" name="testimonial" rows="4"
-                                        placeholder="Tell us how Bilta is impacting your life..." required></textarea>
+                                        placeholder="Tell us how Bilta's impact..." required></textarea>
                                 </div>
 
                                 <div id="testimonialMessage" class="alert d-none"></div>
