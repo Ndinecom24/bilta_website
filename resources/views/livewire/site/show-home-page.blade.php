@@ -312,7 +312,7 @@
             <!-- Modal -->
             <div class="modal fade" id="testimonialModal" tabindex="-1" aria-labelledby="testimonialModalLabel"
                 aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content p-3">
                         <div class="modal-header">
                             <h5 class="modal-title">Tell us how Bilta is impacting you or your community</h5>
@@ -334,7 +334,7 @@
 
                                 <div class="mb-3">
                                     <label>Testimonial</label>
-                                    <textarea class="form-control" name="testimonial" rows="4"
+                                    <textarea class="form-control" name="testimonial" rows="5"
                                         placeholder="Tell us how Bilta's impact..." required></textarea>
                                 </div>
 
