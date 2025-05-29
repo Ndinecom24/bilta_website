@@ -93,7 +93,7 @@
                                         <td>{{ $our_team->facebook_url }}</td>
                                         <td>{{ $our_team->linkedin_url }}</td>
                                         <td>{{ $our_team->twitter_url }}</td>
-                                        <td>{{ $our_team->details }}</td>
+                                        <td>{{ Str::limit($our_team->details, 150) }}</td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-6">
