@@ -19,7 +19,7 @@
               <span class="faq-icon fs-4">+</span>
             </button>
             <div id="faq-list-{{$key}}" class="collapse {{ $key === 0 ? 'show' : '' }} bg-light p-3 rounded-bottom" data-bs-parent=".faq-list">
-              <p class="mb-0 text-secondary">{{$faq->answer ?? ""}}</p>
+              <p class="mb-0 text-secondary">{!! $faq->answer ?? "" !!}</p>
             </div>
           </li>
           @endforeach
