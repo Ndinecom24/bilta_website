@@ -19,8 +19,9 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('/admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-    <script src="https://cdn.tiny.cloud/1/4ww9r42nlj1c7v4thz8rac8pon6d97hsv52wulvvyhu6unye/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
+   <!-- Trix CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/trix/2.0.0/trix.min.css">
+
 
 
     @stack('custom-styles')
@@ -102,30 +103,8 @@
     <!-- Page level plugins -->
     <script src="{{ asset('admin/vendor/chart.js/Chart.min.js') }}"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize TinyMCE when the page is loaded
-            tinymce.init({
-                selector: '.tinymce-editor', // Apply TinyMCE to elements with this class
-                plugins: 'advlist autolink lists link image charmap print preview anchor help',
-                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image | help',
-                menubar: false,
-                branding: false
-            });
-    
-            // Re-initialize TinyMCE when the modal is shown
-            $('#createModal').on('shown.bs.modal', function () {
-                tinymce.get('faqFormControlInput3').init();
-            });
-    
-            // Re-initialize TinyMCE when the modal is hidden
-            $('#createModal').on('hidden.bs.modal', function () {
-                tinymce.remove('textarea');
-            });
-        });
-    </script>
-
-   
+ <!-- Trix JS -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/trix/2.0.0/trix.min.js"></script>
 
 
 </body>

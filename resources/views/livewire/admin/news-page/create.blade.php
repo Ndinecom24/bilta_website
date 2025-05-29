@@ -75,8 +75,14 @@
                             <!-- Details -->
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="faqFormControlInput3">Details</label>
-                                    <textarea rows="4" class="form-control" id="faqFormControlInput3" placeholder="Enter Details" wire:model="details"></textarea>
+
+                                    <div wire:ignore>
+                                        <label for="faqFormControlInput3">Details</label>
+                                        <input id="trix-content" type="hidden" name="details" wire:model.lazy="details">
+                                        <trix-editor input="trix-content"></trix-editor>
+                                    </div>
+
+                                    {{-- <textarea rows="4" class="form-control" id="faqFormControlInput3" placeholder="Enter Details" wire:model="details"></textarea> --}}
                                     @error('details') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
