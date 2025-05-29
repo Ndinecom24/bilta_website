@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bilta\Testimonial;
 use App\Models\ContactMessage;
 use App\Services\SpamFilterService;
+use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Mail;
@@ -33,8 +35,6 @@ class ContactController extends Controller
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
-
-       
 
         // Prepare additional data
         $validated['status_id'] = 1;
@@ -66,5 +66,39 @@ class ContactController extends Controller
             // Return error response with the exception message
             return response()->json(['error' => 'There was an issue sending your message. Please try again later.' . $e->getMessage()], 500);
         }
+    }
+
+
+    public function storeTestimonial(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'testimonial' => 'required|string|max:1000',
+        ]);
+
+        try{
+
+            Testimonial::updateOrCreate(
+
+                [
+                    'name' => $validated['name'],
+                    'title' => $validated['title'],
+                    'testimonial' => $validated['testimonial'],
+                ],
+                [
+                    'name' => $validated['name'],
+                    'title' => $validated['title'],
+                    'testimonial' => $validated['testimonial'],
+                    'status_id' => 0,
+                    'created_by' => 0,
+                ]
+            );
+            return response()->json(['message' => 'Thank you for your testimonial! Has been sent to admin.']);
+
+        }catch(Exception $exception){
+            return response()->json(['message' => 'Error : '.$exception->getMessage() ]);
+        }
+      
     }
 }

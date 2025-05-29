@@ -4,6 +4,56 @@
     {{--    @endpush --}}
     {{--     --}}
 
+    <style>
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .custom-badge {
+            background-color: #b36227;
+            color: #fff;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .custom-badge:hover {
+            background-color: #e74a3b;
+        }
+        
+        .read-more-link {
+            background-color: transparent;
+            border: 1px solid #fff;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .read-more-link:hover {
+            background-color: #fff;
+            color: #b36227;
+        }
+        .project-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+
+        </style>
+        
+        
+
     <main id="main">
 
         <!-- ======= Hero Section ======= -->
@@ -202,6 +252,17 @@
                                 linguistic context.</p>
                         </div>
 
+                        <h3 class="project-header mt-3">See the Impact – Browse Our Projects</h3>
+                        <div class="badge-container">
+                            @foreach ($projects as $project)
+                                <span class="custom-badge">
+                                    {{ $project->myCategory->name ?? '--' }} - {{ $project->title ?? '--' }}
+                                    <a href="{{ route('projects.details', $project) }}" class="read-more-link">Read More</a>
+                                </span>
+                            @endforeach
+                        </div>
+                        
+
                     </div>
                 </div>
             </div>
@@ -234,7 +295,59 @@
                     <div class="swiper-pagination"></div>
                 </div>
 
+                <!-- Share Testimonial Button -->
+                <div class="text-center mt-5">
+                    <p class="text-muted text-white mb-2" style="font-size: 0.9rem;">
+                        We'd love to hear how Bilta is making a difference in your life or community.
+                    </p>
+                    <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#testimonialModal"
+                        title=" We'd love to hear how Bilta is making a difference in your life.">
+                        Share Your Testimonial
+                    </button>
+                </div>
+
             </div>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="testimonialModal" tabindex="-1" aria-labelledby="testimonialModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content p-3">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Tell us how Bilta is impacting your life</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="testimonialForm">
+                                <div class="mb-3">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" name="name"
+                                        placeholder="Enter your full name" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Title</label>
+                                    <input type="text" class="form-control" name="title"
+                                        placeholder="E.g., Student, Entrepreneur" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Testimonial</label>
+                                    <textarea class="form-control" name="testimonial" rows="4"
+                                        placeholder="Tell us how Bilta is impacting your life..." required></textarea>
+                                </div>
+
+                                <div id="testimonialMessage" class="alert d-none"></div>
+
+                                <button type="submit" class="btn btn-primary w-100">Submit Testimonial</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </section><!-- End Testimonials Section -->
 
 
@@ -256,14 +369,13 @@
                                 <div class="member-img">
 
                                     @php
-                                    $media = $our_team->getFirstMedia('team_images');
-                                    $imageUrl = $media
-                                        ? $media->getUrl()
-                                        : asset('storage/defaults/default-team.png');
-                                @endphp
+                                        $media = $our_team->getFirstMedia('team_images');
+                                        $imageUrl = $media
+                                            ? $media->getUrl()
+                                            : asset('storage/defaults/default-team.png');
+                                    @endphp
 
-                                    <img loading="lazy" class="img-fluid"
-                                        src="{{ $imageUrl }}"
+                                    <img loading="lazy" class="img-fluid" src="{{ $imageUrl }}"
                                         style="height: 350px; width: 100%; object-fit: cover;"
                                         title="{{ $media ? $media->name : 'Default Image' }}">
 
@@ -469,6 +581,44 @@
             });
         });
     </script>
+
+
+
+    <script>
+        document.getElementById('testimonialForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const messageBox = document.getElementById('testimonialMessage');
+
+            try {
+                const response = await fetch('/submit-testimonial', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageBox.className = 'alert alert-success';
+                    messageBox.textContent = data.message;
+                    messageBox.classList.remove('d-none');
+                    form.reset();
+                } else {
+                    throw new Error(data.message || 'Something went wrong.');
+                }
+            } catch (error) {
+                messageBox.className = 'alert alert-danger';
+                messageBox.textContent = error.message;
+                messageBox.classList.remove('d-none');
+            }
+        });
+    </script>
+
 
 
 

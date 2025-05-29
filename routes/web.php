@@ -84,6 +84,7 @@ Route::prefix('bilta/site')->group(function () {
 });
 Route::post('/contact', [ContactController::class,  'store'])->name('contact.store');
 Route::post('/clear-cache', [HomeController::class, 'clearCache']);
+Route::post('/submit-testimonial', [ContactController::class, 'storeTestimonial']);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// ADMIN

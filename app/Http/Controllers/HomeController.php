@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bilta\Testimonial;
 use Artisan;
+use Exception;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -38,4 +40,6 @@ class HomeController extends Controller
             return response()->json(['success' => false, 'error' => $e->getMessage()]);
         }
     }
+
+
 }
