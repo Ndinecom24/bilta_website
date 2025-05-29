@@ -329,7 +329,7 @@
                                 <div class="mb-3">
                                     <label>Title</label>
                                     <input type="text" class="form-control" name="title"
-                                        placeholder="E.g., Student, Entrepreneur" required>
+                                        placeholder="E.g., Reveland, Pastor, Student, Entrepreneur" required>
                                 </div>
 
                                 <div class="mb-3">
