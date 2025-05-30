@@ -82,7 +82,7 @@
                                             {{$our_news_item->title}}
                                         </td>
                                         <td>
-                                         {{ Str::limit(   $our_news_item->short_description , '200' , '...') }}
+                                         {!! Str::limit(   $our_news_item->short_description , '200' , '...') !!}
                                         </td>
                                         <td>
                                             {{$our_news_item->post_date}}

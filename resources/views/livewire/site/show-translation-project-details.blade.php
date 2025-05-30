@@ -97,6 +97,30 @@
             background-color: #007bff;
             color: white;
         }
+
+        .btn-outline-primary {
+    font-size: 14px;
+    padding: 6px 18px;               /* a bit more horizontal padding for better balance */
+    color: #b36227;
+    border: 1.5px solid #b36227;    /* slightly thicker border for clearer definition */
+    border-radius: 25px;             /* a bit rounder for a softer, modern feel */
+    background-color: transparent;
+    font-weight: 600;                /* semi-bold for good emphasis */
+    letter-spacing: 0.03em;          /* subtle letter spacing for readability */
+    cursor: pointer;
+    transition: background-color 0.25s ease, box-shadow 0.3s ease, color 0.25s ease, transform 0.2s ease;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    background-color: #b36227;
+    color: #f8f7f5;
+    box-shadow: 0 4px 12px rgba(179, 98, 39, 0.45);
+    text-decoration: none;
+    transform: scale(1.05);           /* slight scale up for a lively hover effect */
+    outline: none;
+}
+
     </style>
 
     <section class="section-bg py-5">

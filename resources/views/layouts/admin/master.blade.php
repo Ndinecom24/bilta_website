@@ -20,8 +20,8 @@
     <link href="{{ asset('/admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
    <!-- Trix CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/trix/2.0.0/trix.min.css">
-
+   <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+   <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
 
 
     @stack('custom-styles')
@@ -102,9 +102,6 @@
 
     <!-- Page level plugins -->
     <script src="{{ asset('admin/vendor/chart.js/Chart.min.js') }}"></script>
-
- <!-- Trix JS -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/trix/2.0.0/trix.min.js"></script>
 
 
 </body>

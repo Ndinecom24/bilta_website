@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CookieConsentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Livewire\Admin\AudioPage\ShowItemAudio;

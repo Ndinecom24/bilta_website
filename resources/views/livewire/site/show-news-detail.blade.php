@@ -45,7 +45,8 @@
 
         .media-grid img {
             width: 100%;
-            height: 250px;     /* fixed height to unify size */
+            height: 250px;
+            /* fixed height to unify size */
             border-radius: 2px;
             object-fit: cover;
         }
@@ -58,7 +59,7 @@
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
         }
-        
+
 
         .media-info {
             margin-top: 10px;
@@ -78,7 +79,31 @@
 
         .btn-outline-primary {
             font-size: 14px;
-            padding: 5px 10px;
+            padding: 6px 18px;
+            /* a bit more horizontal padding for better balance */
+            color: #b36227;
+            border: 1.5px solid #b36227;
+            /* slightly thicker border for clearer definition */
+            border-radius: 25px;
+            /* a bit rounder for a softer, modern feel */
+            background-color: transparent;
+            font-weight: 600;
+            /* semi-bold for good emphasis */
+            letter-spacing: 0.03em;
+            /* subtle letter spacing for readability */
+            cursor: pointer;
+            transition: background-color 0.25s ease, box-shadow 0.3s ease, color 0.25s ease, transform 0.2s ease;
+        }
+
+        .btn-outline-primary:hover,
+        .btn-outline-primary:focus {
+            background-color: #b36227;
+            color: #f8f7f5;
+            box-shadow: 0 4px 12px rgba(179, 98, 39, 0.45);
+            text-decoration: none;
+            transform: scale(1.05);
+            /* slight scale up for a lively hover effect */
+            outline: none;
         }
     </style>
 
@@ -142,35 +167,36 @@
                 </div>
 
                 <div class="col-lg-9 col-md-9 d-flex align-items-stretch" data-aos="fade-up">
-                <!-- Images Section following your provided pattern -->
-                @if ($news->getMedia('news_images')->count())
-                    <div class="col-lg-12 mt-5" data-aos="fade-up">
-                        <div class="section-header">News Images</div>
-                        <div class="media-grid">
-                            <div class="row">
-                                @foreach ($news->getMedia('news_images') as $gallery_item)
-                                    <div class="col-lg-6 col-sm-12">
-                                        <div class="media-item">
-                                            <img src="{{ $gallery_item->getUrl() }}" alt="{{ $gallery_item->name }}"
-                                                loading="lazy">
-                                            <div class="media-info">
-                                                <h4>{{ $gallery_item->name }}</h4>
-                                                <p>{{ $gallery_item->description ?? '' }}</p>
-                                                <a href="{{ $gallery_item->getUrl() }}"
-                                                    class="btn btn-sm btn-outline-primary portfolio-lightbox"
-                                                    data-gallery="portfolioGallery" title="{{ $gallery_item->name }}">
-                                                    <i class="bx bx-plus"></i> View Image
-                                                </a>
+                    <!-- Images Section following your provided pattern -->
+                    @if ($news->getMedia('news_images')->count())
+                        <div class="col-lg-12 mt-5" data-aos="fade-up">
+                            <div class="section-header">News Images</div>
+                            <div class="media-grid">
+                                <div class="row">
+                                    @foreach ($news->getMedia('news_images') as $gallery_item)
+                                        <div class="col-lg-6 col-sm-12">
+                                            <div class="media-item">
+                                                <img src="{{ $gallery_item->getUrl() }}"
+                                                    alt="{{ $gallery_item->name }}" loading="lazy">
+                                                <div class="media-info">
+                                                    <h4>{{ $gallery_item->name }}</h4>
+                                                    <p>{{ $gallery_item->description ?? '' }}</p>
+                                                    <a href="{{ $gallery_item->getUrl() }}"
+                                                        class="btn btn-sm btn-outline-primary portfolio-lightbox"
+                                                        data-gallery="portfolioGallery"
+                                                        title="{{ $gallery_item->name }}">
+                                                        <i class="bx bx-plus"></i> View Image
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endif
-                
-            </div>
+                    @endif
+
+                </div>
 
             </div>
         </div>
