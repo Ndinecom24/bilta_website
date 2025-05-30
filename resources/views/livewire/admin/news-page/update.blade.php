@@ -56,8 +56,11 @@
                         <!-- Short Description -->
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="faqFormControlInput2">Short Description</label>
-                                <textarea rows="3" class="form-control" id="faqFormControlInput2" placeholder="Enter Short Description" wire:model="short_description"></textarea>
+                                <div wire:ignore>
+                                    <label for="faqFormControlInput2">Short Description</label>
+                                    <input id="trix-short_description" type="hidden" name="short_description" wire:model.lazy="short_description">
+                                    <trix-editor input="trix-short_description"></trix-editor>
+                                </div>
                                 @error('short_description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -67,8 +70,11 @@
                         <!-- Details -->
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="faqFormControlInput3">Details</label>
-                                <textarea rows="4" class="form-control" id="faqFormControlInput3" placeholder="Enter Details" wire:model="details"></textarea>
+                                <div wire:ignore>
+                                    <label for="faqFormControlInput3">Details</label>
+                                    <input id="trix-details" type="hidden" name="details" wire:model.lazy="details">
+                                    <trix-editor input="trix-details"></trix-editor>
+                                </div>
                                 @error('details') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
