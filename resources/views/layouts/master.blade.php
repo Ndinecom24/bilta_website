@@ -137,6 +137,10 @@
 
 
 
+
+<script id="usercentrics-cmp" src="https://web.cmp.usercentrics.eu/ui/loader.js" data-settings-id="2k4APU5flxrGQP" async></script>
+
+
         @stack('custom-styles')
         {{--    @livewireStyles --}}
         <livewire:styles />
@@ -533,7 +537,7 @@
 
 
 
-        <script>
+        {{-- <script>
             function setCookie(name, value, days) {
                 const expires = new Date(Date.now() + days * 864e5).toUTCString();
                 document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
@@ -630,7 +634,7 @@
                     bootstrap.Modal.getInstance(document.getElementById('cookieConsentModal')).hide();
                 });
             });
-        </script>
+        </script> --}}
 
 
 
