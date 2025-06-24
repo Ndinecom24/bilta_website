@@ -1,5 +1,6 @@
 <!-- Modal -->
-<div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+<div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -37,8 +38,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="faqFormControlInput1">Title</label>
-                                <input type="text" class="form-control" id="faqFormControlInput1" placeholder="Enter Title" wire:model="title">
-                                @error('title') <span class="text-danger">{{ $message }}</span> @enderror
+                                <input type="text" class="form-control" id="faqFormControlInput1"
+                                    placeholder="Enter Title" wire:model="title">
+                                @error('title')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -46,8 +50,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="faqFormControlInput4">Author</label>
-                                <input type="text" class="form-control" id="faqFormControlInput4" placeholder="Enter Author" wire:model="author">
-                                @error('author') <span class="text-danger">{{ $message }}</span> @enderror
+                                <input type="text" class="form-control" id="faqFormControlInput4"
+                                    placeholder="Enter Author" wire:model="author">
+                                @error('author')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -57,11 +64,13 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div wire:ignore>
-                                    <label for="faqFormControlInput2">Short Description</label>
-                                    <input id="trix-short_description" type="hidden" name="short_description" wire:model.lazy="short_description">
-                                    <trix-editor input="trix-short_description"></trix-editor>
+                                    <label for="trix-short_description">Short Description</label>
+                                    <input id="trix-short_description-update" type="hidden" name="short_description">
+                                    <trix-editor input="trix-short_description-update"></trix-editor>
                                 </div>
-                                @error('short_description') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('short_description')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -71,22 +80,28 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div wire:ignore>
-                                    <label for="faqFormControlInput3">Details</label>
-                                    <input id="trix-details" type="hidden" name="details" wire:model.lazy="details">
-                                    <trix-editor input="trix-details"></trix-editor>
+                                    <label for="trix-content">Details</label>
+                                    <input id="trix-content-update" type="hidden" name="details">
+                                    <trix-editor input="trix-content-update"></trix-editor>
                                 </div>
-                                @error('details') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('details')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
+
 
                     <div class="row">
                         <!-- Post Date -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="faqFormControlInput5">Post Date</label>
-                                <input type="date" class="form-control" id="faqFormControlInput5" wire:model="post_date">
-                                @error('post_date') <span class="text-danger">{{ $message }}</span> @enderror
+                                <input type="date" class="form-control" id="faqFormControlInput5"
+                                    wire:model="post_date">
+                                @error('post_date')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -100,7 +115,9 @@
                                         <option value="{{ $status->id }}">{{ $status->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('status_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('status_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -114,7 +131,9 @@
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('category_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('category_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -125,7 +144,9 @@
                             <div class="form-group">
                                 <label>Current Image</label>
                                 @if (isset($news) && $news->getFirstMedia('news_title_images'))
-                                    <img src="{{ $news->getFirstMedia('news_title_images')->getUrl() }}" style="width:100%; height: 150px;" title="{{ $news->getFirstMedia('news_title_images')->name }}">
+                                    <img src="{{ $news->getFirstMedia('news_title_images')->getUrl() }}"
+                                        style="width:100%; height: 150px;"
+                                        title="{{ $news->getFirstMedia('news_title_images')->name }}">
                                 @endif
                             </div>
                         </div>
@@ -134,36 +155,43 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="contactUsFormControlInputnewsImage">News Image</label>
-                                <input type="file" class="form-control" id="contactUsFormControlInputnewsImage" wire:model="news_title_image">
-                                @error('news_title_image') <span class="text-danger">{{ $message }}</span> @enderror
+                                <input type="file" class="form-control" id="contactUsFormControlInputnewsImage"
+                                    wire:model="news_title_image">
+                                @error('news_title_image')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
 
-       
-              
+
+
                     <label for="ew">Remove News Images</label>
-                <div class="row">
-                    @if (isset($news))
-                        @foreach ($news->getMedia('news_images') as $item)
-                            <div class="col-md-8 m-1">
-                                <img src="{{ $item->getUrl() }}" style="width:100%; " title="{{ $item->name }}">
-                            </div>
-                            <div class="col-md-3 m-1">
-                                <button wire:click.prevent="removeImage({{ $item->id }})" class="btn btn-sm btn-outline-danger">Remove</button>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-           
+                    <div class="row">
+                        @if (isset($news))
+                            @foreach ($news->getMedia('news_images') as $item)
+                                <div class="col-md-8 m-1">
+                                    <img src="{{ $item->getUrl() }}" style="width:100%; " title="{{ $item->name }}">
+                                </div>
+                                <div class="col-md-3 m-1">
+                                    <button wire:click.prevent="removeImage({{ $item->id }})"
+                                        class="btn btn-sm btn-outline-danger">Remove</button>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+
 
                     <!-- Add More Images -->
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="contactUsFormControlInput121">Add More News Images</label>
-                                <input type="file" class="form-control" id="contactUsFormControlInput121" multiple wire:model="news_image">
-                                @error('news_image') <span class="text-danger">{{ $message }}</span> @enderror
+                                <input type="file" class="form-control" id="contactUsFormControlInput121" multiple
+                                    wire:model="news_image">
+                                @error('news_image')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -176,7 +204,7 @@
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
 
-           
+
         </div>
     </div>
 </div>

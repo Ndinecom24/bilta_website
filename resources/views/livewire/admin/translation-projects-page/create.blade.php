@@ -49,33 +49,41 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-12">
                                 <div class="form-group">
                                     <div wire:ignore>
-                                        <label for="faqFormControlInput2">Short Description</label>
-                                        <input id="trix-short_description" type="hidden" name="short_description" wire:model.lazy="short_description">
-                                        <trix-editor input="trix-short_description"></trix-editor>
+                                        <label for="trix-project_short_description">Short Description</label>
+                                        <input id="trix-project_short_description"
+                                               type="hidden"
+                                               name="short_description"
+                                               wire:model.lazy="short_description">
+                                        <trix-editor input="trix-project_short_description"></trix-editor>
                                     </div>
                                     @error('short_description')
-                                        <span class="text-danger ">{{ $message }}</span>
+                                        <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-12">
                                 <div class="form-group">
                                     <div wire:ignore>
-                                        <label for="faqFormControlInput2">Project Details</label>
-                                        <input id="trix-details" type="hidden" name="details" wire:model.lazy="details">
-                                        <trix-editor input="trix-details"></trix-editor>
+                                        <label for="trix-project_details">Project Details</label>
+                                        <input id="trix-project_details"
+                                               type="hidden"
+                                               name="details"
+                                               wire:model.lazy="details">
+                                        <trix-editor input="trix-project_details"></trix-editor>
                                     </div>
                                     @error('details')
-                                        <span class="text-danger ">{{ $message }}</span>
+                                        <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                         </div>
+                        
 
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -215,4 +223,28 @@
             </form>
         </div>
     </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Short Description
+        const shortDescEditor = document.querySelector("trix-editor[input='trix-project_short_description']");
+        if (shortDescEditor) {
+            shortDescEditor.addEventListener('trix-change', event => {
+                Livewire.find('{{ $this->id }}')
+                    .set('short_description', event.target.editor.getDocument().toString());
+            });
+        }
+
+        // Project Details
+        const detailsEditor = document.querySelector("trix-editor[input='trix-project_details']");
+        if (detailsEditor) {
+            detailsEditor.addEventListener('trix-change', event => {
+                Livewire.find('{{ $this->id }}')
+                    .set('details', event.target.editor.getDocument().toString());
+            });
+        }
+    });
+</script>
+
+
 </div>

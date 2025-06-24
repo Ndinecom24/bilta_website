@@ -65,30 +65,29 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <div wire:ignore>
-                                        <label for="faqFormControlInput2">Short Description</label>
-                                        <input id="trix-short_description" type="hidden" name="short_description" wire:model.lazy="short_description">
+                                        <label for="trix-short_description">Short Description</label>
+                                        <input id="trix-short_description" type="hidden" name="short_description">
                                         <trix-editor input="trix-short_description"></trix-editor>
                                     </div>
-                                   @error('short_description') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('short_description') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                         </div>
-    
+                        
                         <div class="row">
-
                             <!-- Details -->
                             <div class="col-12">
                                 <div class="form-group">
-
                                     <div wire:ignore>
-                                        <label for="faqFormControlInput3">Details</label>
-                                        <input id="trix-content" type="hidden" name="details" wire:model.lazy="details">
+                                        <label for="trix-content">Details</label>
+                                        <input id="trix-content" type="hidden" name="details">
                                         <trix-editor input="trix-content"></trix-editor>
                                     </div>
-                                 @error('details') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('details') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                         </div>
+                        
     
                         <div class="row">
                             <!-- Post Date -->
@@ -162,6 +161,10 @@
             </form>
         </div>
     </div>
+
+
+
+   
  
    
 </div>

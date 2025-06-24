@@ -54,6 +54,8 @@ class ShowNewsItem extends Component
         $this->validate();
         try {
 
+        
+
             // Create NewsItem
             $news = News::updateOrCreate(
                 [

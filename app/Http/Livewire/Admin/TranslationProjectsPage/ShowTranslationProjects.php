@@ -49,6 +49,13 @@ class ShowTranslationProjects extends Component
         $statuses = Status::get();
         $categories = ItemCategory::where('type', 'Projects')->get();
 
+
+        $this->dispatchBrowserEvent('fillTrixFields', [
+            'short_description' => $this->short_description,
+            'details' => $this->details,
+        ]);
+        
+
         
             return view('livewire.admin.translation-projects-page.index')
             ->with(compact('translation_projects', 'statuses', 'categories'));

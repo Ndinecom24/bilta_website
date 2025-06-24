@@ -136,6 +136,48 @@
         }
     </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Sync Short Description
+        document.querySelector("trix-editor[input='trix-short_description']")
+            .addEventListener('trix-change', function (event) {
+                Livewire.find('{{ $this->id }}')
+                    .set('short_description', event.target.editor.getDocument().toString());
+            });
+
+        // Sync Details
+        document.querySelector("trix-editor[input='trix-content']")
+            .addEventListener('trix-change', function (event) {
+                Livewire.find('{{ $this->id }}')
+                    .set('details', event.target.editor.getDocument().toString());
+            });
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // For Update Modal: Short Description
+        const shortDescEditorUpdate = document.querySelector("trix-editor[input='trix-short_description-update']");
+        if (shortDescEditorUpdate) {
+            shortDescEditorUpdate.addEventListener('trix-change', function (event) {
+                Livewire.find('{{ $this->id }}')
+                    .set('short_description', event.target.editor.getDocument().toString());
+            });
+        }
+
+        // For Update Modal: Details
+        const detailsEditorUpdate = document.querySelector("trix-editor[input='trix-content-update']");
+        if (detailsEditorUpdate) {
+            detailsEditorUpdate.addEventListener('trix-change', function (event) {
+                Livewire.find('{{ $this->id }}')
+                    .set('details', event.target.editor.getDocument().toString());
+            });
+        }
+    });
+</script>
+
 
 
 </div>

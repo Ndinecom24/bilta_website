@@ -138,8 +138,11 @@
 
 
 
-<script id="usercentrics-cmp" src="https://web.cmp.usercentrics.eu/ui/loader.js" data-settings-id="2k4APU5flxrGQP" async></script>
+        {{-- <script id="usercentrics-cmp" src="https://web.cmp.usercentrics.eu/ui/loader.js" data-settings-id="2k4APU5flxrGQP" async></script> --}}
 
+
+
+       
 
         @stack('custom-styles')
         {{--    @livewireStyles --}}
@@ -149,6 +152,27 @@
 
 
     <body>
+
+         {{-- <!--Start of Tawk.to Script-->
+         <script type="text/javascript">
+            var Tawk_API = Tawk_API || {},
+                Tawk_LoadStart = new Date();
+            (function() {
+                var s1 = document.createElement("script"),
+                    s0 = document.getElementsByTagName("script")[0];
+                s1.async = true;
+                s1.src = 'https://embed.tawk.to/6859236152a648190fbdff1d/1iue34e6j';
+                s1.charset = 'UTF-8';
+                s1.setAttribute('crossorigin', '*');
+                s0.parentNode.insertBefore(s1, s0);
+            })();
+        </script>
+        <!--End of Tawk.to Script--> --}}
+
+
+        <script id="chatway" async="true" src="https://cdn.chatway.app/widget.js?id=6OC9P2rVU5pW"></script>
+
+
         <!-- ======= Top Bar ======= -->
         <section id="topbar" class="d-flex align-items-center">
             <div class="container d-flex justify-content-center justify-content-md-between">
@@ -377,6 +401,7 @@
 
         <!-- Template Main JS File -->
         <script src="{{ asset('assets/js/main.js') }}"></script>
+
         @stack('custom-scripts')
 
         <!-- Cookie Consent Modal -->
@@ -537,7 +562,7 @@
 
 
 
-        {{-- <script>
+        <script>
             function setCookie(name, value, days) {
                 const expires = new Date(Date.now() + days * 864e5).toUTCString();
                 document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
@@ -607,9 +632,6 @@
                 }
             }
 
-
-
-
             document.addEventListener("DOMContentLoaded", function() {
                 const saved = getCookie('cookie_consent');
                 if (!saved || !isJson(decodeURIComponent(saved))) {
@@ -634,7 +656,7 @@
                     bootstrap.Modal.getInstance(document.getElementById('cookieConsentModal')).hide();
                 });
             });
-        </script> --}}
+        </script>
 
 
 
