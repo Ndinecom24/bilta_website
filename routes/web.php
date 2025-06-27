@@ -25,6 +25,9 @@ use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonies;
 use App\Http\Livewire\Admin\TranslationProjectsPage\DetailTranslationProjects;
 use App\Http\Livewire\Admin\TranslationProjectsPage\ShowTranslationProjects;
 use App\Http\Livewire\Admin\VideosPage\ShowItemVidoes;
+use App\Http\Livewire\Admin\Analytics\ClickAnalytics;
+
+
 use App\Http\Livewire\Site\Company\ShowAbout;
 use App\Http\Livewire\Site\MyAudioBibleDetails;
 use App\Http\Livewire\Site\MyAudioBibleList;
@@ -116,5 +119,9 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/news/{id}/details', ShowNewsItemDetails::class)->name('admin.page.item.news.details');
         Route::get('/item/projects', ShowTranslationProjects::class)->name('admin.page.item.projects');
         Route::get('/item/projects/{item}/details', DetailTranslationProjects::class)->name('admin.page.item.projects.details');
-       });
+        Route::get('/admin/live-analytics/clicks', ClickAnalytics::class)->name('admin.page.live.analytics.clicks');
+
+ 
+    
+    });
 });

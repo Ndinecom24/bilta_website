@@ -1,75 +1,111 @@
 <!doctype html>
-{{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">--}}
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-{{--    <!-- Styles -->--}}
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{asset('layout/styles/layout.css')}}" rel="stylesheet" type="text/css" media="all">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .split {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .left-pane {
+            flex: 1;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('{{ asset('layout/images/bilta_group.jpg') }}') center center no-repeat;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .left-pane h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .left-pane p {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        .right-pane {
+            flex: 1;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .split {
+                flex-direction: column;
+            }
+
+            .left-pane {
+                height: 40vh;
+                background-size: cover;
+            }
+
+            .right-pane {
+                height: 60vh;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div id="app" class="bgded overlay" style="background-image:url('{{asset('layout/images/demo/backgrounds/01.png')}}')">
-
-        <nav class="navbar navbar-expand-md navbar-light  shadow-sm" style="background-color: #d76c15" >
-
-
-                <a class="navbar-brand m-2 text-light" href="{{ url('/') }}" >
-                    {{ config('app.name', 'Laravel') }}
+    <div class="split">
+        <div class="left-pane">
+            <h1 class="mb-3">Welcome Back</h1>
+            <p class="mb-4" style="font-size: 1.1rem; line-height: 1.8;">
+                Thank you for standing with us as we bring light and hope through translation.
+            </p>
+            <p>
+                <a href="{{ route('site.home') }}" class="btn btn-outline-light">
+                    <strong>{{ config('app.name', 'Laravel') }}</strong>
                 </a>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto float-end   ">
-
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item float-end text-light ">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-{{--                            @if (Route::has('register'))--}}
-{{--                                <li class="nav-item" text-light>--}}
-{{--                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>--}}
-{{--                                </li>--}}
-{{--                            @endif--}}
-                        @else
-                            <li class="nav-item dropdown text-light ">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-
-        </nav>
-
-
-        <main class="py-4 text-dark">
+            </p>
+        </div>
+        
+        <div class="right-pane">
             @yield('content')
-        </main>
+        </div>
     </div>
 
-    <!-- JAVASCRIPTS -->
-    <script src="{{asset('layout/scripts/jquery.min.js')}}"></script>
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
