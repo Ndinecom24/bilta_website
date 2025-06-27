@@ -9,6 +9,7 @@ use App\Models\Bilta\OurValues;
 use App\Models\Bilta\Projects;
 use App\Models\Bilta\Testimonial;
 use App\Models\Bilta\ChairmanMessage;
+use App\Models\Bilta\Sponsor;
 use Livewire\Component;
 
 class ShowHome extends Component
@@ -44,6 +45,10 @@ class ShowHome extends Component
             return ChairmanMessage::latest()->first(); 
         });
 
+        $sponsors  = cache()->remember('sponsors', now()->addHours(6), function(){
+            return Sponsor::get();
+        });
+
         $projects = cache()->remember('projects', now()->addHours(6), function () {
             return Projects::
             // whereHas('status', function ($query)  {
@@ -76,7 +81,7 @@ class ShowHome extends Component
         });
 
 
-        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro', 'audioFiles', 'chairman', 'projects'));
+        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro', 'audioFiles', 'chairman', 'projects' , 'sponsors'  ));
     }
 
 

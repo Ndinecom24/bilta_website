@@ -524,6 +524,43 @@
             </div>
         </section><!-- End Contact Section -->
 
+<!-- ======= Our Sponsors Section ======= -->
+<section id="sponsors" class="py-5 bg-light">
+    <div class="container" data-aos="fade-up">
+        
+        <div class="section-title text-center mb-4">
+            <h2>Our Sponsors</h2>
+            <p class="text-muted">We’re grateful for the support of these incredible organizations.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            @foreach ($sponsors as $sponsor)
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
+                    <a href="{{ $sponsor->website_url ?? '#' }}" target="_blank" class="d-block">
+                        @if ($sponsor && $sponsor->getFirstMediaUrl('sponsor_image'))
+                            <div 
+                                class="d-flex align-items-center justify-content-center border rounded shadow-sm bg-white mx-auto" 
+                                style="width: 140px; height: 100px; overflow: hidden;">
+                                <img 
+                                    loading="lazy" 
+                                    src="{{ $sponsor->getFirstMediaUrl('sponsor_image') }}"
+                                    alt="{{ $sponsor->name ?? 'Sponsor' }}"
+                                    title="{{ $sponsor->description ?? 'Sponsor' }}"
+                                    class="img-fluid"
+                                    style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                                >
+                            </div>
+                        @endif
+                    </a>
+                    <small class="d-block mt-2">{{ $sponsor->name }}</small>
+                </div>
+            @endforeach
+        </div>
+        
+    </div>
+</section>
+
+
     </main><!-- End #main -->
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i

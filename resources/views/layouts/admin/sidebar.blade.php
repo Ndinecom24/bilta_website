@@ -51,6 +51,10 @@
                     <i class="fas fa-user-tie"></i> Chairman's Message
                 </a>
 
+                <a class="collapse-item" href="{{ route('admin.page.our.sponsors') }}">
+                    <i class="fas fa-user-tie"></i> Our Sponsors
+                </a>
+
                 <a class="collapse-item" href="{{ route('admin.page.contact.emails') }}">
                     <i class="fas fa-inbox"></i> Email Messages
                 </a>
