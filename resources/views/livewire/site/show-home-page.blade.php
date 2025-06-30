@@ -198,11 +198,6 @@
                             {!! $chairman->message ?? '<p>No message provided yet.</p>' !!}
                         </div>
                     </div>
-                    {{-- <div class="col-lg-8 pt-4 pt-lg-0" data-aos="fade-left">
-                        <div style="font-family: 'Times New Roman', serif; font-size: 16px; line-height: 1.6; color: #000;">
-                            {!! $chairman->message ?? '<p>No message provided yet.</p>' !!}
-                        </div>
-                    </div> --}}
                 </div>
             </div>
         </section>
@@ -278,7 +273,8 @@
 
                         @foreach ($testimonials as $testimonial)
                             <div class="swiper-slide">
-                                <div class="testimonial-item">
+                                <div class="testimonial-item"> 
+                                    {{-- {{ asset('layout/images/bilta_group.jpg') }} --}}
                                     <img loading="lazy" src="assets/img/testimonials/testimonies.jpg"
                                         class="testimonial-img" alt="">
                                     <h3>{{ $testimonial->name ?? '--' }}</h3>
@@ -439,7 +435,6 @@
                 /* Button text */
             }
         </style>
-
 
 
         <!-- ======= Contact Section ======= -->

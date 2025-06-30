@@ -43,6 +43,7 @@
                 </div>
             </div>
         </div>
+    
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">Clicks by Country</div>
@@ -52,6 +53,27 @@
             </div>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Clicks by Browser</div>
+                <div class="card-body">
+                    <div id="browserChart"></div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Clicks by Platform</div>
+                <div class="card-body">
+                    <div id="platformChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
     @push('scripts')
         <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -78,5 +100,54 @@
                 });
             });
         </script>
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+    document.addEventListener('livewire:load', function () {
+        window.livewire.on('chartDataUpdated', (urlData, countryData, browserData, platformData) => {
+            Highcharts.chart('urlChart', {
+                chart: { type: 'bar' },
+                title: { text: 'Top Visited URLs' },
+                xAxis: { categories: urlData.labels },
+                yAxis: { title: { text: 'Clicks' } },
+                series: [{ name: 'Clicks', data: urlData.data }]
+            });
+
+            Highcharts.chart('countryChart', {
+                chart: { type: 'pie' },
+                title: { text: 'Clicks by Country' },
+                series: [{
+                    name: 'Clicks',
+                    colorByPoint: true,
+                    data: countryData
+                }]
+            });
+
+            Highcharts.chart('browserChart', {
+                chart: { type: 'pie' },
+                title: { text: 'Clicks by Browser' },
+                series: [{
+                    name: 'Clicks',
+                    colorByPoint: true,
+                    data: browserData
+                }]
+            });
+
+            Highcharts.chart('platformChart', {
+                chart: { type: 'pie' },
+                title: { text: 'Clicks by Platform' },
+                series: [{
+                    name: 'Clicks',
+                    colorByPoint: true,
+                    data: platformData
+                }]
+            });
+        });
+    });
+</script>
+
+
+
     @endpush
 </div>

@@ -22,6 +22,7 @@ class ClickAnalytics extends Component
     public $clicksByPlatform = [];
 
 
+
     public $dateFrom;
 public $dateTo;
 
@@ -35,7 +36,64 @@ public function mount()
 public function updatedDateFrom() { $this->loadStats(); }
 public function updatedDateTo() { $this->loadStats(); }
 
+
 public function loadStats()
+{
+    $query = Click::query()
+        ->when($this->dateFrom, fn($q) => $q->whereDate('created_at', '>=', $this->dateFrom))
+        ->when($this->dateTo, fn($q) => $q->whereDate('created_at', '<=', $this->dateTo));
+
+    $this->totalClicks = $query->count();
+    $this->clicksToday = Click::whereDate('created_at', Carbon::today())->count();
+    $this->clicksThisWeek = Click::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()])->count();
+    $this->clicksThisMonth = Click::whereMonth('created_at', Carbon::now()->month)->count();
+
+    $topUrls = $query->select('url', DB::raw('count(*) as total'))
+        ->groupBy('url')
+        ->orderByDesc('total')
+        ->limit(10)
+        ->get();
+
+    $clicksByCountry = $query->select('country', DB::raw('count(*) as total'))
+        ->groupBy('country')
+        ->orderByDesc('total')
+        ->get();
+
+    $clicksByBrowser = $query->select('browser', DB::raw('count(*) as total'))
+        ->groupBy('browser')
+        ->orderByDesc('total')
+        ->get();
+
+    $clicksByPlatform = $query->select('platform', DB::raw('count(*) as total'))
+        ->groupBy('platform')
+        ->orderByDesc('total')
+        ->get();
+
+    $this->clicksByBrowser = $clicksByBrowser->toArray();
+    $this->clicksByPlatform = $clicksByPlatform->toArray();
+
+    $this->dispatchBrowserEvent('chartDataUpdated', [
+        'urlData' => [
+            'labels' => $topUrls->pluck('url'),
+            'data' => $topUrls->pluck('total'),
+        ],
+        'countryData' => $clicksByCountry->map(fn($item) => [
+            'name' => $item->country ?? 'Unknown',
+            'y' => $item->total
+        ]),
+        'browserData' => $clicksByBrowser->map(fn($item) => [
+            'name' => $item->browser ?? 'Unknown',
+            'y' => $item->total
+        ]),
+        'platformData' => $clicksByPlatform->map(fn($item) => [
+            'name' => $item->platform ?? 'Unknown',
+            'y' => $item->total
+        ]),
+    ]);
+}
+
+
+public function loadStats111()
 {
     $query = Click::query()
         ->when($this->dateFrom, fn($q) => $q->whereDate('created_at', '>=', $this->dateFrom))
