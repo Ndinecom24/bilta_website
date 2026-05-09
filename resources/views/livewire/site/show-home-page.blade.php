@@ -1,515 +1,650 @@
-<div>
-    {{--    @push('custom-styles') --}}
-    {{--    <link href={{asset("assets/css/style.css")}} rel="stylesheet"> --}}
-    {{--    @endpush --}}
-    {{--     --}}
+{{-- =========================
+    PROFESSIONAL BiLTA HOME PAGE REDESIGN
+========================= --}}
 
-    <style>
-        .badge-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .custom-badge {
-            background-color: #b36227;
-            color: #fff;
-            font-size: 12px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.3s ease;
-        }
-        
-        .custom-badge:hover {
-            background-color: #e74a3b;
-        }
-        
-        .read-more-link {
-            background-color: transparent;
-            border: 1px solid #fff;
-            color: #fff;
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 12px;
-            text-decoration: none;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        .read-more-link:hover {
-            background-color: #fff;
-            color: #b36227;
-        }
-        .project-header {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 12px;
-    color: #333;
-}
+<div class="bilta-homepage">
 
+    {{-- ================= HERO SECTION ================= --}}
+    @php
+        $homeIntroImageUrl = $home_intro
+            ? $home_intro->getFirstMediaUrl('home_intro_images')
+            : asset('assets/img/bilta-hero.jpg');
+    @endphp
 
-        </style>
-        
-        
+    <section class="hero-section position-relative overflow-hidden"
+        style="background-image:url('{{ $homeIntroImageUrl }}')">
 
-    <main id="main">
+        <div class="hero-overlay"></div>
 
-        <!-- ======= Hero Section ======= -->
-        @if ($home_intro->getFirstMedia('home_intro_images') ?? '00' != '00')
-            <section id="hero"
-                style="background-image:url('{{ $home_intro->getFirstMedia('home_intro_images')->getUrl() ?? '' }}')"
-                class="d-flex flex-column justify-content-center align-items-center">
-                <div class="container" data-aos="fade-in">
-                    <h1>Welcome to <span style="color: #b25e1d">BiLTA</span></h1>
-                    <h2 id="bilta-intro-text" class="text-justify">A dedicated translation association committed to
-                        advancing the translation of the Bible and other essential literature into local languages.</h2>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bx bxs-bible get-started-icon"></i>
-                        <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
-                            data-bs-target="#audioModal">Play Audio Bible</a>
+        <div class="container position-relative">
+            <div class="row min-vh-100 align-items-center">
+
+                <div class="col-lg-7" data-aos="fade-right">
+
+                    <span class="hero-badge">
+                        Bible & Literature Translation Association
+                    </span>
+
+                    <h1 class="hero-title mt-4">
+                        Transforming Lives Through
+                        <span>Scripture Translation</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        We work to make the Word of God and essential literature accessible
+                        in local languages through translation, literacy development,
+                        audio scripture initiatives, and community partnerships.
+                    </p>
+
+                    <div class="hero-actions d-flex flex-wrap gap-3 mt-4">
+
+                        <a href="{{ route('projects', '0') }}"
+                            class="btn btn-warning btn-lg px-4 rounded-pill shadow-sm">
+                            Explore Our Projects
+                        </a>
+
+                        <button class="btn btn-light btn-lg px-4 rounded-pill shadow-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#audioModal">
+
+                            <i class="bi bi-play-circle me-2"></i>
+                            Listen to Audio Bible
+                        </button>
+
                     </div>
-                </div>
-            </section>
-        @else
-            <section id="hero" style="background: url( {{ asset('assets/img/biblee017c8414_1920.png') }} )"
-                class="d-flex flex-column justify-content-center align-items-center">
-                <div class="container" data-aos="fade-in">
-                    <h1>Welcome to BiLTA</h1>
-                    <h2 id="bilta-intro-text" class="text-justify">A dedicated translation association committed to
-                        advancing the translation of the Bible and other essential literature into local languages
-                        <div class="d-flex align-items-center">
-                            <i class="bx bxs-bible get-started-icon"></i>
-                            <a href="#" class="btn-get-started scrollto" data-bs-toggle="modal"
-                                data-bs-target="#audioModal">Play Audio Bible</a>
-                        </div>
-                </div>
-            </section>
-        @endif
 
-        <!-- Audio Modal -->
-        <div wire:ignore.self class="modal fade" id="audioModal" tabindex="-1" aria-labelledby="audioModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="audioModalLabel">Select an Audio File</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <input type="text" class="form-control mb-3" placeholder="Search audio files..."
-                                wire:model="search" wire:loading.attr="disabled">
+                    <div class="hero-impact mt-5">
 
-                            <div wire:loading class="text-primary mb-2">
-                                Loading audio files...
-                            </div>
-
-                            <ul class="list-group">
-                                @forelse ($audioFiles as $audio)
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <strong>{{ $audio->title }}</strong><br>
-                                            <small>Project| {{ $audio->project->myCategory->name ?? '' }} :
-                                                {{ $audio->project->title ?? '' }}</small>
-                                        </div>
-                                        <div>
-                                            @if ($audio && $audio->getFirstMediaUrl('audio_files'))
-                                                <audio controls aria-label="Play audio">
-                                                    <source src="{{ $audio->getFirstMediaUrl('audio_files') }}"
-                                                        type="audio/mpeg">
-                                                    Your browser does not support the audio element.
-                                                </audio>
-                                            @else
-                                                <p class="text-muted mb-0">No audio file available.</p>
-                                            @endif
-                                        </div>
-                                    </li>
-                                @empty
-                                    <li class="list-group-item text-center text-muted">
-                                        No audio files found.
-                                    </li>
-                                @endforelse
-                            </ul>
-
-                            <div class="mt-3">
-                                {{ $audioFiles->links() }}
-                            </div>
+                        <div class="hero-impact-item">
+                            <h3>50+</h3>
+                            <p>Active Projects</p>
                         </div>
 
+                        <div class="hero-impact-item">
+                            <h3>36+</h3>
+                            <p>Completed Translations</p>
+                        </div>
+
+                        <div class="hero-impact-item">
+                            <h3>108+</h3>
+                            <p>Media Resources</p>
+                        </div>
 
                     </div>
+
                 </div>
+
             </div>
         </div>
+    </section>
 
+    {{-- ================= MISSION SECTION ================= --}}
+    <section class="mission-section py-5">
 
+        <div class="container">
 
+            <div class="row align-items-center g-5">
 
+                <div class="col-lg-6" data-aos="fade-right">
 
+                    <div class="mission-media-wrap">
+                        @php
+                            $missionImages = !empty($missionSliderImages)
+                                ? $missionSliderImages
+                                : [asset('assets/img/project-translation.jpg')];
+                        @endphp
 
-        <!-- ======= Why Us Section ======= -->
-        <section id="why-us" class="why-us">
-            <div class="container">
+                        <div id="missionMediaCarousel" class="carousel slide mission-carousel" data-bs-ride="carousel" data-bs-interval="4500">
+                            @if (count($missionImages) > 1)
+                                <div class="carousel-indicators mission-carousel-indicators">
+                                    @foreach ($missionImages as $index => $missionImage)
+                                        <button type="button"
+                                            data-bs-target="#missionMediaCarousel"
+                                            data-bs-slide-to="{{ $index }}"
+                                            class="{{ $index === 0 ? 'active' : '' }}"
+                                            aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                                            aria-label="Slide {{ $index + 1 }}"></button>
+                                    @endforeach
+                                </div>
+                            @endif
 
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12" data-aos="fade-up">
-                        <div class="content">
-                            <h3>Bible and Literature Translation Association.</h3>
-                            <p>
-                                We are committed to building the capacity of local communities by equipping them with
-                                the skills and tools needed to translate the Bible and essential literature
-                                into their heart languages.
-                                <br> Ensuring the message of the Gospel is communicated in a way that is both meaningful
-                                and culturally relevant,
-                                ultimately fostering more effective evangelism and deeper discipleship among their own
-                                people
-                            </p>
+                            <div class="carousel-inner rounded-4 shadow-lg">
+                                @foreach ($missionImages as $index => $missionImage)
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        <img src="{{ $missionImage }}"
+                                            class="img-fluid mission-image"
+                                            alt="Bible Translation Work {{ $index + 1 }}">
+                                        <div class="mission-slide-overlay"></div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            @if (count($missionImages) > 1)
+                                <button class="carousel-control-prev" type="button" data-bs-target="#missionMediaCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#missionMediaCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            @endif
+                        </div>
+
+                        <div class="mission-media-badge">
+                            <h5 class="mb-1">Serving Communities</h5>
+                            <p class="mb-0">Translation, literacy, and Scripture engagement in local languages.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6" data-aos="fade-left">
+
+                    <div class="mission-panel">
+
+                        <span class="section-tag">Who We Are</span>
+
+                        <h2 class="section-title mt-3">
+                            Bringing Scripture Closer to Every Community
+                        </h2>
+
+                        <p class="section-description mission-copy">
+                            BiLTA exists to ensure that every community can access the Bible
+                            and transformational literature in the language they understand best.
+                            Through translation projects, literacy training, and digital scripture
+                            initiatives, we help preserve language and strengthen faith.
+                        </p>
+
+                        <div class="mission-features-grid mt-4">
+
+                            <div class="mission-feature-card">
+                                <i class="bi bi-book"></i>
+                                <div>
+                                    <h5>Bible Translation</h5>
+                                    <p>Translation of Scripture into local languages.</p>
+                                </div>
+                            </div>
+
+                            <div class="mission-feature-card">
+                                <i class="bi bi-headphones"></i>
+                                <div>
+                                    <h5>Audio Scripture</h5>
+                                    <p>Accessible Bible resources through audio media.</p>
+                                </div>
+                            </div>
+
+                            <div class="mission-feature-card">
+                                <i class="bi bi-people"></i>
+                                <div>
+                                    <h5>Community Impact</h5>
+                                    <p>Empowering communities through literacy and training.</p>
+                                </div>
+                            </div>
 
                         </div>
+
+                        <div class="mission-cta mt-4">
+                            <a href="{{ route('about') }}" class="btn btn-outline-theme">
+                                Learn More About BiLTA
+                            </a>
+                        </div>
+
                     </div>
 
                 </div>
 
             </div>
-        </section><!-- End Why Us Section -->
 
+        </div>
 
-        <!-- ======= Chairman's Message Section ======= -->
-        <section id="chairman-message" class="about">
-            <div class="container">
-                <div class="section-title" data-aos="fade-up">
-                    <h2>Chairperson's Message</h2>
-                </div>
-                <div class="row content">
-                    <div class="col-lg-4 text-center" data-aos="fade-right">
-                        @if ($chairman && $chairman->getFirstMediaUrl('chairman_photo'))
-                            <img loading="lazy" src="{{ $chairman->getFirstMediaUrl('chairman_photo') }}"
-                                class="img-fluid rounded mb-3" style="width: 300px; height: 300px; object-fit: cover;"
-                                alt="{{ $chairman->name ?? 'Chairperson' }}">
-                        @endif
-                        <h4>{{ $chairman->name ?? 'Chairperson' }}</h4>
-                        <p><em>{{ $chairman->title ?? '' }}</em></p>
-                    </div>
-                    <div class="col-lg-8 pt-4 pt-lg-0" data-aos="fade-left">
-                        <div
-                            style="font-family: 'Open Sans', sans-serif; font-size: 18px; line-height: 1.8; color: #333;">
-                            {!! $chairman->message ?? '<p>No message provided yet.</p>' !!}
-                        </div>
-                    </div>
-                </div>
+    </section>
+
+    {{-- ================= PROJECTS SECTION ================= --}}
+    <section class="projects-section py-5 bg-light">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+
+                <span class="section-tag">Our Work</span>
+
+                <h2 class="section-title mt-3">
+                    Translation & Literacy Projects
+                </h2>
+
+                <p class="section-description mx-auto">
+                    Explore some of the impactful initiatives helping communities
+                    experience Scripture in their heart language.
+                </p>
+
             </div>
-        </section>
-        <!-- End Chairman's Message Section -->
 
+            <div class="row g-4">
 
+                @foreach ($projects as $project)
 
-        <!-- ======= About Section ======= -->
-        <section id="translation-projects" class="about section-bg">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-5 col-lg-6 d-flex justify-content-center align-items-stretch position-relative"
-                        data-aos="fade-right">
-                        <img loading="lazy" src="assets/img/project-translation.jpg" class="img-fluid" alt="">
-                    </div>
+                    <div class="col-lg-4 col-md-6" data-aos="zoom-in">
 
-                    <div
-                        class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5">
-                        {{-- <h4 data-aos="fade-up">Translation Projects</h4> --}}
-                        <h3 data-aos="fade-up">Translation Projects</h3>
-                        <p data-aos="fade-up">Providng you with initiatives and activities related to translating
-                            religious texts,
-                            scriptures, or other spiritual materials.</p>
+                        <div class="project-card h-100">
 
-                        <div class="icon-box" data-aos="fade-up">
-                            <div class="icon"><i class="bi bi-journal-text"></i></div>
-                            <h4 class="title"><a href="">Bible Translation</a></h4>
-                            <p class="description">We support and engage in Bible translation projects, working to
-                                translate
-                                the Bible into languages that currently do not have access to a complete translation.
-                            </p>
-                        </div>
+                            <div class="project-card-body">
 
-                        <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
-                            <div class="icon"><i class="bi bi-blockquote-right"></i></div>
-                            <h4 class="title"><a href="">Liturgical Texts</a></h4>
-                            <p class="description">We undertake the translation of liturgical texts, such as prayers,
-                                hymns, and worship resources.</p>
-                        </div>
-
-                        <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
-                            <div class="icon"><i class="bx bx-atom"></i></div>
-                            <h4 class="title"><a href="">Study Materials and Devotionals</a></h4>
-                            <p class="description">We develop translation projects to create study materials,
-                                devotionals, or discipleship resources. These resources can aid individuals in their
-                                spiritual growth, providing accessible materials that align with their cultural and
-                                linguistic context.</p>
-                        </div>
-
-                        <h3 class="project-header mt-3">See the Impact – Browse Our Projects</h3>
-                        <div class="badge-container">
-                            @foreach ($projects as $project)
-                                <span class="custom-badge">
-                                    {{ $project->myCategory->name ?? '--' }} - {{ $project->title ?? '--' }}
-                                    <a href="{{ route('projects.details', $project) }}" class="read-more-link">Read More</a>
+                                <span class="project-category">
+                                    {{ $project->myCategory->name ?? '--' }}
                                 </span>
-                            @endforeach
+
+                                <h4 class="project-title mt-3">
+                                    {{ $project->title ?? '--' }}
+                                </h4>
+
+                                <p class="project-text">
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($project->description ?? ''), 130) }}
+                                </p>
+
+                                <a href="{{ route('projects.details', $project) }}"
+                                    class="project-link">
+                                    Learn More
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+
+                            </div>
+
                         </div>
-                        
 
                     </div>
-                </div>
+
+                @endforeach
+
             </div>
-        </section><!-- End About Section -->
 
+        </div>
 
-        <!-- ======= Testimonials Section ======= -->
-        <section id="testimonials" class="testimonials">
-            <div class="container position-relative" data-aos="fade-up">
+    </section>
 
-                <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
-                    <div class="swiper-wrapper">
+    <section class="latest-news-section py-5 bg-light">
 
-                        @foreach ($testimonials as $testimonial)
-                            <div class="swiper-slide">
-                                <div class="testimonial-item"> 
-                                    {{-- {{ asset('layout/images/bilta_group.jpg') }} --}}
-                                    <img loading="lazy" src="assets/img/testimonials/testimonies.jpg"
-                                        class="testimonial-img" alt="">
-                                    <h3>{{ $testimonial->name ?? '--' }}</h3>
-                                    <h4> {{ $testimonial->title ?? '--' }} </h4>
+        <div class="container">
+
+            <div class="text-center mb-5">
+
+                <span class="section-tag">Latest News</span>
+
+                <h2 class="section-title mt-3">
+                    Recent Updates & Stories
+                </h2>
+
+                <p class="section-description mx-auto">
+                    Stay up to date with BiLTA announcements, progress reports,
+                    and ministry highlights.
+                </p>
+
+            </div>
+
+            <div class="row g-4">
+
+                @forelse ($latestNews as $newsItem)
+
+                    @php
+                        $newsImage = $newsItem->getFirstMedia('news_images')
+                            ? $newsItem->getFirstMedia('news_images')->getUrl()
+                            : asset('assets/img/placeholder.png');
+                    @endphp
+
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up">
+
+                        <div class="news-card h-100">
+
+                            <img src="{{ $newsImage }}"
+                                class="news-image"
+                                alt="{{ $newsItem->title ?? 'News' }}"
+                                loading="lazy">
+
+                            <div class="news-body">
+
+                                <small class="text-muted d-block mb-2">
+                                    {{ $newsItem->post_date ?? '--' }}
+                                </small>
+
+                                <h5 class="news-title mb-2">
+                                    {{ $newsItem->title ?? '--' }}
+                                </h5>
+
+                                <p class="news-text mb-3">
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($newsItem->short_description ?? ''), 140) }}
+                                </p>
+
+                                <a href="{{ route('news.details', ['news' => $newsItem, 'name' => $newsItem->title]) }}"
+                                    class="project-link">
+                                    Read News
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="col-12">
+                        <div class="summary-card text-center">
+                            <p class="mb-0">No news updates available yet.</p>
+                        </div>
+                    </div>
+
+                @endforelse
+
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ route('news', '0') }}" class="btn btn-outline-theme">
+                    View All News
+                </a>
+            </div>
+
+        </div>
+
+    </section>
+
+    {{-- ================= CHAIRPERSON MESSAGE ================= --}}
+    <section class="chairperson-section py-5">
+
+        <div class="container">
+
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-4" data-aos="fade-right">
+
+                    <div class="chairperson-profile text-center">
+
+                        @if ($chairman && $chairman->getFirstMediaUrl('chairman_photo'))
+
+                            <img src="{{ $chairman->getFirstMediaUrl('chairman_photo') }}"
+                                class="img-fluid rounded-circle shadow-lg chairperson-image"
+                                alt="{{ $chairman->name ?? 'Chairperson' }}">
+
+                        @else
+
+                            <div class="chairperson-avatar-fallback mx-auto">
+                                <i class="bi bi-person"></i>
+                            </div>
+
+                        @endif
+
+                        <div class="mt-4">
+                            <h5 class="mb-1">{{ $chairman->name ?? '--' }}</h5>
+                            <p class="mb-0 text-muted">{{ $chairman->title ?? '--' }}</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-8" data-aos="fade-left">
+
+                    <div class="chairperson-panel">
+
+                        <span class="section-tag">Leadership Message</span>
+
+                        <h2 class="section-title mt-3 mb-3">
+                            Message From Our Chairperson
+                        </h2>
+
+                        <div class="chairperson-quote-mark">
+                            <i class="bi bi-quote"></i>
+                        </div>
+
+                        <div class="chairperson-content">
+                            {!! $chairman->message ?? '<p>No message available.</p>' !!}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {{-- ================= TESTIMONIALS ================= --}}
+    <section class="testimonials-section py-5 bg-dark text-white">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+
+                <span class="section-tag bg-warning text-dark">
+                    Testimonials
+                </span>
+
+                <h2 class="section-title text-white mt-3">
+                    Lives Being Impacted
+                </h2>
+
+            </div>
+
+            <div class="swiper testimonials-slider">
+
+                <div class="swiper-wrapper">
+
+                    @foreach ($testimonials as $testimonial)
+
+                        <div class="swiper-slide">
+
+                            <div class="testimonial-card">
+
+                                <div class="testimonial-content">
+
+                                    <i class="bi bi-quote quote-icon"></i>
+
                                     <p>
-                                        <i class="bx bxs-quote-alt-left quote-icon-left"></i>
                                         {{ $testimonial->testimonial ?? '--' }}
-                                        <i class="bx bxs-quote-alt-right quote-icon-right"></i>
                                     </p>
-                                </div>
-                            </div><!-- End testimonial item -->
-                        @endforeach
-                    </div>
-                    <div class="swiper-pagination"></div>
-                </div>
 
-                <!-- Share Testimonial Button -->
-                <div class="text-center mt-5">
-                    <p class="text-muted text-white mb-2" style="font-size: 0.9rem;">
-                        We'd love to hear how Bilta is making a difference in your life or community.
-                    </p>
-                    <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#testimonialModal"
-                        title=" We'd love to hear how Bilta is making a difference in your life.">
-                        Share Your Testimonial
-                    </button>
-                </div>
-
-            </div>
-
-
-            <!-- Modal -->
-            <div class="modal fade" id="testimonialModal" tabindex="-1" aria-labelledby="testimonialModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content p-3">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Tell us how Bilta is impacting you or your community</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="testimonialForm">
-                                <div class="mb-3">
-                                    <label>Name</label>
-                                    <input type="text" class="form-control" name="name"
-                                        placeholder="Enter your full name" required>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label>Title</label>
-                                    <input type="text" class="form-control" name="title"
-                                        placeholder="E.g., Reveland, Pastor, Student, Entrepreneur" required>
+                                <div class="testimonial-author">
+
+                                    <h5>{{ $testimonial->name ?? '--' }}</h5>
+
+                                    <span>{{ $testimonial->title ?? '--' }}</span>
+
                                 </div>
 
-                                <div class="mb-3">
-                                    <label>Testimonial</label>
-                                    <textarea class="form-control" name="testimonial" rows="5"
-                                        placeholder="Tell us how Bilta's impact..." required></textarea>
-                                </div>
-
-                                <div id="testimonialMessage" class="alert d-none"></div>
-
-                                <button type="submit" class="btn btn-primary w-100">Submit Testimonial</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-        </section><!-- End Testimonials Section -->
-
-
-        <!-- ======= Team Section ======= -->
-        <section id="team" class="team section-bg">
-            <div class="container">
-
-                <div class="section-title">
-                    <h2 data-aos="fade-up">Team</h2>
-                    <p data-aos="fade-up">"Welcome to our team! At BiLTA, we are proud to have a diverse and talented
-                        group of individuals working together to achieve our goals.<br> Our team is made up of
-                        passionate professionals who bring a wealth of experience and expertise to the table.</p>
-                </div>
-
-                <div class="row">
-                    @foreach ($our_teams as $our_team)
-                        <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up">
-                            <div class="member">
-                                <div class="member-img">
-
-                                    @php
-                                        $media = $our_team->getFirstMedia('team_images');
-                                        $imageUrl = $media
-                                            ? $media->getUrl()
-                                            : asset('storage/defaults/default-team.png');
-                                    @endphp
-
-                                    <img loading="lazy" class="img-fluid" src="{{ $imageUrl }}"
-                                        style="height: 350px; width: 100%; object-fit: cover;"
-                                        title="{{ $media ? $media->name : 'Default Image' }}">
-
-                                    <div class="social">
-                                        <a href=""><i class="bi bi-twitter"></i></a>
-                                        <a href=""><i class="bi bi-facebook"></i></a>
-                                        <a href=""><i class="bi bi-instagram"></i></a>
-                                        <a href=""><i class="bi bi-linkedin"></i></a>
-                                    </div>
-                                </div>
-                                <div class="member-info">
-                                    <h4>{{ $our_team->name ?? '--' }}</h4>
-                                    <span>{{ $our_team->position ?? '--' }}</span>
-                                </div>
-                                <div class="member-info">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <!-- The checkbox used to toggle details -->
-                                            <input type="checkbox" id="toggleDetails{{ $our_team->id }}"
-                                                class="toggle-details" style="display: none;">
-                                            <!-- Label for the 'More' button -->
-                                            <label for="toggleDetails{{ $our_team->id }}"
-                                                class="btn btn-sm btn-outline-secondary more-btn"></label>
-
-                                            <!-- The details content that will be shown/hidden based on the checkbox -->
-                                            <div class="details-content">
-                                                {{ $our_team->details ?? '--' }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
+
                         </div>
+
                     @endforeach
+
                 </div>
+
+                <div class="swiper-pagination"></div>
 
             </div>
-        </section><!-- End Team Section -->
 
-        <!-- Add this CSS for the toggle effect -->
-        <style>
-            /* Initially hide the details */
-            .details-content {
-                display: none;
-            }
+        </div>
 
-            /* When the checkbox is checked, show the details */
-            .toggle-details:checked+label+.details-content {
-                display: block;
-            }
+    </section>
 
-            /* Optional: Change the 'More' button text when the checkbox is checked */
-            .toggle-details:checked+label::after {
-                content: ' Less';
-                /* Change button text to 'Less' when checked */
-            }
+    {{-- ================= TEAM SECTION ================= --}}
+    <section id="team" class="team-section py-5">
 
-            /* Change appearance of the label (button) */
-            .more-btn::after {
-                content: ' More';
-                /* Button text */
-            }
-        </style>
+        <div class="container">
 
+            <div class="text-center mb-5">
 
-        <!-- ======= Contact Section ======= -->
-        <section id="contact" class="contact">
-            <div class="container">
+                <span class="section-tag">Our Team</span>
 
-                <div class="section-title">
-                    <h2 data-aos="fade-up">Contact</h2>
-                    <p data-aos="fade-up">We value open communication and are always eager to connect with our clients,
-                        partners, and stakeholders. If you have any questions,<br>
-                        inquiries, or would like to discuss a potential collaboration, our team is here to assist you.
+                <h2 class="section-title mt-3">
+                    Dedicated People Behind the Mission
+                </h2>
+
+            </div>
+
+            <div class="row g-4">
+
+                @foreach ($our_teams as $our_team)
+
+                    @php
+                        $media = $our_team->getFirstMedia('team_images');
+
+                        $imageUrl = $media
+                            ? $media->getUrl()
+                            : asset('storage/defaults/default-team.png');
+                    @endphp
+
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up">
+
+                        <div class="team-card text-center">
+
+                            <img src="{{ $imageUrl }}"
+                                class="team-image"
+                                alt="{{ $our_team->name ?? '--' }}">
+
+                            <div class="team-body">
+
+                                <h5>{{ $our_team->name ?? '--' }}</h5>
+
+                                <span>{{ $our_team->position ?? '--' }}</span>
+
+                                <p class="mt-3">
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($our_team->details ?? ''), 100) }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {{-- ================= CONTACT SECTION ================= --}}
+    <section id="contact" class="contact-section py-5 bg-light">
+
+        <div class="container">
+
+            <div class="row g-5">
+
+                <div class="col-lg-5">
+
+                    <span class="section-tag">Get In Touch</span>
+
+                    <h2 class="section-title mt-3">
+                        Let’s Connect
+                    </h2>
+
+                    <p class="section-description">
+                        Reach out to us for partnerships, translation support,
+                        volunteering opportunities, or general inquiries.
                     </p>
+
+                    <div class="contact-info mt-4">
+
+                        <div class="contact-item">
+                            <i class="bi bi-geo-alt"></i>
+                            <div>
+                                <h6>Address</h6>
+                                <p>{{ $contact_us->address ?? '--' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <i class="bi bi-envelope"></i>
+                            <div>
+                                <h6>Email</h6>
+                                <p>{{ $contact_us->email ?? 'info@bilta.org' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <i class="bi bi-telephone"></i>
+                            <div>
+                                <h6>Phone</h6>
+                                <p>{{ $contact_us->phone ?? '--' }}</p>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="row justify-content-center">
+                <div class="col-lg-7">
 
-                    <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up">
-                        <div class="info-box">
-                            <i class="bx bx-map"></i>
-                            <h3>Our Address</h3>
-                            <p>{{ $contact_us->address ?? '--' }}</p>
-                        </div>
-                    </div>
+                    <div class="contact-form-card">
 
-                    <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="info-box">
-                            <i class="bx bx-envelope"></i>
-                            <h3>Email Us</h3>
-                            <p>{{ $contact_us->email ?? 'info@bilta.org' }}</p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 mt-4" data-aos="fade-up" data-aos-delay="200">
-                        <div class="info-box">
-                            <i class="bx bx-phone-call"></i>
-                            <h3>Call Us</h3>
-                            <p>{{ $contact_us->phone ?? '000-000-000' }}</p>
-                        </div>
-                    </div>
-                </div>
+                        @if (session('contact_success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('contact_success') }}
+                            </div>
+                        @endif
 
-                <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
-                    <div class="col-xl-9 col-lg-12 mt-4">
-                        <form action="{{ route('contact.store') }}" method="post" role="form"
+                        @if (session('contact_error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ session('contact_error') }}
+                            </div>
+                        @endif
+
+                        <form action="{{ route('contact.store') }}"
+                            method="POST"
                             class="php-email-form">
+
                             @csrf
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <input type="text" name="name" class="form-control" id="name"
-                                        placeholder="Your Name" required>
-                                    <input type="text" name="website" style="display: none;">
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <input type="text"
+                                        name="name"
+                                        class="form-control form-control-lg"
+                                        placeholder="Your Name"
+                                        required>
                                 </div>
-                                <div class="col-md-6 form-group mt-3 mt-md-0">
-                                    <input type="email" class="form-control" name="email" id="email"
-                                        placeholder="Your Email" required>
+
+                                <div class="col-md-6">
+                                    <input type="email"
+                                        name="email"
+                                        class="form-control form-control-lg"
+                                        placeholder="Your Email"
+                                        required>
                                 </div>
-                            </div>
-                            <div class="form-group mt-3">
-                                <input type="text" class="form-control" name="subject" id="subject"
-                                    placeholder="Subject" required>
-                            </div>
-                            <div class="form-group mt-3">
-                                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-                            </div>
-                            <div class="my-3">
-                                <!-- Loading indicator -->
-                                <div class="loading1" style="display: none;">Loading...</div>
 
-                                <!-- Success message, hidden by default -->
-                                <div class="sent-message1" style="color: green; display: none;"></div>
+                                <div class="col-12">
+                                    <input type="text"
+                                        name="subject"
+                                        class="form-control form-control-lg"
+                                        placeholder="Subject"
+                                        required>
+                                </div>
 
-                                <!-- Error message, hidden by default -->
-                                <div class="error-message1" style="color: red; display: none;"></div>
+                                <div class="col-12">
+                                    <textarea name="message"
+                                        rows="6"
+                                        class="form-control"
+                                        placeholder="Your Message"
+                                        required></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <button type="submit"
+                                        class="btn btn-warning btn-lg w-100 rounded-pill">
+                                        Send Message
+                                    </button>
+                                </div>
+
                             </div>
 
-                            <div class="text-center"><button type="submit">Send Message</button></div>
                         </form>
 
                     </div>
@@ -517,141 +652,507 @@
                 </div>
 
             </div>
-        </section><!-- End Contact Section -->
 
-<!-- ======= Our Sponsors Section ======= -->
-<section id="sponsors" class="py-5 bg-light">
-    <div class="container" data-aos="fade-up">
-        
-        <div class="section-title text-center mb-4">
-            <h2>Our Sponsors</h2>
-            <p class="text-muted">We’re grateful for the support of these incredible organizations.</p>
         </div>
 
-        <div class="row g-4 justify-content-center">
-            @foreach ($sponsors as $sponsor)
-                <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
-                    <a href="{{ $sponsor->website_url ?? '#' }}" target="_blank" class="d-block">
-                        @if ($sponsor && $sponsor->getFirstMediaUrl('sponsor_image'))
-                            <div 
-                                class="d-flex align-items-center justify-content-center border rounded shadow-sm bg-white mx-auto" 
-                                style="width: 140px; height: 100px; overflow: hidden;">
-                                <img 
-                                    loading="lazy" 
-                                    src="{{ $sponsor->getFirstMediaUrl('sponsor_image') }}"
-                                    alt="{{ $sponsor->name ?? 'Sponsor' }}"
-                                    title="{{ $sponsor->description ?? 'Sponsor' }}"
-                                    class="img-fluid"
-                                    style="max-width: 100%; max-height: 100%; object-fit: contain;"
-                                >
-                            </div>
-                        @endif
-                    </a>
-                    <small class="d-block mt-2">{{ $sponsor->name }}</small>
+    </section>
+
+    {{-- ================= SPONSORS ================= --}}
+    <section class="sponsors-section py-5">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+
+                <span class="section-tag">Partners</span>
+
+                <h2 class="section-title mt-3">
+                    Trusted Sponsors & Partners
+                </h2>
+
+            </div>
+
+            <div class="row justify-content-center g-4">
+
+                @foreach ($sponsors as $sponsor)
+
+                    <div class="col-6 col-md-3 col-lg-2">
+
+                        <a href="{{ $sponsor->website_url ?? '#' }}"
+                            target="_blank"
+                            class="sponsor-card">
+
+                            <img src="{{ $sponsor->getFirstMediaUrl('sponsor_image') }}"
+                                class="img-fluid"
+                                alt="{{ $sponsor->name }}">
+
+                        </a>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="modal fade impact-modal" id="audioModal" tabindex="-1" aria-labelledby="audioModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="audioModalLabel">Listen to Audio Bible</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            @endforeach
+                <div class="modal-body">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-7">
+                            <div class="summary-card">
+                                <h6>Audio Scripture Access</h6>
+                                <p class="mb-2">Explore available Audio Bible resources and listen in your preferred language.</p>
+                                <p class="mb-0">Choose from our curated recordings and start listening right away.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="summary-card text-center">
+                                <i class="bi bi-headphones" style="font-size:2rem;"></i>
+                                <p class="mt-3 mb-3">Open the Audio Bible library to browse and play recordings.</p>
+                                <a href="{{ route('audio.bible') }}" class="btn btn-theme w-100">
+                                    Open Audio Bible Library
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        
     </div>
-</section>
-
-
-    </main><!-- End #main -->
-
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-    <script>
-        $(document).ready(function() {
-            $('.php-email-form').on('submit', function(e) {
-                e.preventDefault();
-
-                // Show the loading indicator
-                $('.loading1').show();
-
-                $.ajax({
-                    url: "{{ route('contact.store') }}",
-                    type: "POST",
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        // Hide the loading indicator
-                        $('.loading1').hide();
-
-                        // Show the success message and hide the error message
-                        if (response.success) {
-                            $('.sent-message1').text(response.success).show();
-                            $('.error-message1').hide(); // Hide error message if successful
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        // Hide the loading indicator
-                        $('.loading1').hide();
-
-                        // Handle error response
-                        let errorText = 'An unexpected error occurred. Please try again later.';
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            // Collect and display validation errors
-                            let errors = xhr.responseJSON.errors;
-                            errorText = "";
-                            for (let key in errors) {
-                                errorText += errors[key][0] +
-                                    "<br>"; // Display first error message for each field
-                            }
-                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
-                            // Display general error message
-                            errorText = xhr.responseJSON.error;
-                        }
-
-                        // Show the error message and hide the success message
-                        $('.error-message1').html(errorText).show();
-                        $('.sent-message1').hide(); // Hide success message if there's an error
-                    }
-                });
-            });
-        });
-    </script>
-
-
-
-    <script>
-        document.getElementById('testimonialForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const form = e.target;
-            const formData = new FormData(form);
-            const messageBox = document.getElementById('testimonialMessage');
-
-            try {
-                const response = await fetch('/submit-testimonial', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    messageBox.className = 'alert alert-success';
-                    messageBox.textContent = data.message;
-                    messageBox.classList.remove('d-none');
-                    form.reset();
-                } else {
-                    throw new Error(data.message || 'Something went wrong.');
-                }
-            } catch (error) {
-                messageBox.className = 'alert alert-danger';
-                messageBox.textContent = error.message;
-                messageBox.classList.remove('d-none');
-            }
-        });
-    </script>
-
-
-
 
 </div>
+
+{{-- =========================
+    CUSTOM CSS
+========================= --}}
+
+<style>
+
+:root{
+    --primary:#0f172a;
+    --secondary:#f59e0b;
+    --light:#f8fafc;
+    --text:#475569;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+}
+
+.hero-section{
+    background-size:cover;
+    background-position:center;
+    position:relative;
+    color:white;
+}
+
+.hero-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        90deg,
+        rgba(15,23,42,.92),
+        rgba(15,23,42,.65)
+    );
+}
+
+.hero-title{
+    font-size:4rem;
+    font-weight:800;
+    line-height:1.1;
+}
+
+.hero-title span{
+    color:var(--secondary);
+}
+
+.hero-description{
+    font-size:1.15rem;
+    line-height:1.9;
+    max-width:700px;
+    opacity:.95;
+}
+
+.hero-badge,
+.section-tag{
+    display:inline-block;
+    background:rgba(245,158,11,.12);
+    color:var(--secondary);
+    padding:10px 18px;
+    border-radius:50px;
+    font-weight:600;
+    font-size:.9rem;
+}
+
+.hero-impact{
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
+}
+
+.hero-impact-item h3{
+    font-size:2rem;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.section-title{
+    font-size:2.5rem;
+    font-weight:800;
+    color:var(--primary);
+}
+
+.section-description{
+    line-height:1.9;
+    max-width:750px;
+}
+
+.mission-section{
+    background:#ffffff;
+}
+
+.mission-media-wrap{
+    position:relative;
+}
+
+.mission-carousel .carousel-inner{
+    border-radius:1rem;
+}
+
+.mission-image{
+    width:100%;
+    object-fit:cover;
+    min-height:420px;
+}
+
+.mission-slide-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(15,23,42,.48), rgba(15,23,42,.08));
+}
+
+.mission-carousel-indicators [data-bs-target]{
+    background-color:rgba(255,255,255,.7);
+}
+
+.mission-media-badge{
+    position:absolute;
+    right:18px;
+    bottom:18px;
+    max-width:320px;
+    background:rgba(15,23,42,.92);
+    color:#e2e8f0;
+    padding:18px 20px;
+    border-radius:16px;
+    box-shadow:0 14px 34px rgba(2,6,23,.22);
+}
+
+.mission-media-badge h5{
+    color:#ffffff;
+    font-weight:700;
+}
+
+.mission-panel{
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:24px;
+    padding:30px;
+    box-shadow:0 12px 30px rgba(15,23,42,.06);
+}
+
+.mission-copy{
+    max-width:100%;
+}
+
+.mission-features-grid{
+    display:grid;
+    gap:14px;
+}
+
+.mission-feature-card{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    padding:14px;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+.mission-feature-card i{
+    width:52px;
+    height:52px;
+    border-radius:14px;
+    background:rgba(245,158,11,.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--secondary);
+    font-size:1.3rem;
+    flex-shrink:0;
+}
+
+.mission-feature-card h5{
+    margin:0 0 6px;
+    color:var(--primary);
+    font-weight:700;
+}
+
+.mission-feature-card p{
+    margin:0;
+    color:var(--text);
+    line-height:1.65;
+}
+
+.project-card{
+    background:white;
+    border-radius:24px;
+    padding:35px;
+    transition:.3s;
+    box-shadow:0 10px 35px rgba(0,0,0,.05);
+}
+
+.project-card:hover{
+    transform:translateY(-8px);
+}
+
+.project-category{
+    background:#fff7ed;
+    color:#c2410c;
+    padding:8px 14px;
+    border-radius:50px;
+    font-size:.85rem;
+    font-weight:600;
+}
+
+.project-title{
+    font-weight:700;
+    color:var(--primary);
+}
+
+.project-link{
+    color:var(--secondary);
+    font-weight:600;
+    text-decoration:none;
+}
+
+.latest-news-section{
+    background:#f8fafc;
+}
+
+.news-card{
+    background:white;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 10px 35px rgba(0,0,0,.05);
+    transition:.3s;
+}
+
+.news-card:hover{
+    transform:translateY(-6px);
+}
+
+.news-image{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.news-body{
+    padding:24px;
+}
+
+.news-title{
+    font-weight:700;
+    color:var(--primary);
+}
+
+.news-text{
+    color:var(--text);
+    line-height:1.75;
+}
+
+.chairperson-section{
+    background:#ffffff;
+}
+
+.chairperson-profile{
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:24px;
+    padding:26px;
+    box-shadow:0 12px 30px rgba(15,23,42,.06);
+}
+
+.chairperson-image{
+    width:320px;
+    height:320px;
+    object-fit:cover;
+    border:6px solid #ffffff;
+}
+
+.chairperson-avatar-fallback{
+    width:220px;
+    height:220px;
+    border-radius:999px;
+    border:6px solid #ffffff;
+    background:#f1f5f9;
+    color:#94a3b8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:4.2rem;
+}
+
+.chairperson-panel{
+    position:relative;
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:24px;
+    padding:34px;
+    box-shadow:0 12px 30px rgba(15,23,42,.06);
+}
+
+.chairperson-quote-mark{
+    width:54px;
+    height:54px;
+    border-radius:14px;
+    background:rgba(245,158,11,.14);
+    color:var(--secondary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.6rem;
+    margin-bottom:16px;
+}
+
+.chairperson-content{
+    color:var(--text);
+    line-height:1.85;
+}
+
+.chairperson-content p:last-child{
+    margin-bottom:0;
+}
+
+.testimonial-card{
+    background:rgba(255,255,255,.08);
+    padding:40px;
+    border-radius:24px;
+    backdrop-filter:blur(10px);
+}
+
+.quote-icon{
+    font-size:2rem;
+    color:var(--secondary);
+}
+
+.team-card{
+    background:white;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 10px 35px rgba(0,0,0,.06);
+    transition:.3s;
+}
+
+.team-card:hover{
+    transform:translateY(-6px);
+}
+
+.team-image{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+}
+
+.team-body{
+    padding:25px;
+}
+
+.contact-form-card{
+    background:white;
+    padding:40px;
+    border-radius:24px;
+    box-shadow:0 10px 40px rgba(0,0,0,.05);
+}
+
+.contact-item{
+    display:flex;
+    gap:16px;
+    margin-bottom:25px;
+}
+
+.contact-item i{
+    width:55px;
+    height:55px;
+    border-radius:16px;
+    background:#fff7ed;
+    color:var(--secondary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.3rem;
+}
+
+.sponsor-card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:130px;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+    transition:.3s;
+}
+
+.sponsor-card:hover{
+    transform:translateY(-5px);
+}
+
+@media(max-width:991px){
+
+    .hero-title{
+        font-size:2.7rem;
+    }
+
+    .section-title{
+        font-size:2rem;
+    }
+
+    .mission-image{
+        min-height:300px;
+    }
+
+    .mission-media-badge{
+        position:static;
+        margin-top:14px;
+        max-width:100%;
+    }
+
+    .mission-panel{
+        padding:24px;
+    }
+
+    .chairperson-image{
+        width:260px;
+        height:260px;
+    }
+
+    .chairperson-panel{
+        padding:24px;
+    }
+
+}
+
+</style>

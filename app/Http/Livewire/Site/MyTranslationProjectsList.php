@@ -22,7 +22,9 @@ class MyTranslationProjectsList extends Component
     public function render()
     {
         $query = Projects::query()
-            ->where('status_id', config('constants.status.active'));
+            ->where('status_id', config('constants.status.active'))
+            ->orderBy('display_order')
+            ->orderBy('created_at', 'desc');
 
         if (!empty($this->searchTerm)) {
             $query->where('title', 'like', '%' . $this->searchTerm . '%');

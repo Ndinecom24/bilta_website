@@ -1,667 +1,996 @@
+{{-- =========================================================
+    BiLTA MASTER WEBSITE LAYOUT REDESIGN
+    Modern • Ministry Focused • Responsive • Professional
+========================================================= --}}
+
 <!DOCTYPE html>
 
-@if (auth()->check())
+@if(auth()->check())
+
     @include('layouts.admin.master')
+
 @else
-    <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-    <head>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3KNTJTXGCG"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-            function gtag() {
-                dataLayer.push(arguments);
+<head>
+
+    {{-- =========================================================
+        META
+    ========================================================= --}}
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>
+        BiLTA | Bible & Literature Translation Association
+    </title>
+
+    <meta name="description"
+        content="BiLTA is dedicated to Bible translation, literacy development, scripture engagement, and making God's Word accessible in local languages.">
+
+    <meta name="keywords"
+        content="Bible Translation, Scripture, Audio Bible, Literacy, Christian Ministry, Zambia, BiLTA">
+
+    <meta name="google-site-verification"
+        content="zEabVLZ5N_dEO0PcCoEhDelHwpDzMbLgc14jLRA1IRE" />
+
+    {{-- =========================================================
+        FAVICONS
+    ========================================================= --}}
+    <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
+
+    {{-- =========================================================
+        GOOGLE FONTS
+    ========================================================= --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    {{-- =========================================================
+        VENDOR CSS
+    ========================================================= --}}
+    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+
+    {{-- =========================================================
+        MAIN CSS
+    ========================================================= --}}
+    <link href="{{ asset('assets/css/site-redesign.css') }}" rel="stylesheet">
+
+    {{-- =========================================================
+        LIVEWIRE
+    ========================================================= --}}
+    <livewire:styles />
+
+    {{-- =========================================================
+        MODERN MASTER LAYOUT CSS
+    ========================================================= --}}
+    <style>
+
+        :root{
+            --primary:#0f172a;
+            --secondary:#f59e0b;
+            --secondary-dark:#d97706;
+            --light:#f8fafc;
+            --text:#475569;
+            --muted:#94a3b8;
+            --white:#ffffff;
+            --border:#e2e8f0;
+            --success:#10b981;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Inter',sans-serif;
+            color:var(--text);
+            background:#ffffff;
+            overflow-x:hidden;
+        }
+
+        a{
+            text-decoration:none;
+        }
+
+        /* =========================================================
+            TOP BAR
+        ========================================================= */
+
+        .topbar{
+            background:var(--primary);
+            color:#cbd5e1;
+            font-size:.9rem;
+            padding:10px 0;
+        }
+
+        .topbar a{
+            color:#cbd5e1;
+            transition:.3s;
+        }
+
+        .topbar a:hover{
+            color:var(--secondary);
+        }
+
+        .topbar-info{
+            display:flex;
+            align-items:center;
+            gap:25px;
+        }
+
+        .topbar-socials{
+            display:flex;
+            gap:12px;
+        }
+
+        .topbar-socials a{
+            width:32px;
+            height:32px;
+            border-radius:50%;
+            background:rgba(255,255,255,.08);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        /* =========================================================
+            HEADER
+        ========================================================= */
+
+        #header{
+            position:sticky;
+            top:0;
+            z-index:999;
+            background:rgba(255,255,255,.96);
+            backdrop-filter:blur(10px);
+            border-bottom:1px solid rgba(15,23,42,.06);
+            transition:.3s ease;
+        }
+
+        .site-navbar{
+            min-height:90px;
+        }
+
+        .site-brand{
+            display:flex;
+            align-items:center;
+            gap:14px;
+        }
+
+        .site-brand img{
+            width:62px;
+            height:62px;
+            object-fit:contain;
+        }
+
+        .brand-title{
+            font-size:1.6rem;
+            font-weight:800;
+            color:var(--primary);
+            line-height:1;
+        }
+
+        .brand-title span{
+            color:var(--secondary);
+        }
+
+        .brand-subtitle{
+            font-size:.82rem;
+            color:var(--muted);
+            margin-top:3px;
+        }
+
+        /* =========================================================
+            NAVIGATION
+        ========================================================= */
+
+        .navbar ul{
+            display:flex;
+            align-items:center;
+            gap:6px;
+            list-style:none;
+            margin:0;
+            padding:0;
+        }
+
+        .navbar a{
+            color:var(--primary);
+            font-weight:600;
+            font-size:.95rem;
+            padding:12px 16px;
+            border-radius:12px;
+            transition:.3s ease;
+        }
+
+        .navbar a:hover,
+        .navbar .active{
+            background:#fff7ed;
+            color:var(--secondary);
+        }
+
+        .dropdown-menu-custom{
+            position:absolute;
+            background:white;
+            min-width:240px;
+            border-radius:18px;
+            padding:14px;
+            box-shadow:0 20px 45px rgba(0,0,0,.08);
+            opacity:0;
+            visibility:hidden;
+            transform:translateY(10px);
+            transition:.3s;
+        }
+
+        .dropdown:hover .dropdown-menu-custom{
+            opacity:1;
+            visibility:visible;
+            transform:translateY(0);
+        }
+
+        /* =========================================================
+            CTA BUTTONS
+        ========================================================= */
+
+        .btn-theme{
+            background:var(--secondary);
+            color:white;
+            border:none;
+            border-radius:14px;
+            padding:12px 20px;
+            font-weight:700;
+            transition:.3s ease;
+        }
+
+        .btn-theme:hover{
+            background:var(--secondary-dark);
+            transform:translateY(-2px);
+            color:white;
+        }
+
+        .btn-outline-theme{
+            border:1px solid #fed7aa;
+            background:#fff7ed;
+            color:#c2410c;
+            border-radius:14px;
+            padding:12px 18px;
+            font-weight:600;
+            transition:.3s;
+        }
+
+        .btn-outline-theme:hover{
+            background:var(--secondary);
+            color:white;
+        }
+
+        /* =========================================================
+            MOBILE NAV
+        ========================================================= */
+
+        .mobile-nav-toggle{
+            display:none;
+            font-size:1.7rem;
+            color:var(--primary);
+        }
+
+        /* =========================================================
+            MODALS
+        ========================================================= */
+
+        .impact-modal .modal-content{
+            border:none;
+            border-radius:28px;
+            overflow:hidden;
+            box-shadow:0 30px 80px rgba(0,0,0,.15);
+        }
+
+        .impact-modal .modal-header{
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #1e293b
+                );
+            color:white;
+            border:none;
+            padding:24px 30px;
+        }
+
+        .impact-modal .modal-title{
+            font-weight:700;
+            font-size:1.25rem;
+        }
+
+        .impact-modal .modal-body{
+            padding:35px;
+            background:#ffffff;
+        }
+
+        .summary-card{
+            background:#f8fafc;
+            border-radius:22px;
+            padding:28px;
+            height:100%;
+            border:1px solid #e2e8f0;
+        }
+
+        .summary-card h6{
+            font-size:1.1rem;
+            font-weight:700;
+            margin-bottom:18px;
+            color:var(--primary);
+        }
+
+        .summary-list{
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+
+        .summary-list li{
+            position:relative;
+            padding-left:28px;
+            margin-bottom:12px;
+            color:var(--text);
+        }
+
+        .summary-list li::before{
+            content:'✓';
+            position:absolute;
+            left:0;
+            color:var(--success);
+            font-weight:700;
+        }
+
+        /* =========================================================
+            COOKIE MODAL
+        ========================================================= */
+
+        #cookieConsentModal .modal-content{
+            border-radius:24px;
+            border:none;
+        }
+
+        #cookieConsentModal .nav-tabs .nav-link{
+            border:none;
+            color:var(--text);
+            font-weight:600;
+        }
+
+        #cookieConsentModal .nav-tabs .nav-link.active{
+            color:var(--secondary);
+            border-bottom:2px solid var(--secondary);
+        }
+
+        /* =========================================================
+            SCROLLBAR
+        ========================================================= */
+
+        ::-webkit-scrollbar{
+            width:8px;
+        }
+
+        ::-webkit-scrollbar-thumb{
+            background:#cbd5e1;
+            border-radius:50px;
+        }
+
+        /* =========================================================
+            RESPONSIVE
+        ========================================================= */
+
+        @media(max-width:991px){
+
+            .mobile-nav-toggle{
+                display:block;
             }
-            gtag('js', new Date());
 
-            gtag('config', 'G-3KNTJTXGCG');
-        </script>
-
-
-        <meta name="google-site-verification" content="zEabVLZ5N_dEO0PcCoEhDelHwpDzMbLgc14jLRA1IRE" />
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-        <title>BiLTA</title>
-        <meta content="" name="description">
-        <meta content="" name="keywords">
-
-        <!-- Favicons -->
-        <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
-        <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
-        <link href={{ asset('assets/css/style.css') }} rel="stylesheet">
-
-        <!-- Google Fonts -->
-        <link
-            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-            rel="stylesheet">
-
-        <!-- Vendor CSS Files -->
-        <link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet">
-        <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-        <link href="{{ asset('assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
-
-        <!-- Template Main CSS File -->
-        <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
-
-        <style>
-            .btn-donate {
-                background-color: #b36227;
-                color: #f8f7f5;
-                font-weight: bold;
-                border: none;
-                border-radius: 20px;
-                padding: 6px 12px;
-                font-size: 0.9rem;
-                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            .navbar ul{
+                display:none;
             }
 
-            .btn-donate i {
-                font-size: 1rem;
+            .topbar{
+                display:none;
             }
 
-            .btn-donate:hover {
-                background-color: #e74a3b;
-                box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
-                color: #faf9f9;
-            }
-        </style>
-
-        <style>
-            .modal-header {
-                background-color: #b36227;
-                color: #f8f7f5;
-                border-bottom: none;
+            .brand-subtitle{
+                display:none;
             }
 
-            .modal-title {
-                font-weight: bold;
+            .site-brand img{
+                width:50px;
+                height:50px;
             }
 
-            .btn-close {
-                background-color: #f8f7f5;
-                border-radius: 50%;
-                opacity: 1;
+            .brand-title{
+                font-size:1.3rem;
             }
 
-            .modal-content {
-                border-radius: 15px;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            }
+        }
 
-            .modal-body {
-                background-color: #faf9f9;
-                padding: 2rem;
-            }
-        </style>
+    </style>
 
+    <style>
+    .modern-sidebar {
+        background: #fff;
+        border-radius: 24px;
+        padding: 26px;
+        border: 1px solid #f0e2d3;
+        box-shadow: 0 12px 35px rgba(44, 22, 8, 0.06);
+        position: sticky;
+        top: 100px;
+        overflow: hidden;
+    }
 
-        <style>
-            .modal-footer {
-                background-color: #faf9f9;
-                border-top: none;
-                padding: 1rem 1.5rem;
-                border-radius: 0 0 15px 15px;
-                display: flex;
-                justify-content: flex-end;
-                gap: 0.75rem;
-            }
+    .modern-sidebar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #c9853d, #e2b47e);
+    }
 
-            .modal-footer .btn-theme {
-                background-color: #b36227;
-                color: #f8f7f5;
-                font-weight: bold;
-                border: none;
-                border-radius: 20px;
-                padding: 8px 18px;
-                font-size: 0.9rem;
-                transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            }
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+    }
 
-            .modal-footer .btn-theme:hover {
-                background-color: #e74a3b;
-                color: #ffffff;
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            }
+    .sidebar-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #c9853d, #b7752f);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.2rem;
+        box-shadow: 0 10px 25px rgba(201, 133, 61, 0.25);
+        flex-shrink: 0;
+    }
 
-            .modal-footer .btn-secondary {
-                border-radius: 20px;
-                font-weight: 500;
-            }
-        </style>
+    .sidebar-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #2f1d10;
+    }
 
+    .sidebar-subtitle {
+        font-size: 0.86rem;
+        color: #8a7b6d;
+    }
 
+    .category-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
 
+    .category-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 14px 16px;
+        border-radius: 18px;
+        text-decoration: none;
+        background: #fcfaf8;
+        border: 1px solid #f3e5d6;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
 
-        {{-- <script id="usercentrics-cmp" src="https://web.cmp.usercentrics.eu/ui/loader.js" data-settings-id="2k4APU5flxrGQP" async></script> --}}
+    .category-item::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg,
+                rgba(201, 133, 61, 0.06),
+                rgba(201, 133, 61, 0));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
 
+    .category-item:hover {
+        transform: translateX(5px);
+        border-color: #d6a36f;
+        box-shadow: 0 10px 24px rgba(44, 22, 8, 0.08);
+    }
 
+    .category-item:hover::before {
+        opacity: 1;
+    }
 
-       
+    .category-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        z-index: 2;
+    }
 
-        @stack('custom-styles')
-        {{--    @livewireStyles --}}
-        <livewire:styles />
-    </head>
+    .category-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #c9853d, #e0b17b);
+        flex-shrink: 0;
+    }
 
+    .category-name {
+        color: #3b2a1d;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
 
+    .category-item:hover .category-name {
+        color: #a56628;
+    }
 
-    <body>
+    .category-count {
+        min-width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        background: #fff;
+        border: 1px solid #ecd7bf;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #b7752f;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 4px 12px rgba(44, 22, 8, 0.05);
+    }
 
-         {{-- <!--Start of Tawk.to Script-->
-         <script type="text/javascript">
-            var Tawk_API = Tawk_API || {},
-                Tawk_LoadStart = new Date();
-            (function() {
-                var s1 = document.createElement("script"),
-                    s0 = document.getElementsByTagName("script")[0];
-                s1.async = true;
-                s1.src = 'https://embed.tawk.to/6859236152a648190fbdff1d/1iue34e6j';
-                s1.charset = 'UTF-8';
-                s1.setAttribute('crossorigin', '*');
-                s0.parentNode.insertBefore(s1, s0);
-            })();
-        </script>
-        <!--End of Tawk.to Script--> --}}
+    @media (max-width: 991px) {
+        .modern-sidebar {
+            margin-bottom: 30px;
+            position: relative;
+            top: unset;
+        }
+    }
+</style>
 
+<style>
+    .news-section {
+        position: relative;
+    }
 
-        <script id="chatway" async="true" src="https://cdn.chatway.app/widget.js?id=6OC9P2rVU5pW"></script>
+    .news-card {
+        background: #fff;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid #f1e3d3;
+        transition: all 0.35s ease;
+        box-shadow: 0 10px 30px rgba(44, 22, 8, 0.06);
+        position: relative;
+    }
 
+    .news-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 45px rgba(44, 22, 8, 0.14);
+    }
 
-        <!-- ======= Top Bar ======= -->
-        <section id="topbar" class="d-flex align-items-center">
-            <div class="container d-flex justify-content-center justify-content-md-between">
-                <div class="contact-info d-flex align-items-center">
-                    <i class="bi bi-envelope d-flex align-items-center"><a
-                            href="mailto:info@bilta.org">{{ $contact_us->email ?? 'info@bilta.org' }}</a></i>
-                    <i
-                        class="bi bi-phone d-flex align-items-center ms-4"><span>{{ $contact_us->phone ?? '000-000-000' }}</span></i>
+    .news-card-image {
+        position: relative;
+        overflow: hidden;
+        height: 240px;
+    }
+
+    .news-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .news-card:hover .news-card-image img {
+        transform: scale(1.08);
+    }
+
+    .news-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top,
+                rgba(0, 0, 0, 0.55),
+                rgba(0, 0, 0, 0.05));
+    }
+
+    .news-badge {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        background: rgba(255, 255, 255, 0.92);
+        color: #8a5a2b;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        backdrop-filter: blur(8px);
+    }
+
+    .news-card-body {
+        padding: 24px;
+    }
+
+    .news-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: #8b7b6f;
+    }
+
+    .news-meta span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .news-meta i {
+        color: #c9853d;
+    }
+
+    .news-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 1.5;
+        color: #2e1c0f;
+        margin-bottom: 14px;
+    }
+
+    .news-description {
+        color: #6d6259;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 22px;
+    }
+
+    .news-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 22px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #c9853d, #a76d32);
+        color: #fff;
+        font-size: 0.92rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.25);
+    }
+
+    .news-btn:hover {
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(201, 133, 61, 0.35);
+    }
+
+    .news-empty-state {
+        background: #fff;
+        border-radius: 24px;
+        padding: 70px 30px;
+        text-align: center;
+        border: 1px dashed #d8c1a8;
+    }
+
+    .empty-icon {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f8ead8, #f5ddc2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: #b97835;
+        font-size: 2rem;
+    }
+
+    .news-empty-state h4 {
+        color: #3d2818;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .news-empty-state p {
+        color: #7a6d63;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .news-card-image {
+            height: 220px;
+        }
+
+        .news-card-body {
+            padding: 20px;
+        }
+
+        .news-title {
+            font-size: 1.05rem;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+    {{-- =========================================================
+        CHAT WIDGET
+    ========================================================= --}}
+    <script id="chatway"
+        async="true"
+        src="https://cdn.chatway.app/widget.js?id=6OC9P2rVU5pW">
+    </script>
+
+    {{-- =========================================================
+        TOP BAR
+    ========================================================= --}}
+    <section class="topbar">
+
+        <div class="container">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div class="topbar-info">
+
+                    <div>
+                        <i class="bi bi-envelope me-2"></i>
+
+                        <a href="mailto:{{ $contact_us->email ?? 'info@bilta.org' }}">
+                            {{ $contact_us->email ?? 'info@bilta.org' }}
+                        </a>
+                    </div>
+
+                    <div>
+                        <i class="bi bi-telephone me-2"></i>
+
+                        {{ $contact_us->phone ?? '--' }}
+                    </div>
+
                 </div>
 
-                {{-- <div class="cta d-none d-md-flex align-items-center">
-          <a href="#about" class="scrollto">Get Started</a>
-        </div> --}}
-            </div>
-        </section>
+                <div class="topbar-socials">
 
-        <!-- ======= Header ======= -->
-        <header id="header" class="d-flex align-items-center">
-            <div class="container d-flex align-items-center justify-content-between">
-
-                <div class="logo" style="display: flex ;">
-                    <b> <span><a style="color: #b25e1d" href="{{ route('site.home') }}"> BiLTA</a></span></b>
-                    <a href="{{ route('site.home') }}">
-                        <img style="width: 150px;  background-color: #ffffff ; border-radius: 20px; margin-bottom: 4px ; margin-top: -6px ; margin-left: 6px "
-                            src="{{ asset('layout/images/bilta_logo_one.png') }}">
+                    <a href="{{ $contact_us->facebook_url ?? '#' }}">
+                        <i class="bi bi-facebook"></i>
                     </a>
+
+                    <a href="{{ $contact_us->linkedin_url ?? '#' }}">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+
+                    <a href="{{ $contact_us->youtube ?? '#' }}">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+
                 </div>
 
-                <nav id="navbar" class="navbar">
+            </div>
+
+        </div>
+
+    </section>
+
+    {{-- =========================================================
+        HEADER
+    ========================================================= --}}
+    <header id="header">
+
+        <div class="container">
+
+            <div class="site-navbar d-flex align-items-center justify-content-between">
+
+                {{-- BRAND --}}
+                <a href="{{ route('site.home') }}"
+                    class="site-brand">
+
+                    <img src="{{ asset('layout/images/bilta_logo_one.png') }}"
+                        alt="BiLTA Logo">
+
+                    <div>
+
+                        <div class="brand-title">
+                            Bi<span>LTA</span>
+                        </div>
+
+                        <div class="brand-subtitle">
+                            Bible & Literature Translation Association
+                        </div>
+
+                    </div>
+
+                </a>
+
+                {{-- NAVIGATION --}}
+                <nav class="navbar">
+
                     <ul>
-                        <li><a class="nav-link scrollto" href="{{ route('site.home') }}">Home</a></li>
-                        <li><a class="nav-link scrollto" href="{{ route('projects', '0') }}">Translation Projects</a>
-                        </li>
-                        <li class="dropdown"><a href="{{ route('site.home') }}#"><span>News | Updates</span> <i
-                                    class="bi bi-chevron-down"></i></a>
-                            <ul>
-                                <li><a href="{{ route('faqs') }}">Faq's</a></li>
-                                <li><a href="{{ route('gallery') }}">Gallery</a></li>
-                                <li><a href="{{ route('videos') }}">Videos</a></li>
-                                <li><a href="{{ route('testimonies') }}">Testimonies</a></li>
-                                <li><a href="{{ route('weekly-prayer-points') }}">Weekly Prayer Points</a></li>
-                                <li><a href="{{ route('audio.bible') }}">Audio Bible</a></li>
-                                <li><a href="{{ route('news', '0') }}">News</a></li>
-                            </ul>
-                        </li>
-                        <li><a class="nav-link scrollto"href="{{ route('about') }}">About us</a>
-                        </li>
-                        <li><a class="nav-link scrollto" href="{{ route('site.home') }}#team">Team</a></li>
-                        <li><a class="nav-link scrollto" href="{{ route('site.home') }}#contact">Contact</a></li>
+
                         <li>
-                            <div class="nav-link scrollto">
-                                <button class="btn btn-warning btn-donate btn-sm   m-1" data-bs-toggle="modal"
-                                    data-bs-target="#donateModal">
-                                    <i class="bi bi-cash me-1"></i> Donate
-                                </button>
-                            </div>
+                            <a href="{{ route('site.home') }}">
+                                Home
+                            </a>
                         </li>
 
+                        <li>
+                            <a href="{{ route('about') }}">
+                                About
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('projects', '0') }}">
+                                Projects
+                            </a>
+                        </li>
+
+                        <li class="dropdown position-relative">
+
+                            <a href="#">
+                                Resources
+                                <i class="bi bi-chevron-down small"></i>
+                            </a>
+
+                            <div class="dropdown-menu-custom">
+
+                                <a href="{{ route('gallery') }}"
+                                    class="d-block mb-2">
+                                    Gallery
+                                </a>
+
+                                <a href="{{ route('videos') }}"
+                                    class="d-block mb-2">
+                                    Videos
+                                </a>
+
+                                <a href="{{ route('audio.bible') }}"
+                                    class="d-block mb-2">
+                                    Audio Bible
+                                </a>
+
+                                <a href="{{ route('news', '0') }}"
+                                    class="d-block mb-2">
+                                    News
+                                </a>
+
+                                <a href="{{ route('faqs') }}"
+                                    class="d-block">
+                                    FAQs
+                                </a>
+
+                            </div>
+
+                        </li>
+
+                        <li>
+                            <a href="{{ route('site.home') }}#team">
+                                Team
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('site.home') }}#contact">
+                                Contact
+                            </a>
+                        </li>
 
                     </ul>
+
+                </nav>
+
+                {{-- ACTIONS --}}
+                <div class="d-flex align-items-center gap-2">
+
+                    <button class="btn btn-outline-theme"
+                        data-bs-toggle="modal"
+                        data-bs-target="#sponsorModal">
+
+                        Sponsor
+
+                    </button>
+
+                    <button class="btn btn-theme"
+                        data-bs-toggle="modal"
+                        data-bs-target="#donateModal">
+
+                        <i class="bi bi-heart-fill me-2"></i>
+                        Donate
+
+                    </button>
+
                     <i class="bi bi-list mobile-nav-toggle"></i>
-                </nav><!-- .navbar -->
 
-
-
+                </div>
 
             </div>
-        </header><!-- End Header -->
 
-        @if (isset($slot))
+        </div>
+
+    </header>
+
+    {{-- =========================================================
+        PAGE CONTENT
+    ========================================================= --}}
+    <main>
+
+        @if(isset($slot))
+
             {{ $slot }}
+
         @else
+
             @yield('content')
-        @endif
-
-        <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="donateModalLabel">Support Us with a Donation</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body ">
-                        <!-- PayPal Script and Container -->
-                        <div class="row">
-                            <div class="col-12">
-
-                                <script
-                                    src="https://www.paypal.com/sdk/js?client-id=BAANEWBe_GCODxYELBmUPu5L9O196AdBbBAl4T6aGF_-9XsMPzPXQ6t5j7sZZCE24hFJNYC4F6jy8DSv9Q&components=hosted-buttons&disable-funding=venmo&currency=USD">
-                                </script>
-                                <div id="paypal-container-WP56E5J4AML4W"></div>
-                                <script>
-                                    paypal.HostedButtons({
-                                        hostedButtonId: "WP56E5J4AML4W",
-                                    }).render("#paypal-container-WP56E5J4AML4W")
-                                </script>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ======= Footer ======= -->
-
-
-        @if (auth()->check())
-        @else
-            <footer id="footer">
-
-                <div class="footer-top">
-                    <div class="container">
-                        <div class="row">
-
-                            <div class="col-lg-3 col-md-6 footer-contact">
-                                <h3>BiLTA</h3>
-                                <p>
-                                    {{ $contact_us->address ?? '--' }} <br><br>
-                                    <strong>Phone:</strong> {{ $contact_us->phone ?? '0000-000-000' }}<br>
-                                    <strong>Email:</strong> {{ $contact_us->email ?? 'info@bilta.org' }}<br>
-                                </p>
-                            </div>
-
-                            <div class="col-lg-2 col-md-6 footer-links">
-                                <h4>Useful Links</h4>
-                                <ul>
-                                    <li><i class="bx bx-chevron-right"></i> <a
-                                            href="{{ route('site.home') }}">Home</a>
-                                    </li>
-                                    <li><i class="bx bx-chevron-right"></i> <a href="{{ route('about') }}">About
-                                            us</a>
-                                    </li>
-                                    <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-                                    <li><i class="bx bx-chevron-right"></i> <a
-                                            href="{{ route('weekly-prayer-points') }}">Weekly Prayer points</a></li>
-                                    <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 footer-links">
-                                <h4>Our Services</h4>
-                                <ul>
-                                    @foreach ($services as $service)
-                                        <li><i class="bx bx-chevron-right"></i> <a
-                                                href="#">{{ $service->title ?? '--' }}</a></li>
-                                    @endforeach
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-4 col-md-6 footer-newsletter">
-                                <h4>Become a Sponsor / Join Our Newsletter</h4>
-                                <p>Get the latest news, weekly prayer points, notifications and exclusive info
-                                    conveniently in your inbox</p>
-                                <form action="" method="post">
-                                    <input type="email" name="email"><input type="submit" value="Subscribe">
-                                </form>
-
-                                <!-- Manage Cookies Button -->
-                                <div class="mt-3">
-                                    <button class="btn btn-link p-0"
-                                        onclick="new bootstrap.Modal(document.getElementById('cookieConsentModal')).show();">
-                                        Manage Cookies
-                                    </button>
-                                </div>
-
-
-                            </div>
-
-
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container d-lg-flex py-4">
-
-                    <div class="me-lg-auto text-center text-lg-start">
-                        <div class="copyright">
-                            &copy; Copyright {{ date('Y') }} <strong><span>BILTA</span></strong>. All Rights
-                            Reserved
-                            <p class="fl_right">Designed by <a target="_blank" href="https://www.ndinecom.com"
-                                    title="This is a bible translation site">Ndinecom</a></p>
-
-                        </div>
-
-                        <div class="credits">
-
-                            <!-- All the links in the footer should remain intact. -->
-                            <!-- You can delete the links only if you purchased the pro version. -->
-                            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/flexor-free-multipurpose-bootstrap-template/ -->
-                            {{-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> --}}
-                        </div>
-                    </div>
-                    <div class="social-links text-center text-lg-right pt-3 pt-lg-0">
-                        <a href="{{ $contact_us->twitter_url ?? '#' }}" class="twitter"><i
-                                class="bx bxl-twitter"></i></a>
-                        <a href="{{ $contact_us->facebook_url ?? '#' }}" class="facebook"><i
-                                class="bx bxl-facebook"></i></a>
-                        <a href="{{ $contact_us->youtube ?? '#' }}" class="-youtube"><i
-                                class="bx bxl-youtube"></i></a>
-                        <a href="{{ $contact_us->whatsapp_link ?? '#' }}" class="google-plus"><i
-                                class="bx bxl-whatsapp"></i></a>
-                        <a href="{{ $contact_us->linkedin_url ?? '#' }}" class="linkedin"><i
-                                class="bx bxl-linkedin"></i></a>
-                    </div>
-                </div>
-            </footer><!-- End Footer -->
-
 
         @endif
 
+    </main>
 
+    {{-- =========================================================
+        MODALS
+    ========================================================= --}}
 
-        {{-- @livewireScripts --}}
-        <livewire:scripts />
+    {{-- DONATION MODAL --}}
+    @include('partials.site.donation-modal')
 
-        <!-- Vendor JS Files -->
-        <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
-        <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
-        <script src="{{ asset('assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
-        <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-        <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
+    {{-- SPONSOR MODAL --}}
+    @include('partials.site.sponsor-modal')
 
-        <!-- Template Main JS File -->
-        <script src="{{ asset('assets/js/main.js') }}"></script>
+    {{-- FOOTER --}}
+    @include('partials.site.footer')
 
-        @stack('custom-scripts')
+    {{-- =========================================================
+        LIVEWIRE
+    ========================================================= --}}
+    <livewire:scripts />
 
-        <!-- Cookie Consent Modal -->
-        <!-- Cookie Consent Modal -->
-        <div class="modal fade" id="cookieConsentModal" tabindex="-1" aria-labelledby="cookieConsentLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
+    {{-- =========================================================
+        VENDOR JS
+    ========================================================= --}}
+    <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-                    <div class="modal-header border-0">
-                        <h5 class="modal-title" id="cookieConsentLabel">Cookiebot</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
+    <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
 
-                    <div class="modal-body">
-                        <!-- Tabs -->
-                        <ul class="nav nav-tabs mb-3" id="cookieTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="consent-tab" data-bs-toggle="tab"
-                                    data-bs-target="#consent" type="button" role="tab" aria-controls="consent"
-                                    aria-selected="true">Consent</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="details-tab" data-bs-toggle="tab"
-                                    data-bs-target="#details" type="button" role="tab" aria-controls="details"
-                                    aria-selected="false">Details</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="policy-tab" data-bs-toggle="tab"
-                                    data-bs-target="#policy" type="button" role="tab" aria-controls="policy"
-                                    aria-selected="false">Cookie Policy</button>
-                            </li>
-                        </ul>
+    <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
 
-                        <!-- Tab Content -->
-                        <div class="tab-content" id="cookieTabContent">
-                            <div class="tab-pane fade show active" id="consent" role="tabpanel"
-                                aria-labelledby="consent-tab">
-                                <p><strong>This website uses cookies to enhance your experience.</strong></p>
-                                <p>Cookies are small text files stored on your device to help us analyze traffic,
-                                    improve site functionality, and provide personalized content and advertising. You
-                                    can choose which types of cookies to accept below.</p>
+    {{-- =========================================================
+        APP INIT
+    ========================================================= --}}
+    <script>
 
-                                <form id="cookie-consent-form">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="essential"
-                                            id="cookie-essential" checked disabled>
-                                        <label class="form-check-label" for="cookie-essential">Essential (Always
-                                            Active)</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="analytics"
-                                            id="cookie-analytics">
-                                        <label class="form-check-label" for="cookie-analytics">Analytics</label>
-                                    </div>
-                                    {{-- <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="marketing" id="cookie-marketing">
-                  <label class="form-check-label" for="cookie-marketing">Marketing</label>
-                </div> --}}
-                                </form>
-                            </div>
+        AOS.init({
+            duration:800,
+            once:true
+        });
 
-                            <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
-                                <p><strong>Cookie Details</strong></p>
-                                <p>Here you can list the specific cookies used, their purpose, expiration times, and the
-                                    vendors involved.</p>
-                                <ul>
-                                    <li><strong>_ga (Google Analytics)</strong>: Tracks visitor behavior, expires after
-                                        2 years.</li>
-                                    <li><strong>_fbp (Facebook Pixel)</strong>: Tracks advertising effectiveness,
-                                        expires after 3 months.</li>
-                                    <!-- Add more cookie details as needed -->
-                                </ul>
-                            </div>
+    </script>
 
-                            <div class="tab-pane fade" id="policy" role="tabpanel" aria-labelledby="policy-tab"
-                                style="max-height: 400px; overflow-y: auto;">
-                                <h5>Cookie Policy</h5>
-                                <p><strong>Effective Date:</strong> 05/30/2025 </p>
+</body>
 
-                                <p>This Cookie Policy explains how <strong>BILTA</strong> (“we”, “us”, or “our”) uses
-                                    cookies and similar technologies on our website <a href="https://www.bilta.org"
-                                        target="_blank" rel="noopener noreferrer">https://www.bilta.org</a>. It
-                                    describes what cookies are, the types we use, and how you can control them.</p>
-
-                                <h6>1. What are Cookies?</h6>
-                                <p>Cookies are small text files that websites store on your device (computer,
-                                    smartphone, or tablet) when you visit them. They help websites remember your
-                                    preferences and activity, enhancing your browsing experience and helping us
-                                    understand how visitors use our site.</p>
-
-                                <h6>2. Types of Cookies We Use</h6>
-                                <ul>
-                                    <li><strong>Essential Cookies:</strong> Necessary for the website to function
-                                        properly. These enable basic features like page navigation and access to secure
-                                        areas.</li>
-                                    <li><strong>Analytics & Performance Cookies:</strong> Used to understand how
-                                        visitors interact with the website by collecting anonymous data. This helps
-                                        improve site performance.</li>
-                                    <li><strong>Functionality Cookies:</strong> Enable the site to remember choices you
-                                        make (like language or region) to provide a more personalized experience.</li>
-                                    {{-- <li><strong>Advertising & Targeting Cookies:</strong> Used to deliver relevant ads and limit how often you see them. These cookies also help measure the effectiveness of campaigns.</li> --}}
-                                </ul>
-
-                                <h6>3. Third-Party Cookies</h6>
-                                <p>We may allow trusted third-party partners to place cookies on your device through our
-                                    site. These cookies are subject to the privacy policies of those providers.</p>
-
-                                <h6>4. How You Can Manage Cookies</h6>
-                                <p>When you visit our site, a cookie banner allows you to:</p>
-                                <ul>
-                                    <li>Accept all cookies</li>
-                                    <li>Reject non-essential cookies</li>
-                                    <li>Customize your preferences</li>
-                                </ul>
-                                <p>You can also manage cookies through your browser settings:</p>
-                                <ul>
-                                    <li><a href="https://support.google.com/chrome/answer/95647" target="_blank"
-                                            rel="noopener noreferrer">Chrome</a></li>
-                                    <li><a href="https://support.mozilla.org/en-US/kb/cookies-information-websites-store-on-your-computer"
-                                            target="_blank" rel="noopener noreferrer">Firefox</a></li>
-                                    <li><a href="https://support.apple.com/en-us/HT201265" target="_blank"
-                                            rel="noopener noreferrer">Safari</a></li>
-                                    <li><a href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09"
-                                            target="_blank" rel="noopener noreferrer">Edge</a></li>
-                                </ul>
-                                <p><em>Note: Disabling some cookies may impact site functionality.</em></p>
-
-                                <h6>5. Changes to This Policy</h6>
-                                <p>We may update this policy from time to time. Any changes will be posted here with a
-                                    revised effective date.</p>
-
-                                <h6>6. Contact Us</h6>
-                                <p>If you have any questions about our use of cookies, contact us at:</p>
-                                <p>
-                                    📧 <strong>Email:</strong> <a href="mailto:info@bilta.org">info@bilta.org</a><br>
-                                    📍 <strong>Address:</strong> {{ $contact_us->address ?? '--' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer d-flex justify-content-between border-0">
-                        <button type="button" class="btn btn-outline-secondary"
-                            onclick="denyCookies()">Deny</button>
-                        <div>
-                            <button type="button" class="btn btn-secondary me-2"
-                                onclick="document.getElementById('cookie-consent-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">Customize</button>
-                            <button type="button" class="btn btn-primary" onclick="allowAllCookies()">Allow
-                                All</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <script>
-            function setCookie(name, value, days) {
-                const expires = new Date(Date.now() + days * 864e5).toUTCString();
-                document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
-            }
-
-            function getCookie(name) {
-                return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
-            }
-
-            function loadAnalytics() {
-                const script = document.createElement('script');
-                script.src = "https://www.googletagmanager.com/gtag/js?id=G-3KNTJTXGCG";
-                script.async = true;
-                document.head.appendChild(script);
-                window.dataLayer = window.dataLayer || [];
-
-                function gtag() {
-                    dataLayer.push(arguments);
-                }
-                gtag('js', new Date());
-                gtag('config', 'G-3KNTJTXGCG');
-            }
-
-            function sendConsentToBackend(data) {
-                fetch('/api/cookie-consent', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify(data)
-                });
-            }
-
-            function denyCookies() {
-                const data = {
-                    essential: true,
-                    analytics: false,
-                    marketing: false,
-                    timestamp: new Date().toISOString()
-                };
-                setCookie('cookie_consent', JSON.stringify(data), 365);
-                sendConsentToBackend(data);
-                bootstrap.Modal.getInstance(document.getElementById('cookieConsentModal')).hide();
-            }
-
-            function allowAllCookies() {
-                const data = {
-                    essential: true,
-                    analytics: true,
-                    marketing: true,
-                    timestamp: new Date().toISOString()
-                };
-                setCookie('cookie_consent', JSON.stringify(data), 365);
-                sendConsentToBackend(data);
-                loadAnalytics();
-                bootstrap.Modal.getInstance(document.getElementById('cookieConsentModal')).hide();
-            }
-
-
-            function isJson(str) {
-                try {
-                    JSON.parse(str);
-                    return true;
-                } catch (e) {
-                    return false;
-                }
-            }
-
-            document.addEventListener("DOMContentLoaded", function() {
-                const saved = getCookie('cookie_consent');
-                if (!saved || !isJson(decodeURIComponent(saved))) {
-                    new bootstrap.Modal(document.getElementById('cookieConsentModal')).show();
-                } else {
-                    const consent = JSON.parse(decodeURIComponent(saved));
-                    if (consent.analytics) loadAnalytics();
-                }
-
-                document.getElementById('cookie-consent-form').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const form = e.target;
-                    const data = {
-                        essential: true,
-                        analytics: form.analytics.checked,
-                        marketing: form.marketing.checked,
-                        timestamp: new Date().toISOString()
-                    };
-                    setCookie('cookie_consent', JSON.stringify(data), 365);
-                    sendConsentToBackend(data);
-                    if (data.analytics) loadAnalytics();
-                    bootstrap.Modal.getInstance(document.getElementById('cookieConsentModal')).hide();
-                });
-            });
-        </script>
-
-
-
-    </body>
-
-    </html>
+</html>
 
 @endif

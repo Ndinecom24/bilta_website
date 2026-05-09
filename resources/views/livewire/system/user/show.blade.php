@@ -1,17 +1,17 @@
 <div>
-
-
-    <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">User Details</h1>
+        <div>
+            <h1 class="h4 mb-1 text-dark">User Details</h1>
+            <p class="text-muted mb-0">Manage profile information, password reset, and role assignments.</p>
+        </div>
+        <a href="{{ route('system.users') }}" class="btn btn-sm btn-outline-secondary">Back to Users</a>
     </div>
 
-    <!-- Content Row -->
     <div class="row">
         <div class="col-md-12 p-2">
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0 pl-3">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -19,139 +19,200 @@
                 </div>
             @endif
             @if(session()->has('success'))
-                <div class="alert alert-success" role="alert">
-                    {{ session()->get('success') }}
-                </div>
+                <div class="alert alert-success" role="alert">{{ session()->get('success') }}</div>
             @endif
             @if(session()->has('error'))
-                <div class="alert alert-danger" role="alert">
-                    {{ session()->get('error') }}
+                <div class="alert alert-danger" role="alert">{{ session()->get('error') }}</div>
+            @endif
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header text-center">
+                    <img class="img-profile rounded-circle" width="90" src="{{ asset('admin/img/undraw_profile.svg') }}" alt="Profile avatar">
+                </div>
+                <div class="card-body">
+                    <p><b>Name</b>: {{ $user->name }}</p>
+                    <p><b>Email</b>: {{ $user->email }}</p>
+                    <p><b>Phone</b>: {{ $user->phone }}</p>
+                    <p><b>Status</b>: {{ $user->status->name ?? '--' }}</p>
+                    <p><b>Total Logins</b>: {{ $user->logins ?? 0 }}</p>
+                    <p class="mb-0"><b>Last Login</b>: {{ $user->last_login ?? '--' }}</p>
+                </div>
+                <div class="card-footer d-flex flex-wrap gap-2">
+                    <button wire:click="togglePasswordReset" class="btn btn-warning btn-sm">Password Reset</button>
+                    <button wire:click="toggleEdit" class="btn btn-primary btn-sm">Edit</button>
+                    <button onclick="deleteUser({{ $user->id }})" class="btn btn-danger btn-sm">Delete</button>
+                </div>
+            </div>
+
+            @if($updateUser)
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">Update User</h5>
+                        <button wire:click="cancel" type="button" class="btn btn-sm btn-outline-secondary">Close</button>
+                    </div>
+                    <div class="card-body">
+                        <form wire:submit.prevent="update">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="userName">Name</label>
+                                    <input id="userName" type="text" class="form-control" wire:model.defer="name" required>
+                                    @error('name') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="userEmail">Email Address</label>
+                                    <input id="userEmail" type="email" class="form-control" wire:model.defer="email" required>
+                                    @error('email') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="userPhone">Phone</label>
+                                    <input id="userPhone" type="text" class="form-control" wire:model.defer="phone" required>
+                                    @error('phone') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="userStatus">Status</label>
+                                    <select id="userStatus" class="form-control" wire:model.defer="status_id" required>
+                                        <option value="">-- Select --</option>
+                                        @foreach($statuses as $status)
+                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('status_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="submit" class="btn btn-primary">Update User</button>
+                                <button wire:click.prevent="cancel" type="button" class="btn btn-outline-danger">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             @endif
 
-            @include('livewire.system.role.attach')
-                @include('livewire.system.user.update')
-                @include('livewire.system.user.updatePassword')
+            @if($showPasswordReset)
+                <div class="card shadow-sm mt-3">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">Password Reset</h5>
+                        <button wire:click="cancel" type="button" class="btn btn-sm btn-outline-secondary">Close</button>
+                    </div>
+                    <div class="card-body">
+                        <form wire:submit.prevent="updatePassword">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="newPassword">New Password</label>
+                                    <input id="newPassword" type="password" class="form-control" wire:model.defer="password" autocomplete="new-password" required>
+                                    @error('password') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
 
+                                <div class="col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="confirmPassword">Confirm Password</label>
+                                    <input id="confirmPassword" type="password" class="form-control" wire:model.defer="password_confirmation" autocomplete="new-password" required>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="submit" class="btn btn-warning">Reset Password</button>
+                                <button wire:click.prevent="cancel" type="button" class="btn btn-outline-danger">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @endif
         </div>
 
-        <div class="col-md-6 col-lg-6 col-sm-12 mb-2">
-            <div class="card">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm mb-3">
                 <div class="card-header">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 text-center">
-                            <img class="img-profile rounded-circle" width="25%"
-                                 src="{{asset('admin/img/undraw_profile.svg')}}">
-                        </div>
-                    </div>
-
+                    <h5 class="mb-0">Attach Roles</h5>
                 </div>
                 <div class="card-body">
-
-                    <div class="">
-                        <p><b>Name</b> : {{$user->name}}</p>
-                        <p><b>Email</b> : {{$user->email}}</p>
-                        <p><b>Phone</b> : {{$user->phone}}</p>
-                        <p><b>Status</b> : {{$user->status->name ?? "--"}}</p>
-                        <p><b>Total Logins</b> : {{$user->logins}}</p>
-                        <p><b>Last Login</b> : {{$user->last_login}}</p>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-ld-12 col-md-12 col-sm-12">
-                            <button data-toggle="modal" data-target="#updatePasswordModal"
-                                    class="btn btn-warning btn-sm">Password Change
-                            </button>
-                            <button data-toggle="modal" data-target="#updateModal"
-                                    class="btn btn-primary btn-sm">Edit
-                            </button>
-                            <button onclick="deleteUser({{$user->id}})"
-                                    class="btn btn-danger btn-sm">Delete
-                            </button>
+                    @if ($all_roles->count() > 0)
+                        <div class="table-responsive mb-3">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:40px;"></th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($all_roles as $role)
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" wire:model="selectedRoles" value="{{ $role->id }}">
+                                            </td>
+                                            <td>{{ $role->name }}</td>
+                                            <td>{{ $role->slug }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
+                        <button wire:click="attachRole" type="button" class="btn btn-primary btn-sm" @if (count($selectedRoles) === 0) disabled @endif>
+                            Attach Selected Roles
+                        </button>
+                    @else
+                        <div class="text-muted">All roles are already attached.</div>
+                    @endif
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-6 col-lg-6 col-sm-12 mb-2">
             <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-6">
-                            <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal"
-                                    data-target="#roleModal"
-                                    wire:click="roleAttachButton()">
-                                <i class="fa fa-plus">Attach</i>
-                            </button>
-                        </div>
-                        <div class="col-lg-10 col-md-10 col-sm-6">
-                            <h5>System Roles</h5>
-                        </div>
-                    </div>
-
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Assigned Roles</h5>
+                    <span class="badge badge-light">{{ $user->roles->count() }}</span>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table table-hover mb-0">
                             <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Action</th>
-                            </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th style="width:100px;">Action</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @if (count($user->roles) > 0)
-                                @foreach ($user->roles as $key=>$role)
+                                @forelse ($user->roles as $index => $role)
                                     <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $role->name }}</td>
+                                        <td>{{ $role->slug }}</td>
                                         <td>
-                                            {{++$key}}
-                                        </td>
-                                        <td>
-                                            {{$role->name}}
-                                        </td>
-                                        <td>
-                                            {{$role->slug}}
-                                        </td>
-                                        <td>
-                                            <button onclick="detachRole({{$role->id}})"
-                                                    class="btn btn-sm btn-outline-danger btn-sm">Remove
-                                            </button>
+                                            <button onclick="detachRole({{ $role->id }})" class="btn btn-sm btn-outline-danger">Remove</button>
                                         </td>
                                     </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="3" align="center">
-                                        No Roles Found.
-                                    </td>
-                                </tr>
-                            @endif
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No Roles Found.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
         function detachRole(id) {
-            if (confirm("Are you sure to detach this record?"))
+            if (confirm("Are you sure to detach this role?")) {
                 window.livewire.emit('detachRole', id);
+            }
         }
-    </script>
 
-
-    <script>
         function deleteUser(id) {
-            if (confirm("Are you sure to delete this record?"))
+            if (confirm("Are you sure to delete this user?")) {
                 window.livewire.emit('deleteUser', id);
+            }
         }
     </script>
-
 </div>

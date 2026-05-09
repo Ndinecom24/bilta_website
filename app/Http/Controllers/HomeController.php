@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bilta\Testimonial;
-use Artisan;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class HomeController extends Controller
 {
@@ -33,11 +33,18 @@ class HomeController extends Controller
     public function clearCache()
     {
         try {
-            // Run the Artisan command to clear cache
             Artisan::call('optimize:clear');
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            if (request()->expectsJson()) {
+                return response()->json(['success' => true]);
+            }
+
+            return back()->with('success', 'System cache cleared successfully.');
+        } catch (Exception $e) {
+            if (request()->expectsJson()) {
+                return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+
+            return back()->with('error', 'Failed to clear system cache: ' . $e->getMessage());
         }
     }
 

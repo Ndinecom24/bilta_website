@@ -1,60 +1,27 @@
-<div>
-  <!-- ======= FAQ Section Redesigned ======= -->
-  <section id="faq" class="faq section-bg py-5">
-    <div class="container">
+<div class="site-shell py-5">
+  <div class="container">
+    <section class="page-hero">
+      <h2 class="mb-2">Frequently Asked Questions</h2>
+      <p class="lead mb-0">Clear answers to common questions about BiLTA’s mission, translation process, and community engagement.</p>
+    </section>
 
-      <div class="section-title text-center mb-5" data-aos="fade-up">
-        <h2 class="fw-bold">Frequently Asked Questions</h2>
-        <p class="text-muted mx-auto" style="max-width: 700px;">
-          Welcome to the FAQ page of the Bible and Literature Translation Association! Here, we provide clear answers to common questions about our organization and translation work. Reach out anytime for more info.
-        </p>
-      </div>
-
-      <div class="faq-list">
-        <ul class="list-unstyled">
-          @foreach($faqs as $key => $faq)
-          <li class="mb-3 shadow-sm rounded" data-aos="fade-up" data-aos-delay="{{$key}}00">
-            <button class="faq-question d-flex justify-content-between align-items-center w-100 p-3 bg-white border-0 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#faq-list-{{$key}}" aria-expanded="{{ $key === 0 ? 'true' : 'false' }}" aria-controls="faq-list-{{$key}}">
-              <span class="fw-semibold">{{$faq->question ?? ""}}</span>
-              <span class="faq-icon fs-4">+</span>
-            </button>
-            <div id="faq-list-{{$key}}" class="collapse {{ $key === 0 ? 'show' : '' }} bg-light p-3 rounded-bottom" data-bs-parent=".faq-list">
-              <p class="mb-0 text-secondary">{!! $faq->answer ?? "" !!}</p>
+    <section class="page-section">
+      <div class="accordion" id="faqAccordion">
+        @forelse($faqs as $key => $faq)
+          <div class="accordion-item border-0 mb-3 site-card">
+            <h2 class="accordion-header" id="faqHeading{{ $key }}">
+              <button class="accordion-button {{ $key === 0 ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse{{ $key }}" aria-expanded="{{ $key === 0 ? 'true' : 'false' }}" aria-controls="faqCollapse{{ $key }}">
+                {{ $faq->question ?? '' }}
+              </button>
+            </h2>
+            <div id="faqCollapse{{ $key }}" class="accordion-collapse collapse {{ $key === 0 ? 'show' : '' }}" aria-labelledby="faqHeading{{ $key }}" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">{!! $faq->answer ?? '' !!}</div>
             </div>
-          </li>
-          @endforeach
-        </ul>
+          </div>
+        @empty
+          <div class="site-empty">No FAQs available right now.</div>
+        @endforelse
       </div>
-
-    </div>
-  </section>
+    </section>
+  </div>
 </div>
-
-<style>
-  .faq-question {
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .faq-question:hover {
-    background-color: #f0f8ff;
-  }
-  .faq-icon {
-    transition: transform 0.3s ease;
-    user-select: none;
-  }
-  .collapse.show + .faq-question .faq-icon,
-  .faq-question[aria-expanded="true"] .faq-icon {
-    transform: rotate(45deg);
-  }
-</style>
-
-<script>
-  // Toggle + / - sign on collapse show/hide
-  document.querySelectorAll('.faq-question').forEach(button => {
-    button.addEventListener('click', () => {
-      const icon = button.querySelector('.faq-icon');
-      const expanded = button.getAttribute('aria-expanded') === 'true';
-      icon.textContent = expanded ? '+' : '−';
-    });
-  });
-</script>

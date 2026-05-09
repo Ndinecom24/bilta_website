@@ -12,19 +12,20 @@ class MyAudioBibleList extends Component
 {
     use WithPagination;
 
-    public $searchTerm; 
+    public $searchTerm;
     public $project_id;
     public $title;
     public $categories = [];
 
     public function mount($project_id = null)
     {
-        $this->project_id = $project_id;
+        $this->project_id = $project_id ?? request()->query('project');
     }
 
     public function render()
     {
-        $query = AudioFile::with('project')->where('status_id', config('constants.status.active'));
+        $query = AudioFile::with(['project.myCategory', 'media'])
+            ->where('status_id', config('constants.status.active'));
 
         // Search logic
         if (!is_null($this->searchTerm)) {
@@ -34,12 +35,10 @@ class MyAudioBibleList extends Component
 
         // Filter by project if applicable
         if (!empty($this->project_id) && $this->project_id != '0') {
-            $query->whereHas('project', function ($q) {
-                $q->where('project_id', $this->project_id);
-            });
+            $query->where('project_id', $this->project_id);
 
             try {
-                $this->title = 'Project: ' . (Projects::find($this->project_id)->name ?? "Unknown");
+                $this->title = 'Project: ' . (Projects::find($this->project_id)->title ?? "Unknown");
             } catch (\Exception $e) {
                 $this->title = 'Unknown Project';
             }
@@ -47,12 +46,13 @@ class MyAudioBibleList extends Component
 
         $audioFiles = $query->latest()->paginate(20);
 
-        // Optional: Get categories based on projects associated with audio files
-        $this->categories = AudioFile::select('project_id' )
-        ->with('project')
-        ->selectRaw('project_id, COUNT(*) as audio_count')
-        ->groupBy('project_id')
-        ->get();
+        $this->categories = AudioFile::query()
+            ->selectRaw('project_id, COUNT(*) as audio_count')
+            ->with('project')
+            ->whereNotNull('project_id')
+            ->groupBy('project_id')
+            ->orderByDesc('audio_count')
+            ->get();
 
         return view('livewire.site.show-audio-bible-list')->with(compact('audioFiles'));
     }

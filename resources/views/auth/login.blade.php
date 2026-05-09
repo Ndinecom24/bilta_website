@@ -2,30 +2,33 @@
 
 @section('content')
     <div class="auth-card">
-        <div class="text-center mb-4">
-            <img src="{{ asset('layout/images/bilta_logo_one.png') }}" alt="Logo" style="max-width: 120px;">
+        <div class="text-center mb-4 auth-logo-wrap">
+            <img src="{{ asset('layout/images/bilta_logo_one.png') }}" alt="BiLTA Logo" class="auth-logo-image">
         </div>
 
-        <h3 class="text-center mb-4">{{ __('Login') }}</h3>
+        <h3 class="text-center mb-2 auth-title">{{ __('Admin Login') }}</h3>
+        <p class="text-center text-muted mb-4 auth-subtitle">Sign in to manage site content, media, and ministry updates.</p>
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
-            <div class="mb-3">
+            <div class="mb-3 auth-field-group">
                 <label for="email" class="form-label">{{ __('Email Address') }}</label>
                 <input id="email" type="email"
                        class="form-control @error('email') is-invalid @enderror"
-                       name="email" value="{{ old('email') }}" required autofocus>
+                       name="email" value="{{ old('email') }}" required autofocus
+                       placeholder="you@example.com">
                 @error('email')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 auth-field-group">
                 <label for="password" class="form-label">{{ __('Password') }}</label>
                 <input id="password" type="password"
                        class="form-control @error('password') is-invalid @enderror"
-                       name="password" required>
+                       name="password" required
+                       placeholder="Enter your password">
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -38,7 +41,7 @@
             </div>
 
             <div class="d-grid mb-2">
-                <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
+                <button type="submit" class="btn btn-primary auth-submit-btn">{{ __('Login') }}</button>
             </div>
 
             @if (Route::has('password.request'))

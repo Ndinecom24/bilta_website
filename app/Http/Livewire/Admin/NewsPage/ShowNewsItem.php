@@ -16,7 +16,7 @@ class ShowNewsItem extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $our_news_id, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id;
+    public $our_news_id, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id, $display_order, $news;
     public $news_title_image, $news_image ;
 
     public $updateNewsItem = false;
@@ -30,6 +30,7 @@ class ShowNewsItem extends Component
         'short_description' => 'required',
         'post_date' => 'required',
         'author' => 'required',
+        'display_order' => 'nullable|integer|min:0',
         'news_title_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
 //        'news_title_image' => 'image|max:3072', // 1MB Max
     ];
@@ -38,9 +39,10 @@ class ShowNewsItem extends Component
     {
         $our_news_items = News::select('id', 'title', 'details','category_id', 'short_description', 'post_date', 'author',
          'created_by',
+            'display_order',
             'status_id',
         )
-        ->orderBy('created_at', 'desc')->paginate(20);
+        ->orderBy('display_order')->orderBy('created_at', 'desc')->paginate(20);
         $statuses = Status::get();
         $categories = ItemCategory::where('type', 'News')->get();
 
@@ -72,6 +74,7 @@ class ShowNewsItem extends Component
                     'author' => $this->author,
                     'short_description' => $this->short_description,
                     'category_id' => $this->category_id,
+                    'display_order' => $this->display_order ?? 0,
                     'status_id' => $this->status_id,
                     'created_by' => auth()->user()->id
                 ]
@@ -117,6 +120,7 @@ class ShowNewsItem extends Component
         $this->post_date = '';
         $this->author = '';
         $this->category_id = '';
+        $this->display_order = 0;
         $this->status_id = '';
         $this->news_title_image = null ;
     }
@@ -133,6 +137,7 @@ class ShowNewsItem extends Component
         $this->author = $our_news->author;
         $this->short_description = $our_news->short_description;
         $this->category_id = $our_news->category_id;
+        $this->display_order = $our_news->display_order ?? 0;
         $this->status_id = $our_news->status_id;
         $this->our_news_id = $our_news->id;
         $this->updateNewsItem = true;
@@ -151,6 +156,7 @@ class ShowNewsItem extends Component
                     'author' => $this->author,
                     'short_description' => $this->short_description,
                     'category_id' => $this->category_id,
+                    'display_order' => $this->display_order ?? 0,
                     'status_id' => $this->status_id,
                     'created_by' => auth()->user()->id
                 ]
@@ -179,7 +185,7 @@ class ShowNewsItem extends Component
             session()->flash('success', 'News Item Updated Successfully!!');
 
             $this->cancel();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             session()->flash('error', 'Something goes wrong while updating news item!!');
             $this->cancel();
         }
@@ -197,7 +203,7 @@ class ShowNewsItem extends Component
         try {
             News::find($id)->delete();
             session()->flash('success', "News Item Deleted Successfully!!");
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             session()->flash('error', "Something goes wrong while deleting news item!!");
         }
 

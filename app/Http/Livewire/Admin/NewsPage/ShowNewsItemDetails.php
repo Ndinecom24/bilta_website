@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Admin\NewsPage;
 
-use App\Models\Bilta\FAQs;
 use App\Models\Bilta\ItemCategory;
 use App\Models\Bilta\News;
 use App\Models\System\Status;
@@ -18,7 +17,7 @@ class ShowNewsItemDetails extends Component
     use WithFileUploads;
 
     public $our_news_id, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id;
-    public $news_title_image, $news_image ;
+    public $news_title_image, $news_image;
 
 
 
@@ -33,20 +32,36 @@ class ShowNewsItemDetails extends Component
         'short_description' => 'required',
         'post_date' => 'required',
         'author' => 'required',
-        'news_title_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
+        'status_id' => 'required',
+        'category_id' => 'required',
+        'news_title_image' => 'required|mimes:png,jpg,jpeg|max:3072',
 //        'news_title_image' => 'image|max:3072', // 1MB Max
     ];
 
+    protected $updateRules = [
+        'title' => 'required',
+        'details' => 'required',
+        'short_description' => 'required',
+        'post_date' => 'required',
+        'author' => 'required',
+        'status_id' => 'required',
+        'category_id' => 'required',
+        'news_title_image' => 'nullable|mimes:png,jpg,jpeg|max:3072',
+        'news_image.*' => 'nullable|mimes:png,jpg,jpeg|max:3072',
+    ];
 
-    public function mount($id){
-        $this->our_news_id = $id ;
+
+    public function mount($id)
+    {
+        $this->our_news_id = $id;
     }
+
     public function render()
     {
-        $our_news_item = News::findOrFail($this->our_news_id) ;
+        $our_news_item = News::findOrFail($this->our_news_id);
         $statuses = Status::get();
         $categories = ItemCategory::where('type', 'News')->get();
- 
+
         return view('livewire.admin.news-page.show-news')->with(compact('our_news_item', 'statuses', 'categories'));
     }
 
@@ -78,20 +93,16 @@ class ShowNewsItemDetails extends Component
 
             );
 
-            if (isset($this->news_title_image) ){
-            $news->addMedia($this->news_title_image)
-                -> toMediaCollection('news_title_images');
+            if (isset($this->news_title_image)) {
+                $news->addMedia($this->news_title_image)
+                    ->toMediaCollection('news_title_images');
             }
 
-                 //save other images
-               if (isset($this->news_image) ){
-                foreach(  $this->news_image as $item  ){
-                    
-                    // if ( $item->fileExists()) {
-                            // $projects->clearMediaCollection('news_images');
-                          $news->addMedia( $item )
-                                -> toMediaCollection('news_images');
-                        // }
+            //save other images
+            if (isset($this->news_image)) {
+                foreach ($this->news_image as $item) {
+                    $news->addMedia($item)
+                        ->toMediaCollection('news_images');
                 }
             }
 
@@ -118,15 +129,13 @@ class ShowNewsItemDetails extends Component
         $this->author = '';
         $this->category_id = '';
         $this->status_id = '';
-        $this->news_title_image = null ;
+        $this->news_title_image = null;
+        $this->news_image = null;
     }
 
     public function edit($id)
     {
         $our_news = News::findOrFail($id);
-
-     
-        $this->news = $our_news;
         $this->title = $our_news->title;
         $this->details = $our_news->details;
         $this->post_date = $our_news->post_date;
@@ -140,9 +149,9 @@ class ShowNewsItemDetails extends Component
 
     public function update()
     {
-        // Validate request
+        $this->validate($this->updateRules);
+
         try {
-            // Update our_news
             News::find($this->our_news_id)->fill(
                 [
                     'title' => $this->title,
@@ -156,23 +165,18 @@ class ShowNewsItemDetails extends Component
                 ]
             )->save();
 
-            $news = News::find($this->our_news_id) ;
+            $news = News::find($this->our_news_id);
 
-            if (isset($this->news_title_image) ) {
+            if (isset($this->news_title_image)) {
                 $news->clearMediaCollection('news_title_images');
-              $news->addMedia( $this->news_title_image )
-                    -> toMediaCollection('news_title_images');
+                $news->addMedia($this->news_title_image)
+                    ->toMediaCollection('news_title_images');
             }
 
-               //save other images
-               if (isset($this->news_image) ){
-                foreach(  $this->news_image as $item  ){
-                    
-                    // if ( $item->fileExists()) {
-                            // $projects->clearMediaCollection('news_images');
-                          $news->addMedia( $item )
-                                -> toMediaCollection('news_images');
-                        // }
+            if (isset($this->news_image)) {
+                foreach ($this->news_image as $item) {
+                    $news->addMedia($item)
+                        ->toMediaCollection('news_images');
                 }
             }
 
@@ -197,16 +201,16 @@ class ShowNewsItemDetails extends Component
         try {
             News::find($id)->delete();
             session()->flash('success', "News Item Deleted Successfully!!");
+            return redirect()->route('admin.page.item.news');
         } catch (Exception $e) {
             session()->flash('error', "Something goes wrong while deleting news item!!");
         }
 
     }
 
-    
-    public function removeImage($item){
-        Media::find( $item )->delete();
-        $this->news  = News::find($this->our_news_id );
+    public function removeImage($item)
+    {
+        Media::find($item)->delete();
         session()->flash('success', "News Image Deleted Successfully!!");
     }
 

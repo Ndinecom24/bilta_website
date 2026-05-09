@@ -67,6 +67,42 @@
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
         }
 
+        .auth-logo-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .auth-logo-image {
+            max-width: 96px;
+            border-radius: 50%;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+        }
+
+        .auth-title {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .auth-subtitle {
+            font-size: 0.95rem;
+        }
+
+        .auth-field-group .form-control {
+            min-height: 46px;
+            border-radius: 0.65rem;
+            border-color: #dbe2ea;
+        }
+
+        .auth-field-group .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.14);
+        }
+
+        .auth-submit-btn {
+            min-height: 46px;
+            border-radius: 0.65rem;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             .split {
                 flex-direction: column;

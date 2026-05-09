@@ -20,6 +20,7 @@ class OurTeam extends Model implements HasMedia
         'email',
         'details',
         'position',
+        'display_order',
         'from',
         'to',
         'facebook_url',

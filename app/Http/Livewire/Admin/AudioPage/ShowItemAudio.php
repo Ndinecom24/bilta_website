@@ -51,6 +51,7 @@ class ShowItemAudio extends Component
         $this->status_id = '';
         $this->created_by = '';
         $this->file_url = '';
+        $this->new_file_url = '';
     }
 
     public function store()
@@ -117,11 +118,14 @@ class ShowItemAudio extends Component
     public function update()
     {
         // Validate request
-        $this->validate();
+        $validationRules = $this->rules;
+        $validationRules['file_url'] = 'nullable';
+        $validationRules['new_file_url'] = 'nullable';
+        $this->validate($validationRules);
     
         try {
             // Find the audio item
-            $audio_item = AudioFile::findOrFail($this->project_id);
+            $audio_item = AudioFile::findOrFail($this->audio_item_id);
     
             // Determine the file name
             $file_name = $this->new_file_url 

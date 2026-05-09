@@ -22,6 +22,7 @@ class News extends Model implements HasMedia
         'author',
         'short_description' ,
         'category_id' ,
+        'display_order' ,
         'status_id' ,
         'created_by'
     ] ;

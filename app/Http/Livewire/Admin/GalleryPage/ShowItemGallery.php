@@ -30,7 +30,7 @@ class ShowItemGallery extends Component
         'status_id' => 'required',
         'type' => 'required',
         'item_category_id' => 'required',
-        'gallery_image' => 'required|max:3072', // 3MB Max,
+        'gallery_image' => 'required|image|max:3072', // 3MB Max,
 
     ];
 
@@ -116,11 +116,17 @@ class ShowItemGallery extends Component
 
     public function update()
     {
-        // Validate request
-        $this->validate();
+        $this->validate([
+            'description' => 'required',
+            'name' => 'required',
+            'status_id' => 'required',
+            'type' => 'required',
+            'item_category_id' => 'required',
+            'gallery_image' => 'nullable|image|max:3072',
+        ]);
         try {
-            // Update item_category
-            $team = Gallery::find($this->item_category_id)->fill([
+            $gallery = Gallery::findOrFail($this->gallery_item_id);
+            $gallery->fill([
                 'description' => $this->description,
                 'name' => $this->name,
                 'status_id' => $this->status_id,
@@ -131,8 +137,8 @@ class ShowItemGallery extends Component
 
 
             if (isset($this->gallery_image)) {
-                $team->clearMediaCollection('gallery_images');
-                $team->addMedia($this->gallery_image)
+                $gallery->clearMediaCollection('gallery_images');
+                $gallery->addMedia($this->gallery_image)
                     ->toMediaCollection('gallery_images');
             }
 

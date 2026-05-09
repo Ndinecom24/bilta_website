@@ -14,18 +14,20 @@ class ShowLeadershipTeam extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $our_team_id, $details, $name, $position, $email, $phone, $from, $to, $facebook_url, $linkedin_url, $twitter_url, $team;
+    public $our_team_id, $details, $name, $position, $display_order, $email, $phone, $from, $to, $facebook_url, $linkedin_url, $twitter_url, $team;
     public $user_image;
 
     public $updateLeadershipMember = false;
     protected $listeners = [
-        'deleteOurTeam' => 'destroy'
+        'deleteOurTeam' => 'destroy',
+        'reorderTeam' => 'reorderTeam',
     ];
     // Validation Rules
     protected $rules = [
         'name' => 'required',
         'details' => 'required',
         'position' => 'required',
+        'display_order' => 'nullable|integer|min:0',
         'email' => 'required',
         'phone' => 'required',
         // 'user_image' => 'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
@@ -40,6 +42,7 @@ class ShowLeadershipTeam extends Component
             'name',
             'details',
             'position',
+            'display_order',
             'email',
             'phone',
             'created_by',
@@ -48,7 +51,10 @@ class ShowLeadershipTeam extends Component
             'facebook_url',
             'linkedin_url',
             'twitter_url'
-        )->paginate(20);
+        )
+            ->orderBy('display_order')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
 
         return view('livewire.admin.company.our-team.index')->with(compact('our_teams'));
     }
@@ -74,6 +80,7 @@ class ShowLeadershipTeam extends Component
                     'email' => $this->email,
                     'phone' => $this->phone,
                     'position' => $this->position,
+                    'display_order' => $this->display_order ?? 0,
                     'to' => $this->to,
                     'from' => $this->from,
                     'twitter_url' => $this->twitter_url,
@@ -106,6 +113,7 @@ class ShowLeadershipTeam extends Component
         $this->name = '';
         $this->details = '';
         $this->position = '';
+        $this->display_order = 0;
         $this->email = '';
         $this->phone = '';
         $this->to = '';
@@ -124,6 +132,7 @@ class ShowLeadershipTeam extends Component
         $this->email = $our_team->email;
         $this->phone = $our_team->phone;
         $this->position = $our_team->position;
+        $this->display_order = $our_team->display_order ?? 0;
         $this->to = $our_team->to;
         $this->from = $our_team->from;
         $this->twitter_url = $our_team->twitter_url;
@@ -146,6 +155,7 @@ class ShowLeadershipTeam extends Component
                     'email' => $this->email,
                     'phone' => $this->phone,
                     'position' => $this->position,
+                    'display_order' => $this->display_order ?? 0,
                     'to' => $this->to,
                     'from' => $this->from,
                     'twitter_url' => $this->twitter_url,
@@ -185,6 +195,39 @@ class ShowLeadershipTeam extends Component
         } catch (Exception $e) {
             session()->flash('error', "Something goes wrong while deleting leadership member!!");
         }
+    }
+
+    public function reorderTeam($orderedIds)
+    {
+        if (!is_array($orderedIds) || count($orderedIds) === 0) {
+            return;
+        }
+
+        $orderedIds = array_values(array_filter($orderedIds, function ($id) {
+            return is_numeric($id);
+        }));
+
+        if (count($orderedIds) === 0) {
+            return;
+        }
+
+        $currentBatch = OurTeam::whereIn('id', $orderedIds)->get(['id', 'display_order']);
+        if ($currentBatch->isEmpty()) {
+            return;
+        }
+
+        $startOrder = (int) $currentBatch->min('display_order');
+        if ($startOrder < 1) {
+            $startOrder = 1;
+        }
+
+        foreach ($orderedIds as $index => $id) {
+            OurTeam::where('id', $id)->update([
+                'display_order' => $startOrder + $index,
+            ]);
+        }
+
+        session()->flash('success', 'Team order updated successfully.');
     }
 
 }

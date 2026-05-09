@@ -28,6 +28,7 @@ class Projects  extends Model implements HasMedia
         'location' ,
         'location_map' ,
         'category_id' ,
+        'display_order' ,
         'status_id' ,
         'created_by'
     ] ;

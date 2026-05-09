@@ -44,7 +44,6 @@ class ShowItemVidoes extends Component
 
     public function resetFields()
     {
-        $this->gallery_image = '';
         $this->gallery_image_update = '';
         $this->description = '';
         $this->name = '';
@@ -119,8 +118,8 @@ class ShowItemVidoes extends Component
         // Validate request
         $this->validate();
         try {
-            // Update item_category
-            $team = Videos::find($this->item_category_id)->fill([
+            // Update video
+            Videos::find($this->video_item_id)->fill([
                 'description' => $this->description,
                 'name' => $this->name,
                 'status_id' => $this->status_id,

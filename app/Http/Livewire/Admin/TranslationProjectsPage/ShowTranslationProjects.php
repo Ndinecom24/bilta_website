@@ -16,7 +16,7 @@ class ShowTranslationProjects extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $our_projects_id, $project, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id
+    public $our_projects_id, $project, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id, $display_order
     , $location, $location_map ;
     public $title_image, $project_image , $project_file ;
 
@@ -32,6 +32,7 @@ class ShowTranslationProjects extends Component
         'short_description' => 'required',
         'post_date' => 'required',
         'author' => 'required',
+        'display_order' => 'nullable|integer|min:0',
         'location' => 'required',
         'location_map' => 'required',
         'title_image' =>  'required|max:3072', // 3MB Max,
@@ -43,9 +44,12 @@ class ShowTranslationProjects extends Component
 
     public function render()
     {
-        $translation_projects = Projects::select('id', 'title', 'details', 'short_description', 'post_date', 'author',
-          'created_by', 'status_id', 'location', 'location_map'
-        )->paginate(20);
+                $translation_projects = Projects::select('id', 'title', 'details', 'short_description', 'post_date', 'author',
+                    'created_by', 'status_id', 'location', 'location_map', 'display_order'
+                )
+                        ->orderBy('display_order')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(20);
         $statuses = Status::get();
         $categories = ItemCategory::where('type', 'Projects')->get();
 
@@ -87,6 +91,7 @@ class ShowTranslationProjects extends Component
                     'author' => $this->author,
                     'short_description' => $this->short_description,
                     'category_id' => $this->category_id,
+                    'display_order' => $this->display_order ?? 0,
                     'status_id' => $this->status_id,
                     'location' => $this->location,
                     'location_map' => $this->location_map,
@@ -144,6 +149,7 @@ class ShowTranslationProjects extends Component
         $this->post_date = '';
         $this->author = '';
         $this->category_id = '';
+        $this->display_order = 0;
         $this->status_id = '';
         $this->location = '';
         $this->location_map = '';
@@ -167,6 +173,7 @@ class ShowTranslationProjects extends Component
         $this->location_map = $our_projects->location_map;
         $this->short_description = $our_projects->short_description;
         $this->category_id = $our_projects->category_id;
+        $this->display_order = $our_projects->display_order ?? 0;
         $this->status_id = $our_projects->status_id;
         $this->our_projects_id = $our_projects->id;
         $this->updateProjectsItem = true;
@@ -189,6 +196,7 @@ class ShowTranslationProjects extends Component
                     'location_map' => $this->location_map,
                     'short_description' => $this->short_description,
                     'category_id' => $this->category_id,
+                    'display_order' => $this->display_order ?? 0,
                     'status_id' => $this->status_id,
                     'created_by' => auth()->user()->id
                 ]

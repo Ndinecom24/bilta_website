@@ -9,7 +9,9 @@ use App\Services\SpamFilterService;
 use Exception;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 
 class ContactController extends Controller
 {
@@ -25,7 +27,11 @@ class ContactController extends Controller
 
         // Honeypot check
         if ($request->filled('website')) {
-            return response()->json(['error' => 'Bot submission blocked'], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Bot submission blocked'], 400);
+            }
+
+            return back()->with('contact_error', 'Submission blocked. Please try again.');
         }
 
         // Validate the request data
@@ -40,31 +46,53 @@ class ContactController extends Controller
         $validated['status_id'] = 1;
         $validated['created_by'] = 0;
         $validated['recipient'] = "infor@bilta.org";
+        $hasSpamColumn = Schema::hasColumn('contact_messages', 'spam');
 
-         // Spam filter check
-         if ($this->spamFilter->isSpam($validated['email'], $validated['subject'], $validated['message'])) {   // Save the message to the database
-            $validated['spam'] = 1 ;
-            $contactMessage = ContactMessage::updateOrCreate($validated, $validated);
-            return response()->json(['success' => 'Your message has been saved.'], 200 );
-        }
+        $isSpam = $this->spamFilter->isSpam($validated['email'], $validated['subject'], $validated['message']);
 
         try {
             // Save the message to the database
-            $validated['spam'] = 0 ;
-            $contactMessage = ContactMessage::updateOrCreate($validated, $validated);
+            if ($hasSpamColumn) {
+                $validated['spam'] = $isSpam ? 1 : 0;
+            }
 
-            // Send the email (ensure the ContactMessageMail mailable is set up)
-            Mail::to('infor@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
+            $contactMessage = ContactMessage::updateOrCreate(
+                [
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'subject' => $validated['subject'],
+                    'message' => $validated['message'],
+                ],
+                $validated
+            );
+
+            if (! $isSpam) {
+                // Send the email (use log mailer locally to avoid SMTP blocking during development)
+                $mailer = app()->environment('local') ? 'log' : config('mail.default');
+                Mail::mailer($mailer)->to('infor@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
+            }
 
             // Return success response
-            return response()->json(['success' => 'Your message has been sent successfully.'], 200 );
+            $successMessage = $isSpam
+                ? 'Your message has been saved.'
+                : 'Your message has been sent successfully.';
+
+            if ($request->expectsJson()) {
+                return response()->json(['success' => $successMessage], 200);
+            }
+
+            return back()->with('contact_success', $successMessage);
 
         } catch (\Exception $e) {
             // Log the error for debugging
-            \Log::error('Error sending contact message: ' . $e->getMessage());
+            Log::error('Error sending contact message: ' . $e->getMessage());
 
             // Return error response with the exception message
-            return response()->json(['error' => 'There was an issue sending your message. Please try again later.' . $e->getMessage()], 500);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'There was an issue sending your message. Please try again later.' . $e->getMessage()], 500);
+            }
+
+            return back()->with('contact_error', 'There was an issue sending your message. Please try again later.');
         }
     }
 

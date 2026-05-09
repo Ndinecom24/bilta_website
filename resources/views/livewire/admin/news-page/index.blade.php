@@ -1,128 +1,179 @@
 <div>
-
-    
-    <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Our News Items</h1>
+        <h1 class="h3 mb-0 text-gray-800">News Items</h1>
     </div>
 
-    <!-- Content Row -->
     <div class="row">
         <div class="col-md-12 p-2">
-
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0 pl-3">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
-            @if(session()->has('success'))
-                <div class="alert alert-success" role="alert">
-                    {{ session()->get('success') }}
-                </div>
+            @if (session()->has('success'))
+                <div class="alert alert-success" role="alert">{{ session()->get('success') }}</div>
             @endif
-            @if(session()->has('error'))
-                <div class="alert alert-danger" role="alert">
-                    {{ session()->get('error') }}
-                </div>
+            @if (session()->has('error'))
+                <div class="alert alert-danger" role="alert">{{ session()->get('error') }}</div>
             @endif
-
-            @include('livewire.admin.news-page.create')
-
         </div>
+
+        <div class="col-md-12 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">{{ $updateNewsItem ? 'Edit News Item' : 'Add News Item' }}</h5>
+
+                    @if ($updateNewsItem)
+                        <button wire:click="cancel" type="button" class="btn btn-sm btn-outline-secondary">Create New</button>
+                    @endif
+                </div>
+
+                <div class="card-body">
+                    <form wire:submit.prevent="{{ $updateNewsItem ? 'update' : 'store' }}" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsTitle">Title</label>
+                                <input id="newsTitle" type="text" class="form-control" wire:model.defer="title" placeholder="Enter news title">
+                                @error('title') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsDate">Post Date</label>
+                                <input id="newsDate" type="date" class="form-control" wire:model.defer="post_date">
+                                @error('post_date') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsShortDescription">Short Description</label>
+                                <textarea id="newsShortDescription" rows="3" class="form-control" wire:model.defer="short_description" placeholder="Write a short summary"></textarea>
+                                @error('short_description') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsDetails">Details</label>
+                                <input id="newsDetails" type="hidden" wire:model.defer="details">
+                                <trix-editor input="newsDetails" class="bg-white"></trix-editor>
+                                <small class="text-muted d-block mt-1">Use the editor toolbar to format headings, lists, links, and emphasis.</small>
+                                @error('details') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsAuthor">Author</label>
+                                <input id="newsAuthor" type="text" class="form-control" wire:model.defer="author" placeholder="Author name">
+                                @error('author') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsStatus">Status</label>
+                                <select id="newsStatus" class="form-control" wire:model.defer="status_id">
+                                    <option value="">-- Select Status --</option>
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('status_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsCategory">Category</label>
+                                <select id="newsCategory" class="form-control" wire:model.defer="category_id">
+                                    <option value="">-- Select Category --</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('category_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsOrder">Order</label>
+                                <input id="newsOrder" type="number" min="0" class="form-control" wire:model.defer="display_order" placeholder="0">
+                                @error('display_order') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsTitleImage">Title Image</label>
+                                <input id="newsTitleImage" type="file" class="form-control" wire:model="news_title_image">
+                                @error('news_title_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsImages">Additional Images</label>
+                                <input id="newsImages" type="file" class="form-control" wire:model="news_image" multiple>
+                                @error('news_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-primary">{{ $updateNewsItem ? 'Update News Item' : 'Save News Item' }}</button>
+                            @if ($updateNewsItem)
+                                <button wire:click.prevent="cancel" type="button" class="btn btn-outline-danger">Cancel Edit</button>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-12 mb-2">
             <div class="card">
                 <div class="card-header">
-                    <div class="row">
-
-                        <div class="col-lg-2 col-md-2 col-sm-6">
-                            <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal"
-                                    data-target="#createModal">
-                                <i class="fa fa-plus">Add</i>
-                            </button>
-                        </div>
-
-                        <div class="col-lg-10 col-md-10 col-sm-6">
-                            <h5>Our News Items</h5>
-                        </div>
-
-                    </div>
+                    <h5 class="mb-0">News Records</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Title</th>
-                                <th>Short Description</th>
-                                <th>Post_date</th>
-                                <th>Author</th>
-                                <th>Status</th>
-                                <th>Category</th>
-                                <th>Images</th>
-                                <th>Action</th>
-                            </tr>
+                                <tr>
+                                    <th style="width: 90px;">Image</th>
+                                    <th style="width: 240px;">Title</th>
+                                    <th>Short Description</th>
+                                    <th style="width: 130px;">Post Date</th>
+                                    <th style="width: 130px;">Author</th>
+                                    <th style="width: 120px;">Status</th>
+                                    <th style="width: 140px;">Category</th>
+                                    <th style="width: 90px;">Order</th>
+                                    <th style="width: 130px;">More Images</th>
+                                    <th style="width: 240px;">Action</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @if (count($our_news_items) > 0)
-                                @foreach ($our_news_items as $key=>$our_news_item)
+                                @forelse ($our_news_items as $our_news_item)
                                     <tr>
-                                        <td >
-                                        @if ( $our_news_item->getFirstMedia('news_title_images') != null )
-                                               <img  src="{{ $our_news_item->getFirstMedia('news_title_images')->getUrl()  }}"
-                                                  style="width:100%; height: 60px "
-                                                  title="{{ $our_news_item->getFirstMedia('news_title_images')->short_description }}">
-                                        @endif
-                                        </td>
                                         <td>
-                                            {{$our_news_item->title}}
+                                            @if ($our_news_item->getFirstMedia('news_title_images'))
+                                                <img src="{{ $our_news_item->getFirstMedia('news_title_images')->getUrl() }}" style="height: 52px; width: 72px; object-fit: cover;" alt="News banner">
+                                            @endif
                                         </td>
+                                        <td>{{ $our_news_item->title }}</td>
+                                        <td>{{ \Illuminate\Support\Str::limit(strip_tags($our_news_item->short_description), 120) }}</td>
+                                        <td>{{ $our_news_item->post_date }}</td>
+                                        <td>{{ $our_news_item->author }}</td>
+                                        <td>{{ $our_news_item->status->name ?? '-' }}</td>
+                                        <td>{{ $our_news_item->category->name ?? '-' }}</td>
+                                        <td>{{ $our_news_item->display_order ?? 0 }}</td>
+                                        <td>{{ sizeOf($our_news_item->getMedia('news_images')) }}</td>
                                         <td>
-                                         {!! Str::limit(   $our_news_item->short_description , '200' , '...') !!}
-                                        </td>
-                                        <td>
-                                            {{$our_news_item->post_date}}
-                                        </td>
-                                        <td>
-                                            {{$our_news_item->author}}
-                                        </td>
-                                        <td>
-                                            {{$our_news_item->status->name ?? "-"}}
-                                        </td>
-                                        <td>
-                                            {{$our_news_item->category->name  ?? "-"   }}
-                                        </td>
-
-                                         <td>
-                                                <div class="row">
-                                                     {{ sizeOf($our_news_item->getMedia('news_images')) }} More Images
-                                                </div>
-                                            </td>
-                                      
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <a href="{{  route('admin.page.item.news.details',$our_news_item->id  )  }}" 
-                                                            class="btn btn-primary btn-sm m-2">Show
-                                                    </a>
-                                                </div>
-                                            </div>
+                                            <button wire:click="edit({{ $our_news_item->id }})" class="btn btn-primary btn-sm">Edit</button>
+                                            <a href="{{ route('admin.page.item.news.details', $our_news_item->id) }}" class="btn btn-outline-primary btn-sm">Details</a>
+                                            <button onclick="deleteOurNewsItem({{ $our_news_item->id }})" class="btn btn-danger btn-sm">Delete</button>
                                         </td>
                                     </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="3" aligne="center">
-                                        No News Item Found.
-                                    </td>
-                                </tr>
-                            @endif
+                                @empty
+                                    <tr>
+                                        <td colspan="9" class="text-center">No news records found.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="mt-3">
+                        {{ $our_news_items->links() }}
                     </div>
                 </div>
             </div>
@@ -130,54 +181,14 @@
     </div>
 
     <script>
+        document.addEventListener('trix-file-accept', function (event) {
+            event.preventDefault();
+        });
+
         function deleteOurNewsItem(id) {
-            if (confirm("Are you sure status_id delete this record?"))
+            if (confirm("Are you sure to delete this news record?")) {
                 window.livewire.emit('deleteNews', id);
+            }
         }
     </script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Sync Short Description
-        document.querySelector("trix-editor[input='trix-short_description']")
-            .addEventListener('trix-change', function (event) {
-                Livewire.find('{{ $this->id }}')
-                    .set('short_description', event.target.editor.getDocument().toString());
-            });
-
-        // Sync Details
-        document.querySelector("trix-editor[input='trix-content']")
-            .addEventListener('trix-change', function (event) {
-                Livewire.find('{{ $this->id }}')
-                    .set('details', event.target.editor.getDocument().toString());
-            });
-    });
-</script>
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // For Update Modal: Short Description
-        const shortDescEditorUpdate = document.querySelector("trix-editor[input='trix-short_description-update']");
-        if (shortDescEditorUpdate) {
-            shortDescEditorUpdate.addEventListener('trix-change', function (event) {
-                Livewire.find('{{ $this->id }}')
-                    .set('short_description', event.target.editor.getDocument().toString());
-            });
-        }
-
-        // For Update Modal: Details
-        const detailsEditorUpdate = document.querySelector("trix-editor[input='trix-content-update']");
-        if (detailsEditorUpdate) {
-            detailsEditorUpdate.addEventListener('trix-change', function (event) {
-                Livewire.find('{{ $this->id }}')
-                    .set('details', event.target.editor.getDocument().toString());
-            });
-        }
-    });
-</script>
-
-
-
 </div>

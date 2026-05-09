@@ -12,8 +12,13 @@ class ShowGallery extends Component
 
     public function render()
     {
-        $gallery_items = Gallery::get();
-        $categories= $gallery_items->pluck('category')->unique() ;
+        $gallery_items = Gallery::with('category')->get();
+        $categories = $gallery_items
+            ->pluck('category')
+            ->filter()
+            ->unique('id')
+            ->values();
+
         return view('livewire.site.show-gallery')->with(compact('gallery_items', 'categories'));
     }
 }

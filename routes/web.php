@@ -3,6 +3,8 @@
 use App\Http\Controllers\CookieConsentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Site\ContactController;
+use App\Http\Controllers\Site\NewsletterController;
+use App\Http\Controllers\Site\SponsorInquiryController;
 use App\Http\Livewire\Admin\AudioPage\ShowItemAudio;
 use App\Http\Livewire\Admin\Company\ShowAboutUs;
 use App\Http\Livewire\Admin\Company\ShowAdminHome;
@@ -18,6 +20,7 @@ use App\Http\Livewire\Admin\NewsPage\ShowNewsItemDetails;
 use App\Http\Livewire\Admin\Other\ShowChairmansMessage;
 use App\Http\Livewire\Admin\Other\ShowOurSponsors;
 use App\Http\Livewire\Admin\Other\ShowEmails;
+use App\Http\Livewire\Admin\Other\ShowFrontRequests;
 use App\Http\Livewire\Admin\Other\ShowItemCategory;
 use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
@@ -45,6 +48,7 @@ use App\Http\Livewire\Site\MyTestimonials;
 use App\Http\Livewire\Site\MyTestimonies;
 use App\Http\Livewire\Site\MyNewsList;
 use App\Http\Livewire\Site\ShowWeeklyPrayerPoints;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -88,7 +92,9 @@ Route::prefix('bilta/site')->group(function () {
 
 });
 Route::post('/contact', [ContactController::class,  'store'])->name('contact.store');
-Route::post('/clear-cache', [HomeController::class, 'clearCache']);
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::post('/sponsor/inquiry', [SponsorInquiryController::class, 'store'])->name('sponsor.inquiry.store');
+Route::post('/clear-cache', [HomeController::class, 'clearCache'])->middleware('auth')->name('admin.cache.clear');
 Route::post('/submit-testimonial', [ContactController::class, 'storeTestimonial']);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,6 +120,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/audio', ShowItemAudio::class)->name('admin.page.item.audio');
         Route::get('/item/news', ShowNewsItem::class)->name('admin.page.item.news'); 
         Route::get('/contact/emails', ShowEmails::class)->name('admin.page.contact.emails');
+        Route::get('/front/requests', ShowFrontRequests::class)->name('admin.page.front.requests');
         Route::get('/chairmans/messages', ShowChairmansMessage::class)->name('admin.page.chairmans.messages');
         Route::get('/our/sponsors', ShowOurSponsors::class)->name('admin.page.our.sponsors');
         Route::get('/item/news/{id}/details', ShowNewsItemDetails::class)->name('admin.page.item.news.details');

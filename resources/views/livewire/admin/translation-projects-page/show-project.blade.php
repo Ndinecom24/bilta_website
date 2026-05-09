@@ -1,164 +1,247 @@
-<!-- Show Modal -->
-<div wire:ignore.self class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="row">
-                    <div class="col-12">
-                        <h5 class="modal-title" id="showModalLabel">Project Details</h5>
-                    </div>
-                    <div class="col-12">
-                        @if (session()->has('success'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session()->get('success') }}
-                            </div>
-                        @endif
-                        @if (session()->has('error'))
-                            <div class="alert alert-danger" role="alert">
-                                {{ session()->get('error') }}
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-body">
-                <!-- Project Information -->
-                <div>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showTitle">Title</label>
-                                <p id="showTitle" class="form-control-static">{{ $title }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showShortDescription">Short Description</label>
-                                <p id="showShortDescription" class="form-control-static">{{ $short_description }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showDetails">Details</label>
-                                <p id="showDetails" class="form-control-static">{{ $details }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showAuthor">Author</label>
-                                <p id="showAuthor" class="form-control-static">{{ $author }}</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showPostDate">Post Date</label>
-                                <p id="showPostDate" class="form-control-static">{{ $post_date }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showLocation">Location</label>
-                                <p id="showLocation" class="form-control-static">{{ $location }}</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showLocationMap">Location Map:</label>
-                                <p id="showLocationMap" class="form-control-static">{{ $location_map }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showStatus">Status:</label>
-                                <p id="showStatus" class="form-control-static">{{ $project->status->name ?? ""  }}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showCategory">Category:</label>
-                                <p id="showCategory" class="form-control-static">{{ $categories->find($category_id)->name ?? "" }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Current Image Display -->
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showCurrentImage">Current Image</label>
-                                @if (isset($project) && $project->getFirstMedia('project_title_images'))
-                                    <img src="{{ $project->getFirstMedia('project_title_images')->getUrl() }}"
-                                        style="width:100%; height: 150px"
-                                        title="{{ $project->getFirstMedia('project_title_images')->name }}">
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Additional Project Images -->
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showProjectImages">Additional Project Images</label>
-                                @if (isset($project) && $project->getMedia('project_images'))
-                                    @foreach ($project->getMedia('project_images') as $image)
-                                        <img src="{{ $image->getUrl() }}" style="width:100%; height: 150px"
-                                            title="{{ $image->name }}">
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Additional Project Files -->
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label class="text-bold" for="showProjectFiles">Additional Project Files</label>
-                                @if (isset($project) && $project->getMedia('project_files'))
-                                    @foreach ($project->getMedia('project_files') as $file)
-                                    @if ($file->mime_type === 'application/pdf' || $file->getExtensionAttribute() === 'pdf')
-                                    <a href="{{ $file->getUrl() }}" target="_blank">
-                                        <iframe src="{{ $file->getUrl() }}" height="100px" frameborder="0">
-                                        </iframe>
-                                        <span class="text-sm">open</span>
-                                    </a>
-                                @else
-                                    @if ($file != null)
-                                        <img src="{{ $file->getUrl() }}" style="width:100%; height: 150px "
-                                            title="{{ $file->name }}">
-                                    @endif
-                                @endif
-                                        <a href="{{ $file->getUrl() }}" target="_blank">{{ $file->name }}</a><br>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button wire:click.prevent="closeShowModal" class="btn btn-secondary">Close</button>
-            </div>
+<div>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h4 mb-1 text-dark">Project Details</h1>
+            <p class="text-muted mb-0">Review and update this translation project and its media assets.</p>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12 p-2">
+            @if ($errors->any())
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0 pl-3">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @if (session()->has('success'))
+                <div class="alert alert-success" role="alert">{{ session()->get('success') }}</div>
+            @endif
+            @if (session()->has('error'))
+                <div class="alert alert-danger" role="alert">{{ session()->get('error') }}</div>
+            @endif
+        </div>
+
+        <div class="col-md-4 mb-3">
+            @if ($project->getFirstMedia('project_title_images'))
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Title Image</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="{{ $project->getFirstMedia('project_title_images')->getUrl() }}"
+                            class="img-fluid rounded"
+                            style="width:100%; max-height:300px; object-fit:cover;"
+                            alt="{{ $project->title }}">
+                    </div>
+                </div>
+            @endif
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Additional Project Images</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @forelse ($project->getMedia('project_images') as $image)
+                            <div class="col-md-6 mb-2">
+                                <img src="{{ $image->getUrl() }}"
+                                     class="img-thumbnail"
+                                     style="width:100%; height:120px; object-fit:cover;"
+                                     alt="{{ $image->name }}">
+                            </div>
+                        @empty
+                            <div class="col-12 text-muted">No additional images.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Additional Project Files</h5>
+                </div>
+                <div class="card-body">
+                    @forelse ($project->getMedia('project_files') as $file)
+                        <div class="mb-2">
+                            <a href="{{ $file->getUrl() }}" target="_blank">{{ $file->name }}</a>
+                        </div>
+                    @empty
+                        <div class="text-muted">No additional files.</div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 mb-3">
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ $project->title }}</h5>
+                    <span class="badge badge-light">{{ $project->status->name ?? '-' }}</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Author:</strong> {{ $project->author }}</p>
+                    <p><strong>Post Date:</strong> {{ $project->post_date }}</p>
+                    <p><strong>Category:</strong> {{ optional($categories->firstWhere('id', $project->category_id))->name ?? '-' }}</p>
+                    <p><strong>Location:</strong> {{ $project->location }}</p>
+                    <p><strong>Location Map:</strong> {{ $project->location_map }}</p>
+                    <p><strong>Display Order:</strong> {{ $project->display_order ?? 0 }}</p>
+                    <hr>
+                    <p class="mb-1"><strong>Short Description</strong></p>
+                    <p>{{ $project->short_description }}</p>
+                    <p class="mb-1"><strong>Details</strong></p>
+                    <div>{!! $project->details !!}</div>
+                </div>
+                <div class="card-footer d-flex flex-wrap gap-2">
+                    <a href="{{ route('admin.page.item.projects') }}" class="btn btn-secondary">Back to Projects List</a>
+                    <button wire:click="edit({{ $project->id }})" class="btn btn-primary">Edit</button>
+                    <button onclick="deleteProjectItem({{ $project->id }})" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+
+            @if ($updateProjectsItem)
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Edit Project Item</h5>
+                        <button wire:click="cancel" type="button" class="btn btn-sm btn-outline-secondary">Close Editor</button>
+                    </div>
+                    <div class="card-body">
+                        <form wire:submit.prevent="update" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold" for="projectTitle">Title</label>
+                                    <input id="projectTitle" type="text" class="form-control" wire:model.defer="title" placeholder="Enter title">
+                                    @error('title') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold" for="projectAuthor">Author</label>
+                                    <input id="projectAuthor" type="text" class="form-control" wire:model.defer="author" placeholder="Enter author">
+                                    @error('author') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="projectShortDescription">Short Description</label>
+                                    <textarea id="projectShortDescription" rows="3" class="form-control" wire:model.defer="short_description" placeholder="Enter short description"></textarea>
+                                    @error('short_description') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="projectDetails">Project Details</label>
+                                    <textarea id="projectDetails" rows="6" class="form-control" wire:model.defer="details" placeholder="Enter project details"></textarea>
+                                    @error('details') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="font-weight-bold" for="projectPostDate">Post Date</label>
+                                    <input id="projectPostDate" type="date" class="form-control" wire:model.defer="post_date">
+                                    @error('post_date') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="font-weight-bold" for="projectStatus">Status</label>
+                                    <select id="projectStatus" class="form-control" wire:model.defer="status_id">
+                                        <option value="">-- Choose --</option>
+                                        @foreach ($statuses as $status)
+                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('status_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="font-weight-bold" for="projectCategory">Category</label>
+                                    <select id="projectCategory" class="form-control" wire:model.defer="category_id">
+                                        <option value="">-- Choose --</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold" for="projectLocation">Location</label>
+                                    <input id="projectLocation" type="text" class="form-control" wire:model.defer="location" placeholder="Enter location">
+                                    @error('location') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold" for="projectLocationMap">Location Map</label>
+                                    <input id="projectLocationMap" type="text" class="form-control" wire:model.defer="location_map" placeholder="Enter map URL or text">
+                                    @error('location_map') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="font-weight-bold" for="projectOrder">Display Order</label>
+                                    <input id="projectOrder" type="number" min="0" class="form-control" wire:model.defer="display_order">
+                                    @error('display_order') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-8 mb-3">
+                                    <label class="font-weight-bold" for="projectTitleImage">Replace Title Image (optional)</label>
+                                    <input id="projectTitleImage" type="file" class="form-control" wire:model="title_image">
+                                    @error('title_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold" for="projectImages">Add More Project Images</label>
+                                    <input id="projectImages" type="file" class="form-control" wire:model="project_image" multiple>
+                                    @error('project_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="font-weight-bold" for="projectFiles">Add More Project Files</label>
+                                    <input id="projectFiles" type="file" class="form-control" wire:model="project_file" multiple>
+                                    @error('project_file') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <p class="font-weight-bold mb-2">Remove Existing Project Images</p>
+                                    <div class="row">
+                                        @forelse ($project->getMedia('project_images') as $item)
+                                            <div class="col-md-4 mb-3">
+                                                <img src="{{ $item->getUrl() }}" class="img-fluid rounded mb-2" style="height: 120px; width: 100%; object-fit: cover;" alt="{{ $item->name }}">
+                                                <button wire:click.prevent="removeImage({{ $item->id }})" type="button" class="btn btn-sm btn-outline-danger">Remove</button>
+                                            </div>
+                                        @empty
+                                            <div class="col-12 text-muted">No images to remove.</div>
+                                        @endforelse
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <p class="font-weight-bold mb-2">Remove Existing Project Files</p>
+                                    @forelse ($project->getMedia('project_files') as $item)
+                                        <div class="d-flex align-items-center justify-content-between border rounded p-2 mb-2">
+                                            <a href="{{ $item->getUrl() }}" target="_blank">{{ $item->name }}</a>
+                                            <button wire:click.prevent="removeFile({{ $item->id }})" type="button" class="btn btn-sm btn-outline-danger">Remove</button>
+                                        </div>
+                                    @empty
+                                        <div class="text-muted">No files to remove.</div>
+                                    @endforelse
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button wire:click.prevent="cancel" type="button" class="btn btn-outline-danger">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <script>
+        function deleteProjectItem(id) {
+            if (confirm("Are you sure you want to delete this project?")) {
+                window.livewire.emit('deleteProjects', id);
+            }
+        }
+    </script>
 </div>

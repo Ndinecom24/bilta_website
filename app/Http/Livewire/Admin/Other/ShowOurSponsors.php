@@ -14,7 +14,7 @@ class ShowOurSponsors extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $sponsor_id, $website_url, $description, $status_id, $name , $oursponsor ;
+    public $sponsor_id, $website_url, $description, $status_id, $display_order, $name , $oursponsor ;
 
     public $sponsor_image , $sponsor_image_update  ;
     public $updateSponsor = false;
@@ -32,6 +32,7 @@ class ShowOurSponsors extends Component
         'website_url' => 'required|string|max:255',
         'description' => 'required|string',
         'name' => 'required|string', 
+        'display_order' => 'nullable|integer|min:0',
         'sponsor_image' => 'image|max:3072', // 1MB Max
         'sponsor_image_update' => 'nullable|max:3072', // 1MB Max
         ];
@@ -41,7 +42,10 @@ class ShowOurSponsors extends Component
     public function render()
     {
         $statuses = Status::select('id', 'name')->get();
-        $oursponsors = Sponsor::select('*')->paginate(20);
+        $oursponsors = Sponsor::select('*')
+            ->orderBy('display_order')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
         return view('livewire.admin.sponsor.index', compact('oursponsors', 'statuses'));
     }
 
@@ -51,9 +55,8 @@ class ShowOurSponsors extends Component
         $this->website_url = '';
         $this->description = '';
         $this->status_id = '';
+        $this->display_order = 0;
         $this->name = '';
-        $this->recipient = '';
-        $this->spam = '';
     }
 
     public function saveOurSponsor()
@@ -72,6 +75,7 @@ class ShowOurSponsors extends Component
                     'name' => $this->name,
                     'website_url' => $this->website_url,
                     'description' => $this->description,
+                    'display_order' => $this->display_order ?? 0,
                     'status_id' => 1,
                     'created_by' => auth()->user()->id,
                 ]
@@ -101,6 +105,7 @@ class ShowOurSponsors extends Component
         $this->website_url = $sponsor->website_url;
         $this->description = $sponsor->description;
         $this->status_id = $sponsor->status_id;
+        $this->display_order = $sponsor->display_order ?? 0;
         $this->name = $sponsor->name;
         $this->sponsor_id = $sponsor->id;
         $this->updateSponsor = true;
@@ -122,6 +127,7 @@ class ShowOurSponsors extends Component
                 'name' => $this->name,
                 'website_url' => $this->website_url,
                 'description' => $this->description,
+                'display_order' => $this->display_order ?? 0,
                 'status_id' => $this->status_id,
                 'created_by' => auth()->user()->id ,
             ])->save();

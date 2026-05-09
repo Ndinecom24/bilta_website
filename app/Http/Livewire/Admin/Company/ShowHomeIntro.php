@@ -10,25 +10,33 @@ use Livewire\WithPagination;
 
 class ShowHomeIntro extends Component
 {
-
     use WithPagination;
     use WithFileUploads;
 
     public $our_home_intro_id, $long_description, $name, $short_description, $home_intro;
     public $intro_image;
+    public $slider_images = [];
     public $updateHomeIntro = false;
 
     protected $listeners = [
         'deleteHomeIntro' => 'destroy'
     ];
+
     // Validation Rules
     protected $rules = [
         'name' => 'required',
         'long_description' => 'required',
         'short_description' => 'required',
-        'intro_image' => 'image|max:3072', // 1MB Max
+        'intro_image' => 'nullable|image|max:3072',
+        'slider_images.*' => 'image|max:4096',
 
     ];
+
+    private function clearHomeCaches(): void
+    {
+        cache()->forget('home_intro');
+        cache()->forget('home_mission_slider_images');
+    }
 
     public function render()
     {
@@ -38,39 +46,42 @@ class ShowHomeIntro extends Component
 
     public function store()
     {
-        // Validate Form Request
-        $this->validate();
+        $this->validate([
+            'name' => 'required',
+            'long_description' => 'required',
+            'short_description' => 'required',
+            'intro_image' => 'required|image|max:3072',
+        ]);
+
         try {
+            $home_intro = HomeIntro::first();
 
-            // Create HomeIntro
-            $home_intro = HomeIntro::updateOrCreate(
-                [
+            if (!$home_intro) {
+                $home_intro = HomeIntro::create([
                     'name' => $this->name,
                     'long_description' => $this->long_description,
                     'short_description' => $this->short_description,
-                ],
-                [
+                    'created_by' => auth()->user()->id,
+                ]);
+            } else {
+                $home_intro->fill([
                     'name' => $this->name,
                     'long_description' => $this->long_description,
                     'short_description' => $this->short_description,
-                    'created_by' => auth()->user()->id
-                ]
+                    'created_by' => auth()->user()->id,
+                ])->save();
+            }
 
-            );
+            if ($this->intro_image) {
+                $home_intro->clearMediaCollection('home_intro_images');
+                $home_intro->addMedia($this->intro_image)->toMediaCollection('home_intro_images');
+            }
 
-            $home_intro->addMedia($this->intro_image)
-                ->toMediaCollection('home_intro_images');
-
-            // Set Flash Message
-            session()->flash('success', 'HomeIntro Created Successfully!!');
-            // Reset Form Fields After Creating HomeIntro
+            $this->clearHomeCaches();
+            session()->flash('success', 'Home Intro saved successfully.');
             $this->resetFields();
-
         } catch (Exception $e) {
-
-            // Set Flash Message
-            session()->flash('error', 'Something goes wrong while creating about us!!' . $e->getMessage());
-            // Reset Form Fields After Creating HomeIntro
+            session()->flash('error', 'Something went wrong while saving Home Intro.');
             $this->resetFields();
         }
     }
@@ -80,7 +91,8 @@ class ShowHomeIntro extends Component
         $this->name = '';
         $this->long_description = '';
         $this->short_description = '';
-        $this->intro_image = '';
+        $this->intro_image = null;
+        $this->slider_images = [];
     }
 
     public function edit($id)
@@ -96,9 +108,7 @@ class ShowHomeIntro extends Component
 
     public function update()
     {
-        // Validate request
         try {
-            // Update our_home_intro
             HomeIntro::find($this->our_home_intro_id)
                 ->fill(
                     [
@@ -111,24 +121,70 @@ class ShowHomeIntro extends Component
 
             $home_intro = HomeIntro::find($this->our_home_intro_id);
 
-            if (isset($this->intro_image)) {
-                try {
-                    $home_intro->clearMediaCollection('home_intro_images');
-                    $home_intro->addMedia($this->intro_image)
-                        ->toMediaCollection('home_intro_images');
-                    $this->cancel();
-                } catch (Exception $e) {
-                    session()->flash('error', 'Something goes wrong while updating Home Intro!!');
-                }
-
+            if ($this->intro_image) {
+                $home_intro->clearMediaCollection('home_intro_images');
+                $home_intro->addMedia($this->intro_image)
+                    ->toMediaCollection('home_intro_images');
             }
 
-
+            $this->clearHomeCaches();
             session()->flash('success', 'Home Intro Updated Successfully!!');
             $this->cancel();
         } catch (Exception $e) {
             session()->flash('error', 'Something goes wrong while updating Home Intro!!');
             $this->cancel();
+        }
+    }
+
+    public function uploadMissionSliderImages()
+    {
+        $this->validate([
+            'slider_images' => 'required|array|min:1',
+            'slider_images.*' => 'image|max:4096',
+        ]);
+
+        try {
+            $homeIntro = HomeIntro::first();
+
+            if (!$homeIntro) {
+                session()->flash('error', 'Please create Home Intro first before uploading slider images.');
+                return;
+            }
+
+            foreach ($this->slider_images as $image) {
+                $homeIntro->addMedia($image)->toMediaCollection('mission_slider_images');
+            }
+
+            $this->slider_images = [];
+            $this->clearHomeCaches();
+            session()->flash('success', 'Mission slider images uploaded successfully.');
+        } catch (Exception $e) {
+            session()->flash('error', 'Failed to upload mission slider images.');
+        }
+    }
+
+    public function removeMissionSliderImage($mediaId)
+    {
+        try {
+            $homeIntro = HomeIntro::first();
+
+            if (!$homeIntro) {
+                session()->flash('error', 'Home Intro record not found.');
+                return;
+            }
+
+            $media = $homeIntro->getMedia('mission_slider_images')->firstWhere('id', (int) $mediaId);
+
+            if ($media) {
+                $media->delete();
+                $this->clearHomeCaches();
+                session()->flash('success', 'Mission slider image removed successfully.');
+                return;
+            }
+
+            session()->flash('error', 'Slider image not found.');
+        } catch (Exception $e) {
+            session()->flash('error', 'Failed to remove slider image.');
         }
     }
 
@@ -142,10 +198,11 @@ class ShowHomeIntro extends Component
     {
         try {
             HomeIntro::find($id)->delete();
+            $this->clearHomeCaches();
             session()->flash('success', "Home Intro Deleted Successfully!!");
         } catch (Exception $e) {
             session()->flash('error', "Something goes wrong while deleting Home Intro!!");
         }
-    }
 
+    }
 }

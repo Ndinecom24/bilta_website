@@ -1,73 +1,138 @@
-<section id="projects" class="projects section-bg py-5">
+<div class="site-shell py-5">
     <div class="container">
-        <div class="section-title text-center mb-5">
-            <h2 data-aos="fade-up">Our Projects</h2>
-            <p data-aos="fade-up">{{ $title ?? 'Browse our latest work and initiatives.' }}</p>
-        </div>
+        <section class="page-hero">
+            <h2 class="mb-2">Translation Projects</h2>
+            <p class="lead mb-0">{{ $title ?? 'Browse active and completed work across language communities.' }}</p>
+        </section>
 
-        <div class="row">
-            <!-- Sidebar: Categories -->
-            <aside class="col-lg-3 mb-4" data-aos="fade-up">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Filter by Category</h5>
-                        <ul class="list-group list-group-flush">
-                            @foreach ($categories as $item)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('projects', $item->myCategory->id ?? '0') }}" class="text-decoration-none">
-                                        {{ $item->myCategory->name ?? '-' }}
-                                    </a>
-                                    <span class="badge bg-primary rounded-pill">{{ $item->total ?? '-' }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
+        <div class="row g-4">
+            <aside class="col-lg-3">
+                <div class="modern-sidebar">
+
+                    <div class="sidebar-header">
+                        <div class="sidebar-icon">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+
+                        <div>
+                            <h5 class="sidebar-title mb-1">Project Categories</h5>
+                            <p class="sidebar-subtitle mb-0">
+                                Browse projects by category
+                            </p>
+                        </div>
                     </div>
+
+                    <div class="category-list">
+                        @foreach ($categories as $item)
+                            @php
+                                $categoryId = $item->myCategory->id ?? null;
+                                $categoryName = $item->myCategory->name ?? null;
+                            @endphp
+
+                            @if ($categoryId && $categoryName)
+                                <a href="{{ route('projects', $categoryId) }}" class="category-item">
+                                    <div class="category-content">
+                                        <div class="category-dot"></div>
+
+                                        <span class="category-name">
+                                            {{ $categoryName }}
+                                        </span>
+                                    </div>
+
+                                    <span class="category-count">
+                                        {{ $item->total ?? '0' }}
+                                    </span>
+                                </a>
+                            @endif
+                        @endforeach
+                    </div>
+
                 </div>
             </aside>
 
-            <!-- Main Content: Projects -->
             <div class="col-lg-9">
-                <div class="row g-4">
-                    @forelse ($projects as $item)
-                        <div class="col-md-6" data-aos="fade-up">
-                            <div class="card h-100 shadow-sm border-0">
-                                @if ($item->getFirstMedia('project_title_images'))
-                                    <img 
-                                        src="{{ $item->getFirstMedia('project_title_images')->getUrl() }}"
-                                        alt="{{ $item->getFirstMedia('project_title_images')->name }}"
-                                        class="card-img-top"
-                                        style="height: 220px; object-fit: cover;"
-                                        loading="lazy"
-                                    >
-                                @endif
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{{ $item->title ?? 'Untitled' }}</h5>
-                                    <div class="mb-2 text-muted small">
-                                        <i class="bi bi-calendar3"></i> {{ $item->post_date ?? '-' }} &nbsp;
-                                        <i class="bi bi-person-circle"></i> {{ $item->author ?? '-' }}
+                <section class="news-section">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+                        <div>
+                            <h4 class="mb-1">Featured Projects</h4>
+                            <p class="text-muted mb-0 small">Active and completed translation work across communities.</p>
+                        </div>
+                        <span class="site-pill mt-2 mt-sm-0">{{ $projects->total() ?? count($projects) }} Items</span>
+                    </div>
+
+                    <div class="row g-4">
+                        @forelse ($projects as $item)
+                            @php
+                                $image = $item->getFirstMedia('project_title_images')
+                                    ? $item->getFirstMedia('project_title_images')->getUrl()
+                                    : asset('assets/img/placeholder.png');
+
+                                $postedDate = !empty($item->post_date)
+                                    ? \Illuminate\Support\Carbon::parse($item->post_date)->format('d M Y')
+                                    : '-';
+                            @endphp
+
+                            <div class="col-md-6 col-xl-4">
+                                <article class="news-card h-100">
+                                    <div class="news-card-image">
+                                        <img src="{{ $image }}"
+                                            alt="{{ $item->title ?? 'Project image' }}"
+                                            loading="lazy">
+
+                                        <div class="news-overlay"></div>
+
+                                        <span class="news-badge">
+                                            Translation Project
+                                        </span>
                                     </div>
-                                    <p class="card-text small">{{ $item->short_description ?? '-' }}</p>
-                                    <p class="card-text text-truncate small">{{ Str::limit($item->details, 150, '...') }}</p>
-                                    <div class="mt-auto">
-                                        <a href="{{ route('projects.details', $item) }}" class="btn btn-sm btn-outline-primary">Read More</a>
+
+                                    <div class="news-card-body d-flex flex-column">
+                                        <div class="news-meta">
+                                            <span>
+                                                <i class="fas fa-calendar-alt"></i>
+                                                {{ $postedDate }}
+                                            </span>
+
+                                            <span>
+                                                <i class="fas fa-user"></i>
+                                                {{ $item->author ?? 'Admin' }}
+                                            </span>
+                                        </div>
+
+                                        <h4 class="news-title">
+                                            {{ $item->title ?? 'Untitled' }}
+                                        </h4>
+
+                                        <p class="news-description">
+                                            {{ Str::limit($item->short_description, 140, '...') ?? '-' }}
+                                        </p>
+
+                                        <div class="mt-auto">
+                                            <a href="{{ route('projects.details', $item) }}" class="news-btn">
+                                                View Project
+                                                <i class="fas fa-arrow-right ms-2"></i>
+                                            </a>
+                                        </div>
                                     </div>
+                                </article>
+                            </div>
+                        @empty
+                            <div class="col-12">
+                                <div class="news-empty-state">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+
+                                    <h4>No Projects Available</h4>
+                                    <p>There are currently no projects to display.</p>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="col-12">
-                            <div class="alert alert-info text-center" role="alert">
-                                No projects available at the moment.
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
+                        @endforelse
+                    </div>
 
-                {{-- Pagination (if needed) --}}
-                <div class="mt-4">
-                    {{ $projects->links() }}
-                </div>
+                    <div class="mt-4">{{ $projects->links() }}</div>
+                </section>
             </div>
         </div>
     </div>
-</section>
+</div>

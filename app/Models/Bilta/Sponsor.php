@@ -12,6 +12,6 @@ class Sponsor extends Model implements HasMedia
     use InteractsWithMedia;
     use HasFactory;
 
-    protected $fillable = ['name', 'website_url', 'created_by', 'status_id', 'description'];
+    protected $fillable = ['name', 'website_url', 'created_by', 'status_id', 'description', 'display_order'];
 
 }

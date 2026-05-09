@@ -2,26 +2,30 @@
 
 namespace App\Http\Livewire\System;
 
+use App\Models\User;
 use App\Models\System\Permission;
 use App\Models\System\Role;
-use http\Client\Curl\User;
 use Livewire\Component;
 
 class RolesShow extends Component
 {
 
-    public $role ;
+    public $role;
     public $all_permissions = [];
-    public $selectedPermissions = [] ;
+    public $all_users = [];
+    public $selectedPermissions = [];
+    public $selectedUsers = [];
 
     protected $listeners = [
-        'detachPermission'=>'detachPermission',
-        'detachUser'=>'detachUser',
+        'detachPermission' => 'detachPermission',
+        'detachUser' => 'detachUser',
     ];
 
-    public function mount(Role $role){
+    public function mount(Role $role)
+    {
         $role->load('permissions', 'users');
-        $this->role = $role ;
+        $this->role = $role;
+        $this->refreshRoleData();
     }
 
     public function render()
@@ -29,30 +33,69 @@ class RolesShow extends Component
         return view('livewire.system.role.show');
     }
 
-    public function roleAttachButton (){
-        $this->all_permissions = Permission::whereNotIn('id', $this->role->permissions->pluck('id')->toArray() )->get();
+    private function refreshRoleData()
+    {
+        $this->role = Role::with('permissions', 'users')->findOrFail($this->role->id);
+
+        $this->all_permissions = Permission::whereNotIn('id', $this->role->permissions->pluck('id')->toArray())
+            ->orderBy('name')
+            ->get();
+
+        $this->all_users = User::whereNotIn('id', $this->role->users->pluck('id')->toArray())
+            ->orderBy('name')
+            ->get();
     }
 
-    public function attachPermission(){
-        $this->role->permissions()->syncWithoutDetaching( $this->selectedPermissions );
-        session()->flash('success', 'Roles Attached Successfully');
-        $this->role = Role::find($this->role->id );
-        $this->roleAttachButton();
+    public function roleAttachButton()
+    {
+        $this->refreshRoleData();
+    }
+
+    public function attachPermission()
+    {
+        if (empty($this->selectedPermissions)) {
+            session()->flash('error', 'Select at least one permission to attach.');
+            return;
+        }
+
+        $this->role->permissions()->syncWithoutDetaching($this->selectedPermissions);
+        session()->flash('success', 'Permissions attached successfully.');
+        $this->selectedPermissions = [];
+        $this->refreshRoleData();
+    }
+
+    public function attachUsers()
+    {
+        if (empty($this->selectedUsers)) {
+            session()->flash('error', 'Select at least one user to attach.');
+            return;
+        }
+
+        $this->role->users()->syncWithoutDetaching($this->selectedUsers);
+        session()->flash('success', 'Users attached successfully.');
+        $this->selectedUsers = [];
+        $this->refreshRoleData();
 
     }
 
-    public function detachPermission($id){
-        $this->role->permissions()->detach( $id );
-        session()->flash('success', 'Roles Detached Successfully');
-        $this->role = Role::find($this->role->id );
-        $this->roleAttachButton();
+    public function detachPermission($id)
+    {
+        $this->role->permissions()->detach($id);
+        session()->flash('success', 'Permission detached successfully.');
+        $this->refreshRoleData();
     }
 
-    public function detachUser($id){
+    public function detachUser($id)
+    {
         $user = User::find($id);
-        $user->roles()->detach( $this->role );
-        session()->flash('success', 'User Detached Successfully');
-        $this->role = Role::find($this->role->id );
+        if ($user) {
+            $this->role->users()->detach($user->id);
+            session()->flash('success', 'User detached successfully.');
+            $this->refreshRoleData();
+            return;
+        }
+
+        session()->flash('error', 'User not found.');
     }
 
 
