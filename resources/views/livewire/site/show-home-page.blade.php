@@ -141,7 +141,7 @@
             </div>
 
             <div class="text-center mt-3">
-                <p class="mb-2 text-muted">Need help choosing the right service for your ministry?</p>
+                <p class="mb-2 text-muted">Need help choosing the right service for y?</p>
                 <a href="{{ route('site.home') }}#contact" class="btn btn-warning rounded-pill px-4">
                     Contact Us
                 </a>

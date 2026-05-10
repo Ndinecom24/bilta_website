@@ -21,7 +21,7 @@
                         </a>
 
                         <p class="footer-description">
-                            {{ \Illuminate\Support\Str::limit(strip_tags($about_us->what_is ?? '--'), 220) }}
+                            {{ \Illuminate\Support\Str::limit(strip_tags($about_us->what_is ?? '--'), 230) }}
                         </p>
 
                         <div class="footer-socials">
