@@ -34,7 +34,7 @@ class SiteContentSeeder extends Seeder
             ['id' => 1],
             [
                 'phone' => '(+26) 0977-539-067',
-                'email' => 'info@bilta.org',
+                'email' => 'infor@bilta.org',
                 'address' => 'Plot 324, Flat No 2, Bauhinia Avenue, Off Great East Road, Chelston, Lusaka, Zambia',
                 'message' => 'BILTA is passionate about translating the Bible and essential literature materials into local languages.',
                 'google_maps' => 'https://www.google.com/maps?q=Chelston,+Lusaka,+Zambia&output=embed',

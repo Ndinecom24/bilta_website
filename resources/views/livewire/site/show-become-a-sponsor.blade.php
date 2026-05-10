@@ -23,7 +23,7 @@
                     <h4 class="site-section-title">Start Partnership</h4>
                     <p class="site-section-subtitle">Contact us and we’ll share sponsorship options.</p>
                     <div class="site-stacked">
-                        <a href="mailto:info@bilta.org" class="btn btn-primary w-100">Email Sponsorship Team</a>
+                        <a href="mailto:infor@bilta.org" class="btn btn-primary w-100">Email Sponsorship Team</a>
                         <a href="{{ route('site.home') }}#contact" class="btn btn-outline-secondary w-100">Use Contact Form</a>
                         <a href="{{ route('site.home') }}" class="btn btn-outline-primary w-100">Back to Home</a>
                     </div>

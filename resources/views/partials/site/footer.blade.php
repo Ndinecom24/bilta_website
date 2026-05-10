@@ -226,7 +226,7 @@
                             <i class="bi bi-envelope-fill"></i>
 
                             <span>
-                                {{ $contact_us->email ?? 'info@bilta.org' }}
+                                {{ $contact_us->email ?? 'infor@bilta.org' }}
                             </span>
 
                         </div>

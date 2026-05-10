@@ -782,8 +782,8 @@
                     <div>
                         <i class="bi bi-envelope me-2"></i>
 
-                        <a href="mailto:{{ $contact_us->email ?? 'info@bilta.org' }}">
-                            {{ $contact_us->email ?? 'info@bilta.org' }}
+                        <a href="mailto:{{ $contact_us->email ?? 'infor@bilta.org' }}">
+                            {{ $contact_us->email ?? 'infor@bilta.org' }}
                         </a>
                     </div>
 

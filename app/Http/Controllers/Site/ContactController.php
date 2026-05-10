@@ -45,7 +45,7 @@ class ContactController extends Controller
         // Prepare additional data
         $validated['status_id'] = 1;
         $validated['created_by'] = 0;
-        $validated['recipient'] = "info@bilta.org";
+        $validated['recipient'] = "infor@bilta.org";
         $hasSpamColumn = Schema::hasColumn('contact_messages', 'spam');
 
         $isSpam = $this->spamFilter->isSpam($validated['email'], $validated['subject'], $validated['message']);
@@ -69,7 +69,7 @@ class ContactController extends Controller
             if (! $isSpam) {
                 // Send the email (use log mailer locally to avoid SMTP blocking during development)
                 $mailer = app()->environment('local') ? 'log' : config('mail.default');
-                Mail::mailer($mailer)->to('info@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
+                Mail::mailer($mailer)->to('infor@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
             }
 
             // Return success response

@@ -48,7 +48,7 @@
 
                             <div class="col-lg-4 col-md-6 mb-3">
                                 <label class="font-weight-bold" for="contactEmail">Email</label>
-                                <input id="contactEmail" type="text" class="form-control" wire:model.defer="email" placeholder="e.g. info@bilta.org">
+                                <input id="contactEmail" type="text" class="form-control" wire:model.defer="email" placeholder="e.g. infor@bilta.org">
                                 @error('email') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 

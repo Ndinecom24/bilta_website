@@ -30,7 +30,7 @@ class NewsletterController extends Controller
         ]);
 
         if ($subscriber->wasRecentlyCreated) {
-            $recipient = ContactUs::query()->value('email') ?: 'info@bilta.org';
+            $recipient = ContactUs::query()->value('email') ?: 'infor@bilta.org';
 
             try {
                 $mailer = app()->environment('local') ? 'log' : config('mail.default');

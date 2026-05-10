@@ -637,7 +637,7 @@
                             <i class="bi bi-envelope"></i>
                             <div>
                                 <h6>Email</h6>
-                                <p>{{ $contact_us->email ?? 'info@bilta.org' }}</p>
+                                <p>{{ $contact_us->email ?? 'infor@bilta.org' }}</p>
                             </div>
                         </div>
 

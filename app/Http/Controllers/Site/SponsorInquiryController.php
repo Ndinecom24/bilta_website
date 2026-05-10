@@ -31,7 +31,7 @@ class SponsorInquiryController extends Controller
             'message' => trim($validated['sponsor_message']),
         ]);
 
-        $recipient = ContactUs::query()->value('email') ?: 'info@bilta.org';
+        $recipient = ContactUs::query()->value('email') ?: 'infor@bilta.org';
 
         try {
             $mailer = app()->environment('local') ? 'log' : config('mail.default');

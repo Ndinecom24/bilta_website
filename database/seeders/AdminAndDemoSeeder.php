@@ -121,7 +121,7 @@ class AdminAndDemoSeeder extends Seeder
             ['id' => 1],
             [
                 'phone' => '(+260) 977 539 067',
-                'email' => 'info@bilta.org',
+                'email' => 'infor@bilta.org',
                 'address' => 'Plot 324, Flat 2, Bauhinia Avenue, Chelston, Lusaka, Zambia',
                 'message' => 'We are passionate about translating Scripture and literature into local languages.',
                 'google_maps' => 'https://www.google.com/maps?q=Chelston,+Lusaka,+Zambia&output=embed',

@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-md-6">
                         @php
-                            $sponsorEmail = $contact_us->email ?? 'info@bilta.org';
+                            $sponsorEmail = $contact_us->email ?? 'infor@bilta.org';
                             $sponsorPhone = $contact_us->phone ?? '000-000-000';
                         @endphp
                         <div class="summary-card">
