@@ -1,2 +1,6 @@
 User-agent: *
-Disallow:
+Disallow: /bilta/zadmin/
+Disallow: /system/
+Disallow: /clear-cache
+
+Sitemap: https://bilta.org/sitemap.xml

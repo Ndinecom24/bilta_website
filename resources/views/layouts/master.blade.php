@@ -20,16 +20,37 @@
     ========================================================= --}}
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>
-        BiLTA | Bible & Literature Translation Association
+        @hasSection('title')
+            @yield('title') | BiLTA
+        @else
+            BiLTA | Bible & Literature Translation Association
+        @endif
     </title>
 
     <meta name="description"
-        content="BiLTA is dedicated to Bible translation, literacy development, scripture engagement, and making God's Word accessible in local languages.">
+        content="@hasSection('meta_description')@yield('meta_description')@else BiLTA is dedicated to Bible translation, literacy development, scripture engagement, and making God's Word accessible in local languages.@endif">
 
     <meta name="keywords"
         content="Bible Translation, Scripture, Audio Bible, Literacy, Christian Ministry, Zambia, BiLTA">
+
+    {{-- Open Graph / Social Media Meta Tags --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@hasSection('title')@yield('title') | BiLTA @else BiLTA | Bible & Literature Translation Association @endif">
+    <meta property="og:description" content="@hasSection('meta_description')@yield('meta_description')@else BiLTA is dedicated to Bible translation, literacy development, scripture engagement, and making God's Word accessible in local languages.@endif">
+    <meta property="og:image" content="{{ asset('assets/img/favicon.png') }}">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@hasSection('title')@yield('title') | BiLTA @else BiLTA | Bible & Literature Translation Association @endif">
+    <meta name="twitter:description" content="@hasSection('meta_description')@yield('meta_description')@else BiLTA is dedicated to Bible translation, literacy development, scripture engagement, and making God's Word accessible in local languages.@endif">
+    <meta name="twitter:image" content="{{ asset('assets/img/favicon.png') }}">
+
+    {{-- Canonical URL --}}
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <meta name="google-site-verification"
         content="zEabVLZ5N_dEO0PcCoEhDelHwpDzMbLgc14jLRA1IRE" />

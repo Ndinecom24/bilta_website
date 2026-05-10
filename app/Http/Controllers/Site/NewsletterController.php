@@ -14,6 +14,11 @@ class NewsletterController extends Controller
 {
     public function subscribe(Request $request)
     {
+        // Honeypot check
+        if ($request->filled('website')) {
+            return back()->with('newsletter_success', 'Thank you for subscribing to our newsletter.');
+        }
+
         $validated = $request->validate([
             'email' => 'required|email|max:255',
         ]);

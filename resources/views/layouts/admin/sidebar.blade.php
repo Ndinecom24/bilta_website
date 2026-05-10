@@ -437,6 +437,7 @@
     </li>
 
     <!-- COMPANY -->
+    @canany(['manage-home-intro', 'manage-about-us', 'manage-values', 'manage-services', 'manage-contact-us', 'manage-chairman-message', 'manage-sponsors', 'view-emails', 'view-front-requests', 'manage-team'])
     <div class="sidebar-heading">
         Company
     </div>
@@ -461,53 +462,75 @@
 
             <div class="collapse-inner">
 
+                @can('manage-home-intro')
                 <a class="collapse-item" href="{{ route('admin.page.intro') }}">
                     Home Intro
                 </a>
+                @endcan
 
+                @can('manage-about-us')
                 <a class="collapse-item" href="{{ route('admin.company.about-us') }}">
                     About Us
                 </a>
+                @endcan
 
+                @can('manage-values')
                 <a class="collapse-item" href="{{ route('admin.company.values') }}">
                     Our Values
                 </a>
+                @endcan
 
+                @can('manage-services')
                 <a class="collapse-item" href="{{ route('admin.company.services') }}">
                     Services
                 </a>
+                @endcan
 
+                @can('manage-contact-us')
                 <a class="collapse-item" href="{{ route('admin.company.contact-us') }}">
                     Contact Us
                 </a>
+                @endcan
 
+                @can('manage-chairman-message')
                 <a class="collapse-item" href="{{ route('admin.page.chairmans.messages') }}">
                     Chairman Message
                 </a>
+                @endcan
 
+                @can('manage-sponsors')
                 <a class="collapse-item" href="{{ route('admin.page.our.sponsors') }}">
                     Sponsors
                 </a>
+                @endcan
 
+                @can('view-emails')
                 <a class="collapse-item" href="{{ route('admin.page.contact.emails') }}">
                     Email Messages
                 </a>
+                @endcan
 
+                @can('view-front-requests')
                 <a class="collapse-item" href="{{ route('admin.page.front.requests') }}">
                     Front Requests
                 </a>
+                @endcan
 
+                @can('manage-team')
                 <a class="collapse-item" href="{{ route('admin.page.our-team') }}">
                     Our Team
                 </a>
+                @endcan
 
             </div>
 
         </div>
 
     </li>
+    @endcanany
 
     <!-- CONTENT -->
+    @canany(['manage-faqs', 'manage-prayer-points', 'manage-news', 'manage-testimonies', 'manage-testimonials', 'manage-gallery', 'manage-videos', 'manage-audio', 'manage-projects', 'manage-categories', 'view-analytics'])
     <div class="sidebar-heading">
         Content
     </div>
@@ -532,61 +555,160 @@
 
             <div class="collapse-inner">
 
+                @can('manage-faqs')
                 <a class="collapse-item" href="{{ route('admin.company.faqs') }}">
                     FAQs
                 </a>
+                @endcan
 
+                @can('manage-prayer-points')
                 <a class="collapse-item" href="{{ route('admin.page.weekly-prayer-points') }}">
                     Prayer Points
                 </a>
+                @endcan
 
+                @can('manage-news')
                 <a class="collapse-item" href="{{ route('admin.page.item.news') }}">
                     News
                 </a>
+                @endcan
 
+                @can('manage-testimonies')
                 <a class="collapse-item" href="{{ route('admin.page.testimonies') }}">
                     Testimonies
                 </a>
+                @endcan
 
+                @can('manage-testimonials')
                 <a class="collapse-item" href="{{ route('admin.page.testimonial') }}">
                     Short Testimonials
                 </a>
+                @endcan
 
+                @can('manage-gallery')
                 <a class="collapse-item" href="{{ route('admin.page.item.gallery') }}">
                     Gallery
                 </a>
+                @endcan
 
+                @can('manage-videos')
                 <a class="collapse-item" href="{{ route('admin.page.item.videos') }}">
                     Videos
                 </a>
+                @endcan
 
+                @can('manage-audio')
                 <a class="collapse-item" href="{{ route('admin.page.item.audio') }}">
                     Audio
                 </a>
+                @endcan
 
+                @can('manage-projects')
                 <a class="collapse-item" href="{{ route('admin.page.item.projects') }}">
                     Projects
                 </a>
+                @endcan
 
+                @can('manage-categories')
                 <a class="collapse-item" href="{{ route('admin.page.item.category') }}">
                     Categories
                 </a>
+                @endcan
 
+                @can('view-analytics')
                 <a class="collapse-item" href="{{ route('admin.page.live.analytics.clicks') }}">
                     Analytics
                 </a>
+                @endcan
 
             </div>
 
         </div>
 
     </li>
+    @endcanany
+
+    <!-- DEPARTMENTS -->
+    @can('manage-departments')
+    <li class="nav-item {{ request()->routeIs('admin.departments') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.departments') }}">
+            <i class="fas fa-fw fa-building"></i>
+            <span>Departments</span>
+        </a>
+    </li>
+    @endcan
+
+    <!-- LEAVE MANAGEMENT -->
+    @canany(['apply-leave', 'manage-leave-types', 'manage-leave-applications', 'manage-leave-balances', 'manage-approval-workflows'])
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
+        Leave Management
+    </div>
+
+    <li class="nav-item {{ request()->routeIs('admin.leave.*') ? 'active' : '' }}">
+
+        <a class="nav-link collapsed"
+            href="#"
+            data-toggle="collapse"
+            data-target="#collapseLeave"
+            aria-expanded="{{ request()->routeIs('admin.leave.*') ? 'true' : 'false' }}"
+            aria-controls="collapseLeave">
+            <i class="fas fa-fw fa-calendar-alt"></i>
+            <span>Leave</span>
+        </a>
+
+        <div id="collapseLeave"
+            class="collapse {{ request()->routeIs('admin.leave.*') ? 'show' : '' }}"
+            aria-labelledby="headingLeave"
+            data-parent="#accordionSidebar">
+
+            <div class="bg-white py-2 collapse-inner rounded">
+
+                @can('apply-leave')
+                <a class="collapse-item" href="{{ route('admin.leave.my-applications') }}">
+                    My Leave
+                </a>
+                @endcan
+
+                @can('manage-leave-applications')
+                <a class="collapse-item" href="{{ route('admin.leave.applications') }}">
+                    All Applications
+                </a>
+                @endcan
+
+                @can('manage-leave-types')
+                <a class="collapse-item" href="{{ route('admin.leave.types') }}">
+                    Leave Types
+                </a>
+                @endcan
+
+                @can('manage-leave-balances')
+                <a class="collapse-item" href="{{ route('admin.leave.balances') }}">
+                    Leave Balances
+                </a>
+                @endcan
+
+                @can('manage-approval-workflows')
+                <a class="collapse-item" href="{{ route('admin.leave.workflows') }}">
+                    Approval Workflows
+                </a>
+                @endcan
+
+            </div>
+
+        </div>
+
+    </li>
+    @endcanany
 
     <!-- SYSTEM -->
+    @canany(['manage-roles', 'manage-permissions', 'manage-statuses', 'manage-users'])
     <div class="sidebar-heading">
         System
     </div>
 
+    @canany(['manage-roles', 'manage-permissions', 'manage-statuses'])
     <li class="nav-item {{ request()->routeIs('system.roles') || request()->routeIs('system.permissions') || request()->routeIs('system.statuses') ? 'active' : '' }}">
 
         <a class="nav-link collapsed"
@@ -607,25 +729,33 @@
 
             <div class="collapse-inner">
 
+                @can('manage-roles')
                 <a class="collapse-item" href="{{ route('system.roles') }}">
                     Roles
                 </a>
+                @endcan
 
+                @can('manage-permissions')
                 <a class="collapse-item" href="{{ route('system.permissions') }}">
                     Permissions
                 </a>
+                @endcan
 
+                @can('manage-statuses')
                 <a class="collapse-item" href="{{ route('system.statuses') }}">
                     Statuses
                 </a>
+                @endcan
 
             </div>
 
         </div>
 
     </li>
+    @endcanany
 
     <!-- USERS -->
+    @can('manage-users')
     <li class="nav-item {{ request()->routeIs('system.users') ? 'active' : '' }}">
 
         <a class="nav-link" href="{{ route('system.users') }}">
@@ -636,6 +766,18 @@
 
         </a>
 
+    </li>
+    @endcan
+    @endcanany
+
+    <!-- TRAINING CENTER -->
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">Help & Training</div>
+    <li class="nav-item {{ request()->routeIs('admin.training') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.training') }}">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Training Center</span>
+        </a>
     </li>
 
     <hr class="sidebar-divider mt-3">

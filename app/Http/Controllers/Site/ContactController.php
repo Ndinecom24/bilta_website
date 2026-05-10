@@ -45,7 +45,7 @@ class ContactController extends Controller
         // Prepare additional data
         $validated['status_id'] = 1;
         $validated['created_by'] = 0;
-        $validated['recipient'] = "infor@bilta.org";
+        $validated['recipient'] = "info@bilta.org";
         $hasSpamColumn = Schema::hasColumn('contact_messages', 'spam');
 
         $isSpam = $this->spamFilter->isSpam($validated['email'], $validated['subject'], $validated['message']);
@@ -69,7 +69,7 @@ class ContactController extends Controller
             if (! $isSpam) {
                 // Send the email (use log mailer locally to avoid SMTP blocking during development)
                 $mailer = app()->environment('local') ? 'log' : config('mail.default');
-                Mail::mailer($mailer)->to('infor@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
+                Mail::mailer($mailer)->to('info@bilta.org')->send(new \App\Mail\ContactMessageMail($contactMessage));
             }
 
             // Return success response
@@ -89,7 +89,7 @@ class ContactController extends Controller
 
             // Return error response with the exception message
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'There was an issue sending your message. Please try again later.' . $e->getMessage()], 500);
+                return response()->json(['error' => 'There was an issue sending your message. Please try again later.'], 500);
             }
 
             return back()->with('contact_error', 'There was an issue sending your message. Please try again later.');
@@ -125,7 +125,8 @@ class ContactController extends Controller
             return response()->json(['message' => 'Thank you for your testimonial! Has been sent to admin.']);
 
         }catch(Exception $exception){
-            return response()->json(['message' => 'Error : '.$exception->getMessage() ]);
+            Log::error('Error saving testimonial: ' . $exception->getMessage());
+            return response()->json(['message' => 'An error occurred. Please try again later.'], 500);
         }
       
     }

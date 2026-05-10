@@ -16,7 +16,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SiteContentSeeder::class,
             AdminAndDemoSeeder::class,
-            SqlDumpSystemContentSeeder::class,
+            RoleSeeder::class,
+            PermissionSeeder::class,
+            RolePermissionSeeder::class,
+            DepartmentSeeder::class,
+            LeaveTypeSeeder::class,
         ]);
     }
 }

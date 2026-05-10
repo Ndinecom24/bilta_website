@@ -21,6 +21,15 @@ class TrackClicks
             return $next($request); // skip admin pages
         }
 
+        // Skip bots and crawlers
+        $userAgent = strtolower($request->userAgent() ?? '');
+        $botPatterns = ['bot', 'crawler', 'spider', 'slurp', 'facebookexternalhit', 'mediapartners', 'googlebot', 'bingbot', 'yandex', 'baidu', 'semrush', 'ahref', 'curl', 'wget', 'python', 'headless'];
+        foreach ($botPatterns as $pattern) {
+            if (str_contains($userAgent, $pattern)) {
+                return $next($request);
+            }
+        }
+
         // Only track GET requests (to avoid logging form posts, etc.)
         if ($request->isMethod('get') && !$request->ajax() && !$request->expectsJson()) {
             try {
@@ -35,7 +44,6 @@ class TrackClicks
                 
                 $browserName = $result->browser() ?? 'Unknown';
                 $platform = $result->platform() ?? 'Unknown';
-                $version = $result->browserVersion() ?? 'Unknown';
                 
                 // Determine device type (basic heuristic)
                 $ua = strtolower($platform);
@@ -49,7 +57,7 @@ class TrackClicks
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->userAgent(),
 
-                    'device_type' => $deviceType, 
+                    'device_type' => $deviceType,
                     'platform' =>$platform,
                     'browser' => $browserName,
 
@@ -65,9 +73,6 @@ class TrackClicks
 
                 ]);
             } catch (\Exception $e) {
-
-                dd(   $e->getMessage() );
-                // Optional: Log or silently fail
                 \Log::warning("Click tracking failed: " . $e->getMessage());
             }
         }

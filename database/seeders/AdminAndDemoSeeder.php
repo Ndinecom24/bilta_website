@@ -21,6 +21,9 @@ class AdminAndDemoSeeder extends Seeder
 
         $adminId = $this->seedAdminUsers($activeStatusId, $now);
 
+        // Assign roles to seeded users (roles must be seeded first or already exist)
+        $this->assignUserRoles();
+
         $this->seedCorePages($adminId, $now);
         $this->seedServicesAndValues($adminId, $now);
         $this->seedFaqs($adminId, $now);
@@ -495,6 +498,31 @@ class AdminAndDemoSeeder extends Seeder
                     'deleted_at' => null,
                 ]
             );
+        }
+    }
+
+    /**
+     * Assign roles to the default admin users.
+     * admin@bilta.org   → admin role
+     * content@bilta.org → content-manager role
+     */
+    private function assignUserRoles(): void
+    {
+        $assignments = [
+            'admin@bilta.org' => 'admin',
+            'content@bilta.org' => 'content-manager',
+        ];
+
+        foreach ($assignments as $email => $roleSlug) {
+            $userId = DB::table('users')->where('email', $email)->value('id');
+            $roleId = DB::table('roles')->where('slug', $roleSlug)->value('id');
+
+            if ($userId && $roleId) {
+                DB::table('users_roles')->updateOrInsert(
+                    ['user_id' => $userId, 'role_id' => $roleId],
+                    ['user_id' => $userId, 'role_id' => $roleId, 'updated_at' => now(), 'created_at' => now()]
+                );
+            }
         }
     }
 }

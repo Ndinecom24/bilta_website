@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Bilta\Department;
 use App\Models\System\Status;
 use App\Permissions\HasPermissionsTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -26,6 +27,20 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'position',
+        'department',
+        'department_id',
+        'nrc',
+        'man_number',
+        'employee_id',
+        'date_of_birth',
+        'gender',
+        'date_joined',
+        'contract_type',
+        'address',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'supervisor_id',
         'logins',
         'last_login',
         'status_id',
@@ -48,9 +63,56 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'date_of_birth' => 'date',
+        'date_joined' => 'date',
     ];
 
-    public function status(){
+    // ──────────────────────────────────────
+    // Relationships
+    // ──────────────────────────────────────
+
+    public function status()
+    {
         return $this->belongsTo(Status::class);
+    }
+
+    public function departmentRelation()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function supervisor()
+    {
+        return $this->belongsTo(User::class, 'supervisor_id');
+    }
+
+    public function subordinates()
+    {
+        return $this->hasMany(User::class, 'supervisor_id');
+    }
+
+    // ──────────────────────────────────────
+    // Accessors
+    // ──────────────────────────────────────
+
+    /**
+     * Return department name from the departments table,
+     * falling back to the legacy text 'department' column.
+     */
+    public function getDepartmentNameAttribute()
+    {
+        return $this->departmentRelation->name ?? $this->department ?? '—';
+    }
+
+    /**
+     * Full name with position for display.
+     */
+    public function getDisplayLabelAttribute()
+    {
+        $label = $this->name;
+        if ($this->position) {
+            $label .= ' (' . $this->position . ')';
+        }
+        return $label;
     }
 }

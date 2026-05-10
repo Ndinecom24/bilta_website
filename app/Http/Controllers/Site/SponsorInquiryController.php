@@ -14,6 +14,11 @@ class SponsorInquiryController extends Controller
 {
     public function store(Request $request)
     {
+        // Honeypot check
+        if ($request->filled('website')) {
+            return back()->with('sponsor_inquiry_success', 'Thank you. Your sponsorship inquiry has been received.');
+        }
+
         $validated = $request->validate([
             'sponsor_name' => 'required|string|max:255',
             'sponsor_email' => 'required|email|max:255',

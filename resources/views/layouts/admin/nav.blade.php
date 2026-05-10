@@ -518,8 +518,8 @@
                 aria-labelledby="userDropdown">
 
                 <a class="dropdown-item"
-                    href="{{ route('system.users.show', auth()->user()->id ?? 0) }}"
-                    onclick="event.preventDefault(); document.getElementById('user-profile-form{{ auth()->user()->id ?? 0 }}').submit();">
+                    href="#"
+                    onclick="event.preventDefault(); document.getElementById('user-profile-form').submit();">
 
                     <i class="fas fa-user text-warning mr-2"></i>
 
@@ -527,7 +527,7 @@
 
                 </a>
 
-                <form id="user-profile-form{{ auth()->user()->id ?? 0 }}"
+                <form id="user-profile-form"
                     action="{{ route('system.users.show', auth()->user()->uuid ?? 0) }}"
                     method="POST"
                     class="d-none">

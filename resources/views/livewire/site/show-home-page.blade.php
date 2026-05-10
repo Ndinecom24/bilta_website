@@ -88,7 +88,7 @@
                 <span class="section-tag">Our Services</span>
 
                 <h2 class="section-title mt-3">
-                    Ministry Services That Empower Communities
+                    Our Services That Empower Communities
                 </h2>
 
                 <p class="section-description mx-auto">
@@ -141,7 +141,7 @@
             </div>
 
             <div class="text-center mt-3">
-                <p class="mb-2 text-muted">Need help choosing the right service for y?</p>
+                <p class="mb-2 text-muted">Need help choosing the right service for you?</p>
                 <a href="{{ route('site.home') }}#contact" class="btn btn-warning rounded-pill px-4">
                     Contact Us
                 </a>
