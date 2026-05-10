@@ -844,6 +844,12 @@
                         </li>
 
                         <li>
+                            <a href="{{ route('services') }}">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="{{ route('projects', '0') }}">
                                 Projects
                             </a>

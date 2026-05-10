@@ -82,14 +82,20 @@
                     <ul class="footer-links">
 
                         <li>
-                            <a href="{{ url('/') }}">
+                            <a href="{{ route('site.home') }}">
                                 Home
                             </a>
                         </li>
 
                         <li>
-                            <a href="#about">
+                            <a href="{{ route('about') }}">
                                 About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('services') }}">
+                                Services
                             </a>
                         </li>
 
@@ -100,14 +106,20 @@
                         </li>
 
                         <li>
-                            <a href="#team">
+                            <a href="{{ route('site.home') }}#team">
                                 Our Team
                             </a>
                         </li>
 
                         <li>
-                            <a href="#contact">
+                            <a href="{{ route('site.home') }}#contact">
                                 Contact
+                            </a>
+                        </li>
+                       
+                        <li>
+                              <a href="{{ route('testimonies') }}">
+                                Testimonies
                             </a>
                         </li>
 
@@ -125,32 +137,37 @@
                     <ul class="footer-links">
 
                         <li>
-                            <a href="#">
+                            <a href="{{ route('projects', '0') }}">
                                 Bible Translation
                             </a>
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="{{ route('projects', '0') }}">
                                 Literacy Programs
                             </a>
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="{{ route('audio.bible') }}">
                                 Audio Bible
                             </a>
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="{{ route('testimonies') }}">
                                 Community Outreach
                             </a>
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="{{ route('weekly-prayer-points') }}">
                                 Scripture Engagement
+                            </a>
+                        </li>
+                         <li>
+                               <a href="{{ route('weekly-prayer-points') }}">
+                                Prayer Points
                             </a>
                         </li>
 
@@ -267,6 +284,11 @@
                         </a>
 
                     </p>
+
+                    <a href="{{ route('login') }}" class="admin-login-link d-inline-block mt-1">
+                        <i class="bi bi-shield-lock me-1"></i>
+                        Admin Login
+                    </a>
 
                 </div>
 
@@ -463,6 +485,17 @@
 }
 
 .developer-text a:hover{
+    color:#ffffff;
+}
+
+.admin-login-link{
+    color:#94a3b8;
+    text-decoration:none;
+    font-size:.82rem;
+    transition:.25s ease;
+}
+
+.admin-login-link:hover{
     color:#ffffff;
 }
 

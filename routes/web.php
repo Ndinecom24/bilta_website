@@ -41,6 +41,7 @@ use App\Http\Livewire\Site\MyTranslationProjectsIndex;
 use App\Http\Livewire\Site\MyTranslationProjectsList;
 use App\Http\Livewire\Site\ShowGallery;
 use App\Http\Livewire\Site\ShowHome;
+use App\Http\Livewire\Site\ShowServices as SiteShowServices;
 use App\Http\Livewire\Site\ShowTranslationProjectDetails;
 use App\Http\Livewire\Site\ShowVideos;
 use App\Http\Livewire\Site\MyFaqs;
@@ -77,6 +78,7 @@ Route::get('/', ShowHome::class)->name('site.home');
 Route::get('/home', ShowHome::class)->name('site.home');
 Route::prefix('bilta/site')->group(function () {
     Route::get('/about', ShowAbout::class)->name('about');
+    Route::get('/services', SiteShowServices::class)->name('services');
     Route::get('/videos', ShowVideos::class)->name('videos');
     Route::get('/Gallery', ShowGallery::class)->name('gallery');
     Route::get('/Faqs', MyFaqs::class)->name('faqs');

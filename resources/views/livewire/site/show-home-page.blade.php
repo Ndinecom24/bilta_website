@@ -78,6 +78,79 @@
         </div>
     </section>
 
+    {{-- ================= OUR SERVICES SECTION ================= --}}
+    <section class="home-services-section py-5">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+
+                <span class="section-tag">Our Services</span>
+
+                <h2 class="section-title mt-3">
+                    Ministry Services That Empower Communities
+                </h2>
+
+                <p class="section-description mx-auto">
+                    We provide practical, faith-centered services that improve scripture access,
+                    strengthen literacy, and support local language ministry impact.
+                </p>
+
+            </div>
+
+            <div class="row g-4">
+
+                @forelse ($services->take(6) as $service)
+
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up">
+
+                        <article class="service-home-card h-100">
+
+                            <div class="service-home-icon">
+                                <i class="bi bi-stars"></i>
+                            </div>
+
+                            <h4 class="service-home-title">
+                                {{ $service->title ?? 'Service' }}
+                            </h4>
+
+                            <p class="service-home-text mb-0">
+                                {{ \Illuminate\Support\Str::limit(strip_tags($service->description ?? ''), 170) }}
+                            </p>
+
+                        </article>
+
+                    </div>
+
+                @empty
+
+                    <div class="col-12">
+                        <div class="summary-card text-center">
+                            <p class="mb-0">No services available yet.</p>
+                        </div>
+                    </div>
+
+                @endforelse
+
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ route('services') }}" class="btn btn-outline-theme">
+                    View All Services
+                </a>
+            </div>
+
+            <div class="text-center mt-3">
+                <p class="mb-2 text-muted">Need help choosing the right service for your ministry?</p>
+                <a href="{{ route('site.home') }}#contact" class="btn btn-warning rounded-pill px-4">
+                    Contact Us
+                </a>
+            </div>
+
+        </div>
+
+    </section>
+
     {{-- ================= MISSION SECTION ================= --}}
     <section class="mission-section py-5">
 
@@ -815,6 +888,49 @@ body{
 .section-description{
     line-height:1.9;
     max-width:750px;
+}
+
+.home-services-section{
+    background:#f8fafc;
+}
+
+.service-home-card{
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:22px;
+    padding:26px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);
+    transition:.3s;
+}
+
+.service-home-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 16px 36px rgba(15,23,42,.1);
+}
+
+.service-home-icon{
+    width:54px;
+    height:54px;
+    border-radius:14px;
+    background:rgba(245,158,11,.12);
+    color:var(--secondary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.35rem;
+    margin-bottom:16px;
+}
+
+.service-home-title{
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--primary);
+    margin-bottom:10px;
+}
+
+.service-home-text{
+    color:var(--text);
+    line-height:1.75;
 }
 
 .mission-section{
