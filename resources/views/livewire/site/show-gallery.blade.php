@@ -103,7 +103,7 @@
                     <div class="gallery-image-box">
 
                         <img loading="lazy"
-                            src="{{ $imageUrl ?? asset('assets/img/placeholder.png') }}"
+                            src="{{ $imageUrl ?? 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80' }}"
                             alt="{{ $name }}">
 
                         <div class="gallery-image-overlay">

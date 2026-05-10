@@ -58,7 +58,7 @@
         @php
             $image = $news->getFirstMedia('news_images')
                 ? $news->getFirstMedia('news_images')->getUrl()
-                : asset('assets/img/placeholder.png');
+                : 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&q=80';
         @endphp
 
         <div class="news-hero-image">

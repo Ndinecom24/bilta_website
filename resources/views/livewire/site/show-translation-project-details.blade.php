@@ -56,7 +56,7 @@
                     @php
                         $heroImage = $project->getFirstMedia('project_title_images')
                             ? $project->getFirstMedia('project_title_images')->getUrl()
-                            : asset('assets/img/placeholder.png');
+                            : 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=900&q=80';
 
                         $postedDate = !empty($project->post_date)
                             ? \Illuminate\Support\Carbon::parse($project->post_date)->format('d M Y')

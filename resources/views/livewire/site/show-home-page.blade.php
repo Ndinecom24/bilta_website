@@ -88,7 +88,7 @@
                 <span class="section-tag">Our Services</span>
 
                 <h2 class="section-title mt-3">
-                    Our Services That Empower Communities
+                    Our Services That Empower You
                 </h2>
 
                 <p class="section-description mx-auto">
@@ -164,7 +164,7 @@
                         @php
                             $missionImages = !empty($missionSliderImages)
                                 ? $missionSliderImages
-                                : [asset('assets/img/project-translation.jpg')];
+                                : ['https://images.unsplash.com/photo-1557683316-973673baf926?w=900&q=80'];
                         @endphp
 
                         <div id="missionMediaCarousel" class="carousel slide mission-carousel" data-bs-ride="carousel" data-bs-interval="4500">
@@ -361,7 +361,7 @@
                     @php
                         $newsImage = $newsItem->getFirstMedia('news_images')
                             ? $newsItem->getFirstMedia('news_images')->getUrl()
-                            : asset('assets/img/placeholder.png');
+                            : 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&q=80';
                     @endphp
 
                     <div class="col-lg-4 col-md-6" data-aos="fade-up">
@@ -755,7 +755,7 @@
                             target="_blank"
                             class="sponsor-card">
 
-                            <img src="{{ $sponsor->getFirstMediaUrl('sponsor_image') }}"
+                            <img src="{{ $sponsor->getFirstMediaUrl('sponsor_image') ?: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&q=80' }}"
                                 class="img-fluid"
                                 alt="{{ $sponsor->name }}">
 
