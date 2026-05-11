@@ -1,3 +1,4 @@
+<div>
 <style>
    .dashboard-hero {
     background: linear-gradient(120deg, #5c3b16 0%, #8b5a2b 45%, #c97a1f 100%);
@@ -92,7 +93,6 @@
     }
 </style>
 
-<div>
     <div class="dashboard-hero">
         <div class="dashboard-hero-title">Dashboard Overview</div>
         <p class="dashboard-hero-subtitle">Monitor content performance, engagement trends, and latest activity at a glance.</p>
@@ -267,7 +267,6 @@
             </div>
         </div>
     </div>
-</div>
 
 @push('custom-scripts')
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -320,3 +319,4 @@
     });
 </script>
 @endpush
+</div>
