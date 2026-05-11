@@ -45,7 +45,7 @@
                         <label>Short Description</label>
                         <div wire:ignore>
                             <input type="hidden" id="trix-project-short-description" name="short_description">
-                            <trix-editor input="trix-project-short-description"></trix-editor>
+                            <trix-editor input="trix-project-short-description" style="min-height: 200px;"></trix-editor>
                         </div>
                         @error('short_description')
                             <span class="text-danger">{{ $message }}</span>
@@ -57,7 +57,7 @@
                         <label>Project Details</label>
                         <div wire:ignore>
                             <input type="hidden" id="trix-project-details" name="details">
-                            <trix-editor input="trix-project-details"></trix-editor>
+                            <trix-editor input="trix-project-details" style="min-height: 350px;"></trix-editor>
                         </div>
                         @error('details')
                             <span class="text-danger">{{ $message }}</span>

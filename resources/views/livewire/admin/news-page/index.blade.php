@@ -56,7 +56,7 @@
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="newsDetails">Details</label>
                                 <input id="newsDetails" type="hidden" wire:model.defer="details">
-                                <trix-editor input="newsDetails" class="bg-white"></trix-editor>
+                                <trix-editor input="newsDetails" class="bg-white" style="min-height: 350px;"></trix-editor>
                                 <small class="text-muted d-block mt-1">Use the editor toolbar to format headings, lists, links, and emphasis.</small>
                                 @error('details') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>

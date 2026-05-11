@@ -190,6 +190,12 @@
                     <form class="footer-newsletter" action="{{ route('newsletter.subscribe') }}" method="POST">
                         @csrf
 
+                        {{-- Honeypot --}}
+                        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        <input type="hidden" name="_form_loaded_at" value="{{ now()->timestamp }}">
+
                         <div class="newsletter-group">
 
                             <input type="email"

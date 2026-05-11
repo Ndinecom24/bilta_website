@@ -65,7 +65,7 @@
                             @php
                                 $image = $item->getFirstMedia('project_title_images')
                                     ? $item->getFirstMedia('project_title_images')->getUrl()
-                                    : 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=600&q=80';
+                                    : asset('assets/img/placeholder.png');
 
                                 $postedDate = !empty($item->post_date)
                                     ? \Illuminate\Support\Carbon::parse($item->post_date)->format('d M Y')

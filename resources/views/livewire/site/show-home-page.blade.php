@@ -164,7 +164,7 @@
                         @php
                             $missionImages = !empty($missionSliderImages)
                                 ? $missionSliderImages
-                                : ['https://images.unsplash.com/photo-1557683316-973673baf926?w=900&q=80'];
+                                : ['https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=900&q=80'];
                         @endphp
 
                         <div id="missionMediaCarousel" class="carousel slide mission-carousel" data-bs-ride="carousel" data-bs-interval="4500">
@@ -361,7 +361,7 @@
                     @php
                         $newsImage = $newsItem->getFirstMedia('news_images')
                             ? $newsItem->getFirstMedia('news_images')->getUrl()
-                            : 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&q=80';
+                            : asset('assets/img/placeholder.png');
                     @endphp
 
                     <div class="col-lg-4 col-md-6" data-aos="fade-up">
@@ -565,19 +565,24 @@
 
                     @php
                         $media = $our_team->getFirstMedia('team_images');
-
-                        $imageUrl = $media
-                            ? $media->getUrl()
-                            : asset('storage/defaults/default-team.png');
+                        $teamName = $our_team->name ?? '--';
+                        $teamInitials = collect(explode(' ', $teamName))->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))->take(2)->implode('');
                     @endphp
 
                     <div class="col-lg-3 col-md-6" data-aos="fade-up">
 
                         <div class="team-card text-center">
 
-                            <img src="{{ $imageUrl }}"
-                                class="team-image"
-                                alt="{{ $our_team->name ?? '--' }}">
+                            <div class="team-initials-fallback" @if($media) style="display:none;" @endif>
+                                <span>{{ $teamInitials }}</span>
+                            </div>
+
+                            @if ($media)
+                                <img src="{{ $media->getUrl() }}"
+                                    class="team-image"
+                                    alt="{{ $teamName }}"
+                                    onerror="this.style.display='none';this.previousElementSibling.style.display='flex';">
+                            @endif
 
                             <div class="team-body">
 
@@ -675,6 +680,12 @@
 
                             @csrf
 
+                            {{-- Honeypot: hidden from humans, bots will fill it --}}
+                            <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                                <input type="text" name="website" tabindex="-1" autocomplete="off">
+                            </div>
+                            <input type="hidden" name="_form_loaded_at" value="{{ now()->timestamp }}">
+
                             <div class="row g-3">
 
                                 <div class="col-md-6">
@@ -749,15 +760,27 @@
 
                 @foreach ($sponsors as $sponsor)
 
+                    @php
+                        $sponsorName = $sponsor->name ?? '--';
+                        $sponsorInitials = collect(explode(' ', $sponsorName))->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))->take(2)->implode('');
+                        $sponsorImageUrl = $sponsor->getFirstMediaUrl('sponsor_image');
+                    @endphp
+
                     <div class="col-6 col-md-3 col-lg-2">
 
                         <a href="{{ $sponsor->website_url ?? '#' }}"
                             target="_blank"
                             class="sponsor-card">
 
-                            <img src="{{ $sponsor->getFirstMediaUrl('sponsor_image') ?: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&q=80' }}"
-                                class="img-fluid"
-                                alt="{{ $sponsor->name }}">
+                            @if ($sponsorImageUrl)
+                                <img src="{{ $sponsorImageUrl }}"
+                                    class="img-fluid"
+                                    alt="{{ $sponsorName }}">
+                            @else
+                                <div class="sponsor-initials-fallback">
+                                    <span>{{ $sponsorInitials }}</span>
+                                </div>
+                            @endif
 
                         </a>
 
@@ -1269,6 +1292,33 @@ body{
         padding:24px;
     }
 
+}
+
+.team-initials-fallback{
+    width:100%;
+    height:320px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:#f59e0b;
+    font-size:4rem;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.sponsor-initials-fallback{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#f1f5f9,#e2e8f0);
+    color:#0f172a;
+    font-size:1.8rem;
+    font-weight:800;
+    letter-spacing:1px;
+    border-radius:12px;
 }
 
 </style>

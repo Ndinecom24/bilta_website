@@ -65,6 +65,12 @@
                 <form method="POST" action="{{ route('sponsor.inquiry.store') }}" id="sponsorInquiryForm">
                     @csrf
 
+                    {{-- Honeypot --}}
+                    <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                        <input type="text" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+                    <input type="hidden" name="_form_loaded_at" value="{{ now()->timestamp }}">
+
                     <div class="mb-3">
                         <label class="form-label" for="sponsor_name">Name</label>
                         <input

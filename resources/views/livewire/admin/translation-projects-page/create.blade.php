@@ -57,7 +57,7 @@
                                                type="hidden"
                                                name="short_description"
                                                wire:model.lazy="short_description">
-                                        <trix-editor input="trix-project_short_description"></trix-editor>
+                                        <trix-editor input="trix-project_short_description" style="min-height: 200px;"></trix-editor>
                                     </div>
                                     @error('short_description')
                                         <span class="text-danger">{{ $message }}</span>
@@ -75,7 +75,7 @@
                                                type="hidden"
                                                name="details"
                                                wire:model.lazy="details">
-                                        <trix-editor input="trix-project_details"></trix-editor>
+                                        <trix-editor input="trix-project_details" style="min-height: 350px;"></trix-editor>
                                     </div>
                                     @error('details')
                                         <span class="text-danger">{{ $message }}</span>

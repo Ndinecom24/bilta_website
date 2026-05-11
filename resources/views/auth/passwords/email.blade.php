@@ -1,41 +1,42 @@
 @extends('layouts.auth.app')
 
+@section('page-title', 'Forgot Password')
+
 @section('content')
-    <div class="auth-card">
-        <div class="text-center mb-4">
-            <img src="{{ asset('layout/images/bilta_logo_one.png') }}" alt="Logo" style="max-width: 120px;">
+    <div class="auth-form-header">
+        <h2 class="auth-form-title">Forgot Password?</h2>
+        <p class="auth-form-subtitle">No worries. Enter your email and we'll send you a reset link.</p>
+    </div>
+
+    @if (session('status'))
+        <div class="alert alert-success auth-alert" role="alert">
+            <i class="bi bi-check-circle me-2"></i>{{ session('status') }}
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('password.email') }}">
+        @csrf
+
+        <div class="auth-field">
+            <label for="email">{{ __('Email Address') }}</label>
+            <input id="email" type="email"
+                   class="form-control @error('email') is-invalid @enderror"
+                   name="email" value="{{ old('email') }}" required autofocus
+                   placeholder="you@example.com">
+            @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
-        <h4 class="text-center mb-3">{{ __('Reset Password') }}</h4>
-        <p class="text-muted text-center mb-4">
-            {{ __('Enter your email address to receive a password reset link.') }}
-        </p>
+        <button type="submit" class="auth-btn">
+            <i class="bi bi-envelope"></i>
+            {{ __('Send Reset Link') }}
+        </button>
+    </form>
 
-        @if (session('status'))
-            <div class="alert alert-success text-center" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('password.email') }}">
-            @csrf
-
-            <div class="mb-3">
-                <label for="email" class="form-label">{{ __('Email Address') }}</label>
-                <input id="email" type="email"
-                       class="form-control @error('email') is-invalid @enderror"
-                       name="email" value="{{ old('email') }}" required autofocus>
-
-                @error('email')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">
-                    {{ __('Send Password Reset Link') }}
-                </button>
-            </div>
-        </form>
-    </div>
+    <p class="auth-footer-text">
+        <a href="{{ route('login') }}" class="auth-link">
+            <i class="bi bi-arrow-left"></i> Back to Login
+        </a>
+    </p>
 @endsection

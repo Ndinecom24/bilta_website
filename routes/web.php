@@ -95,11 +95,11 @@ Route::prefix('bilta/site')->group(function () {
     Route::get('/audio/bible/{item}/details', MyAudioBibleDetails::class)->name('audio.bible.details');
 
 });
-Route::post('/contact', [ContactController::class,  'store'])->middleware('throttle:5,1')->name('contact.store');
-Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->middleware('throttle:5,1')->name('newsletter.subscribe');
-Route::post('/sponsor/inquiry', [SponsorInquiryController::class, 'store'])->middleware('throttle:5,1')->name('sponsor.inquiry.store');
+Route::post('/contact', [ContactController::class,  'store'])->middleware('throttle:3,1')->name('contact.store');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->middleware('throttle:3,1')->name('newsletter.subscribe');
+Route::post('/sponsor/inquiry', [SponsorInquiryController::class, 'store'])->middleware('throttle:3,1')->name('sponsor.inquiry.store');
 Route::post('/clear-cache', [HomeController::class, 'clearCache'])->middleware('auth')->name('admin.cache.clear');
-Route::post('/submit-testimonial', [ContactController::class, 'storeTestimonial'])->middleware('throttle:5,1');
+Route::post('/submit-testimonial', [ContactController::class, 'storeTestimonial'])->middleware('throttle:3,1');
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// ADMIN

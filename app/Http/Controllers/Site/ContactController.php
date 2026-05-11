@@ -27,11 +27,21 @@ class ContactController extends Controller
 
         // Honeypot check
         if ($request->filled('website')) {
+            Log::warning('Contact form honeypot triggered', ['ip' => $request->ip()]);
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Bot submission blocked'], 400);
             }
-
             return back()->with('contact_error', 'Submission blocked. Please try again.');
+        }
+
+        // Timing trap — reject if submitted in under 3 seconds
+        $loadedAt = (int) $request->input('_form_loaded_at', 0);
+        if ($loadedAt > 0 && (now()->timestamp - $loadedAt) < 3) {
+            Log::warning('Contact form timing trap triggered', ['ip' => $request->ip()]);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Submission too fast. Please try again.'], 429);
+            }
+            return back()->with('contact_error', 'Please wait a moment before submitting.');
         }
 
         // Validate the request data
