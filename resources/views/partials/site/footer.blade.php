@@ -316,9 +316,9 @@
     background:
         linear-gradient(
             135deg,
-            #0f172a 0%,
-            #111827 50%,
-            #1e293b 100%
+            #020912 0%,
+            #040e1c 50%,
+            #061224 100%
         );
     color:#cbd5e1;
     position:relative;
@@ -339,7 +339,7 @@
 }
 
 .footer-logo-mark{
-    color:#f59e0b;
+    color:#cd5b13;
 }
 
 .footer-description{
@@ -370,7 +370,7 @@
 }
 
 .footer-socials a:hover{
-    background:#f59e0b;
+    background:#cd5b13;
     transform:translateY(-5px);
 }
 
@@ -390,7 +390,7 @@
     width:45px;
     height:3px;
     border-radius:50px;
-    background:#f59e0b;
+    background:#cd5b13;
 }
 
 .footer-links{
@@ -451,8 +451,8 @@
 .newsletter-group button{
     width:60px;
     border:none;
-    background:#f59e0b;
-    color:#111827;
+    background:#cd5b13;
+    color:#ffffff;
     transition:.3s;
 }
 
@@ -470,7 +470,7 @@
 }
 
 .footer-contact-item i{
-    color:#f59e0b;
+    color:#cd5b13;
 }
 
 .footer-bottom{
@@ -485,7 +485,7 @@
 }
 
 .developer-text a{
-    color:#f59e0b;
+    color:#cd5b13;
     text-decoration:none;
     font-weight:600;
 }

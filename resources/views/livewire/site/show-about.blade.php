@@ -274,9 +274,9 @@
         position: relative;
         background:
             radial-gradient(circle at top left,
-                rgba(229, 197, 155, 0.18),
+                rgba(205, 91, 19, 0.10),
                 transparent 28%),
-            linear-gradient(180deg, #faf8f5 0%, #fff 100%);
+            linear-gradient(180deg, #efefff 0%, #fff 100%);
     }
 
     .section-heading {
@@ -289,8 +289,8 @@
         align-items: center;
         gap: 10px;
         padding: 10px 18px;
-        background: rgba(163, 106, 43, 0.12);
-        color: #8b5a24;
+        background: rgba(205, 91, 19, 0.12);
+        color: #cd5b13;
         border-radius: 999px;
         font-weight: 700;
         margin-bottom: 22px;
@@ -342,7 +342,7 @@
         height: 60px;
         min-width: 60px;
         border-radius: 18px;
-        background: linear-gradient(135deg, #a36a2b, #6e4313);
+        background: linear-gradient(to left, #f59e0b, #cd5b13);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -392,8 +392,8 @@
         width: 54px;
         height: 54px;
         border-radius: 16px;
-        background: rgba(163, 106, 43, 0.12);
-        color: #8b5a24;
+        background: rgba(205, 91, 19, 0.12);
+        color: #cd5b13;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -416,12 +416,12 @@
     }
 
     .info-text a {
-        color: #8b5a24;
+        color: #cd5b13;
         text-decoration: none;
     }
 
     .info-text a:hover {
-        color: #6e4313;
+        color: #a34810;
     }
 
     .social-wrapper {
@@ -457,7 +457,7 @@
     }
 
     .twitter {
-        background: #111827;
+        background: #000000;
     }
 
     .linkedin {
@@ -473,7 +473,7 @@
     }
 
     .website {
-        background: linear-gradient(135deg, #a36a2b, #6e4313);
+        background: linear-gradient(to left, #f59e0b, #cd5b13);
     }
 
     .quick-links-header {
@@ -504,7 +504,7 @@
         gap: 12px;
         padding: 18px 20px;
         border-radius: 18px;
-        background: #faf8f5;
+        background: #efefff;
         color: #1f2937;
         text-decoration: none;
         font-weight: 600;
@@ -512,7 +512,7 @@
     }
 
     .quick-links-list li a:hover {
-        background: linear-gradient(135deg, #a36a2b, #6e4313);
+        background: linear-gradient(to left, #f59e0b, #cd5b13);
         color: white;
         transform: translateX(5px);
     }

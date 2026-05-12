@@ -48,7 +48,7 @@
     .dashboard-stat-count {
         font-size: 1.55rem;
         font-weight: 800;
-        color: #0f172a;
+        color: #111147;
         line-height: 1;
     }
 
@@ -65,7 +65,7 @@
     .dashboard-stat-icon.users { background: #eff6ff; color: #2563eb; }
     .dashboard-stat-icon.projects { background: #ecfdf5; color: #059669; }
     .dashboard-stat-icon.testimonials { background: #ecfeff; color: #0891b2; }
-    .dashboard-stat-icon.messages { background: #fff7ed; color: #d97706; }
+    .dashboard-stat-icon.messages { background: #fde8e4; color: #c33205; }
     .dashboard-stat-icon.news { background: #fef2f2; color: #dc2626; }
 
     .dashboard-chart-card {
@@ -85,7 +85,7 @@
         margin: 0;
         font-size: .95rem;
         font-weight: 700;
-        color: #0f172a;
+        color: #111147;
     }
 
     .dashboard-chart-body {
@@ -295,7 +295,7 @@
             series: [
                 { name: 'Today', data: {!! json_encode($clicksToday) !!}, color: '#2563eb' },
                 { name: 'This Week', data: {!! json_encode($clicksWeek) !!}, color: '#059669' },
-                { name: 'This Month', data: {!! json_encode($clicksMonth) !!}, color: '#d97706' }
+                { name: 'This Month', data: {!! json_encode($clicksMonth) !!}, color: '#c33205' }
             ]
         });
 
@@ -305,7 +305,7 @@
             credits: { enabled: false },
             xAxis: { categories: {!! json_encode($newsChartLabels) !!} },
             yAxis: { min: 0, title: { text: 'News Posts' } },
-            series: [{ name: 'News', data: {!! json_encode($newsChartData) !!}, color: '#f59e0b' }]
+            series: [{ name: 'News', data: {!! json_encode($newsChartData) !!}, color: '#c33205' }]
         });
 
         Highcharts.chart('clickTrendChart', {

@@ -31,7 +31,7 @@ class ShowTrainingCenter extends Component
             'dashboard' => [
                 'icon' => 'fas fa-tachometer-alt',
                 'title' => 'Dashboard Overview',
-                'color' => '#7c3aed',
+                'color' => '#1d4ed8',
             ],
             'content-management' => [
                 'icon' => 'fas fa-edit',

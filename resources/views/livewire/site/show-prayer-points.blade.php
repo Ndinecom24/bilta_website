@@ -249,7 +249,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c9853d;
+        color: #c33205;
         margin-bottom: 8px;
     }
 
@@ -314,9 +314,9 @@
 
     .modern-input:focus {
         outline: none;
-        border-color: #c9853d;
+        border-color: #c33205;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(201, 133, 61, 0.08);
+        box-shadow: 0 0 0 4px rgba(195, 50, 5, 0.08);
     }
 
     .modern-filter-btn {
@@ -324,16 +324,16 @@
         margin-top: 28px;
         border: none;
         border-radius: 18px;
-        background: linear-gradient(135deg, #c9853d, #aa6a2b);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         color: #fff;
         font-weight: 700;
         transition: all 0.3s ease;
-        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.24);
+        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
     }
 
     .modern-filter-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 14px 30px rgba(201, 133, 61, 0.32);
+        box-shadow: 0 14px 30px rgba(195, 50, 5, 0.32);
     }
 
     .prayer-search-wrapper {
@@ -361,9 +361,9 @@
 
     .prayer-search-input:focus {
         outline: none;
-        border-color: #c9853d;
+        border-color: #c33205;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(201, 133, 61, 0.08);
+        box-shadow: 0 0 0 4px rgba(195, 50, 5, 0.08);
     }
 
     /* Accordion */
@@ -415,13 +415,13 @@
         width: 58px;
         height: 58px;
         border-radius: 18px;
-        background: linear-gradient(135deg, #c9853d, #ae6f2f);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         display: flex;
         align-items: center;
         justify-content: center;
         color: #fff;
         font-size: 1.2rem;
-        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.24);
+        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
         flex-shrink: 0;
     }
 
@@ -431,7 +431,7 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 700;
-        color: #c9853d;
+        color: #c33205;
         margin-bottom: 6px;
     }
 
@@ -465,7 +465,7 @@
         width: 52px;
         height: 52px;
         border-radius: 16px;
-        background: linear-gradient(135deg, #c9853d, #ae6f2f);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         display: flex;
         align-items: center;
         justify-content: center;

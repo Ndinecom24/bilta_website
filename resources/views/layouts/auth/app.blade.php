@@ -22,7 +22,7 @@
             padding: 0;
             height: 100%;
             font-family: 'Inter', sans-serif;
-            background: #0f172a;
+            background: #111147;
         }
 
         .auth-split {
@@ -47,7 +47,7 @@
             position: absolute;
             inset: 0;
             background:
-                linear-gradient(160deg, rgba(15,23,42,.88) 0%, rgba(15,23,42,.72) 50%, rgba(245,158,11,.18) 100%),
+                linear-gradient(160deg, rgba(17,17,71,.88) 0%, rgba(17,17,71,.72) 50%, rgba(195,50,5,.18) 100%),
                 url('{{ asset('assets/img/testimonials-bg.jpg') }}') center / cover no-repeat;
             z-index: 0;
         }
@@ -72,7 +72,7 @@
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #f59e0b;
+            color: #c33205;
             margin-bottom: .75rem;
         }
 
@@ -84,7 +84,7 @@
         }
 
         .auth-brand-headline span {
-            color: #f59e0b;
+            color: #c33205;
         }
 
         .auth-brand-desc {
@@ -113,8 +113,8 @@
             width: 38px;
             height: 38px;
             border-radius: 10px;
-            background: rgba(245,158,11,.15);
-            color: #f59e0b;
+            background: rgba(195,50,5,.15);
+            color: #c33205;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,7 +141,7 @@
         }
 
         .auth-brand-link:hover {
-            color: #f59e0b;
+            color: #c33205;
         }
 
         /* ── Right form panel ── */
@@ -176,7 +176,7 @@
         .auth-form-title {
             font-size: 1.75rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #111147;
             margin-bottom: .35rem;
         }
 
@@ -210,8 +210,8 @@
         }
 
         .auth-field .form-control:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 3px rgba(245,158,11,.12);
+            border-color: #c33205;
+            box-shadow: 0 0 0 3px rgba(195,50,5,.12);
             background: #fff;
         }
 
@@ -237,8 +237,8 @@
         }
 
         .auth-actions .form-check-input:checked {
-            background-color: #f59e0b;
-            border-color: #f59e0b;
+            background-color: #c33205;
+            border-color: #c33205;
         }
 
         .auth-btn {
@@ -248,7 +248,7 @@
             border-radius: 12px;
             font-size: 1rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #111147, #1a1a6b);
             color: #fff;
             cursor: pointer;
             transition: all .25s;
@@ -259,13 +259,13 @@
         }
 
         .auth-btn:hover {
-            background: linear-gradient(135deg, #1e293b, #334155);
+            background: linear-gradient(135deg, #1a1a6b, #2d2d8a);
             transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(15,23,42,.18);
+            box-shadow: 0 8px 24px rgba(17,17,71,.18);
         }
 
         .auth-link {
-            color: #f59e0b;
+            color: #c33205;
             text-decoration: none;
             font-weight: 600;
             font-size: .88rem;
@@ -273,7 +273,7 @@
         }
 
         .auth-link:hover {
-            color: #d97706;
+            color: #9a2804;
         }
 
         .auth-footer-text {

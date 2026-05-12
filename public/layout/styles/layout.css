@@ -363,8 +363,8 @@ input:focus, textarea:focus, *:required:focus{border-color:#b0560c !important;}
 #introblocks .elements li article a i{color:#b0560c; background-color:#FFFFFF;}/* Blue */
 #introblocks .elements li article:hover{color:#474747; background-color:#FFFFFF !important;}
 #introblocks .elements li article:hover a i{color:#FFFFFF !important; background-color:#b0560c;}
-#introblocks .elements li:nth-child(2) article, #introblocks .elements li:nth-child(2) article:hover a i{background-color:#A197BD;}/* Purple */
-#introblocks .elements li:nth-child(2) article a i{color:#A197BD;}/* Purple */
+#introblocks .elements li:nth-child(2) article, #introblocks .elements li:nth-child(2) article:hover a i{background-color:#b0560c;}/* Orange */
+#introblocks .elements li:nth-child(2) article a i{color:#b0560c;}/* Orange */
 #introblocks .elements li:nth-child(3) article, #introblocks .elements li:nth-child(3) article:hover a i{background-color:#BDA697;}/* Brown */
 #introblocks .elements li:nth-child(3) article a i{color:#BDA697;}/* Brown */
 #introblocks .elements li:nth-child(4) article, #introblocks .elements li:nth-child(4) article:hover a i{background-color:#97BDAB;}/* Green */
@@ -392,8 +392,8 @@ input:focus, textarea:focus, *:required:focus{border-color:#b0560c !important;}
 #ctdetails figure > ul li:hover a i{color:#b0560c; background-color:#FFFFFF;}/* Default */
 
 /* ###### DELETE THE FOLLOWING IF ONLY THE DEFAULT COLOUR IS REQUIRED ###### */
-#ctdetails figure > ul li:hover, #ctdetails figure > ul li a i{color:#FFFFFF; background-color:#A197BD;}
-#ctdetails figure > ul li:hover a i{color:#A197BD; background-color:#FFFFFF !important;}
+#ctdetails figure > ul li:hover, #ctdetails figure > ul li a i{color:#FFFFFF; background-color:#b0560c;}
+#ctdetails figure > ul li:hover a i{color:#b0560c; background-color:#FFFFFF !important;}
 #ctdetails figure > ul li:nth-child(2):hover, #ctdetails figure > ul li:nth-child(2) a i{background-color:#BDA697;}
 #ctdetails figure > ul li:nth-child(2):hover a i{color:#BDA697;}
 #ctdetails figure > ul li:nth-child(3):hover, #ctdetails figure > ul li:nth-child(3) a i{background-color:#97BDAB;}

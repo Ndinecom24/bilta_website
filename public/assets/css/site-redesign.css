@@ -3,12 +3,12 @@
   background: #f4f7fb;
 }
 .page-hero {
-  background: linear-gradient(125deg, #b87333 0%, #d9a066 55%, #eacaaa 100%);
-  color: #4a2c12;
+  background: linear-gradient(to left, #f59e0b, #cd5b13);
+  color: #fff;
   border-radius: 18px;
   padding: 56px 42px;
   margin-bottom: 32px;
-  box-shadow: 0 20px 45px rgba(140, 85, 30, 0.15);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
 }
 .page-hero h1,
 .page-hero h2,
@@ -27,19 +27,19 @@
   background: #fff;
   border-radius: 14px;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
   padding: 28px;
 }
 
 .site-section-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f172a;
+  color: #000000;
   margin-bottom: 8px;
 }
 
 .site-section-subtitle {
-  color: #64748b;
+  color: #445658;
   margin-bottom: 20px;
 }
 
@@ -47,7 +47,7 @@
   background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
   height: 100%;
 }
 
@@ -60,13 +60,13 @@
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 1rem 1.1rem;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
 }
 
 .site-sidebar .sidebar-title {
   margin-bottom: 12px;
   font-weight: 700;
-  color: #0f172a;
+  color: #000000;
 }
 
 .site-list-clean {
@@ -166,7 +166,7 @@
 .site-brand .brand-title {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #b36227;
+  color: #cd5b13;
   line-height: 1;
 }
 
@@ -177,7 +177,7 @@
 }
 
 #topbar {
-  background: #111827;
+  background: #020912;
   color: #e5e7eb;
   border-bottom: 1px solid rgba(148, 163, 184, 0.25);
 }
@@ -189,7 +189,7 @@
 }
 
 #topbar .contact-info i {
-  color: #f59e0b;
+  color: #cd5b13;
 }
 
 #header {
@@ -203,7 +203,7 @@
 }
 
 #footer {
-  background: #0f172a;
+  background: #020912;
   color: #cbd5e1;
   border-top: 1px solid rgba(148, 163, 184, 0.2);
 }
@@ -237,13 +237,13 @@
 }
 
 #footer .social-links a {
-  background: #1e293b;
+  background: #0a1628;
   border: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 #footer .social-links a:hover {
-  background: #b36227;
-  border-color: #b36227;
+  background: #cd5b13;
+  border-color: #cd5b13;
 }
 
 .impact-modal .modal-content {
@@ -254,7 +254,7 @@
 }
 
 .impact-modal .modal-header {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
+  background: linear-gradient(to left, #f59e0b, #cd5b13);
   color: #f8fafc;
   padding: 1rem 1.25rem;
   border-bottom: 0;
@@ -280,7 +280,7 @@
 
 .impact-modal .summary-card h6 {
   margin-bottom: 8px;
-  color: #0f172a;
+  color: #000000;
   font-weight: 700;
 }
 
@@ -313,16 +313,16 @@
 }
 
 .btn-sponsor {
-  background: #1e293b;
+  background: #020912;
   color: #f8fafc;
   border-radius: 999px;
   padding: 7px 12px;
-  border: 1px solid #334155;
+  border: 1px solid #1a2a3e;
   font-weight: 700;
 }
 
 .btn-sponsor:hover {
-  background: #0f172a;
+  background: #000000;
   color: #ffffff;
 }
 
@@ -333,7 +333,7 @@
 }
 
 .home-custom-badge {
-  background: linear-gradient(135deg, #b36227, #8f4d1f);
+  background: linear-gradient(to left, #f59e0b, #cd5b13);
   color: #fff;
   font-size: 12px;
   padding: 8px 12px;
@@ -342,12 +342,12 @@
   align-items: center;
   gap: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 8px 18px rgba(179, 98, 39, 0.28);
+  box-shadow: 0 8px 18px rgba(205, 91, 19, 0.28);
 }
 
 .home-custom-badge:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 22px rgba(179, 98, 39, 0.32);
+  box-shadow: 0 12px 22px rgba(205, 91, 19, 0.32);
 }
 
 .home-read-more-link {
@@ -363,7 +363,7 @@
 
 .home-read-more-link:hover {
   background-color: #fff;
-  color: #b36227;
+  color: #cd5b13;
 }
 
 .home-project-header {
@@ -424,12 +424,12 @@
 
 /* High-contrast homepage refresh */
 .site-shell #why-us {
-  background: #0f172a;
+  background: #020912;
 }
 
 .site-shell #why-us .content {
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: #040e1c;
+  border: 1px solid #0a1628;
   border-radius: 14px;
   padding: 28px;
 }
@@ -444,11 +444,11 @@
 }
 
 .site-shell #impact-overview .section-title h2 {
-  color: #0f172a;
+  color: #000000;
 }
 
 .site-shell #impact-overview .section-title p {
-  color: #334155;
+  color: #445658;
 }
 
 .site-shell #chairman-message,
@@ -469,11 +469,11 @@
 }
 
 .site-shell .section-title h2 {
-  color: #0f172a;
+  color: #000000;
 }
 
 .site-shell .section-title p {
-  color: #334155;
+  color: #445658;
 }
 
 .site-shell #translation-projects .icon-box,
@@ -482,7 +482,7 @@
 .site-shell #sponsors .home-sponsor-box {
   background: #ffffff;
   border: 1px solid #cbd5e1;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
 }
 
 .site-shell #translation-projects .title a,
@@ -496,7 +496,7 @@
 }
 
 .site-shell #testimonials {
-  background: linear-gradient(160deg, #0b1220 0%, #1e293b 100%);
+  background: linear-gradient(160deg, #020912 0%, #0a1628 100%);
 }
 
 .site-shell #testimonials .section-title h2,
@@ -508,18 +508,18 @@
 }
 
 .site-shell #testimonials .testimonial-item {
-  background: rgba(15, 23, 42, 0.66);
+  background: rgba(2, 9, 18, 0.66);
   border: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 .site-shell #contact .php-email-form button[type=submit] {
-  background: #b36227;
+  background: #cd5b13;
   color: #fff;
   border: 0;
 }
 
 .site-shell #contact .php-email-form button[type=submit]:hover {
-  background: #8f4d1f;
+  background: #a34810;
 }
 
 .site-shell .home-testimonials-note {
@@ -539,8 +539,8 @@
 }
 
 .audio-modal-search .form-control:focus {
-  border-color: #b36227;
-  box-shadow: 0 0 0 0.2rem rgba(179, 98, 39, 0.15);
+  border-color: #cd5b13;
+  box-shadow: 0 0 0 0.2rem rgba(205, 91, 19, 0.15);
 }
 
 .audio-modal-list {
@@ -560,7 +560,7 @@
 }
 
 .audio-modal-meta h6 {
-  color: #0f172a;
+  color: #000000;
   font-weight: 700;
 }
 
@@ -582,7 +582,7 @@
   border: 1px solid rgba(37, 99, 235, 0.28);
   border-radius: 16px;
   padding: 14px;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
 }
 
 .modern-sidebar .sidebar-header {
@@ -606,7 +606,7 @@
 }
 
 .modern-sidebar .sidebar-title {
-  color: #0f172a;
+  color: #000000;
   font-size: 1rem;
   font-weight: 800;
 }
@@ -657,7 +657,7 @@
 }
 
 .modern-sidebar .category-name {
-  color: #1e293b;
+  color: #000000;
   font-weight: 600;
   font-size: 0.88rem;
   white-space: nowrap;

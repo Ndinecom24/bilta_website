@@ -462,7 +462,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c9853d;
+        color: #c33205;
         margin-bottom: 8px;
     }
 
@@ -496,9 +496,9 @@
     }
 
     .btn-gradient-primary {
-        background: linear-gradient(135deg, #c9853d, #a96b2c);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         color: #fff;
-        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.24);
+        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
     }
 
     .btn-gradient-success {
@@ -550,7 +550,7 @@
     }
 
     .allocation-header {
-        background: linear-gradient(135deg, #c9853d, #a96b2c);
+        background: linear-gradient(135deg, #c33205, #9a2804);
     }
 
     .allocation-header h5,
@@ -594,9 +594,9 @@
     .modern-input:focus,
     .modern-select:focus {
         outline: none;
-        border-color: #c9853d;
+        border-color: #c33205;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(201, 133, 61, 0.08);
+        box-shadow: 0 0 0 4px rgba(195, 50, 5, 0.08);
     }
 
     .validation-error {
@@ -674,7 +674,7 @@
         width: 46px;
         height: 46px;
         border-radius: 14px;
-        background: linear-gradient(135deg, #c9853d, #a96a2c);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         color: #fff;
         display: flex;
         align-items: center;

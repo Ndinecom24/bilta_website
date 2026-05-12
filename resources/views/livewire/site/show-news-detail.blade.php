@@ -229,7 +229,7 @@
     }
 
     .meta-item i {
-        color: #c9853d;
+        color: #c33205;
     }
 
     .meta-divider {
@@ -295,7 +295,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c9853d;
+        color: #c33205;
         margin-bottom: 8px;
     }
 
@@ -382,7 +382,7 @@
 
     .gallery-view-btn:hover {
         background: #fff;
-        color: #c9853d;
+        color: #c33205;
     }
 
     .gallery-card-body {

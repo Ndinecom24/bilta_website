@@ -172,7 +172,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c9853d;
+        color: #c33205;
         margin-bottom: 8px;
     }
 
@@ -250,9 +250,9 @@
 
     .testimony-search-input:focus {
         outline: none;
-        border-color: #c9853d;
+        border-color: #c33205;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(201, 133, 61, 0.08);
+        box-shadow: 0 0 0 4px rgba(195, 50, 5, 0.08);
     }
 
     /* Cards */
@@ -287,14 +287,14 @@
         width: 68px;
         height: 68px;
         border-radius: 22px;
-        background: linear-gradient(135deg, #c9853d, #aa6b2d);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         display: flex;
         align-items: center;
         justify-content: center;
         color: #fff;
         font-size: 1.3rem;
         margin-bottom: 28px;
-        box-shadow: 0 12px 28px rgba(201, 133, 61, 0.24);
+        box-shadow: 0 12px 28px rgba(195, 50, 5, 0.24);
     }
 
     .testimony-user {

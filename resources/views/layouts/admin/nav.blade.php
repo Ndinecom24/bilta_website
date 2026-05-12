@@ -1,20 +1,20 @@
 <style>
     :root {
-        --topbar-bg: rgba(15, 23, 42, 0.92);
-        --topbar-bg-secondary: rgba(30, 41, 59, 0.95);
+        --topbar-bg: rgba(17, 17, 71, 0.92);
+        --topbar-bg-secondary: rgba(26, 26, 107, 0.95);
 
         --topbar-border: rgba(255, 255, 255, 0.08);
 
         --topbar-text: #f8fafc;
         --topbar-muted: #cbd5e1;
 
-        --topbar-accent: #f59e0b;
-        --topbar-accent-light: #fbbf24;
+        --topbar-accent: #c33205;
+        --topbar-accent-light: #e04a1f;
 
         --topbar-hover: rgba(255, 255, 255, 0.08);
 
         --topbar-shadow:
-            0 18px 40px rgba(15, 23, 42, 0.18);
+            0 18px 40px rgba(17, 17, 71, 0.18);
 
         --topbar-radius: 22px;
     }
@@ -314,9 +314,9 @@
     }
 
     .admin-topbar .dropdown-item:hover {
-        background: rgba(245, 158, 11, 0.08);
+        background: rgba(195, 50, 5, 0.08);
 
-        color: #b45309;
+        color: #9a2804;
 
         transform: translateX(4px);
     }
@@ -356,7 +356,6 @@
 
         .admin-topbar {
             min-height: auto;
-
             border-radius: 18px;
         }
 
@@ -366,6 +365,53 @@
 
         .topbar-divider {
             display: none;
+        }
+
+        .admin-user-button {
+            padding: .3rem .5rem !important;
+        }
+
+        .admin-user-button .img-profile {
+            width: 34px;
+            height: 34px;
+        }
+
+        .admin-topbar .dropdown-menu {
+            position: fixed !important;
+            top: auto !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            border-radius: 18px 18px 0 0 !important;
+            box-shadow: 0 -10px 40px rgba(0,0,0,.15) !important;
+            transform: none !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+
+        .admin-topbar {
+            border-radius: 14px;
+            padding: .5rem .65rem;
+        }
+
+        #sidebarToggleTop {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+        }
+
+        .navbar-nav .nav-link {
+            padding: .4rem .5rem;
+        }
+
+        .admin-mobile-search {
+            left: .5rem !important;
+            right: .5rem !important;
+            width: auto !important;
         }
     }
 </style>
@@ -603,11 +649,11 @@
     .admin-stat-pill {
         background: #f7fafd !important;
         border: 1px solid #d8e4ef !important;
-        color: #2e4d70 !important;
+        color: #111147 !important;
     }
 
     .admin-stat-pill i {
-        color: #c37a2f !important;
+        color: #c33205 !important;
     }
 
     .admin-stat-pill:hover {
@@ -618,12 +664,12 @@
     .admin-top-search {
         background: #ffffff !important;
         border: 1px solid #d8e4ef !important;
-        color: #1f3f63 !important;
+        color: #111147 !important;
     }
 
     .admin-top-search:focus {
-        border-color: #8ea6bf !important;
-        box-shadow: 0 0 0 3px rgba(62, 95, 132, 0.15) !important;
+        border-color: #8888b8 !important;
+        box-shadow: 0 0 0 3px rgba(17, 17, 71, 0.15) !important;
     }
 
     .admin-top-search::placeholder {
@@ -631,19 +677,19 @@
     }
 
     .admin-search-btn {
-        background: #d27a22 !important;
+        background: #c33205 !important;
         color: #fff !important;
     }
 
     .admin-search-btn:hover {
-        background: #b9681a !important;
+        background: #9a2804 !important;
         transform: none !important;
     }
 
     .topbar-label,
     .admin-topbar .nav-link,
     .admin-user-name strong {
-        color: #1f3f63 !important;
+        color: #111147 !important;
     }
 
     .admin-user-name small {

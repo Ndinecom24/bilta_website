@@ -10,7 +10,7 @@
         .email-header { color: #fff; padding: 18px 22px; }
         .email-header.approved { background: linear-gradient(135deg, #166534, #22c55e); }
         .email-header.rejected { background: linear-gradient(135deg, #991b1b, #ef4444); }
-        .email-header.returned { background: linear-gradient(135deg, #92400e, #f59e0b); }
+        .email-header.returned { background: linear-gradient(135deg, #92400e, #c33205); }
         .email-header h2 { margin: 0; font-size: 20px; font-weight: 700; }
         .email-header p { margin: 6px 0 0; font-size: 13px; color: rgba(255,255,255,.84); }
         .email-body { padding: 20px 22px; }

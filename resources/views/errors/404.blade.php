@@ -9,7 +9,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #111147 0%, #1a1a6b 100%);
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -22,7 +22,7 @@
         .error-code {
             font-size: 8rem;
             font-weight: 700;
-            color: #f59e0b;
+            color: #c33205;
             line-height: 1;
             margin-bottom: 1rem;
         }
@@ -30,15 +30,15 @@
         p { color: #94a3b8; margin-bottom: 2rem; line-height: 1.6; }
         .btn-home {
             display: inline-block;
-            background: #f59e0b;
-            color: #0f172a;
+            background: #c33205;
+            color: #111147;
             padding: 0.75rem 2rem;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
             transition: background 0.3s;
         }
-        .btn-home:hover { background: #d97706; }
+        .btn-home:hover { background: #9a2804; }
     </style>
 </head>
 <body>

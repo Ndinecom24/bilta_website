@@ -177,7 +177,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c9853d;
+        color: #c33205;
         margin-bottom: 8px;
     }
 
@@ -254,9 +254,9 @@
 
     .gallery-search-input:focus {
         outline: none;
-        border-color: #c9853d;
+        border-color: #c33205;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(201, 133, 61, 0.08);
+        box-shadow: 0 0 0 4px rgba(195, 50, 5, 0.08);
     }
 
     .gallery-toolbar-actions {
@@ -271,16 +271,16 @@
         padding: 0 22px;
         border: none;
         border-radius: 16px;
-        background: linear-gradient(135deg, #c9853d, #aa6d2e);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         color: #fff;
         font-weight: 600;
         transition: all 0.3s ease;
-        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.22);
+        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.22);
     }
 
     .gallery-reset-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 14px 28px rgba(201, 133, 61, 0.32);
+        box-shadow: 0 14px 28px rgba(195, 50, 5, 0.32);
     }
 
     .gallery-results-count {
@@ -319,10 +319,10 @@
 
     .gallery-filter-list li:hover,
     .gallery-filter-list li.filter-active {
-        background: linear-gradient(135deg, #c9853d, #a96a2b);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         border-color: transparent;
         color: #fff;
-        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.24);
+        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
     }
 
     /* Cards */
@@ -396,7 +396,7 @@
 
     .gallery-preview-btn:hover {
         background: #fff;
-        color: #c9853d;
+        color: #c33205;
     }
 
     .gallery-content {

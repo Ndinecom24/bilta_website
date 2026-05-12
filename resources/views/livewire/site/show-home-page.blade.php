@@ -335,6 +335,7 @@
 
     </section>
 
+    {{-- ================= LATEST NEWS SECTION ================= --}}
     <section class="latest-news-section py-5 bg-light">
 
         <div class="container">
@@ -832,10 +833,10 @@
 <style>
 
 :root{
-    --primary:#0f172a;
-    --secondary:#f59e0b;
-    --light:#f8fafc;
-    --text:#475569;
+    --primary:#000000;
+    --secondary:#cd5b13;
+    --light:#efefff;
+    --text:#445658;
 }
 
 body{
@@ -853,16 +854,49 @@ body{
     background-position:center;
     position:relative;
     color:white;
+    isolation:isolate;
+}
+
+.hero-section::before,
+.hero-section::after{
+    content:'';
+    position:absolute;
+    border-radius:999px;
+    pointer-events:none;
+    z-index:0;
+    filter:blur(4px);
+}
+
+.hero-section::before{
+    width:420px;
+    height:420px;
+    left:-120px;
+    top:-140px;
+    background:radial-gradient(circle, rgba(30,64,175,.42) 0%, rgba(30,64,175,0) 72%);
+}
+
+.hero-section::after{
+    width:460px;
+    height:460px;
+    right:-150px;
+    bottom:-180px;
+    background:radial-gradient(circle, rgba(37,99,235,.22) 0%, rgba(37,99,235,0) 70%);
+}
+
+.hero-section .container{
+    z-index:2;
 }
 
 .hero-overlay{
     position:absolute;
     inset:0;
-    background:linear-gradient(
-        90deg,
-        rgba(15,23,42,.92),
-        rgba(15,23,42,.65)
-    );
+    z-index:1;
+    background:
+        radial-gradient(circle at 14% 20%, rgba(30,64,175,.32), transparent 42%),
+        radial-gradient(circle at 84% 18%, rgba(59,130,246,.36), transparent 40%),
+        radial-gradient(circle at 70% 82%, rgba(29,78,216,.28), transparent 46%),
+        linear-gradient(105deg, rgba(10,25,53,.92) 0%, rgba(15,33,66,.80) 52%, rgba(30,58,138,.58) 100%);
+    backdrop-filter:saturate(120%);
 }
 
 .hero-title{
@@ -885,7 +919,7 @@ body{
 .hero-badge,
 .section-tag{
     display:inline-block;
-    background:rgba(245,158,11,.12);
+    background:rgba(205,91,19,.12);
     color:var(--secondary);
     padding:10px 18px;
     border-radius:50px;
@@ -938,7 +972,7 @@ body{
     width:54px;
     height:54px;
     border-radius:14px;
-    background:rgba(245,158,11,.12);
+    background:rgba(205,91,19,.12);
     color:var(--secondary);
     display:flex;
     align-items:center;
@@ -1035,7 +1069,7 @@ body{
     width:52px;
     height:52px;
     border-radius:14px;
-    background:rgba(245,158,11,.1);
+    background:rgba(205,91,19,.1);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -1058,34 +1092,41 @@ body{
 
 .project-card{
     background:white;
+    border:1px solid #dbeafe;
     border-radius:24px;
     padding:35px;
     transition:.3s;
-    box-shadow:0 10px 35px rgba(0,0,0,.05);
+    box-shadow:0 10px 35px rgba(15,23,42,.07);
 }
 
 .project-card:hover{
     transform:translateY(-8px);
+    box-shadow:0 16px 38px rgba(30,64,175,.16);
 }
 
 .project-category{
-    background:#fff7ed;
-    color:#c2410c;
-    padding:8px 14px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    color:#cd5b13;
     border-radius:50px;
     font-size:.85rem;
     font-weight:600;
+    padding:6px 12px;
 }
 
 .project-title{
     font-weight:700;
-    color:var(--primary);
+    color:#0f172a;
 }
 
 .project-link{
-    color:var(--secondary);
+    color:#cd5b13; 
     font-weight:600;
     text-decoration:none;
+}
+
+.project-link:hover{
+    color:#1d4ed8;
 }
 
 .latest-news-section{
@@ -1169,7 +1210,7 @@ body{
     width:54px;
     height:54px;
     border-radius:14px;
-    background:rgba(245,158,11,.14);
+    background:rgba(205,91,19,.14);
     color:var(--secondary);
     display:flex;
     align-items:center;
@@ -1203,12 +1244,14 @@ body{
     background:white;
     border-radius:24px;
     overflow:hidden;
+    border:1px solid #dbeafe;
     box-shadow:0 10px 35px rgba(0,0,0,.06);
     transition:.3s;
 }
 
 .team-card:hover{
     transform:translateY(-6px);
+    box-shadow:0 16px 36px rgba(29,78,216,.16);
 }
 
 .team-image{
@@ -1219,6 +1262,14 @@ body{
 
 .team-body{
     padding:25px;
+}
+
+.team-body h5{
+    color:#0f172a;
+}
+
+.team-body span{
+    color:#1d4ed8;
 }
 
 .contact-form-card{
@@ -1238,7 +1289,7 @@ body{
     width:55px;
     height:55px;
     border-radius:16px;
-    background:#fff7ed;
+    background:#efefff;
     color:var(--secondary);
     display:flex;
     align-items:center;
@@ -1392,8 +1443,8 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:#f59e0b;
+    background:linear-gradient(135deg,#0f172a,#1d4ed8);
+    color:#dbeafe;
     font-size:4rem;
     font-weight:800;
     letter-spacing:2px;
@@ -1406,7 +1457,7 @@ body{
     width:100%;
     height:100%;
     background:linear-gradient(135deg,#f1f5f9,#e2e8f0);
-    color:#0f172a;
+    color:#000000;
     font-size:1.8rem;
     font-weight:800;
     letter-spacing:1px;

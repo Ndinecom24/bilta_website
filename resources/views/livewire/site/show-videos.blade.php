@@ -162,7 +162,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c9853d;
+        color: #c33205;
         margin-bottom: 8px;
     }
 
@@ -239,9 +239,9 @@
 
     .video-search-input:focus {
         outline: none;
-        border-color: #c9853d;
+        border-color: #c33205;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(201, 133, 61, 0.08);
+        box-shadow: 0 0 0 4px rgba(195, 50, 5, 0.08);
     }
 
     .video-toolbar-right {
@@ -256,16 +256,16 @@
         border: none;
         border-radius: 16px;
         padding: 0 22px;
-        background: linear-gradient(135deg, #c9853d, #aa6b2d);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         color: #fff;
         font-weight: 600;
         transition: all 0.3s ease;
-        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.24);
+        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
     }
 
     .video-show-all-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 14px 30px rgba(201, 133, 61, 0.32);
+        box-shadow: 0 14px 30px rgba(195, 50, 5, 0.32);
     }
 
     .video-results-count {
@@ -355,19 +355,19 @@
         justify-content: center;
         padding: 13px 22px;
         border-radius: 16px;
-        background: linear-gradient(135deg, #c9853d, #a96a2b);
+        background: linear-gradient(135deg, #c33205, #9a2804);
         color: #fff;
         font-size: 0.92rem;
         font-weight: 700;
         text-decoration: none;
         transition: all 0.3s ease;
-        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.24);
+        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
     }
 
     .watch-video-btn:hover {
         color: #fff;
         transform: translateY(-2px);
-        box-shadow: 0 14px 30px rgba(201, 133, 61, 0.34);
+        box-shadow: 0 14px 30px rgba(195, 50, 5, 0.34);
     }
 
     /* Responsive */

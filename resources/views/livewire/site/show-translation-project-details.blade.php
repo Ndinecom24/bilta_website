@@ -253,7 +253,7 @@
     }
 
     .project-meta-item i {
-        color: #c9853d;
+        color: #c33205;
     }
 
     .project-meta-divider {
@@ -313,7 +313,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c9853d;
+        color: #c33205;
         margin-bottom: 8px;
     }
 
@@ -402,7 +402,7 @@
 
     .project-gallery-view-btn:hover {
         background: #fff;
-        color: #c9853d;
+        color: #c33205;
     }
 
     .project-gallery-card-body,
@@ -427,7 +427,7 @@
     .project-file-btn {
         display: inline-block;
         margin-top: 12px;
-        background: #fff7ed;
+        background: #fde8e4;
         color: #9c6327;
         border: 1px solid #f3d8bd;
         border-radius: 12px;

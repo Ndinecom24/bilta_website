@@ -97,14 +97,14 @@
     <style>
 
         :root{
-            --primary:#0f172a;
-            --secondary:#f59e0b;
-            --secondary-dark:#d97706;
-            --light:#f8fafc;
-            --text:#475569;
-            --muted:#94a3b8;
+            --primary:#000000;
+            --secondary:#cd5b13;
+            --secondary-dark:#a34810;
+            --light:#efefff;
+            --text:#445658;
+            --muted:#6b7d7f;
             --white:#ffffff;
-            --border:#e2e8f0;
+            --border:#f0f0f0;
             --success:#10b981;
         }
 
@@ -237,7 +237,7 @@
 
         .navbar a:hover,
         .navbar .active{
-            background:#fff7ed;
+            background:#efefff;
             color:var(--secondary);
         }
 
@@ -281,9 +281,9 @@
         }
 
         .btn-outline-theme{
-            border:1px solid #fed7aa;
-            background:#fff7ed;
-            color:#c2410c;
+            border:1px solid #d8d8ff;
+            background:#efefff;
+            color:#cd5b13;
             border-radius:14px;
             padding:12px 18px;
             font-weight:600;
@@ -321,8 +321,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    #b36227,
-                    #d4943a
+                    #f59e0b,
+                    #cd5b13
                 );
             color:white;
             border:none;
@@ -502,8 +502,8 @@
         background: #fff;
         border-radius: 24px;
         padding: 26px;
-        border: 1px solid #f0e2d3;
-        box-shadow: 0 12px 35px rgba(44, 22, 8, 0.06);
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
         position: sticky;
         top: 100px;
         overflow: hidden;
@@ -516,7 +516,7 @@
         left: 0;
         width: 100%;
         height: 5px;
-        background: linear-gradient(90deg, #c9853d, #e2b47e);
+        background: linear-gradient(to left, rgb(102, 71, 38), #cd5b13);
     }
 
     .sidebar-header {
@@ -530,25 +530,31 @@
         width: 56px;
         height: 56px;
         border-radius: 18px;
-        background: linear-gradient(135deg, #c9853d, #b7752f);
+      background: linear-gradient(
+    135deg,
+    #e9782f 0%,
+    #cd5b13 38%,
+    #a34810 72%,
+    #7f3508 100%
+);
         display: flex;
         align-items: center;
         justify-content: center;
         color: #fff;
         font-size: 1.2rem;
-        box-shadow: 0 10px 25px rgba(201, 133, 61, 0.25);
+        box-shadow: 0 10px 25px rgba(205, 91, 19, 0.25);
         flex-shrink: 0;
     }
 
     .sidebar-title {
         font-size: 1.15rem;
         font-weight: 700;
-        color: #2f1d10;
+        color: #000000;
     }
 
     .sidebar-subtitle {
         font-size: 0.86rem;
-        color: #8a7b6d;
+        color: #445658;
     }
 
     .category-list {
@@ -565,8 +571,8 @@
         padding: 14px 16px;
         border-radius: 18px;
         text-decoration: none;
-        background: #fcfaf8;
-        border: 1px solid #f3e5d6;
+        background: #efefff;
+        border: 1px solid #f0f0f0;
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
@@ -577,16 +583,16 @@
         position: absolute;
         inset: 0;
         background: linear-gradient(135deg,
-                rgba(201, 133, 61, 0.06),
-                rgba(201, 133, 61, 0));
+                rgba(205, 91, 19, 0.06),
+                rgba(205, 91, 19, 0));
         opacity: 0;
         transition: opacity 0.3s ease;
     }
 
     .category-item:hover {
         transform: translateX(5px);
-        border-color: #d6a36f;
-        box-shadow: 0 10px 24px rgba(44, 22, 8, 0.08);
+        border-color: #cd5b13;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
     }
 
     .category-item:hover::before {
@@ -605,19 +611,19 @@
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #c9853d, #e0b17b);
+        background: linear-gradient(to left, #f59e0b, #cd5b13);
         flex-shrink: 0;
     }
 
     .category-name {
-        color: #3b2a1d;
+        color: #000000;
         font-weight: 600;
         font-size: 0.95rem;
         transition: color 0.3s ease;
     }
 
     .category-item:hover .category-name {
-        color: #a56628;
+        color: #cd5b13;
     }
 
     .category-count {
@@ -625,13 +631,13 @@
         height: 34px;
         border-radius: 12px;
         background: #fff;
-        border: 1px solid #ecd7bf;
+        border: 1px solid #f0f0f0;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 0.82rem;
         font-weight: 700;
-        color: #b7752f;
+        color: #cd5b13;
         position: relative;
         z-index: 2;
         box-shadow: 0 4px 12px rgba(44, 22, 8, 0.05);
@@ -655,15 +661,15 @@
         background: #fff;
         border-radius: 24px;
         overflow: hidden;
-        border: 1px solid #f1e3d3;
+        border: 1px solid #f0f0f0;
         transition: all 0.35s ease;
-        box-shadow: 0 10px 30px rgba(44, 22, 8, 0.06);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
         position: relative;
     }
 
     .news-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 45px rgba(44, 22, 8, 0.14);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.14);
     }
 
     .news-card-image {
@@ -696,7 +702,7 @@
         top: 18px;
         left: 18px;
         background: rgba(255, 255, 255, 0.92);
-        color: #8a5a2b;
+        color: #cd5b13;
         padding: 8px 16px;
         border-radius: 50px;
         font-size: 12px;
@@ -715,7 +721,7 @@
         gap: 14px;
         margin-bottom: 16px;
         font-size: 13px;
-        color: #8b7b6f;
+        color: #445658;
     }
 
     .news-meta span {
@@ -725,74 +731,90 @@
     }
 
     .news-meta i {
-        color: #c9853d;
+        color: #cd5b13;
     }
 
     .news-title {
         font-size: 1.2rem;
         font-weight: 700;
         line-height: 1.5;
-        color: #2e1c0f;
+        color: #000000;
         margin-bottom: 14px;
     }
 
     .news-description {
-        color: #6d6259;
+        color: #445658;
         font-size: 0.95rem;
         line-height: 1.7;
         margin-bottom: 22px;
     }
 
-    .news-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 22px;
-        border-radius: 14px;
-        background: linear-gradient(135deg, #c9853d, #a76d32);
-        color: #fff;
-        font-size: 0.92rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 24px rgba(201, 133, 61, 0.25);
-    }
+ .news-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    border-radius: 14px;
+    background: linear-gradient(
+        135deg,
+        #e9782f 0%,
+        #cd5b13 38%,
+        #a34810 72%,
+        #7f3508 100%
+    );
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 10px 24px rgba(127, 53, 8, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
 
-    .news-btn:hover {
-        color: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 14px 30px rgba(201, 133, 61, 0.35);
-    }
-
+.news-btn:hover {
+    color: #fff;
+    transform: translateY(-3px);
+    background: linear-gradient(
+        135deg,
+        #f0863f 0%,
+        #d86418 38%,
+        #b14d12 72%,
+        #8c3c0c 100%
+    );
+    box-shadow:
+        0 16px 34px rgba(127, 53, 8, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
     .news-empty-state {
         background: #fff;
         border-radius: 24px;
         padding: 70px 30px;
         text-align: center;
-        border: 1px dashed #d8c1a8;
+        border: 1px dashed #c4b8d4;
     }
 
     .empty-icon {
         width: 90px;
         height: 90px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #f8ead8, #f5ddc2);
+        background: linear-gradient(135deg, #efefff, #d8d8ff);
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 20px;
-        color: #b97835;
+        color: #cd5b13;
         font-size: 2rem;
     }
 
     .news-empty-state h4 {
-        color: #3d2818;
+        color: #000000;
         margin-bottom: 10px;
         font-weight: 700;
     }
 
     .news-empty-state p {
-        color: #7a6d63;
+        color: #445658;
         margin: 0;
     }
 

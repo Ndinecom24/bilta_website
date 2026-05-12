@@ -21,7 +21,7 @@
     }
 
     .analytics-stat-count {
-        color: #0f172a;
+        color: #111147;
         font-size: 1.55rem;
         line-height: 1;
         font-weight: 800;
@@ -32,7 +32,7 @@
         padding: .85rem .95rem;
         font-size: .92rem;
         font-weight: 700;
-        color: #0f172a;
+        color: #111147;
     }
 
     .analytics-chart-body {
@@ -49,7 +49,7 @@
 
     .analytics-insight-title {
         font-weight: 700;
-        color: #0f172a;
+        color: #111147;
         margin-bottom: .25rem;
     }
 
@@ -62,7 +62,7 @@
     }
 
     .analytics-insight-meta.positive { color: #15803d; }
-    .analytics-insight-meta.warning { color: #b45309; }
+    .analytics-insight-meta.warning { color: #9a2804; }
     .analytics-insight-meta.neutral { color: #475569; }
 </style>
 

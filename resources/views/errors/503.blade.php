@@ -18,7 +18,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #0f172a;
+            background: #111147;
             color: #fff;
             overflow: hidden;
             position: relative;
@@ -29,9 +29,9 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(ellipse at 20% 50%, rgba(245,158,11,.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(245,158,11,.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(30,41,59,.6) 0%, transparent 60%);
+                radial-gradient(ellipse at 20% 50%, rgba(195,50,5,.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(195,50,5,.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(26,26,107,.6) 0%, transparent 60%);
             z-index: 0;
         }
 
@@ -46,15 +46,15 @@
                 0deg,
                 transparent,
                 transparent 48px,
-                rgba(245,158,11,.02) 48px,
-                rgba(245,158,11,.02) 49px
+                rgba(195,50,5,.02) 48px,
+                rgba(195,50,5,.02) 49px
             ),
             repeating-linear-gradient(
                 90deg,
                 transparent,
                 transparent 48px,
-                rgba(245,158,11,.02) 48px,
-                rgba(245,158,11,.02) 49px
+                rgba(195,50,5,.02) 48px,
+                rgba(195,50,5,.02) 49px
             );
             animation: gridMove 20s linear infinite;
         }
@@ -87,20 +87,20 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: rgba(245,158,11,.1);
-            border: 2px solid rgba(245,158,11,.2);
+            background: rgba(195,50,5,.1);
+            border: 2px solid rgba(195,50,5,.2);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
-            color: #f59e0b;
+            color: #c33205;
             margin-bottom: 2rem;
             animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245,158,11,.2); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(245,158,11,0); }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(195,50,5,.2); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(195,50,5,0); }
         }
 
         .maintenance-icon i {
@@ -114,8 +114,8 @@
 
         .maintenance-badge {
             display: inline-block;
-            background: rgba(245,158,11,.12);
-            color: #f59e0b;
+            background: rgba(195,50,5,.12);
+            color: #c33205;
             padding: 8px 18px;
             border-radius: 50px;
             font-weight: 600;
@@ -133,7 +133,7 @@
         }
 
         .maintenance-title span {
-            color: #f59e0b;
+            color: #c33205;
         }
 
         .maintenance-desc {
@@ -167,8 +167,8 @@
             width: 36px;
             height: 36px;
             border-radius: 10px;
-            background: rgba(245,158,11,.1);
-            color: #f59e0b;
+            background: rgba(195,50,5,.1);
+            color: #c33205;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -200,7 +200,7 @@
         .maintenance-progress-fill {
             height: 100%;
             border-radius: 3px;
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            background: linear-gradient(90deg, #c33205, #e04a1f);
             animation: progress 3s ease-in-out infinite;
             width: 65%;
         }
@@ -216,20 +216,20 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #0f172a;
+            background: linear-gradient(135deg, #c33205, #9a2804);
+            color: #111147;
             padding: 14px 32px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 700;
             font-size: .95rem;
             transition: all .25s;
-            box-shadow: 0 4px 16px rgba(245,158,11,.25);
+            box-shadow: 0 4px 16px rgba(195,50,5,.25);
         }
 
         .maintenance-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(245,158,11,.35);
+            box-shadow: 0 8px 28px rgba(195,50,5,.35);
         }
 
         .maintenance-footer {
@@ -239,7 +239,7 @@
         }
 
         .maintenance-footer a {
-            color: #f59e0b;
+            color: #c33205;
             text-decoration: none;
         }
 

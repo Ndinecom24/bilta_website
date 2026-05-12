@@ -1,7 +1,7 @@
 <style>
     :root {
-        --sidebar-bg: #0b1220;
-        --sidebar-bg-secondary: #111827;
+        --sidebar-bg: #0a0a2e;
+        --sidebar-bg-secondary: #0d0d3b;
 
         --sidebar-card: rgba(255, 255, 255, 0.05);
 
@@ -10,13 +10,13 @@
         --sidebar-text: #e2e8f0;
         --sidebar-muted: #94a3b8;
 
-        --sidebar-accent: #f59e0b;
-        --sidebar-accent-light: #fbbf24;
+        --sidebar-accent: #c33205;
+        --sidebar-accent-light: #e04a1f;
 
-        --sidebar-hover: rgba(245, 158, 11, 0.14);
+        --sidebar-hover: rgba(195, 50, 5, 0.14);
         --sidebar-active: linear-gradient(135deg,
-                rgba(245, 158, 11, 0.22),
-                rgba(251, 191, 36, 0.08));
+                rgba(195, 50, 5, 0.22),
+                rgba(224, 74, 31, 0.08));
 
         --sidebar-shadow: 0 25px 45px rgba(0, 0, 0, 0.18);
     }
@@ -30,10 +30,10 @@
 
         background:
             linear-gradient(180deg,
-                #020617 0%,
-                #0f172a 40%,
-                #111827 75%,
-                #020617 100%) !important;
+                #080830 0%,
+                #111147 40%,
+                #0d0d3b 75%,
+                #080830 100%) !important;
 
         border-right: 1px solid var(--sidebar-border);
 
@@ -287,17 +287,17 @@
 
     .admin-sidebar .collapse-inner .collapse-item:hover,
     .admin-sidebar .collapse-inner .collapse-item:focus {
-        background: #fff7ed;
+        background: #fde8e4;
 
-        color: #b45309;
+        color: #9a2804;
 
         transform: translateX(4px);
     }
 
     .admin-sidebar .collapse-inner .collapse-item.active {
-        background: rgba(245, 158, 11, 0.12);
+        background: rgba(195, 50, 5, 0.12);
 
-        color: #b45309;
+        color: #9a2804;
     }
 
     /* ===================================
@@ -318,24 +318,24 @@
         font-size: .76rem;
         font-weight: 700;
 
-        border: 1px solid rgba(245, 158, 11, 0.28);
+        border: 1px solid rgba(195, 50, 5, 0.28);
 
-        color: #fbbf24;
+        color: #e04a1f;
 
-        background: rgba(245, 158, 11, 0.04);
+        background: rgba(195, 50, 5, 0.04);
 
         transition: all .25s ease;
     }
 
     .admin-sidebar .btn-refresh-sidebar:hover {
-        background: rgba(245, 158, 11, 0.16);
+        background: rgba(195, 50, 5, 0.16);
 
         color: #fff;
 
         transform: translateY(-2px);
 
         box-shadow:
-            0 12px 24px rgba(245, 158, 11, 0.18);
+            0 12px 24px rgba(195, 50, 5, 0.18);
     }
 
     /* ===================================
@@ -390,15 +390,57 @@
 
         .admin-sidebar .nav-item .nav-link {
             margin: 0 .55rem;
-            padding: .75rem .85rem;
+            padding: .72rem .8rem;
+            font-size: .82rem;
+            border-radius: 12px;
         }
 
         .admin-sidebar .collapse-inner {
-            margin-left: .75rem;
+            margin-left: .55rem;
+            margin-right: .55rem;
+            padding: .45rem;
+            border-radius: 14px;
+        }
+
+        .admin-sidebar .collapse-inner .collapse-item {
+            padding: .65rem .75rem;
+            font-size: .78rem;
         }
 
         .admin-brand-title {
             font-size: .92rem;
+        }
+
+        .admin-brand-subtitle {
+            font-size: .65rem;
+        }
+
+        .admin-brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+        }
+
+        .admin-sidebar .sidebar-brand {
+            padding: 1rem .8rem .8rem;
+        }
+
+        .admin-sidebar .sidebar-heading {
+            font-size: .62rem;
+            margin: .8rem .8rem .5rem;
+        }
+
+        .admin-sidebar .sidebar-divider {
+            margin: .5rem .8rem;
+        }
+
+        .admin-sidebar .sidebar-quick-actions {
+            margin: .8rem .6rem 0;
+        }
+
+        .admin-sidebar .btn-refresh-sidebar {
+            padding: .55rem .75rem;
+            font-size: .72rem;
         }
     }
 </style>
@@ -849,7 +891,7 @@
 
 <style>
     .admin-sidebar {
-        background: #0f2742 !important;
+        background: #111147 !important;
         border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18) !important;
     }
@@ -884,7 +926,7 @@
     }
 
     .admin-sidebar .nav-item .nav-link i {
-        color: #e39a4f !important;
+        color: #e04a1f !important;
     }
 
     .admin-sidebar .nav-item .nav-link:hover {
@@ -893,21 +935,21 @@
     }
 
     .admin-sidebar .nav-item.active .nav-link {
-        background: rgba(227, 154, 79, 0.16) !important;
+        background: rgba(195, 50, 5, 0.16) !important;
         box-shadow: none !important;
     }
 
     .admin-sidebar .nav-item.active .nav-link::before {
-        background: #e39a4f !important;
+        background: #e04a1f !important;
     }
 
     .admin-sidebar .collapse-inner {
         background: #f8fafc !important;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1) !important;
+        box-shadow: 0 8px 20px rgba(17, 17, 71, 0.1) !important;
     }
 
     .admin-sidebar .collapse-inner::before {
-        background: #e39a4f !important;
+        background: #e04a1f !important;
     }
 
     .admin-sidebar .collapse-inner .collapse-item {
@@ -917,19 +959,19 @@
     .admin-sidebar .collapse-inner .collapse-item:hover,
     .admin-sidebar .collapse-inner .collapse-item:focus,
     .admin-sidebar .collapse-inner .collapse-item.active {
-        background: #eef4fa !important;
-        color: #1f3f63 !important;
+        background: #eef0fa !important;
+        color: #111147 !important;
         transform: none !important;
     }
 
     .admin-sidebar .btn-refresh-sidebar {
-        border: 1px solid rgba(227, 154, 79, 0.35) !important;
-        color: #f3d1ad !important;
+        border: 1px solid rgba(195, 50, 5, 0.35) !important;
+        color: #f5c4b8 !important;
         background: rgba(255, 255, 255, 0.04) !important;
     }
 
     .admin-sidebar .btn-refresh-sidebar:hover {
-        background: rgba(227, 154, 79, 0.18) !important;
+        background: rgba(195, 50, 5, 0.18) !important;
         transform: none !important;
         box-shadow: none !important;
     }

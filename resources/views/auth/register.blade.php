@@ -9,7 +9,7 @@
     </div>
 
     <div class="text-center" style="padding: 2rem 0;">
-        <div style="width:80px;height:80px;border-radius:20px;background:rgba(245,158,11,.1);color:#f59e0b;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:1.25rem;">
+        <div style="width:80px;height:80px;border-radius:20px;background:rgba(195,50,5,.1);color:#c33205;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:1.25rem;">
             <i class="bi bi-shield-lock"></i>
         </div>
         <p style="color:#64748b;line-height:1.7;max-width:340px;margin:0 auto 1.5rem;">

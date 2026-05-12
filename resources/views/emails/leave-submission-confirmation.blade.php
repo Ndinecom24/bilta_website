@@ -14,7 +14,7 @@
         .detail-row { display: flex; padding: 8px 0; border-bottom: 1px solid #eee; }
         .detail-label { font-weight: 700; width: 140px; color: #334155; font-size: 14px; }
         .detail-value { color: #475569; font-size: 14px; }
-        .stage-badge { display: inline-block; background: #fef3c7; color: #92400e; border: 1px solid #fbbf24; padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 13px; margin-top: 12px; }
+        .stage-badge { display: inline-block; background: #fef3c7; color: #92400e; border: 1px solid #e04a1f; padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 13px; margin-top: 12px; }
         .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px 16px; margin-top: 16px; font-size: 14px; color: #1e40af; }
         .btn { display: inline-block; padding: 10px 24px; background: #2563eb; color: #fff !important; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; margin-top: 16px; }
         .email-footer { background: #f8fafc; padding: 14px 22px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }

@@ -27,17 +27,17 @@
 
     <style>
         :root {
-            --primary: #0f2742;
-            --primary-light: #1c3b5f;
-            --secondary: #3e5f84;
+            --primary: #111147;
+            --primary-light: #1a1a6b;
+            --secondary: #2d2d8a;
 
-            --accent: #d27a22;
-            --accent-light: #e39a4f;
+            --accent: #c33205;
+            --accent-light: #e04a1f;
 
             --bg: #f6f7f9;
             --surface: rgba(255, 255, 255, 0.92);
 
-            --text: #0f172a;
+            --text: #111147;
             --muted: #64748b;
 
             --border: rgba(148, 163, 184, 0.18);
@@ -45,8 +45,8 @@
             --success: #10b981;
             --danger: #ef4444;
 
-            --shadow-lg: 0 25px 50px rgba(15, 23, 42, 0.12);
-            --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 25px 50px rgba(17, 17, 71, 0.12);
+            --shadow-md: 0 10px 30px rgba(17, 17, 71, 0.08);
 
             --radius-xl: 24px;
             --radius-lg: 18px;
@@ -334,13 +334,13 @@
         }
 
         .btn-primary {
-            background: #1c3b5f;
+            background: #1a1a6b;
 
             border: 0;
         }
 
         .btn-primary:hover {
-            background: #0f2742;
+            background: #111147;
             opacity: 1;
         }
 
@@ -370,7 +370,7 @@
             color: var(--muted);
 
             box-shadow:
-                0 10px 25px rgba(15, 23, 42, 0.06);
+                0 10px 25px rgba(17, 17, 71, 0.06);
         }
 
         /* ===============================
@@ -380,7 +380,7 @@
         .scroll-to-top.rounded {
             border-radius: 999px !important;
 
-            background: #d27a22;
+            background: #c33205;
 
             width: 52px;
             height: 52px;
@@ -390,7 +390,7 @@
             justify-content: center;
 
             box-shadow:
-                0 10px 24px rgba(15, 23, 42, 0.2);
+                0 10px 24px rgba(17, 17, 71, 0.2);
         }
 
         .scroll-to-top.rounded:hover {
@@ -428,10 +428,27 @@
 
             .admin-page-surface {
                 padding: 1rem;
+                border-radius: 18px;
             }
 
             .admin-topbar {
                 margin: .75rem;
+            }
+
+            /* Tables scroll horizontally */
+            .table-responsive,
+            .card-body {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table.table {
+                min-width: 600px;
+            }
+
+            /* Cards don't hover-lift on touch */
+            .card:hover {
+                transform: none;
             }
         }
 
@@ -440,14 +457,125 @@
             .admin-topbar {
                 border-radius: 16px;
                 padding: .75rem;
+                margin: .5rem;
+                min-height: auto;
             }
 
             .admin-page-surface {
-                border-radius: 20px;
+                border-radius: 16px;
+                padding: .85rem;
+            }
+
+            .admin-main-container {
+                padding: .5rem;
             }
 
             .admin-stat-pill {
                 margin-bottom: .5rem;
+            }
+
+            /* Stack form rows */
+            .row .col-lg-4,
+            .row .col-lg-6,
+            .row .col-lg-8 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            /* Buttons don't lift on touch */
+            .btn:hover {
+                transform: none;
+            }
+
+            /* Scroll-to-top smaller */
+            .scroll-to-top.rounded {
+                width: 42px;
+                height: 42px;
+                right: 12px !important;
+                bottom: 12px !important;
+            }
+
+            /* Card header flex-wrap */
+            .card-header {
+                flex-wrap: wrap;
+                gap: .5rem;
+            }
+
+            .card-header .d-flex {
+                flex-wrap: wrap;
+                gap: .5rem;
+            }
+
+            /* Trix editor smaller on mobile */
+            trix-editor {
+                min-height: 200px !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            .admin-topbar {
+                border-radius: 14px;
+                padding: .6rem;
+                margin: .4rem;
+            }
+
+            .admin-page-surface {
+                border-radius: 14px;
+                padding: .65rem;
+            }
+
+            .admin-main-container {
+                padding: .35rem;
+            }
+
+            /* Full-width buttons on very small screens */
+            .d-flex.flex-wrap.gap-2 .btn,
+            .d-flex.gap-2 .btn {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+
+            /* Typography scale down */
+            h1.h3, .h3 {
+                font-size: 1.2rem;
+            }
+
+            h5 {
+                font-size: 1rem;
+            }
+
+            /* Card body tighter padding */
+            .card-body {
+                padding: .85rem;
+            }
+
+            /* Pagination compact */
+            .pagination {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .pagination .page-link {
+                padding: .35rem .6rem;
+                font-size: .8rem;
+            }
+
+            /* Table font smaller */
+            table.table {
+                font-size: .82rem;
+            }
+
+            table.table .btn-sm {
+                padding: .25rem .5rem;
+                font-size: .72rem;
+            }
+
+            /* Footer compact */
+            .admin-footer-inner {
+                padding: .75rem;
+                font-size: .82rem;
+                border-radius: 14px;
             }
         }
     </style>

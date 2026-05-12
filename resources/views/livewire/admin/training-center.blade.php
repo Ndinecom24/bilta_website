@@ -231,7 +231,7 @@
 
                 {{-- ============================== DASHBOARD ============================== --}}
                 @elseif ($activeSection === 'dashboard')
-                <h2><i class="fas fa-tachometer-alt mr-2" style="color:#7c3aed;"></i> Dashboard Overview</h2>
+                <h2><i class="fas fa-tachometer-alt mr-2" style="color:#1d4ed8;"></i> Dashboard Overview</h2>
 
                 <p>The dashboard is your home page when you log in. It provides a quick overview of the system.</p>
 
@@ -325,7 +325,7 @@
 
                 {{-- ============================== APPLYING FOR LEAVE ============================== --}}
                 @elseif ($activeSection === 'leave-application')
-                <h2><i class="fas fa-calendar-check mr-2" style="color:#d97706;"></i> Applying for Leave</h2>
+                <h2><i class="fas fa-calendar-check mr-2" style="color:#c33205;"></i> Applying for Leave</h2>
 
                 <p>The leave application system allows you to submit leave requests digitally. The form mirrors BiLTA's physical leave application form.</p>
 
@@ -620,7 +620,7 @@
 
                 {{-- ============================== ROLES & PERMISSIONS ============================== --}}
                 @elseif ($activeSection === 'roles-permissions')
-                <h2><i class="fas fa-shield-alt mr-2" style="color:#b45309;"></i> Roles & Permissions</h2>
+                <h2><i class="fas fa-shield-alt mr-2" style="color:#9a2804;"></i> Roles & Permissions</h2>
 
                 <p>The system uses Role-Based Access Control (RBAC). Each user is assigned one or more roles, and each role has a set of permissions that control what the user can see and do.</p>
 
