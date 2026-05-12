@@ -29,6 +29,31 @@ return [
             'slug' => 'viewer',
             'description' => 'Read-only access to admin dashboard and content.',
         ],
+        [
+            'name' => 'Leave Applicant',
+            'slug' => 'leave-applicant',
+            'description' => 'Can submit and track own leave applications.',
+        ],
+        [
+            'name' => 'Leave Approver',
+            'slug' => 'leave-approver',
+            'description' => 'Can access leave approval queue and approve/reject stages assigned to their role.',
+        ],
+        [
+            'name' => 'Leave Officer',
+            'slug' => 'leave-officer',
+            'description' => 'Can manage leave applications, balances, and leave types.',
+        ],
+        [
+            'name' => 'Leave Workflow Manager',
+            'slug' => 'leave-workflow-manager',
+            'description' => 'Can configure and maintain leave approval workflows.',
+        ],
+        [
+            'name' => 'Leave Manager',
+            'slug' => 'leave-manager',
+            'description' => 'Full leave-management access across applications, types, balances, and workflows.',
+        ],
     ],
 
     /*
@@ -151,6 +176,39 @@ return [
             'view-front-requests',
             'view-analytics',
             'apply-leave',
+        ],
+
+        'leave-applicant' => [
+            'view-dashboard',
+            'apply-leave',
+        ],
+
+        'leave-approver' => [
+            'view-dashboard',
+            'apply-leave',
+        ],
+
+        'leave-officer' => [
+            'view-dashboard',
+            'manage-leave-types',
+            'manage-leave-applications',
+            'apply-leave',
+            'manage-leave-balances',
+        ],
+
+        'leave-workflow-manager' => [
+            'view-dashboard',
+            'manage-approval-workflows',
+            'apply-leave',
+        ],
+
+        'leave-manager' => [
+            'view-dashboard',
+            'manage-leave-types',
+            'manage-leave-applications',
+            'apply-leave',
+            'manage-leave-balances',
+            'manage-approval-workflows',
         ],
     ],
 

@@ -5,8 +5,10 @@ namespace App\Http\Livewire\System;
 use App\Models\Bilta\Department;
 use App\Models\System\Role;
 use App\Models\System\Status;
+use App\Mail\NewUserWelcomeMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,7 +16,7 @@ use Livewire\WithPagination;
 class UsersIndex extends Component
 {
     use WithPagination ;
-    public  $user_id, $email, $name, $phone, $status_id, $password , $password_change, $role_id ;
+    public  $user_id, $email, $name, $phone, $status_id, $password_change, $role_id ;
 
     // HR fields
     public $position, $department_id, $nrc, $man_number, $employee_id;
@@ -33,7 +35,6 @@ class UsersIndex extends Component
         'name'=>'required',
         'email'=>'required|email|unique:users,email',
         'status_id' => 'required',
-        'role_id' => 'required',
         'position' => 'nullable|string|max:100',
         'department_id' => 'nullable|exists:departments,id',
         'nrc' => 'nullable|string|max:30',
@@ -49,11 +50,10 @@ class UsersIndex extends Component
     public function render()
     {
         $users = User::with('departmentRelation', 'supervisor')->select('*')->paginate(20);
-        $roles = Role::get();
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
         $supervisors = User::orderBy('name')->select('id', 'name', 'position')->get();
-        return view('livewire.system.user.index')->with(compact('users', 'roles', 'statuses', 'departments', 'supervisors'));
+        return view('livewire.system.user.index')->with(compact('users', 'statuses', 'departments', 'supervisors'));
     }
 
     public function resetFields(){
@@ -61,7 +61,6 @@ class UsersIndex extends Component
         $this->email = '';
         $this->phone = '';
         $this->status_id = '';
-        $this->password = '';
         $this->role_id = '';
         $this->position = '';
         $this->department_id = '';
@@ -82,15 +81,16 @@ class UsersIndex extends Component
         $this->validate();
         try{
             $uuid = Str::uuid()->toString();
+            $temporaryPassword = Str::random(12);
             // Create User
             $user = User::create([
                 'name'=>$this->name,
                 'phone'=>$this->phone,
                 'email'=>$this->email,
                 'status_id'=>$this->status_id,
-                'password_change'=> 0 ,
+                'password_change'=> 1 ,
                 'logins' => 0 ,
-                'password' => Hash::make($this->password),
+                'password' => Hash::make($temporaryPassword),
                 'uuid'=>$uuid,
                 'position' => $this->position ?: null,
                 'department_id' => $this->department_id ?: null,
@@ -107,11 +107,26 @@ class UsersIndex extends Component
                 'supervisor_id' => $this->supervisor_id ?: null,
             ]);
 
-            $user->roles()->syncWithoutDetaching($this->role_id);
+            $viewerRole = Role::where('slug', 'viewer')->first();
+            if ($viewerRole) {
+                $user->roles()->syncWithoutDetaching([$viewerRole->id]);
+            }
+
+            $mailSent = true;
+            try {
+                Mail::to($user->email)->send(new NewUserWelcomeMail($user, $temporaryPassword));
+            } catch (\Exception $mailException) {
+                $mailSent = false;
+            }
 
 
             // Set Flash Message
-            session()->flash('success','User Created Successfully!!');
+            session()->flash(
+                'success',
+                $mailSent
+                    ? 'User created successfully. Temporary password has been emailed.'
+                    : 'User created successfully, but the welcome email could not be sent.'
+            );
 
             // Reset Form Fields After Creating User
             $this->resetFields();

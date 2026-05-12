@@ -70,7 +70,12 @@
                 </div>
 
                 <div class="card-body">
-                    <form wire:submit.prevent="{{ $updateLeadershipMember ? 'update' : 'store' }}" enctype="multipart/form-data">
+                    <form wire:submit.prevent="{{ $updateLeadershipMember ? 'update' : 'store' }}" enctype="multipart/form-data"
+                          x-data="{ isUploading: false, progress: 0 }"
+                          x-on:livewire-upload-start="isUploading = true"
+                          x-on:livewire-upload-finish="isUploading = false; progress = 0"
+                          x-on:livewire-upload-error="isUploading = false"
+                          x-on:livewire-upload-progress="progress = $event.detail.progress">
                         <div class="row">
                             <div class="col-lg-4 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="teamName">Name</label>
@@ -142,13 +147,38 @@
 
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="teamImage">{{ $updateLeadershipMember ? 'Replace Photo (optional)' : 'Member Photo' }}</label>
-                                <input id="teamImage" type="file" class="form-control" wire:model="user_image">
+                                <input id="teamImage" type="file" class="form-control" wire:model="user_image" accept="image/*">
+                                <small class="text-muted d-block mt-1">Please wait for upload to finish before saving.</small>
+
+                                <div class="mt-2" wire:loading wire:target="user_image">
+                                    <div class="d-flex align-items-center">
+                                        <div class="spinner-border spinner-border-sm text-primary mr-2" aria-hidden="true"></div>
+                                        <span class="text-primary">Uploading image, please wait...</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2" x-show="isUploading" x-cloak>
+                                    <progress class="w-100" max="100" x-bind:value="progress"></progress>
+                                </div>
+
+                                <div class="mt-2" wire:loading.remove wire:target="user_image">
+                                    @if ($user_image)
+                                        <small class="text-success d-block">Image ready.</small>
+                                    @endif
+                                </div>
+
                                 @error('user_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
-                            <button type="submit" class="btn btn-primary">{{ $updateLeadershipMember ? 'Update Member' : 'Save Member' }}</button>
+                            <button type="submit" class="btn btn-primary"
+                                    wire:loading.attr="disabled"
+                                    wire:target="user_image,store,update"
+                                    x-bind:disabled="isUploading">
+                                <span wire:loading.remove wire:target="store,update,user_image">{{ $updateLeadershipMember ? 'Update Member' : 'Save Member' }}</span>
+                                <span wire:loading wire:target="store,update,user_image">Please wait...</span>
+                            </button>
                             @if ($updateLeadershipMember)
                                 <button wire:click.prevent="cancel" type="button" class="btn btn-outline-danger">Cancel Edit</button>
                             @endif

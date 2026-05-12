@@ -51,19 +51,8 @@
                                 @error('phone') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
                             <div class="col-lg-4 col-md-6 mb-3">
-                                <label class="font-weight-bold" for="userPassword">Password *</label>
-                                <input id="userPassword" type="password" class="form-control" wire:model.defer="password" required autocomplete="new-password">
-                                @error('password') <span class="text-danger d-block">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="col-lg-4 col-md-6 mb-3">
-                                <label class="font-weight-bold" for="userRole">Role *</label>
-                                <select id="userRole" class="form-control" wire:model.defer="role_id" required>
-                                    <option value="">-- Select --</option>
-                                    @foreach($roles as $role)
-                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('role_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                <span class="font-weight-bold d-block mb-2">Default Role</span>
+                                <input type="text" class="form-control" value="Viewer (automatic)" readonly>
                             </div>
                             <div class="col-lg-4 col-md-6 mb-3">
                                 <label class="font-weight-bold" for="userStatus">Status *</label>
@@ -75,17 +64,23 @@
                                 </select>
                                 @error('status_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
+                            <div class="col-12 mb-3">
+                                <small class="text-muted">A one-time temporary password is auto-generated and sent to the user's email when the account is created.</small>
+                            </div>
 
                             {{-- HR / Employment Info --}}
                             <div class="col-12 mb-2 mt-2"><h6 class="font-weight-bold text-primary border-bottom pb-1">Employment Details</h6></div>
+                           
                             <div class="col-lg-3 col-md-6 mb-3">
                                 <label class="font-weight-bold">Employee ID</label>
                                 <input type="text" class="form-control" wire:model.defer="employee_id" placeholder="e.g. BLT-001">
                             </div>
+
                             <div class="col-lg-3 col-md-6 mb-3">
                                 <label class="font-weight-bold">Position / Title</label>
                                 <input type="text" class="form-control" wire:model.defer="position" placeholder="e.g. Translator">
                             </div>
+
                             <div class="col-lg-3 col-md-6 mb-3">
                                 <label class="font-weight-bold">Department</label>
                                 <select class="form-control" wire:model.defer="department_id">

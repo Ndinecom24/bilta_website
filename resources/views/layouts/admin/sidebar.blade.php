@@ -104,11 +104,25 @@
         color: #fff;
 
         font-size: 1rem;
+
         font-weight: 800;
 
         letter-spacing: .02em;
 
         line-height: 1.15;
+    }
+
+    .admin-sidebar .sidebar-close-mobile {
+        display: none;
+        margin-left: auto;
+        width: 36px;
+        height: 36px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #e2e8f0;
+        align-items: center;
+        justify-content: center;
     }
 
     .admin-brand-subtitle {
@@ -442,6 +456,10 @@
             padding: .55rem .75rem;
             font-size: .72rem;
         }
+
+        .admin-sidebar .sidebar-close-mobile {
+            display: inline-flex;
+        }
     }
 </style>
 
@@ -464,6 +482,10 @@
                     Content Management Hub
                 </div>
             </div>
+
+            <button type="button" id="sidebarCloseMobile" class="sidebar-close-mobile" aria-label="Close sidebar">
+                <i class="fas fa-times"></i>
+            </button>
 
         </div>
     </a>
@@ -879,15 +901,61 @@
 
     <!-- TOGGLE -->
     <div class="text-center d-none d-md-inline mb-4">
-
         <button class="rounded-circle border-0"
             id="sidebarToggle">
-
         </button>
-
     </div>
 
 </ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('accordionSidebar');
+        const closeMobileButton = document.getElementById('sidebarCloseMobile');
+
+        if (!sidebar) {
+            return;
+        }
+
+        const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
+        const closeSidebar = () => {
+            document.body.classList.add('sidebar-toggled');
+            sidebar.classList.add('toggled');
+        };
+
+        const openSidebar = () => {
+            document.body.classList.remove('sidebar-toggled');
+            sidebar.classList.remove('toggled');
+        };
+
+        if (isMobile()) {
+            closeSidebar();
+        }
+
+        if (closeMobileButton) {
+            closeMobileButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeSidebar();
+            });
+        }
+
+        let wasMobile = isMobile();
+        window.addEventListener('resize', function() {
+            const nowMobile = isMobile();
+
+            if (!wasMobile && nowMobile) {
+                closeSidebar();
+            }
+
+            if (wasMobile && !nowMobile) {
+                openSidebar();
+            }
+
+            wasMobile = nowMobile;
+        });
+    });
+</script>
 
 <style>
     .admin-sidebar {
@@ -983,5 +1051,48 @@
     .admin-sidebar #sidebarToggle:hover {
         transform: none !important;
         background: rgba(255, 255, 255, 0.16) !important;
+    }
+
+    @media (max-width: 768px) {
+        .admin-sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: min(86vw, 320px) !important;
+            max-width: min(86vw, 320px) !important;
+            min-height: 100vh !important;
+            max-height: 100vh !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            z-index: 1045 !important;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3) !important;
+            transform: translateX(0);
+            transition: transform .25s ease !important;
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + .75rem);
+        }
+
+        .admin-sidebar.toggled {
+            transform: translateX(-105%) !important;
+        }
+
+        .admin-sidebar .nav-item .nav-link {
+            padding: .85rem .9rem !important;
+            font-size: .86rem !important;
+            line-height: 1.25;
+        }
+
+        .admin-sidebar .collapse-inner .collapse-item {
+            padding: .78rem .85rem !important;
+            font-size: .82rem !important;
+            line-height: 1.25;
+        }
+
+        .admin-sidebar .sidebar-brand {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #111147;
+        }
     }
 </style>
