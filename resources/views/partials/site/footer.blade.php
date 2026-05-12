@@ -509,6 +509,7 @@
 
     .footer-main{
         text-align:center;
+        padding:50px 0 30px;
     }
 
     .footer-description{
@@ -526,6 +527,48 @@
 
     .footer-contact-item{
         justify-content:center;
+    }
+
+}
+
+@media(max-width:576px){
+
+    .footer-main{
+        padding:36px 0 24px;
+    }
+
+    .footer-logo{
+        font-size:1.8rem;
+    }
+
+    .footer-socials a{
+        width:38px;
+        height:38px;
+        font-size:.9rem;
+    }
+
+    .footer-socials{
+        gap:10px;
+        flex-wrap:wrap;
+    }
+
+    .footer-title{
+        font-size:1.05rem;
+        margin-bottom:22px;
+    }
+
+    .newsletter-group input{
+        padding:12px 14px;
+        min-width:0;
+    }
+
+    .footer-bottom{
+        padding:18px 0;
+    }
+
+    .copyright-text,
+    .developer-text{
+        font-size:.82rem;
     }
 
 }

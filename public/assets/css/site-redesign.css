@@ -678,3 +678,75 @@
   font-size: 0.76rem;
   font-weight: 700;
 }
+
+/* =========================================================
+   MOBILE RESPONSIVE — 576px and below
+========================================================= */
+
+@media (max-width: 576px) {
+  .page-hero {
+    padding: 28px 18px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+
+  .page-hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .page-hero h2 {
+    font-size: 1.3rem;
+  }
+
+  .page-section {
+    padding: 16px;
+  }
+
+  .site-section-title {
+    font-size: 1.2rem;
+  }
+
+  .site-media-thumb {
+    height: 160px;
+  }
+
+  .site-search-row .form-control {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .site-card .card-body {
+    padding: 1rem;
+    word-break: break-word;
+  }
+
+  .home-team-image {
+    height: 220px;
+  }
+
+  .home-sponsor-box {
+    width: 110px;
+    height: 80px;
+  }
+
+  .home-contact-form {
+    padding: 1rem;
+  }
+
+  .modern-sidebar {
+    position: static;
+    margin-bottom: 20px;
+  }
+
+  /* Ensure images never overflow */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent horizontal overflow */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

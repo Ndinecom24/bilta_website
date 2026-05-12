@@ -553,6 +553,60 @@
             height: 280px;
         }
     }
+
+    @media (max-width: 576px) {
+        .contact-section-modern {
+            padding: 40px 0;
+        }
+
+        .section-heading {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.7rem;
+        }
+
+        .section-subtitle {
+            font-size: 15px;
+        }
+
+        .info-icon {
+            width: 42px;
+            height: 42px;
+            font-size: 17px;
+        }
+
+        .social-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 16px;
+        }
+
+        .social-links-modern {
+            justify-content: center;
+        }
+
+        .contact-card-body {
+            flex-direction: column;
+            gap: 12px;
+            padding: 18px;
+        }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+        }
+
+        .map-wrapper {
+            height: 200px;
+        }
+
+        .quick-links-list li a {
+            padding: 14px 16px;
+        }
+    }
 </style>
   </div>
 </div>

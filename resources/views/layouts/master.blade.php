@@ -303,6 +303,7 @@
             display:none;
             font-size:1.7rem;
             color:var(--primary);
+            cursor:pointer;
         }
 
         /* =========================================================
@@ -419,6 +420,47 @@
 
             .navbar ul{
                 display:none;
+                flex-direction:column;
+                position:absolute;
+                top:100%;
+                left:0;
+                right:0;
+                background:#ffffff;
+                border-radius:0 0 18px 18px;
+                box-shadow:0 20px 45px rgba(0,0,0,.1);
+                padding:16px;
+                z-index:999;
+                gap:4px;
+            }
+
+            .navbar ul.mobile-nav-open{
+                display:flex;
+            }
+
+            .navbar ul li{
+                width:100%;
+            }
+
+            .navbar a{
+                display:block;
+                padding:12px 16px;
+                border-radius:12px;
+            }
+
+            .dropdown-menu-custom{
+                position:static;
+                box-shadow:none;
+                border-radius:12px;
+                padding:8px 16px;
+                background:#f8fafc;
+                transform:none;
+                opacity:1;
+                visibility:visible;
+                display:none;
+            }
+
+            .dropdown.mobile-dropdown-open .dropdown-menu-custom{
+                display:block;
             }
 
             .topbar{
@@ -436,6 +478,19 @@
 
             .brand-title{
                 font-size:1.3rem;
+            }
+
+        }
+
+        @media(max-width:576px){
+
+            .btn-outline-theme{
+                display:none;
+            }
+
+            .btn-theme{
+                padding:10px 14px;
+                font-size:.85rem;
             }
 
         }
@@ -1013,6 +1068,44 @@
             duration:800,
             once:true
         });
+
+        // =========================================================
+        // MOBILE NAV TOGGLE
+        // =========================================================
+        (function(){
+            const toggle = document.querySelector('.mobile-nav-toggle');
+            const navUl  = document.querySelector('.navbar ul');
+
+            if(toggle && navUl){
+                toggle.addEventListener('click', function(){
+                    navUl.classList.toggle('mobile-nav-open');
+                    // Switch hamburger ↔ close icon
+                    this.classList.toggle('bi-list');
+                    this.classList.toggle('bi-x');
+                });
+
+                // Close nav when a link is clicked (but not dropdowns)
+                navUl.querySelectorAll('a').forEach(function(link){
+                    if(!link.closest('.dropdown')) {
+                        link.addEventListener('click', function(){
+                            navUl.classList.remove('mobile-nav-open');
+                            toggle.classList.add('bi-list');
+                            toggle.classList.remove('bi-x');
+                        });
+                    }
+                });
+            }
+
+            // Mobile dropdown toggle (touch-friendly)
+            document.querySelectorAll('.navbar .dropdown > a').forEach(function(trigger){
+                trigger.addEventListener('click', function(e){
+                    if(window.innerWidth <= 991){
+                        e.preventDefault();
+                        this.closest('.dropdown').classList.toggle('mobile-dropdown-open');
+                    }
+                });
+            });
+        })();
 
     </script>
 

@@ -17,7 +17,7 @@
         <div class="hero-overlay"></div>
 
         <div class="container position-relative">
-            <div class="row min-vh-100 align-items-center">
+            <div class="row min-vh-md-100 align-items-center py-5">
 
                 <div class="col-lg-7" data-aos="fade-right">
 
@@ -843,6 +843,11 @@ body{
     color:var(--text);
 }
 
+/* Responsive min-vh utility */
+@media(min-width:768px){
+    .min-vh-md-100{ min-height:100vh; }
+}
+
 .hero-section{
     background-size:cover;
     background-position:center;
@@ -1288,6 +1293,95 @@ body{
 
     .chairperson-panel{
         padding:24px;
+    }
+
+}
+
+@media(max-width:576px){
+
+    .hero-title{
+        font-size:1.9rem;
+    }
+
+    .hero-title span{
+        font-size:inherit;
+    }
+
+    .hero-impact{
+        gap:20px;
+    }
+
+    .hero-impact-item h3{
+        font-size:1.5rem;
+    }
+
+    .section-title{
+        font-size:1.6rem;
+    }
+
+    .mission-image{
+        min-height:200px;
+    }
+
+    .chairperson-image{
+        width:200px;
+        height:200px;
+    }
+
+    .chairperson-avatar-fallback{
+        width:160px;
+        height:160px;
+        font-size:3rem;
+    }
+
+    .testimonial-card{
+        padding:20px;
+    }
+
+    .team-image,
+    .team-initials-fallback{
+        height:220px;
+    }
+
+    .team-initials-fallback{
+        font-size:2.8rem;
+    }
+
+    .contact-form-card{
+        padding:20px;
+    }
+
+    .contact-item i{
+        width:42px;
+        height:42px;
+        font-size:1.1rem;
+    }
+
+    .sponsor-card{
+        height:100px;
+        padding:16px;
+    }
+
+    .news-image{
+        height:180px;
+    }
+
+    .project-card{
+        padding:24px;
+    }
+
+    .service-home-card{
+        padding:20px;
+    }
+
+    .mission-panel{
+        padding:18px;
+    }
+
+    .mission-feature-card i{
+        width:40px;
+        height:40px;
+        font-size:1.1rem;
     }
 
 }
