@@ -321,8 +321,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    var(--primary),
-                    #1e293b
+                    #b36227,
+                    #d4943a
                 );
             color:white;
             border:none;
@@ -814,14 +814,6 @@
 </head>
 
 <body>
-
-    {{-- =========================================================
-        CHAT WIDGET
-    ========================================================= --}}
-    <script id="chatway"
-        async="true"
-        src="https://cdn.chatway.app/widget.js?id=6OC9P2rVU5pW">
-    </script>
 
     {{-- =========================================================
         TOP BAR

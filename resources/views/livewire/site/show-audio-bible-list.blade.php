@@ -10,7 +10,7 @@
                 <div class="modern-sidebar">
                     <div class="sidebar-header">
                         <div class="sidebar-icon">
-                            <i class="fas fa-headphones-alt"></i>
+                            <i class="bi bi-headphones"></i>
                         </div>
 
                         <div>
@@ -103,7 +103,7 @@
                         @empty
                             <div class="col-12">
                                 <div class="news-empty-state">
-                                    <div class="empty-icon"><i class="fas fa-headphones"></i></div>
+                                    <div class="empty-icon"><i class="bi bi-headphones"></i></div>
                                     <h4>No Audio Files Available</h4>
                                     <p>There are currently no recordings for this selection.</p>
                                 </div>
@@ -123,7 +123,7 @@
 <div id="audioMiniPlayer" class="audio-mini-player d-none" aria-live="polite">
     <div class="audio-mini-player__left">
         <div class="audio-mini-player__icon">
-            <i class="fas fa-headphones"></i>
+            <i class="bi bi-headphones"></i>
         </div>
         <div>
             <div class="audio-mini-player__label">Currently Playing</div>
@@ -134,10 +134,10 @@
 
     <div class="audio-mini-player__actions">
         <button id="miniTogglePlay" type="button" class="btn btn-sm btn-light" aria-label="Play or pause current audio">
-            <i id="miniToggleIcon" class="fas fa-pause"></i>
+            <i id="miniToggleIcon" class="bi bi-pause-fill"></i>
         </button>
         <button id="miniClosePlayer" type="button" class="btn btn-sm btn-outline-light" aria-label="Close mini player">
-            <i class="fas fa-times"></i>
+            <i class="bi bi-x-lg"></i>
         </button>
     </div>
 </div>
@@ -189,8 +189,8 @@
 
         const setMiniPlayerState = (isPlaying) => {
             if (!miniToggleIcon) return;
-            miniToggleIcon.classList.remove('fa-play', 'fa-pause');
-            miniToggleIcon.classList.add(isPlaying ? 'fa-pause' : 'fa-play');
+            miniToggleIcon.classList.remove('bi-play-fill', 'bi-pause-fill');
+            miniToggleIcon.classList.add(isPlaying ? 'bi-pause-fill' : 'bi-play-fill');
         };
 
         audioPlayers.forEach((player) => {
@@ -257,19 +257,49 @@
         font-weight: 700;
         padding: 4px 9px;
         border-radius: 999px;
-        background: rgba(29, 78, 216, 0.12);
-        color: #1d4ed8;
+        background: rgba(179, 98, 39, 0.12);
+        color: #b36227;
     }
 
     .modern-sidebar .category-item.active {
-        background: rgba(37, 99, 235, 0.2);
-        border-color: rgba(37, 99, 235, 0.38);
+        background: rgba(179, 98, 39, 0.15);
+        border-color: rgba(179, 98, 39, 0.35);
     }
 
     .modern-sidebar .category-item.active .category-name,
     .modern-sidebar .category-item.active .category-count {
-        color: #1e3a8a;
+        color: #7c3f14;
         font-weight: 700;
+    }
+
+    .modern-sidebar .category-item.active .category-count {
+        background: rgba(179, 98, 39, 0.22);
+        color: #7c3f14;
+    }
+
+    .modern-sidebar .category-item.active .category-dot {
+        background: #b36227;
+    }
+
+    .audio-news-card {
+        border: 1px solid #e2e8f0;
+        transition: .3s ease;
+    }
+
+    .audio-news-card:hover {
+        border-color: rgba(179, 98, 39, 0.3);
+        box-shadow: 0 12px 30px rgba(179, 98, 39, 0.08);
+    }
+
+    .audio-news-card .btn-outline-primary {
+        border-color: #b36227;
+        color: #b36227;
+    }
+
+    .audio-news-card .btn-outline-primary:hover {
+        background: #b36227;
+        border-color: #b36227;
+        color: #fff;
     }
 
     .audio-mini-player {
@@ -278,12 +308,12 @@
         bottom: 16px;
         transform: translateX(-50%);
         width: min(960px, calc(100% - 24px));
-        background: linear-gradient(135deg, #0f2742, #1e3a63);
-        color: #e2e8f0;
-        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: linear-gradient(135deg, #5c2e0e, #8b4a1f);
+        color: #fde8d0;
+        border: 1px solid rgba(212, 148, 58, 0.35);
         border-radius: 14px;
         padding: 12px 14px;
-        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.26);
+        box-shadow: 0 16px 36px rgba(92, 46, 14, 0.32);
         z-index: 1100;
         display: flex;
         align-items: center;
@@ -305,8 +335,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.12);
-        color: #f8fafc;
+        background: rgba(245, 158, 11, 0.2);
+        color: #f59e0b;
         flex-shrink: 0;
     }
 
@@ -314,7 +344,7 @@
         font-size: .72rem;
         text-transform: uppercase;
         letter-spacing: .08em;
-        color: #bfd0e4;
+        color: #e8c89a;
         font-weight: 700;
     }
 
@@ -331,7 +361,7 @@
 
     .audio-mini-player__meta {
         font-size: .78rem;
-        color: #cbd5e1;
+        color: #e8c89a;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -343,6 +373,32 @@
         align-items: center;
         gap: 8px;
         flex-shrink: 0;
+    }
+
+    .audio-mini-player__actions .btn-light {
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: #f59e0b;
+    }
+
+    .audio-mini-player__actions .btn-light:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .audio-mini-player__actions .btn-outline-light {
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #e8c89a;
+    }
+
+    .audio-mini-player__actions .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+    }
+
+    /* Audio player accent */
+    audio::-webkit-media-controls-play-button,
+    audio::-webkit-media-controls-panel {
+        background: #fef3e2;
     }
 
     @media (max-width: 768px) {
