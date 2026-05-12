@@ -111,11 +111,19 @@
       
         {{-- View Detail --}}
         @if ($viewingApplication)
-        <div class="col-md-12 mb-3">
+        <div id="approvedLeavePrintArea" class="col-md-12 mb-3">
             <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center" style="background: #0b3b2f; color: white;">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #c33205; color: white;">
                     <h5 class="mb-0" style="color: white;"><i class="fas fa-file-alt"></i> Application Details — Ref #{{ $viewingApplication->id }}</h5>
-                    <button wire:click="closeView" class="btn btn-sm btn-light">Close</button>
+                    <div class="d-flex align-items-center">
+                        {{ $viewingApplication  }}
+                        @if ($viewingApplication->status == 'approved')
+                            <button type="button" class="btn btn-sm btn-light mr-2 no-print" onclick="printApprovedLeaveForm()">
+                                <i class="fas fa-print mr-1"></i> Print Approved Form
+                            </button>
+                        @endif
+                        <button wire:click="closeView" class="btn btn-sm btn-light no-print">Close</button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -310,8 +318,8 @@
 
 
   @if ($viewingApplication->status === 'pending' && $viewingApplication->currentStage && auth()->user()->roles->contains('id', $viewingApplication->currentStage->role_id))
-                                                <button wire:click="startReview({{ $viewingApplication->id }}, 'approved')" class="btn btn-success btn-sm">Approve</button>
-                                                <button wire:click="startReview({{ $viewingApplication->id }}, 'rejected')" class="btn btn-danger btn-sm">Reject</button>
+                                                <button wire:click="startReview({{ $viewingApplication->id }}, 'approved')" class="btn btn-success btn-sm no-print">Approve</button>
+                                                <button wire:click="startReview({{ $viewingApplication->id }}, 'rejected')" class="btn btn-danger btn-sm no-print">Reject</button>
                                             @endif 
 
           
@@ -415,7 +423,37 @@
         </div>
     </div>
 
+    <style>
+        @media print {
+            body * {
+                visibility: hidden !important;
+            }
+
+            #approvedLeavePrintArea,
+            #approvedLeavePrintArea * {
+                visibility: visible !important;
+            }
+
+            #approvedLeavePrintArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            #approvedLeavePrintArea .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+
     <script>
+        function printApprovedLeaveForm() {
+            window.print();
+        }
+
         function deleteLeaveApplication(id) {
             if (confirm("Are you sure you want to delete this application?"))
                 window.livewire.emit('deleteLeaveApplication', id);

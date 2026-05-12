@@ -53,7 +53,7 @@
         </button>
     </div>
 
-    <div class="row">
+    <div class="row my-leave-page-row">
         <div class="col-md-12 p-2">
             @if ($errors->any())
                 <div class="alert alert-danger" role="alert">
@@ -403,7 +403,7 @@
              APPLICATION DETAIL + WORKFLOW PROGRESS + AUDIT TRAIL
         ============================================================= --}}
         @if ($viewingApplication)
-        <div class="col-md-12 mb-3">
+        <div id="myApprovedLeavePrintArea" class="col-md-12 mb-3">
             <div class="card shadow-sm" style="border-radius: 14px; overflow: hidden;">
                 <div class="bilta-form-header" style="text-align: left; padding: 1rem 1.5rem;">
                     <div class="d-flex justify-content-between align-items-center">
@@ -411,7 +411,14 @@
                             <h2 style="font-size: 1.1rem;">Leave Application Details</h2>
                             <span class="tagline" style="font-size: 0.75rem;">Ref #{{ $viewingApplication->id }} — {{ $viewingApplication->created_at->format('d M Y') }}</span>
                         </div>
-                        <button wire:click="closeView" class="btn btn-sm btn-light">Close</button>
+                        <div class="d-flex align-items-center">
+                            @if ($viewingApplication->status === 'approved')
+                                <button type="button" class="btn btn-sm btn-light mr-2 no-print" onclick="window.print()">
+                                    <i class="fas fa-print mr-1"></i> Print Approved Form
+                                </button>
+                            @endif
+                            <button wire:click="closeView" class="btn btn-sm btn-light no-print">Close</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body" style="padding: 1.5rem;">
@@ -590,11 +597,11 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
-                            <button wire:click="submitReview('approved')" class="btn btn-success px-4"
+                            <button wire:click="submitReview('approved')" class="btn btn-success px-4 no-print"
                                     onclick="return confirm('Are you sure you want to APPROVE this leave application?')">
                                 <i class="fas fa-check-circle"></i> Approve Application
                             </button>
-                            <button wire:click="submitReview('rejected')" class="btn btn-danger px-4"
+                            <button wire:click="submitReview('rejected')" class="btn btn-danger px-4 no-print"
                                     onclick="return confirm('Are you sure you want to REJECT this leave application?')">
                                 <i class="fas fa-times-circle"></i> Reject Application
                             </button>
@@ -607,4 +614,148 @@
         </div>
         @endif
     </div>
+
+    <style>
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+
+            .admin-sidebar,
+            .sidebar,
+            .admin-topbar,
+            .scroll-to-top,
+            footer,
+            .admin-footer {
+                display: none !important;
+            }
+
+            #content-wrapper,
+            #content,
+            .container-fluid,
+            .admin-main-container,
+            .admin-page-surface {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .my-leave-page-row > :not(#myApprovedLeavePrintArea) {
+                display: none !important;
+            }
+
+            #myApprovedLeavePrintArea {
+                display: block !important;
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            #myApprovedLeavePrintArea .card {
+                overflow: visible !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+            }
+
+            #myApprovedLeavePrintArea .card-body {
+                padding: .5rem !important;
+            }
+
+            #myApprovedLeavePrintArea .bilta-form-header {
+                padding: .55rem .75rem !important;
+            }
+
+            #myApprovedLeavePrintArea .bilta-form-header h2 {
+                font-size: .95rem !important;
+                margin-bottom: 0 !important;
+            }
+
+            #myApprovedLeavePrintArea .tagline {
+                font-size: .68rem !important;
+                padding: .05rem .45rem !important;
+            }
+
+            #myApprovedLeavePrintArea .bilta-section {
+                padding: .55rem .65rem !important;
+                margin-bottom: .45rem !important;
+                border-radius: 8px !important;
+            }
+
+            #myApprovedLeavePrintArea .bilta-section-title {
+                font-size: .84rem !important;
+                margin-bottom: .45rem !important;
+                padding-left: 8px !important;
+                border-left-width: 3px !important;
+            }
+
+            #myApprovedLeavePrintArea .row {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                margin-left: -4px !important;
+                margin-right: -4px !important;
+            }
+
+            #myApprovedLeavePrintArea [class*="col-"] {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                padding-left: 4px !important;
+                padding-right: 4px !important;
+                margin-bottom: .2rem !important;
+            }
+
+            #myApprovedLeavePrintArea small,
+            #myApprovedLeavePrintArea p,
+            #myApprovedLeavePrintArea div,
+            #myApprovedLeavePrintArea td,
+            #myApprovedLeavePrintArea th {
+                font-size: .72rem !important;
+                line-height: 1.2 !important;
+            }
+
+            #myApprovedLeavePrintArea .table-responsive {
+                overflow: visible !important;
+            }
+
+            #myApprovedLeavePrintArea .table {
+                margin-bottom: .35rem !important;
+            }
+
+            #myApprovedLeavePrintArea .table td,
+            #myApprovedLeavePrintArea .table th {
+                padding: .18rem .24rem !important;
+            }
+
+            #myApprovedLeavePrintArea .my-2,
+            #myApprovedLeavePrintArea .mt-2,
+            #myApprovedLeavePrintArea .mt-3,
+            #myApprovedLeavePrintArea .mb-2,
+            #myApprovedLeavePrintArea .mb-3,
+            #myApprovedLeavePrintArea .mb-1 {
+                margin-top: .2rem !important;
+                margin-bottom: .2rem !important;
+            }
+
+            #myApprovedLeavePrintArea .fa-arrow-right {
+                display: none !important;
+            }
+
+            #myApprovedLeavePrintArea .text-center[style*="min-width:120px"] {
+                min-width: 0 !important;
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+            }
+
+            #myApprovedLeavePrintArea .bilta-section,
+            #myApprovedLeavePrintArea table,
+            #myApprovedLeavePrintArea tr {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+
 </div>
