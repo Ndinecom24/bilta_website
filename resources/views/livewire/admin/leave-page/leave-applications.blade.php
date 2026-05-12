@@ -121,7 +121,7 @@
                     <div class="row">
                         {{-- Employee Information --}}
                         <div class="col-md-12 mb-3">
-                            <h6 class="font-weight-bold" style="color: #1e4a3b; border-left: 4px solid #f3b33d; padding-left: 10px;">
+                            <h6 class="font-weight-bold" style="color: #c33205; border-left: 4px solid #f3b33d; padding-left: 10px;">
                                 <i class="fas fa-user"></i> EMPLOYEE INFORMATION
                             </h6>
                             <div class="row mt-2">
@@ -138,7 +138,7 @@
 
                         {{-- Leave Details --}}
                         <div class="col-md-12 mb-3">
-                            <h6 class="font-weight-bold" style="color: #1e4a3b; border-left: 4px solid #f3b33d; padding-left: 10px;">
+                            <h6 class="font-weight-bold" style="color: #c33205; border-left: 4px solid #f3b33d; padding-left: 10px;">
                                 <i class="fas fa-calendar-alt"></i> LEAVE DETAILS
                             </h6>
                             <div class="row mt-2">
@@ -180,7 +180,7 @@
                         @if ($viewingApplication->acting_name)
                         <div class="col-md-12 mb-3">
                             <hr>
-                            <h6 class="font-weight-bold" style="color: #1e4a3b; border-left: 4px solid #f3b33d; padding-left: 10px;">
+                            <h6 class="font-weight-bold" style="color: #c33205; border-left: 4px solid #f3b33d; padding-left: 10px;">
                                 <i class="fas fa-exchange-alt"></i> ACTING ARRANGEMENT
                             </h6>
                             <div class="row mt-2" style="background: #fef9e8; border-radius: 10px; padding: 10px;">

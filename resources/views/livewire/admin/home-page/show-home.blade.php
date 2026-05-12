@@ -1,13 +1,7 @@
 <div>
 <style>
 .dashboard-hero {
-    background: linear-gradient(
-        120deg,
-        #8a2d08 0%,
-        #b93a08 40%,
-        #c33205 70%,
-        #f97316 100%
-    );
+    background: linear-gradient(135deg, #c33205, #e04a1f) !important;
 
     border-radius: 16px;
     color: #fff;
