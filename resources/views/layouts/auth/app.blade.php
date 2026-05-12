@@ -32,7 +32,7 @@
 
         /* ── Left brand panel ── */
         .auth-brand {
-            flex: 0 0 50%;
+            flex: 0 0 58%;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -42,12 +42,13 @@
             color: #fff;
         }
 
+
         .auth-brand-bg {
             position: absolute;
             inset: 0;
             background:
                 linear-gradient(160deg, rgba(15,23,42,.88) 0%, rgba(15,23,42,.72) 50%, rgba(245,158,11,.18) 100%),
-                url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1200&q=80') center / cover no-repeat;
+                url('{{ asset('assets/img/testimonials-bg.jpg') }}') center / cover no-repeat;
             z-index: 0;
         }
 
@@ -145,7 +146,7 @@
 
         /* ── Right form panel ── */
         .auth-form-panel {
-            flex: 0 0 50%;
+            flex: 0 0 42%;
             display: flex;
             align-items: center;
             justify-content: center;
