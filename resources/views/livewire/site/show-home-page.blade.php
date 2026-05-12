@@ -888,17 +888,39 @@ body{
 }
 
 .hero-overlay{
-    position:absolute;
-    inset:0;
-    z-index:1;
-    background:
-        radial-gradient(circle at 14% 20%, rgba(30,64,175,.32), transparent 42%),
-        radial-gradient(circle at 84% 18%, rgba(59,130,246,.36), transparent 40%),
-        radial-gradient(circle at 70% 82%, rgba(29,78,216,.28), transparent 46%),
-        linear-gradient(105deg, rgba(10,25,53,.92) 0%, rgba(15,33,66,.80) 52%, rgba(30,58,138,.58) 100%);
-    backdrop-filter:saturate(120%);
-}
+    position: absolute;
+    inset: 0;
+    z-index: 1;
 
+    background:
+        radial-gradient(
+            circle at 12% 18%,
+            rgba(59, 130, 246, .32),
+            transparent 42%
+        ),
+
+        radial-gradient(
+            circle at 86% 16%,
+            rgba(96, 165, 250, .26),
+            transparent 40%
+        ),
+
+        radial-gradient(
+            circle at 72% 82%,
+            rgba(37, 99, 235, .24),
+            transparent 46%
+        ),
+
+        linear-gradient(
+            115deg,
+            rgba(7, 15, 35, .95) 0%,
+            rgba(15, 23, 42, .90) 32%,
+            rgba(20, 38, 70, .84) 62%,
+            rgba(29, 78, 216, .62) 100%
+        );
+
+    backdrop-filter: saturate(145%) blur(1px);
+}
 .hero-title{
     font-size:4rem;
     font-weight:800;
