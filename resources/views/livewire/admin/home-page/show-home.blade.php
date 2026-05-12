@@ -1,12 +1,20 @@
 <div>
 <style>
-   .dashboard-hero {
-    background: linear-gradient(120deg, #5c3b16 0%, #8b5a2b 45%, #c97a1f 100%);
+.dashboard-hero {
+    background: linear-gradient(
+        120deg,
+        #8a2d08 0%,
+        #b93a08 40%,
+        #c33205 70%,
+        #f97316 100%
+    );
+
     border-radius: 16px;
     color: #fff;
     padding: 1rem 1.1rem;
     margin-bottom: 1rem;
-    box-shadow: 0 14px 28px rgba(92, 59, 22, 0.22);
+
+    box-shadow: 0 14px 28px rgba(249, 115, 22, 0.18);
 }
 
     .dashboard-hero-title {

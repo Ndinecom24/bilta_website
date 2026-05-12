@@ -71,7 +71,7 @@
 
         padding: 1.2rem 1rem 1rem;
 
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(193, 24, 24, 0.06);
 
         margin-bottom: .3rem;
     }
@@ -969,11 +969,12 @@
     }
 
     .admin-sidebar .sidebar-brand {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-bottom: 1px solid rgba(223, 107, 29, 0.08) !important;
+        background: linear-gradient(135deg, #c33205, #e04a1f) !important;
     }
 
     .admin-brand-logo {
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16) !important;
+        box-shadow: 0 6px 16px rgba(222, 14, 14, 0.16) !important;
     }
 
     .admin-brand-title {
@@ -1092,7 +1093,7 @@
             position: sticky;
             top: 0;
             z-index: 2;
-            background: #111147;
+            background: linear-gradient(135deg, #c33205, #e04a1f) !important;
         }
     }
 </style>
