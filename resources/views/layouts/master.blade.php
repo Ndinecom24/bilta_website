@@ -121,6 +121,28 @@
             overflow-x:hidden;
         }
 
+        body.mobile-nav-active{
+            overflow:hidden;
+        }
+
+        body::after{
+            content:'';
+            position:fixed;
+            inset:0;
+            background:rgba(2,6,23,.45);
+            opacity:0;
+            visibility:hidden;
+            transition:opacity .25s ease, visibility .25s ease;
+            z-index:995;
+            pointer-events:none;
+        }
+
+        body.mobile-nav-active::after{
+            opacity:1;
+            visibility:visible;
+            pointer-events:auto;
+        }
+
         a{
             text-decoration:none;
         }
@@ -226,6 +248,10 @@
             padding:0;
         }
 
+        .navbar{
+            position:relative;
+        }
+
         .navbar a{
             color:var(--primary);
             font-weight:600;
@@ -246,12 +272,25 @@
             background:white;
             min-width:240px;
             border-radius:18px;
+            border:1px solid #f0f0f0;
             padding:14px;
             box-shadow:0 20px 45px rgba(0,0,0,.08);
             opacity:0;
             visibility:hidden;
             transform:translateY(10px);
             transition:.3s;
+        }
+
+        .dropdown-menu-custom a{
+            color:var(--primary);
+            font-weight:600;
+            border-radius:10px;
+            padding:10px 12px;
+        }
+
+        .dropdown-menu-custom a:hover{
+            background:#efefff;
+            color:var(--secondary);
         }
 
         .dropdown:hover .dropdown-menu-custom{
@@ -304,6 +343,13 @@
             font-size:1.7rem;
             color:var(--primary);
             cursor:pointer;
+            border:none;
+            background:#efefff;
+            width:42px;
+            height:42px;
+            border-radius:12px;
+            align-items:center;
+            justify-content:center;
         }
 
         /* =========================================================
@@ -415,26 +461,34 @@
         @media(max-width:991px){
 
             .mobile-nav-toggle{
-                display:block;
+                display:inline-flex;
+            }
+
+            .site-header-actions .header-cta-desktop{
+                display:none;
             }
 
             .navbar ul{
-                display:none;
+                display:flex;
                 flex-direction:column;
-                position:absolute;
-                top:100%;
-                left:0;
-                right:0;
-                background:#ffffff;
-                border-radius:0 0 18px 18px;
-                box-shadow:0 20px 45px rgba(0,0,0,.1);
-                padding:16px;
-                z-index:999;
-                gap:4px;
+                position:fixed;
+                top:0;
+                right:-100%;
+                width:min(88vw, 360px);
+                height:100vh;
+                background:#ffffff !important;
+                border:1px solid #f0f0f0;
+                border-radius:0;
+                box-shadow:-18px 0 45px rgba(2, 6, 23, .12);
+                padding:82px 14px 18px;
+                z-index:1001;
+                gap:6px;
+                overflow-y:auto;
+                transition:right .28s ease;
             }
 
             .navbar ul.mobile-nav-open{
-                display:flex;
+                right:0;
             }
 
             .navbar ul li{
@@ -443,24 +497,64 @@
 
             .navbar a{
                 display:block;
-                padding:12px 16px;
+                padding:12px 14px;
                 border-radius:12px;
+                font-size:.98rem;
+                min-height:44px;
+            }
+
+            .navbar .dropdown > a{
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+            }
+
+            .navbar .dropdown > a i{
+                transition:transform .2s ease;
+            }
+
+            .dropdown.mobile-dropdown-open > a i{
+                transform:rotate(180deg);
             }
 
             .dropdown-menu-custom{
                 position:static;
                 box-shadow:none;
                 border-radius:12px;
-                padding:8px 16px;
-                background:#f8fafc;
+                padding:8px;
+                margin-top:6px;
+                background:#f8fafc !important;
+                border:1px solid #e5e7eb;
                 transform:none;
                 opacity:1;
                 visibility:visible;
                 display:none;
             }
 
+            .dropdown-menu-custom a{
+                background:#f8fafc;
+                color:var(--primary);
+                margin-bottom:2px;
+            }
+
+            .dropdown-menu-custom a:hover{
+                background:#efefff;
+                color:var(--secondary);
+            }
+
             .dropdown.mobile-dropdown-open .dropdown-menu-custom{
                 display:block;
+            }
+
+            .mobile-nav-cta{
+                margin-top:10px;
+            }
+
+            .mobile-nav-cta .btn{
+                width:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
             }
 
             .topbar{
@@ -493,6 +587,85 @@
                 font-size:.85rem;
             }
 
+            .site-navbar{
+                min-height:74px;
+            }
+
+            .site-brand{
+                gap:10px;
+                min-width:0;
+            }
+
+            .brand-title{
+                font-size:1.08rem;
+                line-height:1.05;
+                white-space:nowrap;
+            }
+
+            .mobile-nav-toggle{
+                font-size:1.95rem;
+                margin-left:2px;
+            }
+
+        }
+
+        /* =========================================================
+            GLOBAL MOBILE SAFETY
+        ========================================================= */
+
+        img,
+        svg,
+        video,
+        canvas,
+        iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        @media (max-width: 991px) {
+            .container,
+            .container-fluid {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .row {
+                margin-left: -8px;
+                margin-right: -8px;
+            }
+
+            .row > * {
+                padding-left: 8px;
+                padding-right: 8px;
+                min-width: 0;
+            }
+
+            table,
+            .table-responsive {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .btn-theme {
+                padding: 8px 11px;
+                font-size: .78rem;
+            }
+
+            .site-brand img {
+                width: 44px;
+                height: 44px;
+            }
+
+            .brand-title {
+                font-size: .98rem;
+            }
         }
 
     </style>
@@ -919,7 +1092,7 @@
                 {{-- NAVIGATION --}}
                 <nav class="navbar">
 
-                    <ul>
+                    <ul id="mainSiteNav">
 
                         <li>
                             <a href="{{ route('site.home') }}">
@@ -995,14 +1168,31 @@
                             </a>
                         </li>
 
+                        <li class="mobile-nav-cta d-lg-none">
+                            <button class="btn btn-outline-theme"
+                                data-bs-toggle="modal"
+                                data-bs-target="#sponsorModal">
+                                Sponsor
+                            </button>
+                        </li>
+
+                        <li class="mobile-nav-cta d-lg-none">
+                            <button class="btn btn-theme"
+                                data-bs-toggle="modal"
+                                data-bs-target="#donateModal">
+                                <i class="bi bi-heart-fill me-2"></i>
+                                Donate
+                            </button>
+                        </li>
+
                     </ul>
 
                 </nav>
 
                 {{-- ACTIONS --}}
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2 site-header-actions">
 
-                    <button class="btn btn-outline-theme"
+                    <button class="btn btn-outline-theme header-cta-desktop"
                         data-bs-toggle="modal"
                         data-bs-target="#sponsorModal">
 
@@ -1010,7 +1200,7 @@
 
                     </button>
 
-                    <button class="btn btn-theme"
+                    <button class="btn btn-theme header-cta-desktop"
                         data-bs-toggle="modal"
                         data-bs-target="#donateModal">
 
@@ -1019,7 +1209,9 @@
 
                     </button>
 
-                    <i class="bi bi-list mobile-nav-toggle"></i>
+                    <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mainSiteNav">
+                        <i class="bi bi-list"></i>
+                    </button>
 
                 </div>
 
@@ -1091,21 +1283,60 @@
             const navUl  = document.querySelector('.navbar ul');
 
             if(toggle && navUl){
+                const closeMobileNav = function(){
+                    navUl.classList.remove('mobile-nav-open');
+                    document.body.classList.remove('mobile-nav-active');
+                    document.querySelectorAll('.navbar .dropdown.mobile-dropdown-open').forEach(function(dropdown){
+                        dropdown.classList.remove('mobile-dropdown-open');
+                    });
+                    toggle.setAttribute('aria-expanded', 'false');
+                    const icon = toggle.querySelector('i');
+                    if(icon){
+                        icon.classList.add('bi-list');
+                        icon.classList.remove('bi-x');
+                    }
+                };
+
                 toggle.addEventListener('click', function(){
                     navUl.classList.toggle('mobile-nav-open');
+                    const isOpen = navUl.classList.contains('mobile-nav-open');
+                    document.body.classList.toggle('mobile-nav-active', isOpen);
+                    this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
                     // Switch hamburger ↔ close icon
-                    this.classList.toggle('bi-list');
-                    this.classList.toggle('bi-x');
+                    const icon = this.querySelector('i');
+                    if(icon){
+                        icon.classList.toggle('bi-list');
+                        icon.classList.toggle('bi-x');
+                    }
                 });
 
                 // Close nav when a link is clicked (but not dropdowns)
                 navUl.querySelectorAll('a').forEach(function(link){
                     if(!link.closest('.dropdown')) {
                         link.addEventListener('click', function(){
-                            navUl.classList.remove('mobile-nav-open');
-                            toggle.classList.add('bi-list');
-                            toggle.classList.remove('bi-x');
+                            closeMobileNav();
                         });
+                    }
+                });
+
+                document.addEventListener('click', function(event){
+                    if(window.innerWidth > 991) return;
+                    const clickedInsideNav = event.target.closest('.navbar');
+                    const clickedToggle = event.target.closest('.mobile-nav-toggle');
+                    if(!clickedInsideNav && !clickedToggle && navUl.classList.contains('mobile-nav-open')) {
+                        closeMobileNav();
+                    }
+                });
+
+                window.addEventListener('resize', function(){
+                    if(window.innerWidth > 991){
+                        closeMobileNav();
+                    }
+                });
+
+                document.addEventListener('keydown', function(event){
+                    if(event.key === 'Escape' && navUl.classList.contains('mobile-nav-open')){
+                        closeMobileNav();
                     }
                 });
             }
@@ -1115,7 +1346,13 @@
                 trigger.addEventListener('click', function(e){
                     if(window.innerWidth <= 991){
                         e.preventDefault();
-                        this.closest('.dropdown').classList.toggle('mobile-dropdown-open');
+                        const currentDropdown = this.closest('.dropdown');
+                        document.querySelectorAll('.navbar .dropdown.mobile-dropdown-open').forEach(function(dropdown){
+                            if(dropdown !== currentDropdown){
+                                dropdown.classList.remove('mobile-dropdown-open');
+                            }
+                        });
+                        currentDropdown.classList.toggle('mobile-dropdown-open');
                     }
                 });
             });

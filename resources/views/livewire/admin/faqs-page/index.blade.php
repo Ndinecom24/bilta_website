@@ -39,16 +39,18 @@
                                 @error('question') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
-                            <div class="col-lg-4 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="faqStatus">Status</label>
-                                <select id="faqStatus" class="form-control" wire:model.defer="status_id">
-                                    <option value="">-- Select Status --</option>
-                                    @foreach ($statuses as $status)
-                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('status_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
-                            </div>
+                            @if ($supportsStatusColumn)
+                                <div class="col-lg-4 col-md-12 mb-3">
+                                    <label class="font-weight-bold" for="faqStatus">Status</label>
+                                    <select id="faqStatus" class="form-control" wire:model.defer="status_id">
+                                        <option value="">-- Select Status --</option>
+                                        @foreach ($statuses as $status)
+                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('status_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                </div>
+                            @endif
 
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="faqAnswer">Answer</label>
@@ -80,7 +82,9 @@
                                 <tr>
                                     <th style="width:300px;">Question</th>
                                     <th>Answer</th>
-                                    <th style="width:130px;">Status</th>
+                                    @if ($supportsStatusColumn)
+                                        <th style="width:130px;">Status</th>
+                                    @endif
                                     <th style="width:160px;">Action</th>
                                 </tr>
                             </thead>
@@ -89,7 +93,9 @@
                                     <tr>
                                         <td>{{ $faq->question }}</td>
                                         <td>{{ \Illuminate\Support\Str::limit($faq->answer, 220) }}</td>
-                                        <td>{{ $faq->status->name ?? '-' }}</td>
+                                        @if ($supportsStatusColumn)
+                                            <td>{{ $faq->status->name ?? '-' }}</td>
+                                        @endif
                                         <td>
                                             <button wire:click="edit({{ $faq->id }})" class="btn btn-primary btn-sm">Edit</button>
                                             <button onclick="deleteFAQ({{ $faq->id }})" class="btn btn-danger btn-sm">Delete</button>
@@ -97,7 +103,7 @@
                                     </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">No FAQs found.</td>
+                                    <td colspan="{{ $supportsStatusColumn ? 4 : 3 }}" class="text-center">No FAQs found.</td>
                                 </tr>
                             @endforelse
                             </tbody>

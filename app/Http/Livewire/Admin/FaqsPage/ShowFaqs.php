@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\FaqsPage;
 
 use App\Models\Bilta\FAQs;
 use App\Models\System\Status;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,22 +13,44 @@ class ShowFaqs extends Component
     use WithPagination;
 
     public $faq_id, $answer, $question, $status_id;
+    public $supportsStatusColumn = false;
 
     public $updateFAQs = false;
     protected $listeners = [
         'deleteFAQ' => 'destroy'
     ];
-    // Validation Rules
-    protected $rules = [
-        'question' => 'required',
-        'answer' => 'required',
-        'status_id' => 'required',
-    ];
+    public function mount()
+    {
+        $this->supportsStatusColumn = Schema::hasColumn('f_a_qs', 'status_id');
+    }
+
+    protected function rules()
+    {
+        $rules = [
+            'question' => 'required',
+            'answer' => 'required',
+        ];
+
+        if ($this->supportsStatusColumn) {
+            $rules['status_id'] = 'required';
+        }
+
+        return $rules;
+    }
 
     public function render()
     {
-        $statuses = Status::select('id', 'name')->get();
-        $faqs = FAQs::select('id', 'question', 'answer', 'status_id')->paginate(20);
+        $statuses = $this->supportsStatusColumn
+            ? Status::select('id', 'name')->get()
+            : collect();
+
+        $faqsQuery = FAQs::query()->select('id', 'question', 'answer');
+
+        if ($this->supportsStatusColumn) {
+            $faqsQuery->addSelect('status_id')->with('status:id,name');
+        }
+
+        $faqs = $faqsQuery->paginate(20);
         return view('livewire.admin.faqs-page.index')->with(compact('faqs', 'statuses'));
     }
 
@@ -43,18 +66,23 @@ class ShowFaqs extends Component
         // Validate Form Request
         $this->validate();
         try {
+            $payload = [
+                'question' => $this->question,
+                'answer' => $this->answer,
+                'created_by' => auth()->user()->id,
+            ];
+
+            if ($this->supportsStatusColumn) {
+                $payload['status_id'] = $this->status_id;
+            }
+
             // Create FAQs
             FAQs::updateOrCreate(
                 [
                     'question' => $this->question,
                     'answer' => $this->answer,
                 ],
-                [
-                    'question' => $this->question,
-                    'answer' => $this->answer,
-                    'status_id' => $this->status_id,
-                    'created_by' => auth()->user()->id
-                ]
+                $payload
 
             );
 
@@ -77,7 +105,7 @@ class ShowFaqs extends Component
         $faq = FAQs::findOrFail($id);
         $this->question = $faq->question;
         $this->answer = $faq->answer;
-        $this->status_id = $faq->status_id;
+        $this->status_id = $this->supportsStatusColumn ? ($faq->status_id ?? '') : '';
         $this->faq_id = $faq->id;
         $this->updateFAQs = true;
     }
@@ -93,12 +121,19 @@ class ShowFaqs extends Component
         // Validate request
         $this->validate();
         try {
-            // Update faq
-            FAQs::find($this->faq_id)->fill([
+            $payload = [
                 'question' => $this->question,
                 'answer' => $this->answer,
-                'status_id' => $this->status_id,
-                'created_by' => auth()->user()->id
+                'created_by' => auth()->user()->id,
+            ];
+
+            if ($this->supportsStatusColumn) {
+                $payload['status_id'] = $this->status_id;
+            }
+
+            // Update faq
+            FAQs::find($this->faq_id)->fill([
+                ...$payload
             ])->save();
             session()->flash('success', 'FAQs Updated Successfully!!');
 
