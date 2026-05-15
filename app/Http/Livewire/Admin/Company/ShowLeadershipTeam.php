@@ -7,6 +7,7 @@ use Exception;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Intervention\Image\Facades\Image;
 
 class ShowLeadershipTeam extends Component
 {
@@ -30,9 +31,7 @@ class ShowLeadershipTeam extends Component
         'display_order' => 'nullable|integer|min:0',
         'email' => 'required',
         'phone' => 'required',
-        // 'user_image' => 'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
-        'user_image' => 'image|max:3072', // 1MB Max
-
+        'user_image' => 'nullable|image|max:5120', // 5MB Max
     ];
 
     public function render()
@@ -91,8 +90,11 @@ class ShowLeadershipTeam extends Component
 
             );
 
-            $team->addMedia($this->user_image)
-                ->toMediaCollection('team_images');
+            if (isset($this->user_image)) {
+                $this->compressImage($this->user_image);
+                $team->addMedia($this->user_image)
+                    ->toMediaCollection('team_images');
+            }
 
             // Set Flash Message
             session()->flash('success', 'LeadershipMember Created Successfully!!');
@@ -145,7 +147,7 @@ class ShowLeadershipTeam extends Component
     public function update()
     {
         // Validate request
-//        $this->validate();
+        $this->validate();
         try {
             // Update our_team
             $team = OurTeam::find($this->our_team_id)->fill(
@@ -168,6 +170,7 @@ class ShowLeadershipTeam extends Component
             $team = OurTeam::find($this->our_team_id);
             if (isset($this->user_image)) {
                 $team->clearMediaCollection('team_images');
+                $this->compressImage($this->user_image);
                 $team->addMedia($this->user_image)
                     ->toMediaCollection('team_images');
             }
@@ -195,6 +198,31 @@ class ShowLeadershipTeam extends Component
         } catch (Exception $e) {
             session()->flash('error', "Something goes wrong while deleting leadership member!!");
         }
+    }
+
+    /**
+     * Compress an uploaded image to reduce file size (75% quality).
+     */
+    private function compressImage($uploadedFile)
+    {
+        try {
+            $path = $uploadedFile->getRealPath();
+            $image = Image::make($path);
+
+            $mime = $uploadedFile->getMimeType();
+            $format = 'jpg';
+            if ($mime === 'image/png') {
+                $format = 'png';
+            } elseif ($mime === 'image/webp') {
+                $format = 'webp';
+            }
+
+            $image->encode($format, 75)->save($path);
+        } catch (\Exception $e) {
+            // If compression fails, continue with original file
+        }
+
+        return $uploadedFile;
     }
 
     public function reorderTeam($orderedIds)

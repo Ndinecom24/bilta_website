@@ -9,6 +9,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Intervention\Image\Facades\Image;
 
 class ShowTranslationProjects extends Component
 {
@@ -35,11 +36,11 @@ class ShowTranslationProjects extends Component
         'display_order' => 'nullable|integer|min:0',
         'location' => 'required',
         'location_map' => 'required',
-        'title_image' =>  'required|max:3072', // 3MB Max,
-        'project_image' =>  'required|max:3072', // 3MB Max,
-        'project_file' =>  'required|max:3072', // 3MB Max,
-//        'title_image' => 'image|max:3072', // 1MB Max
-
+        'title_image' => 'nullable|image|max:5120', // 5MB Max
+        'project_image' => 'nullable|array',
+        'project_image.*' => 'image|max:5120', // 5MB Max per image
+        'project_file' => 'nullable|array',
+        'project_file.*' => 'file|max:10240', // 10MB Max per file
     ];
 
     public function render()
@@ -100,30 +101,27 @@ class ShowTranslationProjects extends Component
 
             );
 
-            //save title image
-            if (isset($this->title_image)  ){
-            $projects->addMedia($this->title_image)
-                -> toMediaCollection('project_title_images');
+            //save title image (auto-compressed)
+            if (isset($this->title_image)) {
+                $this->compressImage($this->title_image);
+                $projects->addMedia($this->title_image)
+                    ->toMediaCollection('project_title_images');
             }
 
-            // save other project images
-            if (isset($this->project_image) ){
-                foreach(  $this->project_image as $item  ){
-                // if ( $item->fileExists()) {
-                       $projects->addMedia( $item )
-                    -> toMediaCollection('project_images') ;
-                // }
+            // save other project images (auto-compressed)
+            if (isset($this->project_image)) {
+                foreach ($this->project_image as $item) {
+                    $this->compressImage($item);
+                    $projects->addMedia($item)
+                        ->toMediaCollection('project_images');
                 }
             }
 
-
-            // save other project images
-            if (isset($this->project_file) ){
-                foreach(  $this->project_file as $item  ){
-                // if ( $item->fileExists()) {
-                       $projects->addMedia( $item )
-                    -> toMediaCollection('project_files') ;
-                // }
+            // save project files (no compression for non-image files)
+            if (isset($this->project_file)) {
+                foreach ($this->project_file as $item) {
+                    $projects->addMedia($item)
+                        ->toMediaCollection('project_files');
                 }
             }
 
@@ -204,37 +202,28 @@ class ShowTranslationProjects extends Component
 
             $projects = Projects::find( $this->our_projects_id ) ;
 
-            //save title image
-            if (isset($this->title_image) ) {
-
+            //save title image (auto-compressed)
+            if (isset($this->title_image)) {
                 $projects->clearMediaCollection('project_title_images');
-              $projects->addMedia( $this->title_image )
-                    -> toMediaCollection('project_title_images');              
+                $this->compressImage($this->title_image);
+                $projects->addMedia($this->title_image)
+                    ->toMediaCollection('project_title_images');
             }
-        
 
-            //save other images
-            if (isset($this->project_image) ){
-                foreach(  $this->project_image as $item  ){
-                    
-                    // if ( $item->fileExists()) {
-                            // $projects->clearMediaCollection('project_images');
-                          $projects->addMedia( $item )
-                                -> toMediaCollection('project_images');
-                        // }
+            //save other images (auto-compressed)
+            if (isset($this->project_image)) {
+                foreach ($this->project_image as $item) {
+                    $this->compressImage($item);
+                    $projects->addMedia($item)
+                        ->toMediaCollection('project_images');
                 }
             }
 
-            
-            //save other images
-            if (isset($this->project_file) ){
-                foreach(  $this->project_file as $item  ){
-                    
-                    // if ( $item->fileExists()) {
-                            // $projects->clearMediaCollection('project_files');
-                          $projects->addMedia( $item )
-                                -> toMediaCollection('project_files');
-                        // }
+            //save project files (no compression for non-image files)
+            if (isset($this->project_file)) {
+                foreach ($this->project_file as $item) {
+                    $projects->addMedia($item)
+                        ->toMediaCollection('project_files');
                 }
             }
 
@@ -277,5 +266,33 @@ class ShowTranslationProjects extends Component
         Media::find( $item)->delete();
         $this->project  = Projects::find($this->our_projects_id );
         session()->flash('success', "Projects File Deleted Successfully!!");
+    }
+
+    /**
+     * Compress an uploaded image to reduce file size (75% quality).
+     * Maintains dimensions, only reduces encoding quality.
+     */
+    private function compressImage($uploadedFile)
+    {
+        try {
+            $path = $uploadedFile->getRealPath();
+            $image = Image::make($path);
+
+            // Determine format from mime type
+            $mime = $uploadedFile->getMimeType();
+            $format = 'jpg';
+            if ($mime === 'image/png') {
+                $format = 'png';
+            } elseif ($mime === 'image/webp') {
+                $format = 'webp';
+            }
+
+            // Compress and overwrite the temp file
+            $image->encode($format, 75)->save($path);
+        } catch (\Exception $e) {
+            // If compression fails, continue with original file
+        }
+
+        return $uploadedFile;
     }
 }

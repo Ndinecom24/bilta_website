@@ -146,9 +146,9 @@
                             @endif
 
                             <div class="col-lg-12 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="teamImage">{{ $updateLeadershipMember ? 'Replace Photo (optional)' : 'Member Photo' }}</label>
+                                <label class="font-weight-bold" for="teamImage">{{ $updateLeadershipMember ? 'Replace Photo (optional)' : 'Member Photo' }} <span class="text-muted font-weight-normal">(optional)</span></label>
                                 <input id="teamImage" type="file" class="form-control" wire:model="user_image" accept="image/*">
-                                <small class="text-muted d-block mt-1">Please wait for upload to finish before saving.</small>
+                                <small class="text-muted d-block mt-1">Max 5 MB. Images are auto-compressed to save space.</small>
 
                                 <div class="mt-2" wire:loading wire:target="user_image">
                                     <div class="d-flex align-items-center">

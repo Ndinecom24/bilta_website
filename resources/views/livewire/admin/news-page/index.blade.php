@@ -95,17 +95,58 @@
                                 @error('display_order') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
-                            <div class="col-lg-6 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="newsTitleImage">Title Image</label>
-                                <input id="newsTitleImage" type="file" class="form-control" wire:model="news_title_image">
+                            <div class="col-lg-4 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsTitleImage">Title Image <span class="text-muted font-weight-normal">(optional)</span></label>
+                                <input id="newsTitleImage" type="file" class="form-control" wire:model="news_title_image" accept="image/*">
+                                <small class="text-muted">Max 5 MB.</small>
                                 @error('news_title_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
-                            <div class="col-lg-6 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="newsImages">Additional Images</label>
-                                <input id="newsImages" type="file" class="form-control" wire:model="news_image" multiple>
+                            <div class="col-lg-4 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsImages">Additional Images <span class="text-muted font-weight-normal">(optional)</span></label>
+                                <input id="newsImages" type="file" class="form-control" wire:model="news_image" multiple accept="image/*">
+                                <small class="text-muted">Max 5 MB per image.</small>
                                 @error('news_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                @error('news_image.*') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
+
+                            <div class="col-lg-4 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="newsPdfs">PDF Files <span class="text-muted font-weight-normal">(optional)</span></label>
+                                <input id="newsPdfs" type="file" class="form-control" wire:model="news_pdf" multiple accept=".pdf">
+                                <small class="text-muted">Max 10 MB per file.</small>
+                                @error('news_pdf') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                @error('news_pdf.*') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
+
+                            @if ($updateNewsItem && $news)
+                                <div class="col-lg-6 col-md-12 mb-3">
+                                    <p class="font-weight-bold mb-2">Existing Images</p>
+                                    @forelse ($news->getMedia('news_images') as $item)
+                                        <div class="d-flex align-items-center justify-content-between border rounded p-2 mb-2">
+                                            <span>{{ $item->name }}</span>
+                                            <button wire:click.prevent="removeImage({{ $item->id }})" type="button" class="btn btn-sm btn-outline-danger">Remove</button>
+                                        </div>
+                                    @empty
+                                        <div class="text-muted">No additional images.</div>
+                                    @endforelse
+                                </div>
+
+                                <div class="col-lg-6 col-md-12 mb-3">
+                                    <p class="font-weight-bold mb-2">Existing PDF Files</p>
+                                    @forelse ($news->getMedia('news_pdfs') as $item)
+                                        <div class="d-flex align-items-center justify-content-between border rounded p-2 mb-2">
+                                            <div>
+                                                <i class="fas fa-file-pdf text-danger mr-1"></i>
+                                                <a href="{{ $item->getUrl() }}" target="_blank">{{ $item->name }}</a>
+                                                <small class="text-muted ml-1">({{ round($item->size / 1024) }} KB)</small>
+                                            </div>
+                                            <button wire:click.prevent="removeFile({{ $item->id }})" type="button" class="btn btn-sm btn-outline-danger">Remove</button>
+                                        </div>
+                                    @empty
+                                        <div class="text-muted">No PDF files.</div>
+                                    @endforelse
+                                </div>
+                            @endif
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
@@ -138,6 +179,7 @@
                                     <th style="width: 140px;">Category</th>
                                     <th style="width: 90px;">Order</th>
                                     <th style="width: 130px;">More Images</th>
+                                    <th style="width: 90px;">PDFs</th>
                                     <th style="width: 240px;">Action</th>
                                 </tr>
                             </thead>
@@ -157,7 +199,8 @@
                                         <td>{{ $our_news_item->category->name ?? '-' }}</td>
                                         <td>{{ $our_news_item->display_order ?? 0 }}</td>
                                         <td>{{ sizeOf($our_news_item->getMedia('news_images')) }}</td>
-                                        <td>
+                                        <td>{{ sizeOf($our_news_item->getMedia('news_pdfs')) }}</td>
+                                        <td></td>
                                             <button wire:click="edit({{ $our_news_item->id }})" class="btn btn-primary btn-sm">Edit</button>
                                             <a href="{{ route('admin.page.item.news.details', $our_news_item->id) }}" class="btn btn-outline-primary btn-sm">Details</a>
                                             <button onclick="deleteOurNewsItem({{ $our_news_item->id }})" class="btn btn-danger btn-sm">Delete</button>
@@ -165,7 +208,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center">No news records found.</td>
+                                        <td colspan="11" class="text-center">No news records found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

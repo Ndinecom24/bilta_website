@@ -115,21 +115,26 @@
                             @endif
 
                             <div class="col-lg-12 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="projectTitleImage">Title Image</label>
-                                <input id="projectTitleImage" type="file" class="form-control" wire:model="title_image">
+                                <label class="font-weight-bold" for="projectTitleImage">Title Image <span class="text-muted font-weight-normal">(optional)</span></label>
+                                <input id="projectTitleImage" type="file" class="form-control" wire:model="title_image" accept="image/*">
+                                <small class="text-muted">Max 5 MB. Images are auto-compressed to save space.</small>
                                 @error('title_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-lg-6 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="projectImages">Project Images</label>
-                                <input id="projectImages" type="file" class="form-control" wire:model="project_image" multiple>
+                                <label class="font-weight-bold" for="projectImages">Project Images <span class="text-muted font-weight-normal">(optional)</span></label>
+                                <input id="projectImages" type="file" class="form-control" wire:model="project_image" multiple accept="image/*">
+                                <small class="text-muted">Max 5 MB per image. Images are auto-compressed.</small>
                                 @error('project_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                @error('project_image.*') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-lg-6 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="projectFiles">Project Files</label>
+                                <label class="font-weight-bold" for="projectFiles">Project Files <span class="text-muted font-weight-normal">(optional)</span></label>
                                 <input id="projectFiles" type="file" class="form-control" wire:model="project_file" multiple>
+                                <small class="text-muted">Max 10 MB per file.</small>
                                 @error('project_file') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                @error('project_file.*') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
                             @if ($updateProjectsItem && $project)

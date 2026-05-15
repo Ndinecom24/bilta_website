@@ -17,7 +17,7 @@ class ShowNewsItem extends Component
     use WithFileUploads;
 
     public $our_news_id, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id, $display_order, $news;
-    public $news_title_image, $news_image ;
+    public $news_title_image, $news_image, $news_pdf;
 
     public $updateNewsItem = false;
     protected $listeners = [
@@ -31,8 +31,11 @@ class ShowNewsItem extends Component
         'post_date' => 'required',
         'author' => 'required',
         'display_order' => 'nullable|integer|min:0',
-        'news_title_image' =>  'required|mimes:png,jpg,jpeg|max:3072', // 3MB Max,
-//        'news_title_image' => 'image|max:3072', // 1MB Max
+        'news_title_image' => 'nullable|image|max:5120', // 5MB Max
+        'news_image' => 'nullable|array',
+        'news_image.*' => 'image|max:5120', // 5MB Max per image
+        'news_pdf' => 'nullable|array',
+        'news_pdf.*' => 'file|mimes:pdf|max:10240', // 10MB Max per PDF
     ];
 
     public function render()
@@ -89,12 +92,16 @@ class ShowNewsItem extends Component
                  //save other images
                if (isset($this->news_image) ){
                 foreach(  $this->news_image as $item  ){
-                    
-                    // if ( $item->fileExists()) {
-                            // $projects->clearMediaCollection('news_images');
                           $news->addMedia( $item )
                                 -> toMediaCollection('news_images');
-                        // }
+                }
+            }
+
+            // save PDF files
+            if (isset($this->news_pdf)) {
+                foreach ($this->news_pdf as $pdf) {
+                    $news->addMedia($pdf)
+                        ->toMediaCollection('news_pdfs');
                 }
             }
 
@@ -123,6 +130,7 @@ class ShowNewsItem extends Component
         $this->display_order = 0;
         $this->status_id = '';
         $this->news_title_image = null ;
+        $this->news_pdf = null;
     }
 
     public function edit($id)
@@ -173,12 +181,16 @@ class ShowNewsItem extends Component
                //save other images
                if (isset($this->news_image) ){
                 foreach(  $this->news_image as $item  ){
-                    
-                    // if ( $item->fileExists()) {
-                            // $projects->clearMediaCollection('news_images');
                           $news->addMedia( $item )
                                 -> toMediaCollection('news_images');
-                        // }
+                }
+            }
+
+            // save PDF files
+            if (isset($this->news_pdf)) {
+                foreach ($this->news_pdf as $pdf) {
+                    $news->addMedia($pdf)
+                        ->toMediaCollection('news_pdfs');
                 }
             }
 
@@ -216,5 +228,10 @@ class ShowNewsItem extends Component
         session()->flash('success', "News Image Deleted Successfully!!");
     }
 
+    public function removeFile($item){
+        Media::find( $item )->delete();
+        $this->news  = News::find($this->our_news_id );
+        session()->flash('success', "News PDF Deleted Successfully!!");
+    }
 
 }
