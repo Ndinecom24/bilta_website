@@ -385,6 +385,195 @@
             background:#ffffff;
         }
 
+        .modal-header-icon{
+            width:48px;
+            height:48px;
+            border-radius:16px;
+            background:rgba(255,255,255,.2);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1.3rem;
+            flex-shrink:0;
+        }
+
+        /* Impact Stat Cards */
+        .impact-stat-card{
+            background:#f8fafc;
+            border-radius:18px;
+            padding:20px 12px;
+            border:1px solid #e2e8f0;
+            transition: all .3s ease;
+        }
+
+        .impact-stat-card:hover{
+            transform:translateY(-3px);
+            box-shadow:0 8px 25px rgba(0,0,0,.08);
+            border-color:#cd5b13;
+        }
+
+        .impact-stat-icon{
+            width:40px;
+            height:40px;
+            border-radius:12px;
+            background:linear-gradient(135deg,#fff3e0,#ffe0b2);
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1.1rem;
+            color:#cd5b13;
+            margin-bottom:10px;
+        }
+
+        .impact-stat-number{
+            font-size:1.4rem;
+            font-weight:800;
+            color:#0f2742;
+            line-height:1.1;
+        }
+
+        .impact-stat-label{
+            font-size:.78rem;
+            color:#64748b;
+            font-weight:600;
+            text-transform:uppercase;
+            letter-spacing:.3px;
+            margin-top:4px;
+        }
+
+        /* Impact Verse */
+        .impact-verse{
+            background:#fff;
+            border-radius:14px;
+            padding:16px;
+            border-left:3px solid #cd5b13;
+        }
+
+        /* Separator */
+        .separator-or{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            color:#94a3b8;
+            font-size:.82rem;
+            font-weight:600;
+        }
+
+        .separator-or::before,
+        .separator-or::after{
+            content:'';
+            flex:1;
+            height:1px;
+            background:#e2e8f0;
+        }
+
+        /* Direct Donate Button */
+        .btn-donate-direct{
+            background:#f8fafc;
+            border:2px dashed #cbd5e1;
+            border-radius:14px;
+            padding:14px 20px;
+            color:#0f2742;
+            font-weight:600;
+            transition:all .3s ease;
+        }
+
+        .btn-donate-direct:hover{
+            background:#efefff;
+            border-color:#cd5b13;
+            color:#cd5b13;
+        }
+
+        /* Sponsor Tier Cards */
+        .sponsor-tier-card{
+            background:#f8fafc;
+            border-radius:18px;
+            padding:22px 16px;
+            border:1px solid #e2e8f0;
+            text-align:center;
+            transition:all .3s ease;
+            position:relative;
+            height:100%;
+        }
+
+        .sponsor-tier-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 10px 30px rgba(0,0,0,.1);
+            border-color:#cd5b13;
+        }
+
+        .sponsor-tier-card.featured{
+            background:linear-gradient(145deg,#fffbf5,#fff8f0);
+            border-color:#e9a36a;
+            box-shadow:0 6px 20px rgba(205,91,19,.1);
+        }
+
+        .sponsor-tier-badge{
+            position:absolute;
+            top:-10px;
+            left:50%;
+            transform:translateX(-50%);
+            background:linear-gradient(135deg,#f59e0b,#cd5b13);
+            color:#fff;
+            padding:3px 14px;
+            border-radius:50px;
+            font-size:.7rem;
+            font-weight:700;
+            letter-spacing:.3px;
+            text-transform:uppercase;
+            white-space:nowrap;
+        }
+
+        .sponsor-tier-icon{
+            width:48px;
+            height:48px;
+            border-radius:14px;
+            background:linear-gradient(135deg,#fff3e0,#ffe0b2);
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1.3rem;
+            color:#cd5b13;
+            margin-bottom:12px;
+        }
+
+        .sponsor-tier-card h6{
+            font-size:.95rem;
+            font-weight:700;
+            color:#0f2742;
+            margin-bottom:8px;
+        }
+
+        .sponsor-tier-card p{
+            font-size:.82rem;
+            color:#64748b;
+            margin:0;
+            line-height:1.4;
+        }
+
+        /* Sponsor Contact Items */
+        .sponsor-contact-item{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:10px 14px;
+            background:#fff;
+            border-radius:14px;
+            border:1px solid #f0f0f0;
+        }
+
+        .sponsor-contact-icon{
+            width:36px;
+            height:36px;
+            border-radius:10px;
+            background:#efefff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#cd5b13;
+            flex-shrink:0;
+        }
+
         .summary-card{
             background:#f8fafc;
             border-radius:22px;
@@ -422,23 +611,350 @@
         }
 
         /* =========================================================
-            COOKIE MODAL
+            COOKIE CONSENT BANNER & MODAL
         ========================================================= */
 
-        #cookieConsentModal .modal-content{
-            border-radius:24px;
-            border:none;
+        .cookie-banner{
+            position:fixed;
+            bottom:0;
+            left:0;
+            right:0;
+            z-index:9999;
+            background:rgba(15,23,42,.97);
+            backdrop-filter:blur(12px);
+            border-top:1px solid rgba(255,255,255,.08);
+            padding:22px 0;
+            transition:opacity .3s ease, transform .3s ease;
         }
 
-        #cookieConsentModal .nav-tabs .nav-link{
-            border:none;
-            color:var(--text);
+        .cookie-banner-inner{
+            display:flex;
+            align-items:center;
+            gap:24px;
+            flex-wrap:wrap;
+        }
+
+        .cookie-banner-content{
+            display:flex;
+            align-items:flex-start;
+            gap:16px;
+            flex:1;
+            min-width:0;
+        }
+
+        .cookie-banner-icon{
+            width:46px;
+            height:46px;
+            border-radius:14px;
+            background:linear-gradient(135deg,#cd5b13,#f59e0b);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            font-size:1.2rem;
+            flex-shrink:0;
+        }
+
+        .cookie-banner-title{
+            color:#fff;
+            font-weight:700;
+            font-size:1rem;
+            margin-bottom:4px;
+        }
+
+        .cookie-banner-text{
+            color:#94a3b8;
+            font-size:.88rem;
+            line-height:1.5;
+            margin:0;
+        }
+
+        .cookie-link{
+            color:#f59e0b;
+            text-decoration:underline;
             font-weight:600;
         }
 
-        #cookieConsentModal .nav-tabs .nav-link.active{
-            color:var(--secondary);
-            border-bottom:2px solid var(--secondary);
+        .cookie-link:hover{
+            color:#fbbf24;
+        }
+
+        .cookie-banner-actions{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-shrink:0;
+        }
+
+        .cookie-btn-accept{
+            background:linear-gradient(135deg,#cd5b13,#e9782f);
+            color:#fff;
+            border:none;
+            border-radius:12px;
+            padding:12px 22px;
+            font-weight:700;
+            font-size:.9rem;
+            transition:all .3s ease;
+        }
+
+        .cookie-btn-accept:hover{
+            background:linear-gradient(135deg,#b14d12,#cd5b13);
+            color:#fff;
+            transform:translateY(-2px);
+            box-shadow:0 6px 20px rgba(205,91,19,.3);
+        }
+
+        .cookie-btn-reject{
+            background:transparent;
+            color:#94a3b8;
+            border:1px solid rgba(148,163,184,.3);
+            border-radius:12px;
+            padding:12px 20px;
+            font-weight:600;
+            font-size:.9rem;
+            transition:all .3s ease;
+        }
+
+        .cookie-btn-reject:hover{
+            color:#fff;
+            border-color:rgba(255,255,255,.3);
+            background:rgba(255,255,255,.06);
+        }
+
+        .cookie-btn-settings{
+            background:rgba(255,255,255,.06);
+            color:#cbd5e1;
+            border:1px solid rgba(255,255,255,.1);
+            border-radius:12px;
+            padding:12px 18px;
+            font-weight:600;
+            font-size:.9rem;
+            transition:all .3s ease;
+        }
+
+        .cookie-btn-settings:hover{
+            background:rgba(255,255,255,.12);
+            color:#fff;
+        }
+
+        .cookie-btn-save{
+            background:linear-gradient(135deg,#cd5b13,#e9782f);
+            color:#fff;
+            border:none;
+            border-radius:12px;
+            padding:12px 22px;
+            font-weight:700;
+            font-size:.9rem;
+            transition:all .3s ease;
+        }
+
+        .cookie-btn-save:hover{
+            background:linear-gradient(135deg,#b14d12,#cd5b13);
+            color:#fff;
+            transform:translateY(-2px);
+        }
+
+        /* Cookie Preferences Modal */
+        .cookie-modal-content{
+            border:none;
+            border-radius:24px;
+            overflow:hidden;
+            box-shadow:0 30px 80px rgba(0,0,0,.2);
+        }
+
+        .cookie-modal-header{
+            background:linear-gradient(135deg,#0f2742,#1a3a5c);
+            color:#fff;
+            padding:22px 28px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+
+        .cookie-modal-icon{
+            width:44px;
+            height:44px;
+            border-radius:14px;
+            background:rgba(255,255,255,.15);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1.2rem;
+            flex-shrink:0;
+        }
+
+        .cookie-modal-body{
+            padding:28px;
+            background:#fff;
+        }
+
+        .cookie-modal-footer{
+            padding:18px 28px;
+            background:#f8fafc;
+            border-top:1px solid #e2e8f0;
+        }
+
+        /* Cookie Categories */
+        .cookie-category{
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+            border-radius:18px;
+            padding:22px;
+            margin-bottom:16px;
+            transition:border-color .2s ease;
+        }
+
+        .cookie-category:hover{
+            border-color:#cbd5e1;
+        }
+
+        .cookie-category:last-child{
+            margin-bottom:0;
+        }
+
+        .cookie-category-header{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+        }
+
+        .cookie-category-desc{
+            margin-top:14px;
+            font-size:.88rem;
+            color:#64748b;
+            line-height:1.6;
+            padding-left:52px;
+        }
+
+        .cookie-cat-icon{
+            width:38px;
+            height:38px;
+            border-radius:12px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1rem;
+            flex-shrink:0;
+        }
+
+        .cookie-cat-icon.essential{
+            background:#e0f2fe;
+            color:#0284c7;
+        }
+
+        .cookie-cat-icon.analytics{
+            background:#fef3c7;
+            color:#d97706;
+        }
+
+        .cookie-cat-icon.marketing{
+            background:#fce7f3;
+            color:#db2777;
+        }
+
+        .cookie-examples{
+            display:flex;
+            flex-wrap:wrap;
+            gap:6px;
+        }
+
+        .cookie-example-tag{
+            background:#fff;
+            border:1px solid #e2e8f0;
+            border-radius:8px;
+            padding:3px 10px;
+            font-size:.78rem;
+            color:#64748b;
+            font-weight:500;
+        }
+
+        /* Toggle Switches */
+        .cookie-category .form-check-input{
+            width:48px;
+            height:26px;
+            cursor:pointer;
+        }
+
+        .cookie-category .form-check-input:checked{
+            background-color:#cd5b13;
+            border-color:#cd5b13;
+        }
+
+        .cookie-category .form-check-input:focus{
+            box-shadow:0 0 0 .2rem rgba(205,91,19,.25);
+        }
+
+        /* Floating Cookie Button */
+        .cookie-floating-btn{
+            position:fixed;
+            bottom:24px;
+            left:24px;
+            z-index:990;
+            width:48px;
+            height:48px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#0f2742,#1a3a5c);
+            color:#fff;
+            border:2px solid rgba(255,255,255,.15);
+            font-size:1.1rem;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            box-shadow:0 8px 25px rgba(0,0,0,.2);
+            transition:all .3s ease;
+        }
+
+        .cookie-floating-btn:hover{
+            transform:scale(1.1);
+            background:linear-gradient(135deg,#cd5b13,#e9782f);
+            box-shadow:0 10px 30px rgba(205,91,19,.3);
+        }
+
+        /* Responsive */
+        @media(max-width:768px){
+            .cookie-banner{
+                padding:16px 0;
+            }
+
+            .cookie-banner-inner{
+                flex-direction:column;
+                gap:16px;
+            }
+
+            .cookie-banner-actions{
+                width:100%;
+                flex-direction:column;
+            }
+
+            .cookie-banner-actions .btn{
+                width:100%;
+            }
+
+            .cookie-banner-icon{
+                display:none;
+            }
+
+            .cookie-category-desc{
+                padding-left:0;
+            }
+
+            .cookie-modal-body{
+                padding:18px;
+            }
+
+            .cookie-category{
+                padding:16px;
+            }
+
+            .cookie-floating-btn{
+                bottom:16px;
+                left:16px;
+                width:42px;
+                height:42px;
+                font-size:1rem;
+            }
         }
 
         /* =========================================================
@@ -607,6 +1123,50 @@
                 margin-left:2px;
             }
 
+        }
+
+        /* =========================================================
+            MODAL RESPONSIVE
+        ========================================================= */
+
+        @media(max-width:768px){
+            .impact-modal .modal-body{
+                padding:20px;
+            }
+
+            .impact-modal .modal-header{
+                padding:18px 20px;
+            }
+
+            .impact-stat-card{
+                padding:14px 8px;
+            }
+
+            .impact-stat-number{
+                font-size:1.1rem;
+            }
+
+            .impact-stat-label{
+                font-size:.7rem;
+            }
+
+            .sponsor-tier-card{
+                padding:16px 12px;
+            }
+
+            .sponsor-tier-card p{
+                font-size:.75rem;
+            }
+
+            .summary-card{
+                padding:20px;
+            }
+
+            .modal-header-icon{
+                width:40px;
+                height:40px;
+                font-size:1.1rem;
+            }
         }
 
         /* =========================================================
@@ -1127,6 +1687,10 @@
 
                             <div class="dropdown-menu-custom">
 
+                                <a href="{{ route('newsletters') }}"
+                                    class="d-block mb-2">
+                                    Newsletters
+                                </a>
                                 <a href="{{ route('gallery') }}"
                                     class="d-block mb-2">
                                     Gallery
@@ -1157,12 +1721,6 @@
                         </li>
 
                         <li>
-                            <a href="{{ route('site.home') }}#team">
-                                Team
-                            </a>
-                        </li>
-
-                        <li>
                             <a href="{{ route('site.home') }}#contact">
                                 Contact
                             </a>
@@ -1181,7 +1739,7 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#donateModal">
                                 <i class="bi bi-heart-fill me-2"></i>
-                                Donate
+                                Give
                             </button>
                         </li>
 
@@ -1205,7 +1763,7 @@
                         data-bs-target="#donateModal">
 
                         <i class="bi bi-heart-fill me-2"></i>
-                        Donate
+                        Give
 
                     </button>
 
@@ -1250,6 +1808,9 @@
 
     {{-- FOOTER --}}
     @include('partials.site.footer')
+
+    {{-- COOKIE CONSENT (GDPR / UK PECR) --}}
+    @include('partials.site.cookie-consent')
 
     {{-- =========================================================
         LIVEWIRE

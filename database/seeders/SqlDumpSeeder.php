@@ -31,20 +31,25 @@ class SqlDumpSeeder extends Seeder
 
         // Split on statement boundaries (semicolons followed by newline)
         // Filter to only INSERT statements — tables already exist from migrations
-        $statements = array_filter(
-            preg_split('/;\s*\n/', $sql),
-            function ($statement) {
-                $trimmed = trim($statement);
-                if (empty($trimmed)) return false;
-                // Remove comments to find the actual SQL keyword
-                $withoutComments = preg_replace('/--.*$/m', '', $trimmed);
-                $withoutComments = preg_replace('/\/\*.*?\*\//s', '', $withoutComments);
-                $withoutComments = trim($withoutComments);
-                // Only keep INSERT statements
-                return stripos($withoutComments, 'INSERT') === 0;
-            }
-        );
+            // Convert INSERT to INSERT IGNORE to skip duplicates
+            $statements = array_filter(
+                preg_split('/;\s*\n/', $sql),
+                function ($statement) {
+                    $trimmed = trim($statement);
+                    if (empty($trimmed)) return false;
+                    // Remove comments to find the actual SQL keyword
+                    $withoutComments = preg_replace('/--.*$/m', '', $trimmed);
+                    $withoutComments = preg_replace('/\/\*.*?\*\//s', '', $withoutComments);
+                    $withoutComments = trim($withoutComments);
+                    // Only keep INSERT statements
+                    return stripos($withoutComments, 'INSERT') === 0;
+                }
+            );
 
+            // Convert INSERT INTO to INSERT IGNORE INTO so existing rows are not overwritten
+            $statements = array_map(function ($statement) {
+                return preg_replace('/^INSERT\s+INTO/i', 'INSERT IGNORE INTO', trim($statement));
+            }, $statements);
         $total = count($statements);
         $executed = 0;
         $errors = 0;

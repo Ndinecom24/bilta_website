@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 class AdminAndDemoSeeder extends Seeder
 {
-    private const CREATED_AT_EXPR = 'COALESCE(created_at, NOW())';
     private const ABOUT_TEXT_MAX = 191;
 
     public function run()
@@ -49,16 +48,15 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($statuses as $status) {
-            DB::table('statuses')->updateOrInsert(
-                ['slug' => $status['slug']],
-                [
+            if (!DB::table('statuses')->where('slug', $status['slug'])->exists()) {
+                DB::table('statuses')->insert([
                     'name' => $status['name'],
                     'slug' => $status['slug'],
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
     }
 
@@ -80,9 +78,8 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($adminUsers as $adminUser) {
-            DB::table('users')->updateOrInsert(
-                ['email' => $adminUser['email']],
-                [
+            if (!DB::table('users')->where('email', $adminUser['email'])->exists()) {
+                DB::table('users')->insert([
                     'name' => $adminUser['name'],
                     'email' => $adminUser['email'],
                     'phone' => $adminUser['phone'],
@@ -90,10 +87,10 @@ class AdminAndDemoSeeder extends Seeder
                     'status_id' => $activeStatusId,
                     'password' => Hash::make($adminUser['password']),
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
 
         return DB::table('users')->where('email', 'admin@bilta.org')->value('id') ?: 1;
@@ -161,16 +158,16 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($services as $service) {
-            DB::table('our_services')->updateOrInsert(
-                ['title' => $service['title']],
-                [
+            if (!DB::table('our_services')->where('title', $service['title'])->exists()) {
+                DB::table('our_services')->insert([
+                    'title' => $service['title'],
                     'description' => $service['description'],
                     'created_by' => $adminId,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
 
         $values = [
@@ -181,16 +178,16 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($values as $value) {
-            DB::table('our_values')->updateOrInsert(
-                ['title' => $value['title']],
-                [
+            if (!DB::table('our_values')->where('title', $value['title'])->exists()) {
+                DB::table('our_values')->insert([
+                    'title' => $value['title'],
                     'description' => $value['description'],
                     'created_by' => $adminId,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
     }
 
@@ -203,16 +200,16 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($faqs as $faq) {
-            DB::table('f_a_qs')->updateOrInsert(
-                ['question' => $faq['question']],
-                [
+            if (!DB::table('f_a_qs')->where('question', $faq['question'])->exists()) {
+                DB::table('f_a_qs')->insert([
+                    'question' => $faq['question'],
                     'answer' => $faq['answer'],
                     'created_by' => $adminId,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
     }
 
@@ -226,16 +223,17 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            DB::table('item_categories')->updateOrInsert(
-                ['name' => $category['name'], 'type' => $category['type']],
-                [
+            if (!DB::table('item_categories')->where('name', $category['name'])->where('type', $category['type'])->exists()) {
+                DB::table('item_categories')->insert([
+                    'name' => $category['name'],
+                    'type' => $category['type'],
                     'description' => $category['description'],
                     'status_id' => $activeStatusId,
                     'created_by' => $adminId,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
-                ]
-            );
+                    'created_at' => $now,
+                ]);
+            }
         }
 
         $projectCategoryId = DB::table('item_categories')->where('type', 'projects')->value('id') ?: 1;
@@ -271,9 +269,8 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($teams as $index => $team) {
-            DB::table('our_teams')->updateOrInsert(
-                ['email' => $team['email']],
-                [
+            if (!DB::table('our_teams')->where('email', $team['email'])->exists()) {
+                DB::table('our_teams')->insert([
                     'name' => $team['name'],
                     'phone' => $team['phone'],
                     'email' => $team['email'],
@@ -287,10 +284,10 @@ class AdminAndDemoSeeder extends Seeder
                     'twitter_url' => 'https://x.com',
                     'created_by' => $adminId,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
     }
 
@@ -318,9 +315,9 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($projects as $index => $project) {
-            DB::table('projects')->updateOrInsert(
-                ['title' => $project['title']],
-                [
+            if (!DB::table('projects')->where('title', $project['title'])->exists()) {
+                DB::table('projects')->insert([
+                    'title' => $project['title'],
                     'short_description' => $project['short_description'],
                     'post_date' => $now->toDateString(),
                     'author' => 'BiLTA Team',
@@ -332,10 +329,10 @@ class AdminAndDemoSeeder extends Seeder
                     'category_id' => $projectCategoryId,
                     'display_order' => $index + 1,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
     }
 
@@ -360,9 +357,9 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($newsItems as $index => $newsItem) {
-            DB::table('news_item')->updateOrInsert(
-                ['title' => $newsItem['title']],
-                [
+            if (!DB::table('news_item')->where('title', $newsItem['title'])->exists()) {
+                DB::table('news_item')->insert([
+                    'title' => $newsItem['title'],
                     'short_description' => $newsItem['short_description'],
                     'post_date' => $now->toDateString(),
                     'author' => 'BiLTA Communications',
@@ -372,10 +369,10 @@ class AdminAndDemoSeeder extends Seeder
                     'category_id' => $newsCategoryId,
                     'display_order' => $index + 1,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
     }
 
@@ -403,18 +400,18 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($audioFiles as $audioFile) {
-            DB::table('audio_files')->updateOrInsert(
-                ['file_url' => $audioFile['file_url']],
-                [
+            if (!DB::table('audio_files')->where('file_url', $audioFile['file_url'])->exists()) {
+                DB::table('audio_files')->insert([
                     'title' => $audioFile['title'],
                     'description' => $audioFile['description'],
+                    'file_url' => $audioFile['file_url'],
                     'status_id' => $activeStatusId,
                     'project_id' => $projectId,
                     'created_by' => $adminId,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
-                ]
-            );
+                    'created_at' => $now,
+                ]);
+            }
         }
     }
 
@@ -426,18 +423,18 @@ class AdminAndDemoSeeder extends Seeder
 
         $chairmanSummary = Str::limit(trim(strip_tags($chairmanMessage)), self::ABOUT_TEXT_MAX, '');
 
-        DB::table('chairman_messages')->updateOrInsert(
-            ['id' => 1],
-            [
+        if (!DB::table('chairman_messages')->where('id', 1)->exists()) {
+            DB::table('chairman_messages')->insert([
+                'id' => 1,
                 'name' => 'Rev. Fr. Jackson J. Katete',
                 'title' => '',
                 'message' => $chairmanSummary,
                 'created_by' => $adminId,
                 'status_id' => $activeStatusId,
                 'updated_at' => $now,
-                'created_at' => DB::raw(self::CREATED_AT_EXPR),
-            ]
-        );
+                'created_at' => $now,
+            ]);
+        }
     }
 
     private function seedSponsors(int $activeStatusId, int $adminId, $now): void
@@ -456,18 +453,18 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($sponsors as $index => $sponsor) {
-            DB::table('sponsors')->updateOrInsert(
-                ['name' => $sponsor['name']],
-                [
+            if (!DB::table('sponsors')->where('name', $sponsor['name'])->exists()) {
+                DB::table('sponsors')->insert([
+                    'name' => $sponsor['name'],
                     'website_url' => $sponsor['website_url'],
                     'description' => $sponsor['description'],
                     'display_order' => $index + 1,
                     'status_id' => $activeStatusId,
                     'created_by' => $adminId,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
-                ]
-            );
+                    'created_at' => $now,
+                ]);
+            }
         }
     }
 
@@ -487,17 +484,18 @@ class AdminAndDemoSeeder extends Seeder
         ];
 
         foreach ($testimonials as $testimonial) {
-            DB::table('testimonials')->updateOrInsert(
-                ['name' => $testimonial['name'], 'title' => $testimonial['title']],
-                [
+            if (!DB::table('testimonials')->where('name', $testimonial['name'])->where('title', $testimonial['title'])->exists()) {
+                DB::table('testimonials')->insert([
+                    'name' => $testimonial['name'],
+                    'title' => $testimonial['title'],
                     'testimonial' => $testimonial['testimonial'],
                     'status_id' => $activeStatusId,
                     'created_by' => $adminId,
                     'updated_at' => $now,
-                    'created_at' => DB::raw(self::CREATED_AT_EXPR),
+                    'created_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
     }
 
@@ -518,10 +516,11 @@ class AdminAndDemoSeeder extends Seeder
             $roleId = DB::table('roles')->where('slug', $roleSlug)->value('id');
 
             if ($userId && $roleId) {
-                DB::table('users_roles')->updateOrInsert(
-                    ['user_id' => $userId, 'role_id' => $roleId],
-                    ['user_id' => $userId, 'role_id' => $roleId, 'updated_at' => now(), 'created_at' => now()]
-                );
+                if (!DB::table('users_roles')->where('user_id', $userId)->where('role_id', $roleId)->exists()) {
+                    DB::table('users_roles')->insert(
+                        ['user_id' => $userId, 'role_id' => $roleId, 'updated_at' => now(), 'created_at' => now()]
+                    );
+                }
             }
         }
     }

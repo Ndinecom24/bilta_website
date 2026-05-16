@@ -26,7 +26,7 @@ class RolePermissionSeeder extends Seeder
 
             // '*' means all permissions
             if ($permissionSlugs === '*') {
-                $role->permissions()->sync($allPermissionIds->values()->toArray());
+                $role->permissions()->syncWithoutDetaching($allPermissionIds->values()->toArray());
                 $this->command->info("Role '{$role->name}' → ALL permissions assigned.");
                 continue;
             }
@@ -38,7 +38,7 @@ class RolePermissionSeeder extends Seeder
                 continue;
             }
 
-            $role->permissions()->sync($ids);
+            $role->permissions()->syncWithoutDetaching($ids);
             $this->command->info("Role '{$role->name}' → " . count($ids) . ' permissions assigned.');
         }
     }

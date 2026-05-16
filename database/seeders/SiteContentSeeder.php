@@ -30,9 +30,9 @@ class SiteContentSeeder extends Seeder
             ]
         );
 
-        DB::table('contact_us')->updateOrInsert(
-            ['id' => 1],
-            [
+        if (!DB::table('contact_us')->where('id', 1)->exists()) {
+            DB::table('contact_us')->insert([
+                'id' => 1,
                 'phone' => '(+26) 0977-539-067',
                 'email' => 'infor@bilta.org',
                 'address' => 'Plot 324, Flat No 2, Bauhinia Avenue, Off Great East Road, Chelston, Lusaka, Zambia',
@@ -47,8 +47,8 @@ class SiteContentSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
                 'deleted_at' => null,
-            ]
-        );
+            ]);
+        }
 
         $services = [
             [
@@ -66,16 +66,16 @@ class SiteContentSeeder extends Seeder
         ];
 
         foreach ($services as $service) {
-            DB::table('our_services')->updateOrInsert(
-                ['title' => $service['title']],
-                [
+            if (!DB::table('our_services')->where('title', $service['title'])->exists()) {
+                DB::table('our_services')->insert([
+                    'title' => $service['title'],
                     'description' => $service['description'],
                     'created_by' => 1,
                     'created_at' => $now,
                     'updated_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
 
         $values = [
@@ -85,21 +85,21 @@ class SiteContentSeeder extends Seeder
         ];
 
         foreach ($values as $value) {
-            DB::table('our_values')->updateOrInsert(
-                ['title' => $value['title']],
-                [
+            if (!DB::table('our_values')->where('title', $value['title'])->exists()) {
+                DB::table('our_values')->insert([
+                    'title' => $value['title'],
                     'description' => $value['description'],
                     'created_by' => 1,
                     'created_at' => $now,
                     'updated_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
 
-        DB::table('home_intros')->updateOrInsert(
-            ['id' => 1],
-            [
+        if (!DB::table('home_intros')->where('id', 1)->exists()) {
+            DB::table('home_intros')->insert([
+                'id' => 1,
                 'name' => 'Welcome to BiLTA',
                 'short_description' => 'Bible and Literature Translation Association',
                 'long_description' => 'A dedicated translation association advancing Bible and essential literature in local languages.',
@@ -107,8 +107,8 @@ class SiteContentSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
                 'deleted_at' => null,
-            ]
-        );
+            ]);
+        }
 
         $faqs = [
             [
@@ -126,16 +126,16 @@ class SiteContentSeeder extends Seeder
         ];
 
         foreach ($faqs as $faq) {
-            DB::table('f_a_qs')->updateOrInsert(
-                ['question' => $faq['question']],
-                [
+            if (!DB::table('f_a_qs')->where('question', $faq['question'])->exists()) {
+                DB::table('f_a_qs')->insert([
+                    'question' => $faq['question'],
                     'answer' => $faq['answer'],
                     'created_by' => 1,
                     'created_at' => $now,
                     'updated_at' => $now,
                     'deleted_at' => null,
-                ]
-            );
+                ]);
+            }
         }
     }
 }

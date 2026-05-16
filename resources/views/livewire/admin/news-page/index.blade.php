@@ -228,6 +228,22 @@
             event.preventDefault();
         });
 
+        // Sync Trix editor content to Livewire (deferred — no re-render)
+        document.addEventListener('trix-change', function (event) {
+            var input = event.target.inputElement;
+            if (input && input.id === 'newsDetails') {
+                @this.set('details', input.value, true);
+            }
+        });
+
+        // Populate Trix editor when editing an existing news item
+        window.addEventListener('load-trix-content', function (event) {
+            var editor = document.querySelector('trix-editor[input="newsDetails"]');
+            if (editor && editor.editor) {
+                editor.editor.loadHTML(event.detail.content || '');
+            }
+        });
+
         function deleteOurNewsItem(id) {
             if (confirm("Are you sure to delete this news record?")) {
                 window.livewire.emit('deleteNews', id);

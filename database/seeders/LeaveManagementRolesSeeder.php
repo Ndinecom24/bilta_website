@@ -47,13 +47,13 @@ class LeaveManagementRolesSeeder extends Seeder
         ];
 
         foreach ($roles as $slug => $data) {
-            $role = Role::updateOrCreate(
+            $role = Role::firstOrCreate(
                 ['slug' => $slug],
                 ['name' => $data['name']]
             );
 
             $permissionIds = Permission::whereIn('slug', $data['permissions'])->pluck('id')->toArray();
-            $role->permissions()->sync($permissionIds);
+            $role->permissions()->syncWithoutDetaching($permissionIds);
 
             $this->command->info("Leave role seeded: {$role->name} (" . count($permissionIds) . ' permissions)');
         }

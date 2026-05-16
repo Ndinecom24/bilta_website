@@ -15,7 +15,7 @@ class RoleSeeder extends Seeder
         $roles = config('chilolezo.roles', []);
 
         foreach ($roles as $role) {
-            Role::updateOrCreate(
+            Role::firstOrCreate(
                 ['slug' => $role['slug']],
                 ['name' => $role['name']]
             );

@@ -594,12 +594,12 @@
     @endcanany
 
     <!-- CONTENT -->
-    @canany(['manage-faqs', 'manage-prayer-points', 'manage-news', 'manage-testimonies', 'manage-testimonials', 'manage-gallery', 'manage-videos', 'manage-audio', 'manage-projects', 'manage-categories', 'view-analytics'])
+    @canany(['manage-faqs', 'manage-prayer-points', 'manage-news', 'manage-newsletters', 'manage-testimonies', 'manage-testimonials', 'manage-gallery', 'manage-videos', 'manage-audio', 'manage-projects', 'manage-categories', 'view-analytics'])
     <div class="sidebar-heading">
         Content
     </div>
 
-    <li class="nav-item {{ request()->routeIs('admin.company.faqs') || request()->routeIs('admin.page.weekly-prayer-points') || request()->routeIs('admin.page.item.news') || request()->routeIs('admin.page.testimonies') || request()->routeIs('admin.page.testimonial') || request()->routeIs('admin.page.item.gallery') || request()->routeIs('admin.page.item.videos') || request()->routeIs('admin.page.item.audio') || request()->routeIs('admin.page.item.projects') || request()->routeIs('admin.page.item.category') || request()->routeIs('admin.page.live.analytics.clicks') ? 'active' : '' }}">
+    <li class="nav-item {{ request()->routeIs('admin.company.faqs') || request()->routeIs('admin.page.weekly-prayer-points') || request()->routeIs('admin.page.item.news') || request()->routeIs('admin.page.item.newsletters') || request()->routeIs('admin.page.testimonies') || request()->routeIs('admin.page.testimonial') || request()->routeIs('admin.page.item.gallery') || request()->routeIs('admin.page.item.videos') || request()->routeIs('admin.page.item.audio') || request()->routeIs('admin.page.item.projects') || request()->routeIs('admin.page.item.category') || request()->routeIs('admin.page.live.analytics.clicks') ? 'active' : '' }}">
 
         <a class="nav-link collapsed"
             href="#"
@@ -614,7 +614,7 @@
         </a>
 
         <div id="collapsePages"
-            class="collapse {{ request()->routeIs('admin.company.faqs') || request()->routeIs('admin.page.weekly-prayer-points') || request()->routeIs('admin.page.item.news') || request()->routeIs('admin.page.testimonies') || request()->routeIs('admin.page.testimonial') || request()->routeIs('admin.page.item.gallery') || request()->routeIs('admin.page.item.videos') || request()->routeIs('admin.page.item.audio') || request()->routeIs('admin.page.item.projects') || request()->routeIs('admin.page.item.category') || request()->routeIs('admin.page.live.analytics.clicks') ? 'show' : '' }}"
+            class="collapse {{ request()->routeIs('admin.company.faqs') || request()->routeIs('admin.page.weekly-prayer-points') || request()->routeIs('admin.page.item.news') || request()->routeIs('admin.page.item.newsletters') || request()->routeIs('admin.page.testimonies') || request()->routeIs('admin.page.testimonial') || request()->routeIs('admin.page.item.gallery') || request()->routeIs('admin.page.item.videos') || request()->routeIs('admin.page.item.audio') || request()->routeIs('admin.page.item.projects') || request()->routeIs('admin.page.item.category') || request()->routeIs('admin.page.live.analytics.clicks') ? 'show' : '' }}"
             data-parent="#accordionSidebar">
 
             <div class="collapse-inner">
@@ -634,6 +634,12 @@
                 @can('manage-news')
                 <a class="collapse-item" href="{{ route('admin.page.item.news') }}">
                     News
+                </a>
+                @endcan
+
+                @can('manage-newsletters')
+                <a class="collapse-item" href="{{ route('admin.page.item.newsletters') }}">
+                    Newsletters
                 </a>
                 @endcan
 

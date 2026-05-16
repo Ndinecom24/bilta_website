@@ -175,6 +175,8 @@ class ShowTranslationProjects extends Component
         $this->status_id = $our_projects->status_id;
         $this->our_projects_id = $our_projects->id;
         $this->updateProjectsItem = true;
+
+        $this->dispatchBrowserEvent('load-trix-content', ['content' => $our_projects->details ?? '']);
     }
 
     public function update()

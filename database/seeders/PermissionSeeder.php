@@ -15,7 +15,7 @@ class PermissionSeeder extends Seeder
         $permissions = config('chilolezo.permissions', []);
 
         foreach ($permissions as $permission) {
-            Permission::updateOrCreate(
+            Permission::firstOrCreate(
                 ['slug' => $permission['slug']],
                 ['name' => $permission['name']]
             );

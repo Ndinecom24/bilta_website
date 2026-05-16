@@ -29,6 +29,7 @@ use App\Http\Livewire\Admin\TranslationProjectsPage\DetailTranslationProjects;
 use App\Http\Livewire\Admin\TranslationProjectsPage\ShowTranslationProjects;
 use App\Http\Livewire\Admin\VideosPage\ShowItemVidoes;
 use App\Http\Livewire\Admin\Analytics\ClickAnalytics;
+use App\Http\Livewire\Admin\NewsletterPage\ShowNewsletters;
 use App\Http\Livewire\Admin\LeavePage\ShowLeaveTypes;
 use App\Http\Livewire\Admin\LeavePage\ShowLeaveApplications;
 use App\Http\Livewire\Admin\LeavePage\MyLeaveApplications;
@@ -54,6 +55,8 @@ use App\Http\Livewire\Site\MyFaqs;
 use App\Http\Livewire\Site\MyTestimonials;
 use App\Http\Livewire\Site\MyTestimonies;
 use App\Http\Livewire\Site\MyNewsList;
+use App\Http\Livewire\Site\MyNewsletterList;
+use App\Http\Livewire\Site\MyNewsletterDetails;
 use App\Http\Livewire\Site\ShowWeeklyPrayerPoints;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +96,8 @@ Route::prefix('bilta/site')->group(function () {
     Route::get('/WeeklyPrayerPoint', ShowWeeklyPrayerPoints::class)->name('weekly-prayer-points');
     Route::get('/audio/bible', MyAudioBibleList::class)->name('audio.bible');
     Route::get('/audio/bible/{item}/details', MyAudioBibleDetails::class)->name('audio.bible.details');
+    Route::get('/newsletters', MyNewsletterList::class)->name('newsletters');
+    Route::get('/newsletters/{id}/details', MyNewsletterDetails::class)->name('newsletters.details');
 
 });
 Route::post('/contact', [ContactController::class,  'store'])->middleware('throttle:3,1')->name('contact.store');
@@ -135,6 +140,9 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/projects', ShowTranslationProjects::class)->middleware('permission:manage-projects')->name('admin.page.item.projects');
         Route::get('/item/projects/{item}/details', DetailTranslationProjects::class)->middleware('permission:manage-projects')->name('admin.page.item.projects.details');
         Route::get('/admin/live-analytics/clicks', ClickAnalytics::class)->middleware('permission:view-analytics')->name('admin.page.live.analytics.clicks');
+
+        // Newsletters
+        Route::get('/item/newsletters', ShowNewsletters::class)->middleware('permission:manage-newsletters')->name('admin.page.item.newsletters');
 
         // Departments
         Route::get('/departments', \App\Http\Livewire\Admin\ShowDepartments::class)->middleware('permission:manage-departments')->name('admin.departments');

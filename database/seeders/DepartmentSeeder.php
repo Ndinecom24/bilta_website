@@ -64,7 +64,7 @@ class DepartmentSeeder extends Seeder
         ];
 
         foreach ($departments as $dept) {
-            Department::updateOrCreate(
+            Department::firstOrCreate(
                 ['slug' => Str::slug($dept['name'])],
                 array_merge($dept, [
                     'slug' => Str::slug($dept['name']),

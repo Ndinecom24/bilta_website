@@ -91,13 +91,12 @@ class LeaveTypeSeeder extends Seeder
         ];
 
         foreach ($types as $type) {
-            DB::table('leave_types')->updateOrInsert(
-                ['slug' => $type['slug']],
-                array_merge($type, [
+            if (!DB::table('leave_types')->where('slug', $type['slug'])->exists()) {
+                DB::table('leave_types')->insert(array_merge($type, [
                     'created_at' => now(),
                     'updated_at' => now(),
-                ])
-            );
+                ]));
+            }
         }
 
         $this->command->info('Leave types seeded: ' . count($types));
