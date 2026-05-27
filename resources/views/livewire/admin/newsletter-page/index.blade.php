@@ -530,10 +530,17 @@
 
         // Populate Trix editor when editing an existing newsletter
         window.addEventListener('load-trix-content', function (event) {
-            var editor = document.querySelector('trix-editor[input="newsletterContent"]');
-            if (editor && editor.editor) {
-                editor.editor.loadHTML(event.detail.content || '');
+            function loadContent() {
+                var editor = document.querySelector('trix-editor[input="newsletterContent"]');
+                if (editor && editor.editor) {
+                    editor.editor.loadHTML(event.detail.content || '');
+                } else {
+                    // Trix not ready yet — retry after a short delay
+                    setTimeout(loadContent, 100);
+                }
             }
+            // Small delay to let Livewire finish DOM updates
+            setTimeout(loadContent, 50);
         });
 
         function deleteNewsletter(id) {

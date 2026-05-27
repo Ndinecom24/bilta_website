@@ -18,20 +18,21 @@ class ShowItemAudio extends Component
  
 
     public $audio_item_id, $project_id, $title, $description, $status_id, $created_by;
-    public $file_url, $audio_item , $new_file_url ;
+    public $file_url, $audio_item, $new_file_url;
+    public $external_url;
 
     public $updateAudios = false;
     protected $listeners = [
         'deleteAudioItem' => 'destroy'
     ];
-    // Validation Rules
+
     protected $rules = [
         'description' => 'required',
         'title' => 'required',
         'status_id' => 'required',
         'project_id' => 'required',
-        'file_url' => 'required', // ,
-
+        'file_url' => 'nullable',
+        'external_url' => 'nullable|url|max:2048',
     ];
 
     public function render()
@@ -52,46 +53,39 @@ class ShowItemAudio extends Component
         $this->created_by = '';
         $this->file_url = '';
         $this->new_file_url = '';
+        $this->external_url = '';
     }
 
     public function store()
     {
+        // At least one source required: file upload or external URL
+        if (empty($this->file_url) && empty($this->external_url)) {
+            $this->addError('file_url', 'Please upload an audio file or provide an external URL.');
+            return;
+        }
 
-        // Validate Form Request
         $this->validate();
         try {
-            // Create Audios
-            $audio_item = AudioFile::updateOrCreate(
-                [
-                    'description' => $this->description,
-                    'title' => $this->title,
-                    'project_id' => $this->project_id,
-                ],
-                [
-                    'description' => $this->description,
-                    'title' => $this->title,
-                    'status_id' => $this->status_id,
-                    'file_url' => $this->file_url->getClientOriginalName() ,
-                    'project_id' => $this->project_id,
-                    'created_by' => auth()->user()->id
-                ]
+            $fileName = $this->file_url ? $this->file_url->getClientOriginalName() : ($this->external_url ?? '');
 
-            );
+            $audio_item = AudioFile::create([
+                'description' => $this->description,
+                'title' => $this->title,
+                'status_id' => $this->status_id,
+                'file_url' => $fileName,
+                'external_url' => $this->external_url ?: null,
+                'project_id' => $this->project_id,
+                'created_by' => auth()->user()->id,
+            ]);
 
-            
-            $audio_item->addMedia($this->file_url)->toMediaCollection('audio_files');
+            if ($this->file_url && is_object($this->file_url)) {
+                $audio_item->addMedia($this->file_url)->toMediaCollection('audio_files');
+            }
 
-
-            // Set Flash Message
-            session()->flash('success', 'Audio Item Created Successfully!!');
-            // Reset Form Fields After Creating Audios
+            session()->flash('success', 'Audio Item Created Successfully!');
             $this->resetFields();
-
         } catch (\Exception $e) {
-
-            // Set Flash Message
-            session()->flash('error', 'Something goes wrong while creating audio item!!' . $e->getMessage());
-            // Reset Form Fields After Creating Audios
+            session()->flash('error', 'Error creating audio item: ' . $e->getMessage());
             $this->resetFields();
         }
     }
@@ -103,6 +97,7 @@ class ShowItemAudio extends Component
         $this->title = $audio_item->title;
         $this->status_id = $audio_item->status_id;
         $this->project_id = $audio_item->project_id;
+        $this->external_url = $audio_item->external_url;
         $this->audio_item_id = $audio_item->id;
 
         $this->updateAudios = true;
@@ -117,42 +112,37 @@ class ShowItemAudio extends Component
 
     public function update()
     {
-        // Validate request
         $validationRules = $this->rules;
         $validationRules['file_url'] = 'nullable';
         $validationRules['new_file_url'] = 'nullable';
         $this->validate($validationRules);
-    
+
         try {
-            // Find the audio item
             $audio_item = AudioFile::findOrFail($this->audio_item_id);
-    
-            // Determine the file name
-            $file_name = $this->new_file_url 
-                ? $this->new_file_url->getClientOriginalName() 
-                : ($this->file_url ? $this->file_url->getClientOriginalName() : $audio_item->file_url);
-    
-            // Update the audio item fields
+
+            $file_name = $this->new_file_url
+                ? $this->new_file_url->getClientOriginalName()
+                : $audio_item->file_url;
+
             $audio_item->update([
                 'description' => $this->description,
                 'title' => $this->title,
                 'status_id' => $this->status_id,
                 'file_url' => $file_name,
+                'external_url' => $this->external_url ?: null,
                 'project_id' => $this->project_id,
                 'created_by' => auth()->user()->id,
             ]);
-    
-            // If a new file is uploaded, update the media collection
+
             if ($this->new_file_url) {
                 $audio_item->clearMediaCollection('audio_files');
                 $audio_item->addMedia($this->new_file_url)->toMediaCollection('audio_files');
             }
-    
+
             session()->flash('success', 'Audio updated successfully!');
             $this->cancel();
-    
         } catch (\Exception $e) {
-            session()->flash('error', 'Something went wrong while updating the audio item!');
+            session()->flash('error', 'Error updating audio item: ' . $e->getMessage());
             $this->cancel();
         }
     }

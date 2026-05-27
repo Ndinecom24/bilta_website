@@ -4,37 +4,49 @@ namespace App\Http\Livewire\Admin\PrayerPointsPage;
 
 use App\Models\Bilta\WeeklyPrayerPoints;
 use App\Models\System\Status;
+use Intervention\Image\Facades\Image;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ShowPrayerPoints extends Component
 {
-
-
     use WithPagination;
+    use WithFileUploads;
 
-    public $weekly_prayer_point_id, $details, $title, $status_id, $post_date, $scriptures, $year, $month, $week, $day;
+    public $weekly_prayer_point_id, $details, $title, $status_id, $post_date, $scriptures;
 
+    public $banner_image;
+    public $attachments = [];
+
+    public $prayerPoint;
     public $updateWeeklyPrayerPoint = false;
 
     protected $listeners = [
         'deleteWeeklyPrayerPoint' => 'destroy'
     ];
 
-    // Validation Rules
     protected $rules = [
-        'title' => 'required',
-        'details' => 'required',
-        'status_id' => 'required',
-        'post_date' => 'required',
-        'scriptures' => 'required',
+        'title' => 'required|string|max:255',
+        'status_id' => 'required|exists:statuses,id',
+        'post_date' => 'required|date',
+        'details' => 'nullable|string',
+        'scriptures' => 'nullable|string',
+        'banner_image' => 'nullable|image|max:5120',
+        'attachments' => 'nullable|array',
+        'attachments.*' => 'file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
     ];
 
     public function render()
     {
         $statuses = Status::all();
-        $weekly_prayer_points = WeeklyPrayerPoints::select('id', 'title', 'details', 'status_id', 'post_date', 'scriptures', 'created_by', 'year', 'month', 'week', 'day')->paginate(20);
-        return view('livewire.admin.prayer-points-page.index')->with(compact('weekly_prayer_points', 'statuses'));
+        $weekly_prayer_points = WeeklyPrayerPoints::with('media')
+            ->orderBy('post_date', 'desc')
+            ->paginate(20);
+
+        return view('livewire.admin.prayer-points-page.index')
+            ->with(compact('weekly_prayer_points', 'statuses'));
     }
 
     public function resetFields()
@@ -44,74 +56,68 @@ class ShowPrayerPoints extends Component
         $this->status_id = '';
         $this->post_date = '';
         $this->scriptures = '';
+        $this->banner_image = null;
+        $this->attachments = [];
+        $this->prayerPoint = null;
     }
 
     public function store()
     {
-        $date = date_parse_from_format('Y-m-d', $this->post_date);
-
-        // $date_info = $date ;
-//        if ($date_info['error_count'] === 0 && $date_info['warning_count'] === 0) {
-//            $week_number = date('W', mktime(0, 0, 0, $date_info['month'], $date_info['day'], $date_info['year']));
-//        } else {
-//            $week_number = 0 ;
-//        }
-//        dd([  date("W", strtotime($this->post_date )) , $week_number]);
-
-
-        // Validate Form Request
         $this->validate();
+
         try {
-            // Create WeeklyPrayerPoint
-            WeeklyPrayerPoints::updateOrCreate(
-                [
-                    'title' => $this->title,
-                    'details' => $this->details,
-                    'post_date' => $this->post_date,
-                    'scriptures' => $this->scriptures,
-                ],
-                [
-                    'title' => $this->title,
-                    'details' => $this->details,
-                    'post_date' => $this->post_date,
-                    'scriptures' => $this->scriptures,
-                    'status_id' => $this->status_id,
-                    'created_by' => auth()->user()->id,
-                    'year' => $date['year'],
-                    'month' => $date['month'],
-                    'week' => date("W", strtotime($this->post_date)),
-                    'day' => $date['day'],
-                ]
+            $date = date_parse_from_format('Y-m-d', $this->post_date);
 
-            );
+            $prayerPoint = WeeklyPrayerPoints::create([
+                'title' => $this->title,
+                'details' => $this->details,
+                'post_date' => $this->post_date,
+                'scriptures' => $this->scriptures,
+                'status_id' => $this->status_id,
+                'created_by' => auth()->user()->id,
+                'year' => $date['year'],
+                'month' => $date['month'],
+                'week' => date("W", strtotime($this->post_date)),
+                'day' => $date['day'],
+            ]);
 
-            // Set Flash Message
-            session()->flash('success', 'WeeklyPrayerPoint Created Successfully!!');
-            // Reset Form Fields After Creating WeeklyPrayerPoint
+            // Save banner image
+            if (isset($this->banner_image)) {
+                $this->compressImage($this->banner_image);
+                $prayerPoint->addMedia($this->banner_image)
+                    ->toMediaCollection('prayer_banner_images');
+            }
+
+            // Save PDF / image attachments
+            if (!empty($this->attachments)) {
+                foreach ($this->attachments as $file) {
+                    $mime = $file->getMimeType();
+                    if (str_starts_with($mime, 'image/')) {
+                        $this->compressImage($file);
+                    }
+                    $prayerPoint->addMedia($file)
+                        ->toMediaCollection('prayer_attachments');
+                }
+            }
+
+            session()->flash('success', 'Prayer Point created successfully!');
             $this->resetFields();
-
         } catch (\Exception $e) {
-
-            // Set Flash Message
-            session()->flash('error', 'Something goes wrong while creating about us!!' . $e->getMessage());
-            // Reset Form Fields After Creating WeeklyPrayerPoint
+            session()->flash('error', 'Error creating prayer point: ' . $e->getMessage());
             $this->resetFields();
         }
     }
 
     public function edit($id)
     {
-        $weekly_prayer_point = WeeklyPrayerPoints::findOrFail($id);
-        $this->title = $weekly_prayer_point->title;
-        $this->details = $weekly_prayer_point->details;
-        $this->post_date = $weekly_prayer_point->post_date;
-        $this->scriptures = $weekly_prayer_point->scriptures;
-        $this->status_id = $weekly_prayer_point->status_id;
-        $this->year = $weekly_prayer_point->year;
-        $this->month = $weekly_prayer_point->month;
-        $this->week = $weekly_prayer_point->week;
-        $this->day = $weekly_prayer_point->day;
-        $this->weekly_prayer_point_id = $weekly_prayer_point->id;
+        $item = WeeklyPrayerPoints::findOrFail($id);
+        $this->prayerPoint = $item;
+        $this->weekly_prayer_point_id = $item->id;
+        $this->title = $item->title;
+        $this->details = $item->details;
+        $this->post_date = $item->post_date;
+        $this->scriptures = $item->scriptures;
+        $this->status_id = $item->status_id;
         $this->updateWeeklyPrayerPoint = true;
     }
 
@@ -123,12 +129,13 @@ class ShowPrayerPoints extends Component
 
     public function update()
     {
-        // Validate request
         $this->validate();
+
         try {
-            $date = date_parse_from_format('Y-m-d W', $this->post_date);
-            // Update weekly_prayer_point
-            WeeklyPrayerPoints::find($this->weekly_prayer_point_id)->fill([
+            $date = date_parse_from_format('Y-m-d', $this->post_date);
+            $prayerPoint = WeeklyPrayerPoints::findOrFail($this->weekly_prayer_point_id);
+
+            $prayerPoint->fill([
                 'title' => $this->title,
                 'details' => $this->details,
                 'post_date' => $this->post_date,
@@ -140,11 +147,31 @@ class ShowPrayerPoints extends Component
                 'week' => date("W", strtotime($this->post_date)),
                 'day' => $date['day'],
             ])->save();
-            session()->flash('success', 'Weekly Prayer Point Updated Successfully!!');
 
+            // Update banner image
+            if (isset($this->banner_image)) {
+                $this->compressImage($this->banner_image);
+                $prayerPoint->clearMediaCollection('prayer_banner_images');
+                $prayerPoint->addMedia($this->banner_image)
+                    ->toMediaCollection('prayer_banner_images');
+            }
+
+            // Add new attachments
+            if (!empty($this->attachments)) {
+                foreach ($this->attachments as $file) {
+                    $mime = $file->getMimeType();
+                    if (str_starts_with($mime, 'image/')) {
+                        $this->compressImage($file);
+                    }
+                    $prayerPoint->addMedia($file)
+                        ->toMediaCollection('prayer_attachments');
+                }
+            }
+
+            session()->flash('success', 'Prayer Point updated successfully!');
             $this->cancel();
         } catch (\Exception $e) {
-            session()->flash('error', 'Something goes wrong while updating weekly prayer point!!');
+            session()->flash('error', 'Error updating prayer point: ' . $e->getMessage());
             $this->cancel();
         }
     }
@@ -152,11 +179,42 @@ class ShowPrayerPoints extends Component
     public function destroy($id)
     {
         try {
-            WeeklyPrayerPoints::find($id)->delete();
-            session()->flash('success', "Weekly Prayer Point Deleted Successfully!!");
+            WeeklyPrayerPoints::findOrFail($id)->delete();
+            session()->flash('success', 'Prayer Point deleted successfully!');
         } catch (\Exception $e) {
-            session()->flash('error', "Something goes wrong while deleting weekly prayer point!!");
+            session()->flash('error', 'Error deleting prayer point.');
         }
     }
 
+    public function removeFile($mediaId)
+    {
+        Media::findOrFail($mediaId)->delete();
+        $this->prayerPoint = WeeklyPrayerPoints::find($this->weekly_prayer_point_id);
+        session()->flash('success', 'File removed successfully!');
+    }
+
+    /**
+     * Compress an uploaded image to 75% quality.
+     */
+    private function compressImage($uploadedFile)
+    {
+        try {
+            $path = $uploadedFile->getRealPath();
+            $image = Image::make($path);
+
+            $mime = $uploadedFile->getMimeType();
+            $format = 'jpg';
+            if ($mime === 'image/png') {
+                $format = 'png';
+            } elseif ($mime === 'image/webp') {
+                $format = 'webp';
+            }
+
+            $image->encode($format, 75)->save($path);
+        } catch (\Exception $e) {
+            // If compression fails, continue with original file
+        }
+
+        return $uploadedFile;
+    }
 }

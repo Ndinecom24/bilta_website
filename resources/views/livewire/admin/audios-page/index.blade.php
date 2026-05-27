@@ -38,6 +38,7 @@
                         <div class="row">
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="audioFileInput">{{ $updateAudios ? 'Change Audio File (optional)' : 'Audio File' }}</label>
+                                <small class="text-muted d-block mb-1">Upload a file <strong>or</strong> provide an external URL below — both are optional, but at least one is needed.</small>
                                 @if ($updateAudios)
                                     <input id="audioFileInput" type="file" class="form-control" accept="audio/*" wire:model.defer="new_file_url">
                                     @error('new_file_url') <span class="text-danger d-block">{{ $message }}</span> @enderror
@@ -46,6 +47,18 @@
                                     @error('file_url') <span class="text-danger d-block">{{ $message }}</span> @enderror
                                 @endif
                                 <div wire:loading wire:target="file_url,new_file_url" class="mt-2 text-info small">Uploading file...</div>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 mb-3">
+                                <label class="font-weight-bold" for="externalUrl">
+                                    <i class="fas fa-link text-primary mr-1"></i> External URL
+                                    <span class="font-weight-normal text-muted">(optional)</span>
+                                </label>
+                                <input id="externalUrl" type="url" class="form-control"
+                                       wire:model.defer="external_url"
+                                       placeholder="https://example.com/audio-file.mp3 or any external link">
+                                @error('external_url') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                <small class="text-muted">Paste a link to an external audio source, YouTube, SoundCloud, etc.</small>
                             </div>
 
                             @if ($updateAudios && $audio_item && $audio_item->getFirstMediaUrl('audio_files'))
@@ -134,8 +147,12 @@
                                                         <source src="{{ $audio->getFirstMediaUrl('audio_files') }}" type="audio/mpeg">
                                                         Your browser does not support the audio element.
                                                     </audio>
+                                                @elseif ($audio->external_url)
+                                                    <a href="{{ $audio->external_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-external-link-alt mr-1"></i> External Link
+                                                    </a>
                                                 @else
-                                                    <span class="text-muted">No audio file available.</span>
+                                                    <span class="text-muted">No source</span>
                                                 @endif
                                             </td>
                                             <td>{{ $audio->title }}</td>

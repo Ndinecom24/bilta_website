@@ -18,6 +18,7 @@ class AudioFile  extends Model implements HasMedia
     'title',
     'description',
     'file_url',
+    'external_url',
     'status_id',
     'project_id',
     'created_by',

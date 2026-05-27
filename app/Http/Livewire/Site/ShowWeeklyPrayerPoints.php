@@ -4,20 +4,19 @@ namespace App\Http\Livewire\Site;
 
 use App\Models\Bilta\WeeklyPrayerPoints;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ShowWeeklyPrayerPoints extends Component
 {
-    public $start_date, $end_date ;
+    use WithPagination;
+
     public function render()
     {
-        $dataset = WeeklyPrayerPoints::select('status_id','post_date', 'details', 'title', 'scriptures', 'created_by')
+        $dataset = WeeklyPrayerPoints::with('media')
             ->where('status_id', config('constants.status.active'))
-            ->paginate(20);
+            ->orderBy('post_date', 'desc')
+            ->paginate(12);
 
         return view('livewire.site.show-prayer-points')->with(compact('dataset'));
-    }
-
-    public function search(){
-
     }
 }

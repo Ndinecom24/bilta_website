@@ -68,12 +68,54 @@
 
                     <div class="row g-4" id="audioList">
                         @forelse ($audioFiles as $item)
-                            @foreach ($item->media as $media)
-                                <div class="col-md-6 audio-card" data-title="{{ strtolower($item->title ?? '') }}" data-description="{{ strtolower($item->short_description ?? '') }}">
+                            @php
+                                $hasMedia = $item->media->count() > 0;
+                                $hasExternalUrl = !empty($item->external_url);
+                            @endphp
+
+                            @if ($hasMedia)
+                                {{-- Uploaded audio files --}}
+                                @foreach ($item->media as $media)
+                                    <div class="col-md-6 audio-card" data-title="{{ strtolower($item->title ?? '') }}" data-description="{{ strtolower($item->description ?? '') }}">
+                                        <article class="news-card h-100 audio-news-card">
+                                            <div class="news-card-body d-flex flex-column gap-2">
+                                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+                                                    <span class="news-badge audio-badge">Audio Bible</span>
+                                                    <small class="text-muted">{{ $item->post_date ?? '-' }}</small>
+                                                </div>
+
+                                                <h5 class="news-title mb-1">{{ $item->title ?? 'Untitled' }}</h5>
+
+                                                <p class="text-muted small mb-1">
+                                                    <i class="bi bi-folder2-open"></i> {{ $item->project->title ?? '-' }}
+                                                </p>
+
+                                                <p class="news-text mb-2">{{ \Illuminate\Support\Str::limit($item->description ?? '-', 150) }}</p>
+
+                                                <audio controls class="w-100 mb-2"
+                                                    data-title="{{ $item->title ?? 'Untitled' }}"
+                                                    data-project="{{ $item->project->title ?? '-' }}">
+                                                    <source src="{{ $media->getUrl() }}" type="{{ $media->mime_type }}">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+
+                                                <div class="d-flex gap-2 mt-auto">
+                                                    <a href="{{ $media->getUrl() }}" class="btn btn-sm btn-outline-secondary" target="_blank">Open</a>
+                                                    <a href="{{ $media->getUrl() }}" class="btn btn-sm btn-outline-primary" download>Download</a>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </div>
+                                @endforeach
+                            @elseif ($hasExternalUrl)
+                                {{-- External URL only --}}
+                                <div class="col-md-6 audio-card" data-title="{{ strtolower($item->title ?? '') }}" data-description="{{ strtolower($item->description ?? '') }}">
                                     <article class="news-card h-100 audio-news-card">
                                         <div class="news-card-body d-flex flex-column gap-2">
                                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
-                                                <span class="news-badge audio-badge">Audio Bible</span>
+                                                <span class="news-badge audio-badge" style="background: linear-gradient(135deg, #f1b66346, #e5a8464f);">
+                                                    <i class="bi bi-link-45deg me-1"></i> External
+                                                </span>
                                                 <small class="text-muted">{{ $item->post_date ?? '-' }}</small>
                                             </div>
 
@@ -85,21 +127,15 @@
 
                                             <p class="news-text mb-2">{{ \Illuminate\Support\Str::limit($item->description ?? '-', 150) }}</p>
 
-                                            <audio controls class="w-100 mb-2"
-                                                data-title="{{ $item->title ?? 'Untitled' }}"
-                                                data-project="{{ $item->project->title ?? '-' }}">
-                                                <source src="{{ $media->getUrl() }}" type="{{ $media->mime_type }}">
-                                                Your browser does not support the audio element.
-                                            </audio>
-
                                             <div class="d-flex gap-2 mt-auto">
-                                                <a href="{{ $media->getUrl() }}" class="btn btn-sm btn-outline-secondary" target="_blank">Open</a>
-                                                <a href="{{ $media->getUrl() }}" class="btn btn-sm btn-outline-primary" download>Download</a>
+                                                <a href="{{ $item->external_url }}" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener">
+                                                    <i class="bi bi-box-arrow-up-right me-1"></i> Open Link
+                                                </a>
                                             </div>
                                         </div>
                                     </article>
                                 </div>
-                            @endforeach
+                            @endif
                         @empty
                             <div class="col-12">
                                 <div class="news-empty-state">
