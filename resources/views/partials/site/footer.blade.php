@@ -100,12 +100,6 @@
                         </li>
 
                         <li>
-                            <a href="{{ route('projects', '0') }}">
-                                Projects
-                            </a>
-                        </li>
-
-                        <li>
                             <a href="{{ route('site.home') }}#team">
                                 Our Team
                             </a>
@@ -166,10 +160,11 @@
                             </a>
                         </li>
                          <li>
-                               <a href="{{ route('weekly-prayer-points') }}">
-                                Prayer Points
+                               <a href="{{ route('projects.map') }}">
+                               Projects Map
                             </a>
                         </li>
+                         
 
                     </ul>
 

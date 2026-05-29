@@ -27,6 +27,8 @@ class Projects  extends Model implements HasMedia
         'short_description' ,
         'location' ,
         'location_map' ,
+        'latitude' ,
+        'longitude' ,
         'category_id' ,
         'display_order' ,
         'status_id' ,
@@ -44,6 +46,10 @@ class Projects  extends Model implements HasMedia
 
     public function myCategory (){
         return $this->belongsTo( ItemCategory::class, 'category_id', 'id');
+    }
+
+    public function locations(){
+        return $this->hasMany(ProjectLocation::class, 'project_id', 'id');
     }
 
     public function registerMediaConversions( $media = null): void

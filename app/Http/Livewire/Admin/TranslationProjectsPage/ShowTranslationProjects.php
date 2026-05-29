@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\TranslationProjectsPage;
 
 use App\Models\Bilta\ItemCategory;
+use App\Models\Bilta\ProjectLocation;
 use App\Models\Bilta\Projects;
 use App\Models\System\Status;
 use Livewire\Component;
@@ -18,13 +19,17 @@ class ShowTranslationProjects extends Component
     use WithFileUploads;
 
     public $our_projects_id, $project, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id, $display_order
-    , $location, $location_map ;
+    , $location, $location_map, $latitude, $longitude ;
     public $title_image, $project_image , $project_file ;
+
+    // Multiple locations support
+    public $projectLocations = [];
 
 
     public $updateProjectsItem = false;
     protected $listeners = [
-        'deleteProjects' => 'destroy'
+        'deleteProjects' => 'destroy',
+        'addLocationFromMap' => 'addLocationFromMap'
     ];
     // Validation Rules
     protected $rules = [
@@ -59,11 +64,55 @@ class ShowTranslationProjects extends Component
             'short_description' => $this->short_description,
             'details' => $this->details,
         ]);
-        
-
-        
+         
             return view('livewire.admin.translation-projects-page.index')
             ->with(compact('translation_projects', 'statuses', 'categories'));
+    }
+
+    public function addLocation()
+    {
+        $this->projectLocations[] = ['name' => '', 'latitude' => '', 'longitude' => ''];
+    }
+
+    public function addLocationFromMap($name, $latitude, $longitude)
+    {
+        $this->projectLocations[] = [
+            'name' => $name,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+        ];
+    }
+
+    public function removeLocation($index)
+    {
+        unset($this->projectLocations[$index]);
+        $this->projectLocations = array_values($this->projectLocations);
+    }
+
+    private function syncLocations($project)
+    {
+        // Remove old locations
+        $project->locations()->delete();
+
+        // Save new locations
+        foreach ($this->projectLocations as $loc) {
+            if (!empty($loc['latitude']) && !empty($loc['longitude'])) {
+                $project->locations()->create([
+                    'name' => $loc['name'] ?? $project->location ?? 'Location',
+                    'latitude' => $loc['latitude'],
+                    'longitude' => $loc['longitude'],
+                ]);
+            }
+        }
+
+        // Also sync the primary lat/lng from first location for backward compatibility
+        if (!empty($this->projectLocations)) {
+            $first = $this->projectLocations[0];
+            $project->update([
+                'latitude' => $first['latitude'] ?? null,
+                'longitude' => $first['longitude'] ?? null,
+            ]);
+        }
     }
 
     public function store()
@@ -71,10 +120,6 @@ class ShowTranslationProjects extends Component
         // Validate Form Request
         $this->validate();
         try {
-
-
-
-
             // Create ProjectsItem
             $projects = Projects::updateOrCreate(
                 [
@@ -96,10 +141,14 @@ class ShowTranslationProjects extends Component
                     'status_id' => $this->status_id,
                     'location' => $this->location,
                     'location_map' => $this->location_map,
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
                     'created_by' => auth()->user()->id
                 ]
-
             );
+
+            // Sync multiple locations
+            $this->syncLocations($projects);
 
             //save title image (auto-compressed)
             if (isset($this->title_image)) {
@@ -151,9 +200,12 @@ class ShowTranslationProjects extends Component
         $this->status_id = '';
         $this->location = '';
         $this->location_map = '';
+        $this->latitude = null;
+        $this->longitude = null;
         $this->title_image = null ;
         $this->project_image = null ;
         $this->project_file = null ;
+        $this->projectLocations = [];
     }
 
     public function edit($id)
@@ -169,12 +221,28 @@ class ShowTranslationProjects extends Component
         $this->author = $our_projects->author;
         $this->location = $our_projects->location;
         $this->location_map = $our_projects->location_map;
+        $this->latitude = $our_projects->latitude;
+        $this->longitude = $our_projects->longitude;
         $this->short_description = $our_projects->short_description;
         $this->category_id = $our_projects->category_id;
         $this->display_order = $our_projects->display_order ?? 0;
         $this->status_id = $our_projects->status_id;
         $this->our_projects_id = $our_projects->id;
         $this->updateProjectsItem = true;
+
+        // Load existing locations
+        $this->projectLocations = $our_projects->locations->map(function ($loc) {
+            return ['name' => $loc->name, 'latitude' => $loc->latitude, 'longitude' => $loc->longitude];
+        })->toArray();
+
+        // If no locations exist but project has lat/lng, seed from project fields
+        if (empty($this->projectLocations) && $our_projects->latitude && $our_projects->longitude) {
+            $this->projectLocations = [[
+                'name' => $our_projects->location ?? 'Primary Location',
+                'latitude' => $our_projects->latitude,
+                'longitude' => $our_projects->longitude,
+            ]];
+        }
 
         $this->dispatchBrowserEvent('load-trix-content', ['content' => $our_projects->details ?? '']);
     }
@@ -194,6 +262,8 @@ class ShowTranslationProjects extends Component
                     'author' => $this->author,
                     'location' => $this->location,
                     'location_map' => $this->location_map,
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
                     'short_description' => $this->short_description,
                     'category_id' => $this->category_id,
                     'display_order' => $this->display_order ?? 0,
@@ -201,6 +271,10 @@ class ShowTranslationProjects extends Component
                     'created_by' => auth()->user()->id
                 ]
             )->save();
+
+            // Sync multiple locations
+            $projectModel = Projects::find($this->our_projects_id);
+            $this->syncLocations($projectModel);
 
             $projects = Projects::find( $this->our_projects_id ) ;
 

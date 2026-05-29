@@ -23,6 +23,16 @@
                     </div>
 
                     <div class="category-list">
+                        <a href="{{ route('projects.map') }}" class="category-item" style="background: rgba(195,50,5,0.08);">
+                            <div class="category-content">
+                                <div class="category-dot" style="background: #c33205;"></div>
+                                <span class="category-name">
+                                    <i class="fas fa-map-marked-alt mr-1"></i> Projects Map
+                                </span>
+                            </div>
+                            <span class="category-count"><i class="fas fa-chevron-right" style="font-size:0.7rem;"></i></span>
+                        </a>
+
                         @foreach ($categories as $item)
                             @php
                                 $categoryId = $item->myCategory->id ?? null;

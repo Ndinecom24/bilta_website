@@ -88,6 +88,36 @@
                     <p><strong>Category:</strong> {{ optional($categories->firstWhere('id', $project->category_id))->name ?? '-' }}</p>
                     <p><strong>Location:</strong> {{ $project->location }}</p>
                     <p><strong>Location Map:</strong> {{ $project->location_map }}</p>
+
+                    {{-- Project Locations (multi-location) --}}
+                    @if($project->locations && $project->locations->count() > 0)
+                        <div class="mb-3">
+                            <strong><i class="fas fa-map-marker-alt text-danger mr-1"></i> Project Locations ({{ $project->locations->count() }})</strong>
+                            <div class="table-responsive mt-2">
+                                <table class="table table-sm table-bordered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Latitude</th>
+                                            <th>Longitude</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($project->locations as $i => $loc)
+                                            <tr>
+                                                <td>{{ $i + 1 }}</td>
+                                                <td>{{ $loc->name ?: 'Unnamed' }}</td>
+                                                <td>{{ $loc->latitude }}</td>
+                                                <td>{{ $loc->longitude }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="detailLocationsMap" class="mt-2 border rounded" style="height: 280px;"></div>
+                        </div>
+                    @endif
                     <p><strong>Display Order:</strong> {{ $project->display_order ?? 0 }}</p>
                     <hr>
                     <p class="mb-1"><strong>Short Description</strong></p>
@@ -244,4 +274,38 @@
             }
         }
     </script>
+
+    {{-- Leaflet for detail page locations mini-map --}}
+    @if($project->locations && $project->locations->count() > 0)
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var mapEl = document.getElementById('detailLocationsMap');
+                if (!mapEl) return;
+
+                var locations = @json($project->locations->map(function ($loc) {
+                    return ['name' => $loc->name ?: 'Location', 'lat' => $loc->latitude, 'lng' => $loc->longitude];
+                }));
+
+                if (locations.length === 0) return;
+
+                var map = L.map('detailLocationsMap').setView([locations[0].lat, locations[0].lng], 8);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap', maxZoom: 19
+                }).addTo(map);
+
+                var bounds = [];
+                locations.forEach(function (loc) {
+                    var marker = L.marker([loc.lat, loc.lng]).addTo(map);
+                    marker.bindPopup('<strong>' + loc.name + '</strong><br>Lat: ' + loc.lat + ', Lng: ' + loc.lng);
+                    bounds.push([loc.lat, loc.lng]);
+                });
+
+                if (bounds.length > 1) {
+                    map.fitBounds(bounds, { padding: [30, 30] });
+                }
+            });
+        </script>
+    @endif
 </div>

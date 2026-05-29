@@ -45,12 +45,12 @@ class DetailTranslationProjects extends Component
 
     public function render()
     {
-        $project = Projects::findOrFail($this->our_projects_id);
+        $this->project = Projects::with('locations')->findOrFail($this->our_projects_id);
         $statuses = Status::get();
         $categories = ItemCategory::where('type', 'Projects')->get();
 
         return view('livewire.admin.translation-projects-page.show-project')
-            ->with(compact('project', 'statuses', 'categories'));
+            ->with(compact('statuses', 'categories'));
     }
 
     public function resetFields()

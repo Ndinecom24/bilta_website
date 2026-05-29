@@ -26,6 +26,7 @@ use App\Http\Livewire\Admin\PrayerPointsPage\ShowPrayerPoints;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonialsPage;
 use App\Http\Livewire\Admin\TestimoniesPage\ShowTestimonies;
 use App\Http\Livewire\Admin\TranslationProjectsPage\DetailTranslationProjects;
+use App\Http\Livewire\Admin\TranslationProjectsPage\ShowProjectsMap as AdminShowProjectsMap;
 use App\Http\Livewire\Admin\TranslationProjectsPage\ShowTranslationProjects;
 use App\Http\Livewire\Admin\VideosPage\ShowItemVidoes;
 use App\Http\Livewire\Admin\Analytics\ClickAnalytics;
@@ -49,6 +50,7 @@ use App\Http\Livewire\Site\MyTranslationProjectsList;
 use App\Http\Livewire\Site\ShowGallery;
 use App\Http\Livewire\Site\ShowHome;
 use App\Http\Livewire\Site\ShowServices as SiteShowServices;
+use App\Http\Livewire\Site\ShowProjectsMap;
 use App\Http\Livewire\Site\ShowTranslationProjectDetails;
 use App\Http\Livewire\Site\ShowVideos;
 use App\Http\Livewire\Site\MyFaqs;
@@ -91,6 +93,7 @@ Route::prefix('bilta/site')->group(function () {
     Route::get('/Testimonials', MyTestimonials::class)->name('testimonials');
     Route::get('/news/details/{news}/{name}', MyNewsDetails::class)->name('news.details');
     Route::get('/news/{category_id}', MyNewsList::class)->name('news');
+    Route::get('/projects/map', ShowProjectsMap::class)->name('projects.map');
     Route::get('/projects/details/{project}', MyTranslationProjectDetails::class)->name('projects.details');
     Route::get('/projects/{category_id}', MyTranslationProjectsList::class)->name('projects');
     Route::get('/WeeklyPrayerPoint', ShowWeeklyPrayerPoints::class)->name('weekly-prayer-points');
@@ -138,6 +141,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/item/news', ShowNewsItem::class)->middleware('permission:manage-news')->name('admin.page.item.news');
         Route::get('/item/news/{id}/details', ShowNewsItemDetails::class)->middleware('permission:manage-news')->name('admin.page.item.news.details');
         Route::get('/item/projects', ShowTranslationProjects::class)->middleware('permission:manage-projects')->name('admin.page.item.projects');
+        Route::get('/item/projects/map', AdminShowProjectsMap::class)->middleware('permission:manage-projects')->name('admin.page.item.projects.map');
         Route::get('/item/projects/{item}/details', DetailTranslationProjects::class)->middleware('permission:manage-projects')->name('admin.page.item.projects.details');
         Route::get('/admin/live-analytics/clicks', ClickAnalytics::class)->middleware('permission:view-analytics')->name('admin.page.live.analytics.clicks');
 

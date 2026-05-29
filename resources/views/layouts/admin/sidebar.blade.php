@@ -677,6 +677,9 @@
                 <a class="collapse-item" href="{{ route('admin.page.item.projects') }}">
                     Projects
                 </a>
+                <a class="collapse-item" href="{{ route('admin.page.item.projects.map') }}">
+                    <i class="fas fa-map-marked-alt mr-1"></i> Projects Map
+                </a>
                 @endcan
 
                 @can('manage-categories')
