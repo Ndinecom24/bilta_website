@@ -172,9 +172,12 @@
 
                     <div class="mission-media-wrap">
                         @php
+                            $missionFallback = file_exists(public_path('assets/img/susan-mbuzi.png'))
+                                ? asset('assets/img/susan-mbuzi.png')
+                                : 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=900&q=80';
                             $missionImages = !empty($missionSliderImages)
                                 ? $missionSliderImages
-                                : ['https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=900&q=80'];
+                                : [$missionFallback];
                         @endphp
 
                         <div id="missionMediaCarousel" class="carousel slide mission-carousel" data-bs-ride="carousel" data-bs-interval="4500">
