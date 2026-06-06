@@ -19,10 +19,10 @@
         {{-- Abstract decorative elements --}}
         <div class="hero-abstract-shapes">
             <div class="hero-shape hero-shape-1"></div>
-            <div class="hero-shape hero-shape-2"></div>
+           <div class="hero-shape hero-shape-2"></div>
             <div class="hero-shape hero-shape-3"></div>
-            <div class="hero-shape hero-shape-4"></div>
-            <div class="hero-shape hero-shape-5"></div>
+          <div class="hero-shape hero-shape-4"></div>
+            <div class="hero-shape hero-shape-5"></div>   {{--   --}}
             <div class="hero-grid-pattern"></div>
         </div>
 
@@ -950,13 +950,14 @@ body{
 }
 
 .hero-shape-1{
-    width:320px;
-    height:320px;
-    top:-60px;
-    right:8%;
-    background:radial-gradient(circle, rgba(205,91,19,.18) 0%, transparent 70%);
-    animation-delay:0s;
-    animation-duration:20s;
+    width:220px;
+    height:220px;
+    top:6%;
+    right:10%;
+    background:rgba(205, 90, 19, 0.016);
+    border-radius:50%;
+    animation-delay:5s;
+    animation-duration:10s;
 }
 
 .hero-shape-2{
@@ -975,10 +976,9 @@ body{
     top:35%;
     right:15%;
     background:rgba(96,165,250,.08);
-    border-radius:30%;
+    border-radius:50%;
     animation-delay:6s;
     animation-duration:22s;
-    transform:rotate(45deg);
 }
 
 .hero-shape-4{
