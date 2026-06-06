@@ -16,6 +16,16 @@
 
         <div class="hero-overlay"></div>
 
+        {{-- Abstract decorative elements --}}
+        <div class="hero-abstract-shapes">
+            <div class="hero-shape hero-shape-1"></div>
+            <div class="hero-shape hero-shape-2"></div>
+            <div class="hero-shape hero-shape-3"></div>
+            <div class="hero-shape hero-shape-4"></div>
+            <div class="hero-shape hero-shape-5"></div>
+            <div class="hero-grid-pattern"></div>
+        </div>
+
         <div class="container position-relative">
             <div class="row min-vh-md-100 align-items-center py-5">
 
@@ -39,7 +49,7 @@
                     <div class="hero-actions d-flex flex-wrap gap-3 mt-4">
 
                         <a href="{{ route('projects', '0') }}"
-                            class="btn btn-warning btn-lg px-4 rounded-pill shadow-sm">
+                            class="btn btn-lg px-4 rounded-pill shadow-sm" style="background:#cd5b13; color:#fff; border:none;">
                             Explore Our Projects
                         </a>
 
@@ -142,7 +152,7 @@
 
             <div class="text-center mt-3">
                 <p class="mb-2 text-muted">Need help choosing the right service for you?</p>
-                <a href="{{ route('site.home') }}#contact" class="btn btn-warning rounded-pill px-4">
+                <a href="{{ route('site.home') }}#contact" class="btn rounded-pill px-4" style="background:#cd5b13; color:#fff; border:none;">
                     Contact Us
                 </a>
             </div>
@@ -491,7 +501,7 @@
 
             <div class="text-center mb-5">
 
-                <span class="section-tag bg-warning text-dark">
+                <span class="section-tag" style="background:rgba(205,91,19,.12); color:#cd5b13;">
                     Testimonials
                 </span>
 
@@ -922,6 +932,95 @@ body{
 
     backdrop-filter: saturate(145%) blur(1px);
 }
+
+/* Abstract shapes */
+.hero-abstract-shapes{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    overflow:hidden;
+    pointer-events:none;
+}
+
+.hero-shape{
+    position:absolute;
+    border-radius:50%;
+    opacity:0;
+    animation: heroShapeFloat 18s ease-in-out infinite;
+}
+
+.hero-shape-1{
+    width:320px;
+    height:320px;
+    top:-60px;
+    right:8%;
+    background:radial-gradient(circle, rgba(205,91,19,.18) 0%, transparent 70%);
+    animation-delay:0s;
+    animation-duration:20s;
+}
+
+.hero-shape-2{
+    width:200px;
+    height:200px;
+    bottom:12%;
+    left:5%;
+    border:1px solid rgba(255,255,255,.08);
+    animation-delay:3s;
+    animation-duration:16s;
+}
+
+.hero-shape-3{
+    width:140px;
+    height:140px;
+    top:35%;
+    right:15%;
+    background:rgba(96,165,250,.08);
+    border-radius:30%;
+    animation-delay:6s;
+    animation-duration:22s;
+    transform:rotate(45deg);
+}
+
+.hero-shape-4{
+    width:80px;
+    height:80px;
+    bottom:25%;
+    right:30%;
+    border:1.5px solid rgba(205,91,19,.15);
+    border-radius:20%;
+    animation-delay:2s;
+    animation-duration:14s;
+}
+
+.hero-shape-5{
+    width:260px;
+    height:260px;
+    top:10%;
+    left:50%;
+    background:radial-gradient(circle, rgba(59,130,246,.1) 0%, transparent 65%);
+    animation-delay:4s;
+    animation-duration:24s;
+}
+
+.hero-grid-pattern{
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse 70% 60% at 70% 50%, black 20%, transparent 70%);
+    -webkit-mask-image:radial-gradient(ellipse 70% 60% at 70% 50%, black 20%, transparent 70%);
+}
+
+@keyframes heroShapeFloat{
+    0%   { opacity:0; transform:translateY(20px) rotate(0deg); }
+    15%  { opacity:1; }
+    50%  { transform:translateY(-30px) rotate(8deg); }
+    85%  { opacity:1; }
+    100% { opacity:0; transform:translateY(20px) rotate(0deg); }
+}
+
 .hero-title{
     font-size:4rem;
     font-weight:800;
