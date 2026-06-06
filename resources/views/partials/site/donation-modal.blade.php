@@ -51,12 +51,12 @@
                                 <i class="bi bi-stars" style="color:#cd5b13; font-size:1.2rem;"></i>
                                 <h6 class="mb-0">Your Gift Enables</h6>
                             </div>
-                            <ul class="summary-list">
-                                <li>Training of local Bible translators</li>
-                                <li>Publishing scripture in local languages</li>
-                                <li>Expanding audio Bible access</li>
-                                <li>Strengthening language communities</li>
-                                <li>Supporting literacy programs</li>
+                            <ul  style="font-size:.9rem; color:#445658;">
+                                <li> Training of local Bible translators</li>
+                                <li> Publishing scripture in local languages</li>
+                                <li> Expanding audio Bible access</li>
+                                <li> Strengthening language communities</li>
+                                <li> Supporting literacy programs</li>
                             </ul>
                             <div class="impact-verse mt-3">
                                 <i class="bi bi-quote" style="font-size:1.4rem; color:#cd5b13; opacity:.5;"></i>
