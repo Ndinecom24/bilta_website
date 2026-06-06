@@ -460,3 +460,212 @@
         }
     }
 </style>
+
+<!-- Lightbox Modal -->
+<div id="projectLightbox" class="project-lightbox" style="display:none;">
+    <div class="project-lightbox-backdrop"></div>
+    <button class="project-lightbox-close" title="Close">Close</button>
+    <button class="project-lightbox-nav project-lightbox-prev" title="Previous">Prev</button>
+    <button class="project-lightbox-nav project-lightbox-next" title="Next">Next</button>
+    <div class="project-lightbox-content">
+        <img id="projectLightboxImage" src="" alt="">
+        <div class="project-lightbox-caption" id="projectLightboxCaption"></div>
+        <div class="project-lightbox-counter" id="projectLightboxCounter"></div>
+    </div>
+</div>
+
+<style>
+    .project-lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .project-lightbox-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        backdrop-filter: blur(8px);
+    }
+
+    .project-lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 24px;
+        z-index: 10;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        font-size: 0.88rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+    .project-lightbox-close:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .project-lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        padding: 12px 22px;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 0.88rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+    .project-lightbox-nav:hover {
+        background: rgba(205, 91, 19, 0.7);
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    .project-lightbox-prev { left: 20px; }
+    .project-lightbox-next { right: 20px; }
+
+    .project-lightbox-content {
+        position: relative;
+        z-index: 5;
+        max-width: 90vw;
+        max-height: 85vh;
+        text-align: center;
+    }
+
+    .project-lightbox-content img {
+        max-width: 100%;
+        max-height: 78vh;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        object-fit: contain;
+        animation: projectLightboxFadeIn 0.3s ease;
+    }
+
+    @keyframes projectLightboxFadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .project-lightbox-caption {
+        color: #e2e8f0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-top: 14px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .project-lightbox-counter {
+        color: #94a3b8;
+        font-size: 0.82rem;
+        margin-top: 6px;
+    }
+
+    @media (max-width: 768px) {
+        .project-lightbox-nav {
+            padding: 10px 16px;
+            font-size: 0.82rem;
+        }
+        .project-lightbox-prev { left: 10px; }
+        .project-lightbox-next { right: 10px; }
+        .project-lightbox-close { top: 12px; right: 12px; padding: 8px 16px; font-size: 0.82rem; }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const lightbox = document.getElementById('projectLightbox');
+        const lightboxImg = document.getElementById('projectLightboxImage');
+        const lightboxCaption = document.getElementById('projectLightboxCaption');
+        const lightboxCounter = document.getElementById('projectLightboxCounter');
+        let lightboxImages = [];
+        let currentIndex = 0;
+
+        function collectImages() {
+            lightboxImages = [];
+            document.querySelectorAll('.modern-project-gallery-section .portfolio-lightbox').forEach(function(link) {
+                lightboxImages.push({
+                    src: link.getAttribute('href'),
+                    title: link.getAttribute('title') || ''
+                });
+            });
+        }
+
+        function showLightboxImage() {
+            const img = lightboxImages[currentIndex];
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.title;
+            lightboxCaption.textContent = img.title;
+            lightboxCounter.textContent = (currentIndex + 1) + ' / ' + lightboxImages.length;
+            lightboxImg.style.animation = 'none';
+            lightboxImg.offsetHeight;
+            lightboxImg.style.animation = '';
+        }
+
+        function openLightbox(index) {
+            collectImages();
+            if (lightboxImages.length === 0) return;
+            currentIndex = index;
+            showLightboxImage();
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % lightboxImages.length;
+            showLightboxImage();
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + lightboxImages.length) % lightboxImages.length;
+            showLightboxImage();
+        }
+
+        // Attach click to all lightbox links
+        document.querySelectorAll('.modern-project-gallery-section .portfolio-lightbox').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                collectImages();
+                const clickedSrc = this.getAttribute('href');
+                currentIndex = lightboxImages.findIndex(function(img) { return img.src === clickedSrc; });
+                if (currentIndex < 0) currentIndex = 0;
+                showLightboxImage();
+                lightbox.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Controls
+        document.querySelector('.project-lightbox-close').addEventListener('click', closeLightbox);
+        document.querySelector('.project-lightbox-backdrop').addEventListener('click', closeLightbox);
+        document.querySelector('.project-lightbox-next').addEventListener('click', nextImage);
+        document.querySelector('.project-lightbox-prev').addEventListener('click', prevImage);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (lightbox.style.display === 'none') return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') prevImage();
+        });
+    });
+</script>
