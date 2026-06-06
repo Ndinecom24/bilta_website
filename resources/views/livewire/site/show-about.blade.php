@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <div class="site-shell py-5">
   <div class="container">
     <section class="page-hero">
@@ -10,6 +11,14 @@
     <section class="page-section mb-4">
       <h2 class="site-section-title">Who We Are</h2>
       <p class="site-section-subtitle">Bible and Literature Translation Association focused on sustainable translation impact.</p>
+
+      <style>
+        .page-section .site-card h5 {
+          color: #cd5b13;
+          font-weight: 700;
+          margin-bottom: 10px;
+        }
+      </style>
 
       <div class="row g-4">
         <div class="col-md-6">
@@ -60,16 +69,7 @@
                 <div class="contact-card-modern h-100 overflow-hidden">
 
                     <div class="map-wrapper">
-                        <iframe
-                            src="https://www.google.com/maps?q=Chelston,+Lusaka,+Zambia&output=embed"
-                            width="100%"
-                            height="100%"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            title="BiLTA Location Map">
-                        </iframe>
+                        <div id="about-map" style="width:100%; height:340px; display:block;"></div>
                     </div>
 
                     <div class="contact-card-body">
@@ -256,7 +256,7 @@
                         </p>
 
                         <a href="#"
-                           class="btn-modern btn-primary-modern w-100">
+                           class="news-btn w-100 justify-content-center">
                             Support Our Mission
                         </a>
                     </div>
@@ -272,11 +272,7 @@
     .contact-section-modern {
         padding: 100px 0;
         position: relative;
-        background:
-            radial-gradient(circle at top left,
-                rgba(205, 91, 19, 0.10),
-                transparent 28%),
-            linear-gradient(180deg, #efefff 0%, #fff 100%);
+        background: #f8fafc;
     }
 
     .section-heading {
@@ -311,18 +307,18 @@
 
     .contact-card-modern,
     .quick-links-card {
-        background: rgba(255, 255, 255, 0.96);
-        border-radius: 28px;
+        background: #fff;
+        border-radius: 18px;
         overflow: hidden;
-        border: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 18px 45px rgba(0,0,0,0.08);
-        transition: all .35s ease;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+        transition: all .25s ease;
     }
 
     .contact-card-modern:hover,
     .quick-links-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.10);
     }
 
     .map-wrapper {
@@ -342,7 +338,7 @@
         height: 60px;
         min-width: 60px;
         border-radius: 18px;
-        background: linear-gradient(to left, #f59e0b, #cd5b13);
+        background: #cd5b13;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -448,7 +444,7 @@
     }
 
     .social-btn:hover {
-        transform: translateY(-4px) scale(1.05);
+        transform: translateY(-2px);
         color: white;
     }
 
@@ -473,7 +469,7 @@
     }
 
     .website {
-        background: linear-gradient(to left, #f59e0b, #cd5b13);
+        background: #cd5b13;
     }
 
     .quick-links-header {
@@ -502,19 +498,21 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        padding: 18px 20px;
-        border-radius: 18px;
-        background: #efefff;
-        color: #1f2937;
+        padding: 14px 18px;
+        border-radius: 12px;
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        color: #1e293b;
         text-decoration: none;
         font-weight: 600;
-        transition: all .3s ease;
+        font-size: 0.92rem;
+        transition: all .2s ease;
     }
 
     .quick-links-list li a:hover {
-        background: linear-gradient(to left, #f59e0b, #cd5b13);
+        background: #cd5b13;
         color: white;
-        transform: translateX(5px);
+        transform: translateX(4px);
     }
 
     .quick-links-footer {
@@ -608,6 +606,29 @@
         }
     }
 </style>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var lat = {{ $contact_us_details->latitude ?? -15.4167 }};
+    var lng = {{ $contact_us_details->longitude ?? 28.2833 }};
+
+    var map = L.map('about-map', {
+        scrollWheelZoom: false
+    }).setView([lat, lng], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(map);
+
+    var marker = L.marker([lat, lng]).addTo(map);
+    marker.bindPopup('<strong>BiLTA Office</strong><br>{{ addslashes($contact_us_details->address ?? "Lusaka, Zambia") }}').openPopup();
+
+    // Fix map rendering in hidden/dynamic containers
+    setTimeout(function() { map.invalidateSize(); }, 300);
+});
+</script>
   </div>
 </div>
 

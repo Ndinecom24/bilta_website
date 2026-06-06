@@ -1502,34 +1502,23 @@ BiLTA is dedicated to Bible translation, literacy development, scripture engagem
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                padding: 12px 22px;
-                border-radius: 14px;
-                background: linear-gradient(135deg,
-                        #e9782f 0%,
-                        #cd5b13 38%,
-                        #a34810 72%,
-                        #7f3508 100%);
+                gap: 6px;
+                padding: 10px 20px;
+                border-radius: 8px;
+                background: #cd5b13;
                 color: #fff;
-                font-size: 0.92rem;
+                font-size: 0.88rem;
                 font-weight: 600;
                 text-decoration: none;
-                transition: all 0.3s ease;
-                box-shadow:
-                    0 10px 24px rgba(127, 53, 8, 0.28),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+                transition: all 0.2s ease;
+                border: 1px solid transparent;
             }
 
             .news-btn:hover {
                 color: #fff;
-                transform: translateY(-3px);
-                background: linear-gradient(135deg,
-                        #f0863f 0%,
-                        #d86418 38%,
-                        #b14d12 72%,
-                        #8c3c0c 100%);
-                box-shadow:
-                    0 16px 34px rgba(127, 53, 8, 0.38),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+                background: #a34810;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(205, 91, 19, 0.25);
             }
 
             .news-empty-state {

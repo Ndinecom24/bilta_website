@@ -23,9 +23,9 @@
                     </div>
 
                     <div class="category-list">
-                        <a href="{{ route('projects.map') }}" class="category-item" style="background: rgba(195,50,5,0.08);">
+                        <a href="{{ route('projects.map') }}" class="category-item" style="background: rgba(205,91,19,0.08);">
                             <div class="category-content">
-                                <div class="category-dot" style="background: #c33205;"></div>
+                                <div class="category-dot" style="background: #cd5b13;"></div>
                                 <span class="category-name">
                                     <i class="fas fa-map-marked-alt mr-1"></i> Projects Map
                                 </span>
@@ -82,7 +82,7 @@
                                     : '-';
                             @endphp
 
-                            <div class="col-md-6 col-xl-4">
+                            <div class="col-md-6 col-xl-6">
                                 <article class="news-card h-100">
                                     <div class="news-card-image">
                                         <img src="{{ $image }}"

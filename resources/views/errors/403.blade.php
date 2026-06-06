@@ -22,7 +22,7 @@
         .error-code {
             font-size: 8rem;
             font-weight: 700;
-            color: #c33205;
+            color: #cd5b13;
             line-height: 1;
             margin-bottom: 1rem;
         }
@@ -30,7 +30,7 @@
         p { color: #94a3b8; margin-bottom: 2rem; line-height: 1.6; }
         .btn-home {
             display: inline-block;
-            background: #c33205;
+            background: #cd5b13;
             color: #111147;
             padding: 0.75rem 2rem;
             border-radius: 50px;
@@ -38,7 +38,7 @@
             font-weight: 600;
             transition: background 0.3s;
         }
-        .btn-home:hover { background: #9a2804; }
+        .btn-home:hover { background: #a34810; }
     </style>
 </head>
 <body>

@@ -162,7 +162,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c33205;
+        color: #cd5b13;
         margin-bottom: 8px;
     }
 
@@ -239,9 +239,9 @@
 
     .video-search-input:focus {
         outline: none;
-        border-color: #c33205;
+        border-color: #cd5b13;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(195, 50, 5, 0.08);
+        box-shadow: 0 0 0 4px rgba(205, 91, 19, 0.10);
     }
 
     .video-toolbar-right {
@@ -256,16 +256,16 @@
         border: none;
         border-radius: 16px;
         padding: 0 22px;
-        background: linear-gradient(135deg, #c33205, #9a2804);
+        background: #cd5b13;
         color: #fff;
         font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(205, 91, 19, 0.22);
     }
 
     .video-show-all-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 14px 30px rgba(195, 50, 5, 0.32);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(205, 91, 19, 0.28);
     }
 
     .video-results-count {
@@ -355,19 +355,19 @@
         justify-content: center;
         padding: 13px 22px;
         border-radius: 16px;
-        background: linear-gradient(135deg, #c33205, #9a2804);
+        background: #cd5b13;
         color: #fff;
         font-size: 0.92rem;
         font-weight: 700;
         text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(205, 91, 19, 0.22);
     }
 
     .watch-video-btn:hover {
         color: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 14px 30px rgba(195, 50, 5, 0.34);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(205, 91, 19, 0.28);
     }
 
     /* Responsive */

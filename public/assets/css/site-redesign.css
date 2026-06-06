@@ -2,25 +2,133 @@
 .site-shell {
   background: #f4f7fb;
 }
-.page-hero {
-  background: linear-gradient(to left, #f59e0b, #cd5b13);
-  color: #fff;
-  border-radius: 18px;
-  padding: 56px 42px;
-  margin-bottom: 32px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+
+/* remove top padding so hero touches the navbar */
+.site-shell.py-5 {
+  padding-top: 0 !important;
 }
+
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  /* break out of .container to go full-width */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-top: 0;
+  border-radius: 0;
+  background:
+    /* very faint grid — barely visible texture */
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px),
+    /* radial blobs — slightly larger and softer */
+    radial-gradient(circle 320px at 85% 15%, rgba(66,165,245,0.22) 0%, transparent 70%),
+    radial-gradient(circle 280px at 8% 85%, rgba(100,181,246,0.16) 0%, transparent 70%),
+    radial-gradient(circle 200px at 45% -5%, rgba(144,202,249,0.14) 0%, transparent 70%),
+    radial-gradient(circle 150px at 92% 75%, rgba(187,222,251,0.10) 0%, transparent 70%),
+    radial-gradient(circle 180px at 60% 100%, rgba(30,136,229,0.12) 0%, transparent 70%),
+    /* base gradient — deep midnight blue */
+    linear-gradient(135deg, #020b1a 0%, #0c2340 25%, #0d3b66 50%, #10456e 70%, #155d8a 90%, #1a6fa0 100%);
+  background-size:
+    60px 60px,
+    60px 60px,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  color: #fff;
+  padding: 80px 48px 72px;
+  margin-bottom: 36px;
+  box-shadow: 0 8px 40px rgba(13, 71, 161, 0.25);
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* inner text container to keep content aligned with page grid */
+.page-hero > * {
+  max-width: 1140px;
+  width: 100%;
+}
+
+/* abstract organic blob - top right */
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -50px;
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, rgba(66,165,245,0.14), rgba(144,202,249,0.06));
+  border-radius: 40% 60% 55% 45% / 55% 40% 60% 45%;
+  transform: rotate(15deg);
+  pointer-events: none;
+  animation: heroFloat 20s ease-in-out infinite;
+}
+
+/* abstract organic blob - bottom left */
+.page-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -70px;
+  left: -40px;
+  width: 340px;
+  height: 340px;
+  background: linear-gradient(225deg, rgba(30,136,229,0.12), rgba(100,181,246,0.05));
+  border-radius: 55% 45% 50% 50% / 40% 55% 45% 60%;
+  transform: rotate(-20deg);
+  pointer-events: none;
+  animation: heroFloat 25s ease-in-out infinite reverse;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: rotate(15deg) translate(0, 0); }
+  50% { transform: rotate(18deg) translate(10px, -8px); }
+}
+
 .page-hero h1,
 .page-hero h2,
 .page-hero h3,
 .page-hero p {
+  position: relative;
+  z-index: 1;
   color: #fff;
 }
 
+.page-hero h1,
+.page-hero h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+
 .page-hero .lead {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.05rem;
-  max-width: 880px;
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1.15rem;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 52px 20px 48px;
+    min-height: 200px;
+    border-radius: 0;
+  }
+  .page-hero h1,
+  .page-hero h2 {
+    font-size: 1.6rem;
+  }
+  .page-hero .lead {
+    font-size: 1rem;
+  }
 }
 
 .page-section {
@@ -576,50 +684,94 @@
   width: 100%;
 }
 
+/* FAQ accordion — orange accents */
+.site-shell .accordion-button {
+  font-weight: 600;
+  color: #1e293b;
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: none;
+}
+
+.site-shell .accordion-button:not(.collapsed) {
+  color: #cd5b13;
+  background: #fff7f0;
+  box-shadow: none;
+}
+
+.site-shell .accordion-button:focus {
+  border-color: rgba(205, 91, 19, 0.3);
+  box-shadow: 0 0 0 0.2rem rgba(205, 91, 19, 0.12);
+}
+
+.site-shell .accordion-button:not(.collapsed)::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23cd5b13'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.site-shell .accordion-body {
+  color: #475569;
+  line-height: 1.7;
+  padding: 8px 20px 20px;
+}
+
+.site-shell .accordion-item.site-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
 /* Shared modern category sidebar (News + Projects, list + detail) */
 .modern-sidebar {
-  background: linear-gradient(180deg, rgba(37, 99, 235, 0.13) 0%, #ffffff 46%);
-  border: 1px solid rgba(37, 99, 235, 0.28);
+  background: #fff;
+  border: 1px solid #e2e8f0;
   border-radius: 16px;
-  padding: 14px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  padding: 0;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
 }
 
 .modern-sidebar .sidebar-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(37, 99, 235, 0.24);
+  gap: 14px;
+  padding: 20px 20px 16px;
+  margin-bottom: 0;
+  border-bottom: none;
+ 
 }
 
 .modern-sidebar .sidebar-icon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(37, 99, 235, 0.28);
-  color: #1e40af;
+  background: #f0f5ff;
+  color: #1565c0;
+  font-size: 1.05rem;
+  flex-shrink: 0;
 }
 
 .modern-sidebar .sidebar-title {
-  color: #000000;
+  color: #1e293b;
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.2px;
 }
 
 .modern-sidebar .sidebar-subtitle {
-  color: #475569;
-  font-size: 0.82rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 .modern-sidebar .category-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
+  padding: 8px;
 }
 
 .modern-sidebar .category-item {
@@ -628,55 +780,71 @@
   justify-content: space-between;
   gap: 10px;
   text-decoration: none;
-  padding: 10px 11px;
-  border-radius: 12px;
-  border: 1px solid rgba(37, 99, 235, 0.2);
-  background: rgba(37, 99, 235, 0.09);
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
   transition: all 0.2s ease;
 }
 
 .modern-sidebar .category-item:hover {
-  background: rgba(37, 99, 235, 0.16);
-  border-color: rgba(37, 99, 235, 0.34);
-  transform: translateY(-1px);
+  background: #f0f5ff;
+  border-color: #dbeafe;
+  transform: translateX(3px);
+}
+
+.modern-sidebar .category-item:hover .category-dot {
+  transform: scale(1.3);
+}
+
+.modern-sidebar .category-item:hover .category-name {
+  color: #cd5b13;
 }
 
 .modern-sidebar .category-content {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   min-width: 0;
 }
 
 .modern-sidebar .category-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
-  background: rgba(37, 99, 235, 0.92);
+  background: #1976d2;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
 .modern-sidebar .category-name {
-  color: #000000;
-  font-weight: 600;
+  color: #334155;
+  font-weight: 500;
   font-size: 0.88rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: color 0.2s ease;
 }
 
 .modern-sidebar .category-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 28px;
-  height: 24px;
-  border-radius: 999px;
-  padding: 0 8px;
-  background: rgba(37, 99, 235, 0.28);
-  color: #1e40af;
-  font-size: 0.76rem;
+  min-width: 26px;
+  height: 22px;
+  border-radius: 6px;
+  padding: 0 7px;
+  background: #eff6ff;
+  color: #1565c0;
+  font-size: 0.74rem;
   font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.modern-sidebar .category-item:hover .category-count {
+  background: #cd5b13;
+  color: #fff;
 }
 
 /* =========================================================

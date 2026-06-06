@@ -62,7 +62,7 @@
     }
 
     .analytics-insight-meta.positive { color: #15803d; }
-    .analytics-insight-meta.warning { color: #9a2804; }
+    .analytics-insight-meta.warning { color: #cd5b13; }
     .analytics-insight-meta.neutral { color: #475569; }
 </style>
 

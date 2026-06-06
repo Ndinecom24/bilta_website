@@ -8,8 +8,8 @@
         --topbar-text: #f8fafc;
         --topbar-muted: #cbd5e1;
 
-        --topbar-accent: #c33205;
-        --topbar-accent-light: #e04a1f;
+        --topbar-accent: #cd5b13;
+        --topbar-accent-light: #e06b1f;
 
         --topbar-hover: rgba(255, 255, 255, 0.08);
 
@@ -314,9 +314,9 @@
     }
 
     .admin-topbar .dropdown-item:hover {
-        background: rgba(195, 50, 5, 0.08);
+        background: rgba(205, 91, 19, 0.08);
 
-        color: #9a2804;
+        color: #cd5b13;
 
         transform: translateX(4px);
     }
@@ -653,7 +653,7 @@
     }
 
     .admin-stat-pill i {
-        color: #c33205 !important;
+        color: #cd5b13 !important;
     }
 
     .admin-stat-pill:hover {
@@ -677,12 +677,12 @@
     }
 
     .admin-search-btn {
-        background: #c33205 !important;
+        background: #cd5b13 !important;
         color: #fff !important;
     }
 
     .admin-search-btn:hover {
-        background: #9a2804 !important;
+        background: #a34810 !important;
         transform: none !important;
     }
 

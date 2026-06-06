@@ -71,9 +71,32 @@
                             </div>
 
                             <div class="col-md-12 mb-3">
-                                <label class="font-weight-bold" for="contactMaps">Google Maps Embed/Link</label>
-                                <textarea id="contactMaps" rows="3" class="form-control" wire:model.defer="google_maps" placeholder="Paste google maps embed code or link"></textarea>
-                                @error('google_maps') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                <label class="font-weight-bold">Office Location (click map to set pin)</label>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-md-5">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text">Lat</span>
+                                            <input type="text" class="form-control" wire:model.defer="latitude" id="latInput" placeholder="e.g. -15.3875" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text">Lng</span>
+                                            <input type="text" class="form-control" wire:model.defer="longitude" id="lngInput" placeholder="e.g. 28.3228" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary w-100" onclick="resetMapPin()">
+                                            <i class="fas fa-undo me-1"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                                <div wire:ignore>
+                                    <div id="adminLocationMap" style="height: 350px; border-radius: 10px; border: 1px solid #dee2e6; z-index: 1;"></div>
+                                </div>
+                                <small class="text-muted mt-1 d-block">Click anywhere on the map to place the pin. You can also drag the pin to adjust.</small>
+                                @error('latitude') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                @error('longitude') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-lg-3 col-md-6 mb-3">
@@ -136,6 +159,8 @@
                                     <tr><th>Address</th><td>{{ $contact_details->address ?? '-' }}</td></tr>
                                     <tr><th>Message</th><td>{{ $contact_details->message ?? '-' }}</td></tr>
                                     <tr><th>Google Maps</th><td>{{ $contact_details->google_maps ?? '-' }}</td></tr>
+                                    <tr><th>Latitude</th><td>{{ $contact_details->latitude ?? '-' }}</td></tr>
+                                    <tr><th>Longitude</th><td>{{ $contact_details->longitude ?? '-' }}</td></tr>
                                     <tr><th>WhatsApp</th><td>{{ $contact_details->whatsapp_link ?? '-' }}</td></tr>
                                     <tr><th>YouTube</th><td>{{ $contact_details->youtube ?? '-' }}</td></tr>
                                     <tr><th>Twitter/X</th><td>{{ $contact_details->twitter_url ?? '-' }}</td></tr>
@@ -158,6 +183,105 @@
                 window.livewire.emit('deleteContactUs', id);
             }
         }
+    </script>
+
+    {{-- Leaflet for map picker --}}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        let adminMap, adminMarker;
+        const defaultLat = {{ $this->latitude ?? -15.3875 }};
+        const defaultLng = {{ $this->longitude ?? 28.3228 }};
+
+        function initAdminMap() {
+            const mapEl = document.getElementById('adminLocationMap');
+            if (!mapEl || mapEl._leaflet_id) return;
+
+            adminMap = L.map('adminLocationMap').setView([defaultLat, defaultLng], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap',
+                maxZoom: 19,
+            }).addTo(adminMap);
+
+            // Place marker if coordinates exist
+            if (defaultLat && defaultLng) {
+                placeMarker(defaultLat, defaultLng);
+            }
+
+            // Click to place/move pin
+            adminMap.on('click', function(e) {
+                placeMarker(e.latlng.lat, e.latlng.lng);
+                updateCoordinateInputs(e.latlng.lat, e.latlng.lng);
+            });
+        }
+
+        function placeMarker(lat, lng) {
+            if (adminMarker) {
+                adminMarker.setLatLng([lat, lng]);
+            } else {
+                adminMarker = L.marker([lat, lng], { draggable: true }).addTo(adminMap);
+
+                adminMarker.on('dragend', function(e) {
+                    const pos = e.target.getLatLng();
+                    updateCoordinateInputs(pos.lat, pos.lng);
+                });
+            }
+        }
+
+        function updateCoordinateInputs(lat, lng) {
+            const latVal = parseFloat(lat).toFixed(7);
+            const lngVal = parseFloat(lng).toFixed(7);
+
+            document.getElementById('latInput').value = latVal;
+            document.getElementById('lngInput').value = lngVal;
+
+            // Update Livewire properties
+            @this.set('latitude', latVal);
+            @this.set('longitude', lngVal);
+        }
+
+        function resetMapPin() {
+            if (adminMarker) {
+                adminMap.removeLayer(adminMarker);
+                adminMarker = null;
+            }
+            document.getElementById('latInput').value = '';
+            document.getElementById('lngInput').value = '';
+            @this.set('latitude', null);
+            @this.set('longitude', null);
+            adminMap.setView([-15.3875, 28.3228], 13);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initAdminMap, 300);
+        });
+
+        // Listen for Livewire events to update map pin
+        window.addEventListener('map-update', function(e) {
+            var lat = parseFloat(e.detail.latitude);
+            var lng = parseFloat(e.detail.longitude);
+            if (!adminMap) {
+                setTimeout(initAdminMap, 300);
+                return;
+            }
+            if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
+                placeMarker(lat, lng);
+                adminMap.setView([lat, lng], 15);
+                document.getElementById('latInput').value = parseFloat(lat).toFixed(7);
+                document.getElementById('lngInput').value = parseFloat(lng).toFixed(7);
+            } else {
+                // Reset - remove marker
+                if (adminMarker) {
+                    adminMap.removeLayer(adminMarker);
+                    adminMarker = null;
+                }
+                document.getElementById('latInput').value = '';
+                document.getElementById('lngInput').value = '';
+                adminMap.setView([-15.3875, 28.3228], 13);
+            }
+        });
     </script>
 
 </div>

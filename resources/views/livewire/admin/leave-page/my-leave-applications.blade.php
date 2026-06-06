@@ -2,7 +2,7 @@
     {{-- BiLTA Form Custom Styles --}}
     <style>
         .bilta-form-header {
-            background: linear-gradient(135deg, #c33205, #e04a1f) !important;
+            background: #cd5b13 !important;
             color: white;
             padding: 1.2rem 1.5rem;
             text-align: center;
@@ -23,7 +23,7 @@
             background: #fff;
         }
         .bilta-section-title {
-            font-size: 1.05rem; font-weight: 700; color: #c33205;
+            font-size: 1.05rem; font-weight: 700; color: #cd5b13;
             border-left: 5px solid #f3b33d; padding-left: 12px;
             margin-bottom: 1rem;
         }
@@ -41,7 +41,7 @@
             border-radius: 10px; font-size: 0.78rem; color: #2d3e50;
         }
         .bilta-leave-check { display: inline-flex; align-items: center; gap: 0.4rem; margin-right: 1rem; margin-bottom: 0.5rem; }
-        .bilta-leave-check input[type="radio"] { accent-color: #c33205; width: 1rem; height: 1rem; }
+        .bilta-leave-check input[type="radio"] { accent-color: #cd5b13; width: 1rem; height: 1rem; }
         .bilta-leave-check label { font-weight: 500; font-size: 0.85rem; cursor: pointer; margin-bottom: 0; }
     </style>
 
@@ -313,7 +313,7 @@
                             <button wire:click.prevent="toggleForm" type="button" class="btn btn-outline-secondary">
                                 <i class="fas fa-times"></i> Cancel
                             </button>
-                            <button type="submit" class="btn text-white" style="background: #c33205; font-weight: 700; border-radius: 40px; padding: 0.6rem 2rem;" wire:loading.attr="disabled">
+                            <button type="submit" class="btn text-white" style="background: #cd5b13; font-weight: 700; border-radius: 40px; padding: 0.6rem 2rem;" wire:loading.attr="disabled">
                                 <span wire:loading.remove wire:target="store"><i class="fas fa-paper-plane"></i> Submit Leave Application</span>
                                 <span wire:loading wire:target="store"><i class="fas fa-spinner fa-spin"></i> Submitting...</span>
                             </button>
@@ -586,7 +586,7 @@
 
                     
                     @if ($viewingApplication->status === 'pending' && $viewingApplication->currentStage && auth()->user()->roles->contains('id', $viewingApplication->currentStage->role_id))
-                    <div class="bilta-section" style="border: 2px solid #c33205; background: #fff7ed;">
+                    <div class="bilta-section" style="border: 2px solid #cd5b13; background: #fff7ed;">
                         <h5 class="bilta-section-title"><i class="fas fa-gavel"></i> YOUR ACTION REQUIRED — {{ $viewingApplication->currentStage->name }}</h5>
                         <p class="small text-muted mb-2">You have the role <strong>{{ $viewingApplication->currentStage->role->name ?? '-' }}</strong> required to act on this application at the current stage. Please review all details above before making your decision.</p>
 

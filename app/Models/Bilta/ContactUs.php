@@ -17,6 +17,8 @@ class ContactUs extends Model
         'address',
         'message',
         'google_maps',
+        'latitude',
+        'longitude',
         'created_by',
         'facebook_url',
         'linkedin_url',

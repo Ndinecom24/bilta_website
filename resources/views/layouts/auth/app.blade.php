@@ -47,7 +47,7 @@
             position: absolute;
             inset: 0;
             background:
-                linear-gradient(160deg, rgba(17,17,71,.88) 0%, rgba(17,17,71,.72) 50%, rgba(195,50,5,.18) 100%),
+                linear-gradient(160deg, rgba(17,17,71,.88) 0%, rgba(17,17,71,.72) 50%, rgba(205,91,19,.18) 100%),
                 url('{{ asset('assets/img/testimonials-bg.jpg') }}') center / cover no-repeat;
             z-index: 0;
         }
@@ -72,7 +72,7 @@
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #c33205;
+            color: #cd5b13;
             margin-bottom: .75rem;
         }
 
@@ -84,7 +84,7 @@
         }
 
         .auth-brand-headline span {
-            color: #c33205;
+            color: #cd5b13;
         }
 
         .auth-brand-desc {
@@ -113,8 +113,8 @@
             width: 38px;
             height: 38px;
             border-radius: 10px;
-            background: rgba(195,50,5,.15);
-            color: #c33205;
+            background: rgba(205,91,19,.15);
+            color: #cd5b13;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,7 +141,7 @@
         }
 
         .auth-brand-link:hover {
-            color: #c33205;
+            color: #cd5b13;
         }
 
         /* ── Right form panel ── */
@@ -210,8 +210,8 @@
         }
 
         .auth-field .form-control:focus {
-            border-color: #c33205;
-            box-shadow: 0 0 0 3px rgba(195,50,5,.12);
+            border-color: #cd5b13;
+            box-shadow: 0 0 0 3px rgba(205,91,19,.12);
             background: #fff;
         }
 
@@ -237,8 +237,8 @@
         }
 
         .auth-actions .form-check-input:checked {
-            background-color: #c33205;
-            border-color: #c33205;
+            background-color: #cd5b13;
+            border-color: #cd5b13;
         }
 
         .auth-btn {
@@ -265,7 +265,7 @@
         }
 
         .auth-link {
-            color: #c33205;
+            color: #cd5b13;
             text-decoration: none;
             font-weight: 600;
             font-size: .88rem;
@@ -273,7 +273,7 @@
         }
 
         .auth-link:hover {
-            color: #9a2804;
+            color: #a34810;
         }
 
         .auth-footer-text {

@@ -177,7 +177,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #c33205;
+        color: #cd5b13;
         margin-bottom: 8px;
     }
 
@@ -254,9 +254,9 @@
 
     .gallery-search-input:focus {
         outline: none;
-        border-color: #c33205;
+        border-color: #cd5b13;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(195, 50, 5, 0.08);
+        box-shadow: 0 0 0 4px rgba(205, 91, 19, 0.10);
     }
 
     .gallery-toolbar-actions {
@@ -271,16 +271,16 @@
         padding: 0 22px;
         border: none;
         border-radius: 16px;
-        background: linear-gradient(135deg, #c33205, #9a2804);
+        background: #cd5b13;
         color: #fff;
         font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.22);
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(205, 91, 19, 0.22);
     }
 
     .gallery-reset-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 14px 28px rgba(195, 50, 5, 0.32);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(205, 91, 19, 0.28);
     }
 
     .gallery-results-count {
@@ -319,10 +319,10 @@
 
     .gallery-filter-list li:hover,
     .gallery-filter-list li.filter-active {
-        background: linear-gradient(135deg, #c33205, #9a2804);
+        background: #cd5b13;
         border-color: transparent;
         color: #fff;
-        box-shadow: 0 10px 24px rgba(195, 50, 5, 0.24);
+        box-shadow: 0 4px 12px rgba(205, 91, 19, 0.22);
     }
 
     /* Cards */
@@ -396,7 +396,7 @@
 
     .gallery-preview-btn:hover {
         background: #fff;
-        color: #c33205;
+        color: #cd5b13;
     }
 
     .gallery-content {

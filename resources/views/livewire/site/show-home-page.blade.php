@@ -723,7 +723,8 @@
 
                                 <div class="col-12">
                                     <button type="submit"
-                                        class="btn btn-warning btn-lg w-100 rounded-pill">
+                                        class="btn btn-lg w-100 rounded-pill"
+                                        style="background:#cd5b13; color:#fff; border:none;">
                                         Send Message
                                     </button>
                                 </div>
@@ -1291,7 +1292,7 @@ body{
 }
 
 .team-body span{
-    color:#1d4ed8;
+    color:#cd5b13;
 }
 
 .contact-form-card{
@@ -1465,11 +1466,38 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(135deg,#0f172a,#1d4ed8);
-    color:#dbeafe;
-    font-size:4rem;
-    font-weight:800;
-    letter-spacing:2px;
+    background:#0c2340;
+    color:rgba(255,255,255,0.85);
+    font-size:3.4rem;
+    font-weight:700;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    position:relative;
+    overflow:hidden;
+}
+
+.team-initials-fallback::before{
+    content:'';
+    position:absolute;
+    bottom:-30px;
+    right:-30px;
+    width:160px;
+    height:160px;
+    background:rgba(205,91,19,0.15);
+    border-radius:50%;
+    pointer-events:none;
+}
+
+.team-initials-fallback::after{
+    content:'';
+    position:absolute;
+    top:-20px;
+    left:-20px;
+    width:100px;
+    height:100px;
+    background:rgba(255,255,255,0.04);
+    border-radius:50%;
+    pointer-events:none;
 }
 
 .sponsor-initials-fallback{

@@ -31,8 +31,8 @@
             --primary-light: #1a1a6b;
             --secondary: #2d2d8a;
 
-            --accent: #c33205;
-            --accent-light: #e04a1f;
+            --accent: #cd5b13;
+            --accent-light: #e06b1f;
 
             --bg: #f6f7f9;
             --surface: rgba(255, 255, 255, 0.92);
@@ -380,7 +380,7 @@
         .scroll-to-top.rounded {
             border-radius: 999px !important;
 
-            background: #c33205;
+            background: #cd5b13;
 
             width: 52px;
             height: 52px;

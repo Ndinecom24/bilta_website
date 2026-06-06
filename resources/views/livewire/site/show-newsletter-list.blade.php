@@ -43,7 +43,7 @@
 
                                 {{-- Date & PDF badge --}}
                                 <div class="d-flex align-items-center flex-wrap mb-2" style="gap: 10px;">
-                                    <span style="font-size: .78rem; color: #64748b; font-weight: 600;">
+                                    <span style="font-size: .78rem; color: #895b2f; font-weight: 600;">
                                         <i class="fas fa-calendar-alt me-1" style="color: #94a3b8;"></i>
                                         {{ $publishDate->format('d M Y') }}
                                     </span>
@@ -71,9 +71,9 @@
                                     <div class="mt-auto pt-3">
                                         <a href="{{ $item->getFirstMedia('newsletter_pdfs')->getUrl() }}"
                                            target="_blank"
-                                           style="display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 600; color: #0f2742; text-decoration: none; padding: 9px 18px; border: 1.5px solid #d1d9e3; border-radius: 10px; transition: all .2s ease;"
-                                           onmouseover="this.style.background='#0f2742'; this.style.color='#fff'; this.style.borderColor='#0f2742';"
-                                           onmouseout="this.style.background='transparent'; this.style.color='#0f2742'; this.style.borderColor='#d1d9e3';">
+                                           style="display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 600; color: #cd5b13; text-decoration: none; padding: 9px 18px; border: 1.5px solid #d1d9e3; border-radius: 10px; transition: all .2s ease;"
+                                           onmouseover="this.style.background='#cd5b13'; this.style.color='#fff'; this.style.borderColor='#cd5b13';"
+                                           onmouseout="this.style.background='transparent'; this.style.color='#cd5b13'; this.style.borderColor='#d1d9e3';">
                                             <i class="fas fa-download" style="font-size: .8rem;"></i>
                                             Read More
                                         </a>

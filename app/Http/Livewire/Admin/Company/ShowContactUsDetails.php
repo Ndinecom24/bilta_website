@@ -17,6 +17,8 @@ class ShowContactUsDetails  extends Component
         $address ,
         $message,
         $google_maps ,
+        $latitude,
+        $longitude,
         $facebook_url,
         $linkedin_url,
         $twitter_url,
@@ -32,12 +34,11 @@ class ShowContactUsDetails  extends Component
         'email'=>'required',
         'phone'=>'required',
         'address'=>'required',
-        'google_maps'=>'required',
     ];
 
     public function render()
     {
-        $contact_details = ContactUs::select('id','email','phone', 'address','message', 'google_maps', 'facebook_url', 'linkedin_url', 'twitter_url', 'youtube', 'whatsapp_link', )
+        $contact_details = ContactUs::select('id','email','phone', 'address','message', 'google_maps', 'latitude', 'longitude', 'facebook_url', 'linkedin_url', 'twitter_url', 'youtube', 'whatsapp_link', )
             ->first();
         return view('livewire.admin.company.contact-us.index')->with(compact('contact_details'));
     }
@@ -48,6 +49,8 @@ class ShowContactUsDetails  extends Component
         $this->message = '';
         $this->address = '';
         $this->google_maps = '';
+        $this->latitude = null;
+        $this->longitude = null;
         $this->youtube = '';
         $this->linkedin_url = '';
         $this->facebook_url = '';
@@ -63,13 +66,14 @@ class ShowContactUsDetails  extends Component
                 'email'=>$this->email,
                 'phone'=>$this->phone,
                 'address'=>$this->address,
-                'google_maps'=>$this->google_maps,
             ],
                 [
                     'email'=>$this->email,
                     'phone'=>$this->phone,
                     'address'=>$this->address,
                     'google_maps'=>$this->google_maps,
+                    'latitude'=>$this->latitude,
+                    'longitude'=>$this->longitude,
                     'message' =>$this->message,
                     'whatsapp_link'=>$this->whatsapp_link,
                     'youtube'=>$this->youtube,
@@ -86,6 +90,11 @@ class ShowContactUsDetails  extends Component
             // Reset Form Fields After Creating ContactUs
             $this->resetFields();
 
+            $this->dispatchBrowserEvent('map-update', [
+                'latitude' => null,
+                'longitude' => null,
+            ]);
+
         }catch(\Exception $e){
 
             // Set Flash Message
@@ -101,6 +110,8 @@ class ShowContactUsDetails  extends Component
         $this->address = $contact_us->address;
         $this->message = $contact_us->message;
         $this->google_maps = $contact_us->google_maps;
+        $this->latitude = $contact_us->latitude;
+        $this->longitude = $contact_us->longitude;
         $this->linkedin_url = $contact_us->linkedin_url;
         $this->facebook_url = $contact_us->facebook_url;
         $this->youtube = $contact_us->youtube;
@@ -108,11 +119,21 @@ class ShowContactUsDetails  extends Component
         $this->whatsapp_link = $contact_us->whatsapp_link;
         $this->contact_us_id = $contact_us->id;
         $this->updateContactUs = true;
+
+        $this->dispatchBrowserEvent('map-update', [
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+        ]);
     }
     public function cancel()
     {
         $this->updateContactUs = false;
         $this->resetFields();
+
+        $this->dispatchBrowserEvent('map-update', [
+            'latitude' => null,
+            'longitude' => null,
+        ]);
     }
     public function update(){
         // Validate request
@@ -125,6 +146,8 @@ class ShowContactUsDetails  extends Component
                 'address'=>$this->address,
                 'message' =>$this->message,
                 'google_maps'=>$this->google_maps,
+                'latitude'=>$this->latitude,
+                'longitude'=>$this->longitude,
                 'whatsapp_link'=>$this->whatsapp_link,
                 'youtube'=>$this->youtube,
                 'facebook_url'=>$this->facebook_url,
@@ -133,6 +156,11 @@ class ShowContactUsDetails  extends Component
                 'created_by' => auth()->user()->id
             ])->save();
             session()->flash('success','Contact Details Updated Successfully!!');
+
+            $this->dispatchBrowserEvent('map-update', [
+                'latitude' => null,
+                'longitude' => null,
+            ]);
 
             $this->cancel();
         }catch(\Exception $e){

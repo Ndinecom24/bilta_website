@@ -127,7 +127,7 @@
                                 <small class="font-weight-bold d-block mb-1"><i class="fas fa-map-pin mr-1"></i> Locations ({{ $selectedProject->locations->count() }})</small>
                                 @foreach($selectedProject->locations as $loc)
                                     <div class="d-flex align-items-center small text-muted mb-1">
-                                        <i class="fas fa-circle mr-1" style="font-size:6px;color:#c33205;"></i>
+                                        <i class="fas fa-circle mr-1" style="font-size:6px;color:#cd5b13;"></i>
                                         {{ $loc->name ?: 'Unnamed' }} <span class="ml-1">({{ number_format($loc->latitude, 4) }}, {{ number_format($loc->longitude, 4) }})</span>
                                     </div>
                                 @endforeach

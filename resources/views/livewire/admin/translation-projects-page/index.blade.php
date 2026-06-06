@@ -371,10 +371,10 @@
         .picker-crosshair { cursor: crosshair !important; }
         .map-picker-pin {
             width: 20px; height: 20px;
-            background: #c33205;
+            background: #cd5b13;
             border-radius: 50%;
             border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(195,50,5,0.5);
+            box-shadow: 0 2px 8px rgba(205,91,19,0.5);
         }
     </style>
 

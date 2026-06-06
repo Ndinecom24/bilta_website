@@ -1,26 +1,54 @@
 <div>
 <style>
 .dashboard-hero {
-    background: linear-gradient(135deg, #c33205, #e04a1f) !important;
-
+    background: linear-gradient(135deg, #0c2340 0%, #0d3b66 40%, #155d8a 100%);
     border-radius: 16px;
     color: #fff;
-    padding: 1rem 1.1rem;
+    padding: 1.4rem 1.5rem;
     margin-bottom: 1rem;
-
-    box-shadow: 0 14px 28px rgba(249, 115, 22, 0.18);
+    box-shadow: 0 14px 28px rgba(12, 35, 64, 0.22);
+    position: relative;
+    overflow: hidden;
 }
+
+    .dashboard-hero::before {
+        content: '';
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, rgba(205,91,19,0.18) 0%, transparent 70%);
+        border-radius: 50%;
+        top: -80px;
+        right: -40px;
+        pointer-events: none;
+    }
+
+    .dashboard-hero::after {
+        content: '';
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+        border-radius: 50%;
+        bottom: -50px;
+        left: 30px;
+        pointer-events: none;
+    }
 
     .dashboard-hero-title {
         font-size: 1.45rem;
         font-weight: 800;
         margin-bottom: .15rem;
+        position: relative;
+        z-index: 1;
     }
 
     .dashboard-hero-subtitle {
-        color: #cbd5e1;
+        color: #94a3b8;
         font-size: .92rem;
         margin-bottom: 0;
+        position: relative;
+        z-index: 1;
     }
 
     .dashboard-stat-card {
@@ -67,7 +95,7 @@
     .dashboard-stat-icon.users { background: #eff6ff; color: #2563eb; }
     .dashboard-stat-icon.projects { background: #ecfdf5; color: #059669; }
     .dashboard-stat-icon.testimonials { background: #ecfeff; color: #0891b2; }
-    .dashboard-stat-icon.messages { background: #fde8e4; color: #c33205; }
+    .dashboard-stat-icon.messages { background: #fff3eb; color: #cd5b13; }
     .dashboard-stat-icon.news { background: #fef2f2; color: #dc2626; }
 
     .dashboard-chart-card {
@@ -297,7 +325,7 @@
             series: [
                 { name: 'Today', data: {!! json_encode($clicksToday) !!}, color: '#2563eb' },
                 { name: 'This Week', data: {!! json_encode($clicksWeek) !!}, color: '#059669' },
-                { name: 'This Month', data: {!! json_encode($clicksMonth) !!}, color: '#c33205' }
+                { name: 'This Month', data: {!! json_encode($clicksMonth) !!}, color: '#cd5b13' }
             ]
         });
 
@@ -307,7 +335,7 @@
             credits: { enabled: false },
             xAxis: { categories: {!! json_encode($newsChartLabels) !!} },
             yAxis: { min: 0, title: { text: 'News Posts' } },
-            series: [{ name: 'News', data: {!! json_encode($newsChartData) !!}, color: '#c33205' }]
+            series: [{ name: 'News', data: {!! json_encode($newsChartData) !!}, color: '#cd5b13' }]
         });
 
         Highcharts.chart('clickTrendChart', {

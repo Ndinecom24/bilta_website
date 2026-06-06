@@ -29,8 +29,8 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(ellipse at 20% 50%, rgba(195,50,5,.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(195,50,5,.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 50%, rgba(205,91,19,.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(205,91,19,.05) 0%, transparent 50%),
                 radial-gradient(ellipse at 50% 80%, rgba(26,26,107,.6) 0%, transparent 60%);
             z-index: 0;
         }
@@ -46,15 +46,15 @@
                 0deg,
                 transparent,
                 transparent 48px,
-                rgba(195,50,5,.02) 48px,
-                rgba(195,50,5,.02) 49px
+                rgba(205,91,19,.02) 48px,
+                rgba(205,91,19,.02) 49px
             ),
             repeating-linear-gradient(
                 90deg,
                 transparent,
                 transparent 48px,
-                rgba(195,50,5,.02) 48px,
-                rgba(195,50,5,.02) 49px
+                rgba(205,91,19,.02) 48px,
+                rgba(205,91,19,.02) 49px
             );
             animation: gridMove 20s linear infinite;
         }
@@ -87,20 +87,20 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: rgba(195,50,5,.1);
-            border: 2px solid rgba(195,50,5,.2);
+            background: rgba(205,91,19,.1);
+            border: 2px solid rgba(205,91,19,.2);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
-            color: #c33205;
+            color: #cd5b13;
             margin-bottom: 2rem;
             animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(195,50,5,.2); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(195,50,5,0); }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(205,91,19,.2); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(205,91,19,0); }
         }
 
         .maintenance-icon i {
@@ -114,8 +114,8 @@
 
         .maintenance-badge {
             display: inline-block;
-            background: rgba(195,50,5,.12);
-            color: #c33205;
+            background: rgba(205,91,19,.12);
+            color: #cd5b13;
             padding: 8px 18px;
             border-radius: 50px;
             font-weight: 600;
@@ -133,7 +133,7 @@
         }
 
         .maintenance-title span {
-            color: #c33205;
+            color: #cd5b13;
         }
 
         .maintenance-desc {
@@ -167,8 +167,8 @@
             width: 36px;
             height: 36px;
             border-radius: 10px;
-            background: rgba(195,50,5,.1);
-            color: #c33205;
+            background: rgba(205,91,19,.1);
+            color: #cd5b13;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -200,7 +200,7 @@
         .maintenance-progress-fill {
             height: 100%;
             border-radius: 3px;
-            background: linear-gradient(90deg, #c33205, #e04a1f);
+            background: #cd5b13;
             animation: progress 3s ease-in-out infinite;
             width: 65%;
         }
@@ -216,7 +216,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(135deg, #c33205, #9a2804);
+            background: #cd5b13;
             color: #111147;
             padding: 14px 32px;
             border-radius: 50px;
@@ -224,12 +224,12 @@
             font-weight: 700;
             font-size: .95rem;
             transition: all .25s;
-            box-shadow: 0 4px 16px rgba(195,50,5,.25);
+            box-shadow: 0 4px 16px rgba(205,91,19,.25);
         }
 
         .maintenance-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(195,50,5,.35);
+            box-shadow: 0 8px 28px rgba(205,91,19,.35);
         }
 
         .maintenance-footer {
@@ -239,7 +239,7 @@
         }
 
         .maintenance-footer a {
-            color: #c33205;
+            color: #cd5b13;
             text-decoration: none;
         }
 
