@@ -481,7 +481,41 @@
         showAllBtn.addEventListener("click", function () {
             searchInput.value = "";
             items.forEach(item => item.style.display = "");
+            // Reset active filter to "All"
+            document.querySelectorAll("#portfolio-flters li").forEach(f => f.classList.remove("filter-active"));
+            document.querySelector('#portfolio-flters li[data-filter="*"]').classList.add("filter-active");
             updateGalleryCount();
+        });
+
+        // Category filter clicks
+        document.querySelectorAll("#portfolio-flters li").forEach(function (filterBtn) {
+            filterBtn.addEventListener("click", function () {
+                const filterValue = this.getAttribute("data-filter");
+
+                // Update active state
+                document.querySelectorAll("#portfolio-flters li").forEach(f => f.classList.remove("filter-active"));
+                this.classList.add("filter-active");
+
+                // Clear search
+                searchInput.value = "";
+
+                // Filter items
+                items.forEach(function (item) {
+                    if (filterValue === "*") {
+                        item.style.display = "";
+                    } else {
+                        // filterValue is like ".filter-3", item has class "filter-3"
+                        const filterClass = filterValue.replace(".", "");
+                        if (item.classList.contains(filterClass)) {
+                            item.style.display = "";
+                        } else {
+                            item.style.display = "none";
+                        }
+                    }
+                });
+
+                updateGalleryCount();
+            });
         });
 
         updateGalleryCount();
