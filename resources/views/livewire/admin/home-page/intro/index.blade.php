@@ -50,6 +50,11 @@
                                 <label class="font-weight-bold" for="homeIntroImage">Intro Image <small class="text-muted">(max 3MB)</small></label>
                                 <input id="homeIntroImage" type="file" class="form-control" wire:model="intro_image" accept="image/*">
                                 @error('intro_image') <span class="text-danger d-block">{{ $message }}</span> @enderror
+
+                                <div class="mt-2 text-primary" wire:loading wire:target="intro_image">
+                                    <output class="spinner-border spinner-border-sm mr-1" aria-hidden="true"></output>
+                                    Loading selected image...
+                                </div>
                             </div>
 
                             <div class="col-md-12 mb-3">
@@ -66,9 +71,15 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
-                            <button type="submit" class="btn btn-primary">{{ $updateHomeIntro ? 'Update Intro' : 'Save Intro' }}</button>
+                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="store,update,intro_image">
+                                <span wire:loading.remove wire:target="store,update">{{ $updateHomeIntro ? 'Update Intro' : 'Save Intro' }}</span>
+                                <span wire:loading wire:target="store,update">
+                                    <output class="spinner-border spinner-border-sm mr-1" aria-hidden="true"></output>
+                                    Saving...
+                                </span>
+                            </button>
                             @if ($updateHomeIntro)
-                                <button wire:click.prevent="cancel" type="button" class="btn btn-outline-danger">Cancel Edit</button>
+                                <button wire:click.prevent="cancel" type="button" class="btn btn-outline-danger" wire:loading.attr="disabled" wire:target="store,update,intro_image">Cancel Edit</button>
                             @endif
                         </div>
                     </form>
@@ -134,10 +145,26 @@
                             <input id="missionSliderImages" type="file" class="form-control" wire:model="slider_images" accept="image/*" multiple>
                             @error('slider_images') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             @error('slider_images.*') <span class="text-danger d-block">{{ $message }}</span> @enderror
+
+                            <div class="mt-2 text-primary" wire:loading wire:target="slider_images">
+                                <output class="spinner-border spinner-border-sm mr-1" aria-hidden="true"></output>
+                                Preparing slider images...
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-sm">Upload Slider Images</button>
+                        <button type="submit" class="btn btn-primary btn-sm" wire:loading.attr="disabled" wire:target="uploadMissionSliderImages,slider_images">
+                            <span wire:loading.remove wire:target="uploadMissionSliderImages">Upload Slider Images</span>
+                            <span wire:loading wire:target="uploadMissionSliderImages">
+                                <output class="spinner-border spinner-border-sm mr-1" aria-hidden="true"></output>
+                                Uploading...
+                            </span>
+                        </button>
                     </form>
+
+                    <div class="mb-2 text-primary" wire:loading wire:target="removeMissionSliderImage">
+                        <output class="spinner-border spinner-border-sm mr-1" aria-hidden="true"></output>
+                        Removing image...
+                    </div>
 
                     @if (isset($home_intro->id) && $home_intro->getMedia('mission_slider_images')->count())
                         <div class="row">
@@ -145,12 +172,14 @@
                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                                     <div class="border rounded p-2 h-100">
                                         <img src="{{ $media->getUrl() }}"
-                                            alt="Mission slider image"
+                                            alt="Mission slider"
                                             class="img-fluid rounded mb-2"
                                             style="height:140px; width:100%; object-fit:cover;">
 
                                         <button type="button"
                                             class="btn btn-outline-danger btn-sm btn-block"
+                                            wire:loading.attr="disabled"
+                                            wire:target="removeMissionSliderImage"
                                             wire:click="removeMissionSliderImage({{ $media->id }})">
                                             Remove
                                         </button>

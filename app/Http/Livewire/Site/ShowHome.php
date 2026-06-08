@@ -41,21 +41,17 @@ class ShowHome extends Component
             return OurValues::get();
         });
 
-        $home_intro = cache()->remember('home_intro', now()->addHours(6), function () {
-            return HomeIntro::first();
-        });
+        $home_intro = HomeIntro::first();
 
-        $missionSliderImages = cache()->remember('home_mission_slider_images', now()->addHours(6), function () use ($home_intro) {
-            if (!$home_intro) {
-                return [];
-            }
-
-            return $home_intro
+        $missionSliderImages = [];
+        if ($home_intro) {
+            $missionSliderImages = $home_intro
                 ->getMedia('mission_slider_images')
                 ->map(fn($media) => $media->getUrl())
+                ->filter()
                 ->values()
                 ->all();
-        });
+        }
 
         $chairman = cache()->remember('chairman', now()->addHours(6), function () {
             return ChairmanMessage::latest()->first();
