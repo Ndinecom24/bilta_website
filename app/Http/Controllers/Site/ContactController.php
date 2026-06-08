@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bilta\Testimonial;
+use App\Models\Bilta\Testimonies;
 use App\Models\ContactMessage;
 use App\Services\SpamFilterService;
 use Exception;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class ContactController extends Controller
 {
@@ -139,5 +141,83 @@ class ContactController extends Controller
             return response()->json(['message' => 'An error occurred. Please try again later.'], 500);
         }
       
+    }
+
+    public function storePublicTestimony(Request $request)
+    {
+
+        if ($request->filled('website')) {
+            Log::warning('Public testimony honeypot triggered', ['ip' => $request->ip()]);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Bot submission blocked'], 400);
+            }
+            return back()->withInput()->with('testimonial_error', 'Submission blocked. Please try again.');
+        }
+
+        $loadedAt = (int) $request->input('_form_loaded_at', 0);
+        if ($loadedAt > 0 && (now()->timestamp - $loadedAt) < 3) {
+            Log::warning('Public testimony timing trap triggered', ['ip' => $request->ip()]);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Submission too fast. Please try again.'], 429);
+            }
+            return back()->withInput()->with('testimonial_error', 'Please wait a moment before submitting.');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:30',
+            'title' => 'nullable|string|max:255',
+            'description' => 'required|string|min:20|max:5000',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        $isSpam = $this->spamFilter->isSpam(
+            $validated['email'],
+            $validated['title'] ?? 'testimony',
+            $validated['description']
+        );
+
+        if ($isSpam) {
+            Log::warning('Public testimony spam blocked', ['ip' => $request->ip(), 'email' => $validated['email']]);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Submission blocked.'], 400);
+            }
+            return back()->withInput()->with('testimonial_error', 'We could not accept this submission. Please review your message and try again.');
+        }
+
+        $imagePath = null;
+        try {
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('testimonies', 'public');
+            }
+
+            Testimonies::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+                'image' => $imagePath,
+                'title' => $validated['title'] ?? 'Public Testimony Submission',
+                'description' => $validated['description'],
+                'status_id' => config('constants.status.pending', 3),
+            ]);
+
+            $message = 'Thank you for your testimony. It has been received and will be reviewed by BILTA admins before publishing.';
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $message], 200);
+            }
+
+            return back()->with('testimonial_success', $message);
+        } catch (\Exception $exception) {
+            if (!empty($imagePath) && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            Log::error('Error saving public testimony: ' . $exception->getMessage());
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'An error occurred. Please try again later.'], 500);
+            }
+
+            return back()->withInput()->with('testimonial_error', 'An error occurred. Please try again later.');
+        }
     }
 }

@@ -1,5 +1,9 @@
 <div class="site-shell py-5" id="testimony-section">
     <div class="container">
+        @php
+            $testimonies = $testimonies ?? collect();
+        @endphp
+
         <section class="page-hero">
             <h2 class="mb-2">Testimonies</h2>
             <p class="lead mb-0">Stories of encouragement and transformation from communities we serve.</p>
@@ -148,6 +152,84 @@
 
     </div>
 
+</section>
+
+<section class="public-testimony-submit mt-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4 p-md-5">
+            <h3 class="mb-2">Share Your Testimony</h3>
+            <p class="text-muted mb-4">Submit your testimony below. Our BILTA admins will review it first, then publish it before it appears publicly.</p>
+
+            @if (session()->has('testimonial_success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('testimonial_success') }}
+                </div>
+            @endif
+
+            @if (session()->has('testimonial_error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('testimonial_error') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0 pl-3">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('testimonies.submit') }}" class="row g-3" enctype="multipart/form-data">
+                @csrf
+
+                <input type="hidden" name="_form_loaded_at" value="{{ now()->timestamp }}">
+
+                <div style="position:absolute; left:-9999px; opacity:0; pointer-events:none;" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input id="website" type="text" name="website" value="">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="publicTestimonyName" class="form-label font-weight-bold">Name</label>
+                    <input id="publicTestimonyName" type="text" name="name" class="form-control" value="{{ old('name') }}" required maxlength="255">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="publicTestimonyEmail" class="form-label font-weight-bold">Email</label>
+                    <input id="publicTestimonyEmail" type="email" name="email" class="form-control" value="{{ old('email') }}" required maxlength="255">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="publicTestimonyPhone" class="form-label font-weight-bold">Phone</label>
+                    <input id="publicTestimonyPhone" type="text" name="phone" class="form-control" value="{{ old('phone') }}" required maxlength="30">
+                </div>
+
+                <div class="col-12">
+                    <label for="publicTestimonyTitle" class="form-label font-weight-bold">Title (Optional)</label>
+                    <input id="publicTestimonyTitle" type="text" name="title" class="form-control" value="{{ old('title') }}" maxlength="255" placeholder="Example: How God transformed my life">
+                </div>
+
+                <div class="col-12">
+                    <label for="publicTestimonyImage" class="form-label font-weight-bold">Photo (Optional)</label>
+                    <input id="publicTestimonyImage" type="file" name="image" class="form-control" accept="image/*">
+                    <small class="text-muted">Accepted: JPG, PNG, WEBP. Max 5 MB.</small>
+                </div>
+
+                <div class="col-12">
+                    <label for="publicTestimonyDescription" class="form-label font-weight-bold">Your Testimony</label>
+                    <textarea id="publicTestimonyDescription" name="description" rows="6" class="form-control" required maxlength="5000" placeholder="Please share the full details of your testimony.">{{ old('description') }}</textarea>
+                </div>
+
+                <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <small class="text-muted">Submissions are reviewed by admins before publishing.</small>
+                    <button type="submit" class="btn btn-primary px-4">Submit Testimony</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </section>
 
 <style>

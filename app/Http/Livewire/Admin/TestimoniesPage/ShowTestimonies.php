@@ -4,14 +4,17 @@ namespace App\Http\Livewire\Admin\TestimoniesPage;
 
 use App\Models\Bilta\Testimonies;
 use App\Models\System\Status;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class ShowTestimonies extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
-    public $testimonies_id, $name, $title, $description, $status_id;
+    public $testimonies_id, $name, $email, $phone, $image, $existing_image, $title, $description, $status_id;
     public $statuses = [];
 
     public $updateTestimonies = false;
@@ -21,6 +24,9 @@ class ShowTestimonies extends Component
     // Validation Rules
     protected $rules = [
         'name' => 'required',
+        'email' => 'nullable|email|max:255',
+        'phone' => 'nullable|string|max:30',
+        'image' => 'nullable|image|max:5120',
         'title' => 'required',
         'description' => 'required',
         'status_id' => 'required',
@@ -28,7 +34,7 @@ class ShowTestimonies extends Component
 
     public function render()
     {
-        $testimonies = Testimonies::select('id', 'name', 'title', 'description', 'status_id')->paginate(20);
+        $testimonies = Testimonies::with('status:id,name')->select('id', 'name', 'email', 'phone', 'image', 'title', 'description', 'status_id')->paginate(20);
         $this->statuses = Status::get();
         return view('livewire.admin.testimonies-page.index')->with(compact('testimonies'));
     }
@@ -36,6 +42,10 @@ class ShowTestimonies extends Component
     public function resetFields()
     {
         $this->name = '';
+        $this->email = '';
+        $this->phone = '';
+        $this->image = null;
+        $this->existing_image = null;
         $this->title = '';
         $this->description = '';
         $this->status_id = '';
@@ -46,16 +56,27 @@ class ShowTestimonies extends Component
         // Validate Form Request
         $this->validate();
         try {
+            $storedImage = null;
+            if ($this->image) {
+                $storedImage = $this->image->store('testimonies', 'public');
+            }
+
             // Create Testimonies
             Testimonies::updateOrCreate(
                 [
                     'name' => $this->name,
+                    'email' => $this->email,
+                    'phone' => $this->phone,
+                    'image' => $storedImage,
                     'title' => $this->title,
                     'description' => $this->description,
                     'status_id' => $this->status_id,
                 ],
                 [
                     'name' => $this->name,
+                    'email' => $this->email,
+                    'phone' => $this->phone,
+                    'image' => $storedImage,
                     'title' => $this->title,
                     'description' => $this->description,
                     'status_id' => $this->status_id,
@@ -82,6 +103,10 @@ class ShowTestimonies extends Component
     {
         $testimonies = Testimonies::findOrFail($id);
         $this->name = $testimonies->name;
+        $this->email = $testimonies->email;
+        $this->phone = $testimonies->phone;
+        $this->existing_image = $testimonies->image;
+        $this->image = null;
         $this->title = $testimonies->title;
         $this->description = $testimonies->description;
         $this->status_id = $testimonies->status_id;
@@ -100,9 +125,21 @@ class ShowTestimonies extends Component
         // Validate request
         $this->validate();
         try {
+            $testimony = Testimonies::find($this->testimonies_id);
+            $storedImage = $testimony->image;
+            if ($this->image) {
+                $storedImage = $this->image->store('testimonies', 'public');
+                if (!empty($testimony->image) && Storage::disk('public')->exists($testimony->image)) {
+                    Storage::disk('public')->delete($testimony->image);
+                }
+            }
+
             // Update testimonies
-            Testimonies::find($this->testimonies_id)->fill([
+            $testimony->fill([
                 'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'image' => $storedImage,
                 'title' => $this->title,
                 'description' => $this->description,
                 'status_id' => $this->status_id,
@@ -120,7 +157,11 @@ class ShowTestimonies extends Component
     public function destroy($id)
     {
         try {
-            Testimonies::find($id)->delete();
+            $testimony = Testimonies::find($id);
+            if (!empty($testimony->image) && Storage::disk('public')->exists($testimony->image)) {
+                Storage::disk('public')->delete($testimony->image);
+            }
+            $testimony->delete();
             session()->flash('success', "Testimonies Deleted Successfully!!");
         } catch (\Exception $e) {
             session()->flash('error', "Something goes wrong while deleting testimonies!!");

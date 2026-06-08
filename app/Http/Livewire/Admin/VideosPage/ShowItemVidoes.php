@@ -36,7 +36,7 @@ class ShowItemVidoes extends Component
     public function render()
     {
         $statuses = Status::select('id', 'name')->get();
-        $item_categories = ItemCategory::where('type', 'Images')->get();
+        $item_categories = ItemCategory::where('type', 'Video')->get();
         $video_items = Videos::select('item_category_id', 'id', 'description', 'name', 'status_id', 'type', 'video_link')->paginate(20);
         return view('livewire.admin.videos-page.index')
             ->with(compact('video_items', 'statuses', 'item_categories'));

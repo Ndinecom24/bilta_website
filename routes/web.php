@@ -108,6 +108,7 @@ Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])
 Route::post('/sponsor/inquiry', [SponsorInquiryController::class, 'store'])->middleware('throttle:3,1')->name('sponsor.inquiry.store');
 Route::post('/clear-cache', [HomeController::class, 'clearCache'])->middleware('auth')->name('admin.cache.clear');
 Route::post('/submit-testimonial', [ContactController::class, 'storeTestimonial'])->middleware('throttle:3,1');
+Route::post('/testimonies/submit', [ContactController::class, 'storePublicTestimony'])->middleware('throttle:3,1')->name('testimonies.submit');
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// ADMIN
