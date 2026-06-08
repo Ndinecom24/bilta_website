@@ -45,6 +45,11 @@
                                     <option value="">-- Select Type --</option>
                                     <option value="Projects">Projects</option>
                                     <option value="News">News</option>
+                                    <option value="Audio">Audio</option>
+                                    <option value="Video">Video</option>
+                                    <option value="Gallery">Gallery</option>
+                                    <option value="Testimonies">Testimonies</option>
+                                    <option value="Prayer Points">Prayer Points</option>
                                 </select>
                                 @error('type') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
