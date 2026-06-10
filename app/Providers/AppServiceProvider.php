@@ -40,15 +40,21 @@ class AppServiceProvider extends ServiceProvider
 
         try {
             if (Schema::hasTable('about_us')) {
-                $about_us = AboutUs::first();
+                $about_us = cache()->remember('shared_about_us', 6 * 60 * 60, function () {
+                    return AboutUs::first();
+                });
             }
 
             if (Schema::hasTable('contact_us')) {
-                $contact_us = ContactUs::first();
+                $contact_us = cache()->remember('shared_contact_us', 6 * 60 * 60, function () {
+                    return ContactUs::first();
+                });
             }
 
             if (Schema::hasTable('our_services')) {
-                $services = OurServices::get();
+                $services = cache()->remember('shared_services', 6 * 60 * 60, function () {
+                    return OurServices::get();
+                });
             }
         } catch (Throwable $th) {
             $about_us = null;

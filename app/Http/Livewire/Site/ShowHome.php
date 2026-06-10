@@ -18,73 +18,123 @@ class ShowHome extends Component
     public $search;
     public $successMessage;
 
+    /**
+     * Cache duration in seconds (6 hours).
+     */
+    private const CACHE_TTL = 6 * 60 * 60;
 
     public function render()
     {
-     
-        $testimonials = cache()->remember('home_testimonials', now()->addHours(6), function () {
+        $testimonials = cache()->remember('home_testimonials', self::CACHE_TTL, function () {
             return Testimonial::select('id', 'testimonial', 'title', 'status_id', 'name')
-            ->whereHas('status', function ($query)  {
-                $query->where('name', 'like', '%Active%');
-            })
-            ->take(10)->get();
+                ->whereHas('status', function ($query) {
+                    $query->where('name', 'like', '%Active%');
+                })
+                ->take(10)->get();
         });
 
-        $our_teams = cache()->remember('home_our_teams', now()->addHours(6), function () {
+        $our_teams = cache()->remember('home_our_teams', self::CACHE_TTL, function () {
             return OurTeam::select('id', 'name', 'phone', 'email', 'details', 'position', 'display_order')
+                ->with('media') // eager-load media to avoid N+1
                 ->orderBy('display_order')
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->get()
+                ->map(function ($team) {
+                    $media = $team->getFirstMedia('team_images');
+                    $team->team_image_url = $media ? $media->getUrl() : null;
+                    $team->unsetRelation('media'); // drop heavy relation before caching
+                    return $team;
+                });
         });
 
-        $our_values = cache()->remember('home_our_values', now()->addHours(6), function () {
+        $our_values = cache()->remember('home_our_values', self::CACHE_TTL, function () {
             return OurValues::get();
         });
 
-        $home_intro = HomeIntro::first();
+        // Cache HomeIntro with pre-resolved media URLs
+        $homeIntroData = cache()->remember('home_intro_data', self::CACHE_TTL, function () {
+            $home_intro = HomeIntro::first();
+            if (!$home_intro) {
+                return [
+                    'model' => null,
+                    'hero_image_url' => null,
+                    'mission_slider_images' => [],
+                ];
+            }
 
-        $missionSliderImages = [];
-        if ($home_intro) {
-            $missionSliderImages = $home_intro
-                ->getMedia('mission_slider_images')
-                ->map(fn($media) => $media->getUrl())
-                ->filter()
-                ->values()
-                ->all();
-        }
+            $home_intro->load('media');
 
-        $chairman = cache()->remember('chairman', now()->addHours(6), function () {
-            return ChairmanMessage::latest()->first();
+            return [
+                'model' => $home_intro,
+                'hero_image_url' => $home_intro->getFirstMediaUrl('home_intro_images') ?: null,
+                'mission_slider_images' => $home_intro
+                    ->getMedia('mission_slider_images')
+                    ->map(fn($media) => $media->getUrl())
+                    ->filter()
+                    ->values()
+                    ->all(),
+            ];
         });
 
-        $sponsors  = cache()->remember('sponsors', now()->addHours(6), function(){
-            return Sponsor::orderBy('display_order')->orderBy('created_at', 'desc')->get();
+        $home_intro = $homeIntroData['model'];
+        $heroImageUrl = $homeIntroData['hero_image_url'] ?? asset('assets/img/bilta-hero.jpg');
+        $missionSliderImages = $homeIntroData['mission_slider_images'];
+
+        // Cache chairman with pre-resolved photo URL
+        $chairmanData = cache()->remember('chairman_data', self::CACHE_TTL, function () {
+            $chairman = ChairmanMessage::with('media')->latest()->first();
+            $photoUrl = $chairman ? $chairman->getFirstMediaUrl('chairman_photo') : null;
+            if ($chairman) {
+                $chairman->unsetRelation('media');
+            }
+            return ['model' => $chairman, 'photo_url' => $photoUrl ?: null];
+        });
+        $chairman = $chairmanData['model'];
+        $chairmanPhotoUrl = $chairmanData['photo_url'];
+
+        // Cache sponsors with pre-resolved image URLs
+        $sponsors = cache()->remember('sponsors', self::CACHE_TTL, function () {
+            return Sponsor::with('media')
+                ->orderBy('display_order')
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function ($sponsor) {
+                    $sponsor->sponsor_image_url = $sponsor->getFirstMediaUrl('sponsor_image') ?: null;
+                    $sponsor->unsetRelation('media');
+                    return $sponsor;
+                });
         });
 
-        $projects = cache()->remember('projects', now()->addHours(6), function () {
-            return Projects::orderBy('display_order')
+        $projects = cache()->remember('projects', self::CACHE_TTL, function () {
+            return Projects::with('myCategory')
+                ->orderBy('display_order')
                 ->orderBy('created_at', 'desc')
                 ->take(10)
                 ->get();
         });
 
-        $latestNews = cache()->remember('latest_news_home', now()->addHours(6), function () {
+        // Cache latest news with pre-resolved image URLs
+        $latestNews = cache()->remember('latest_news_home', self::CACHE_TTL, function () {
             return News::query()
                 ->where('status_id', config('constants.status.active'))
+                ->with('media') // eager-load media
                 ->orderBy('display_order')
                 ->orderBy('created_at', 'desc')
                 ->take(3)
-                ->get();
+                ->get()
+                ->map(function ($news) {
+                    $media = $news->getFirstMedia('news_images');
+                    $news->news_image_url = $media ? $media->getUrl() : null;
+                    $news->unsetRelation('media');
+                    return $news;
+                });
         });
-
-        
-
 
         $searchKey = $this->search;
         $page = request()->get('page', 1);
         $cacheKey = 'audio_files_' . md5($searchKey . '_page_' . $page);
-        
-        $audioFiles = cache()->remember($cacheKey, now()->addHours(6), function () use ($searchKey) {
+
+        $audioFiles = cache()->remember($cacheKey, self::CACHE_TTL, function () use ($searchKey) {
             return AudioFile::query()
                 ->where('status_id', config('constants.status.active'))
                 ->where(function ($query) use ($searchKey) {
@@ -99,8 +149,11 @@ class ShowHome extends Component
                 ->paginate(10);
         });
 
-
-        return view('livewire.site.show-home-page')->with(compact('testimonials', 'our_teams', 'our_values', 'home_intro', 'audioFiles', 'chairman', 'projects' , 'sponsors', 'latestNews', 'missionSliderImages'  ));
+        return view('livewire.site.show-home-page')->with(compact(
+            'testimonials', 'our_teams', 'our_values', 'home_intro',
+            'audioFiles', 'chairman', 'projects', 'sponsors', 'latestNews',
+            'missionSliderImages', 'heroImageUrl', 'chairmanPhotoUrl'
+        ));
     }
 
 

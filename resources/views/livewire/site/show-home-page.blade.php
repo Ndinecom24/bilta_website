@@ -5,14 +5,8 @@
 <div class="bilta-homepage">
 
     {{-- ================= HERO SECTION ================= --}}
-    @php
-        $homeIntroImageUrl = $home_intro
-            ? $home_intro->getFirstMediaUrl('home_intro_images')
-            : asset('assets/img/bilta-hero.jpg');
-    @endphp
-
     <section class="hero-section position-relative overflow-hidden"
-        style="background-image:url('{{ $homeIntroImageUrl }}')">
+        style="background-image:url('{{ $heroImageUrl }}')">
 
         <div class="hero-overlay"></div>
 
@@ -172,9 +166,7 @@
 
                     <div class="mission-media-wrap">
                         @php
-                            $missionFallback = file_exists(public_path('assets/img/susan-mbuzi.png'))
-                                ? asset('assets/img/susan-mbuzi.png')
-                                : 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=900&q=80';
+                            $missionFallback = asset('assets/img/susan-mbuzi.png');
                             $missionImages = collect($missionSliderImages ?? [])
                                 ->filter(fn($item) => !empty($item))
                                 ->values()
@@ -203,7 +195,8 @@
                                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                         <img src="{{ $missionImage }}"
                                             class="img-fluid mission-image"
-                                            alt="Bible Translation Work {{ $index + 1 }}">
+                                            alt="Bible Translation Work {{ $index + 1 }}"
+                                            loading="lazy">
                                         <div class="mission-slide-overlay"></div>
                                     </div>
                                 @endforeach
@@ -376,17 +369,11 @@
 
                 @forelse ($latestNews as $newsItem)
 
-                    @php
-                        $newsImage = $newsItem->getFirstMedia('news_images')
-                            ? $newsItem->getFirstMedia('news_images')->getUrl()
-                            : asset('assets/img/placeholder.png');
-                    @endphp
-
                     <div class="col-lg-4 col-md-6" data-aos="fade-up">
 
                         <div class="news-card h-100">
 
-                            <img src="{{ $newsImage }}"
+                            <img src="{{ $newsItem->news_image_url ?? asset('assets/img/placeholder.png') }}"
                                 class="news-image"
                                 alt="{{ $newsItem->title ?? 'News' }}"
                                 loading="lazy">
@@ -450,11 +437,12 @@
 
                     <div class="chairperson-profile text-center">
 
-                        @if ($chairman && $chairman->getFirstMediaUrl('chairman_photo'))
+                        @if ($chairmanPhotoUrl)
 
-                            <img src="{{ $chairman->getFirstMediaUrl('chairman_photo') }}"
+                            <img src="{{ $chairmanPhotoUrl }}"
                                 class="img-fluid rounded-circle shadow-lg chairperson-image"
-                                alt="{{ $chairman->name ?? 'Chairperson' }}">
+                                alt="{{ $chairman->name ?? 'Chairperson' }}"
+                                loading="lazy">
 
                         @else
 
@@ -582,7 +570,6 @@
                 @foreach ($our_teams as $our_team)
 
                     @php
-                        $media = $our_team->getFirstMedia('team_images');
                         $teamName = $our_team->name ?? '--';
                         $teamInitials = collect(explode(' ', $teamName))->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))->take(2)->implode('');
                     @endphp
@@ -591,14 +578,15 @@
 
                         <div class="team-card text-center">
 
-                            <div class="team-initials-fallback" @if($media) style="display:none;" @endif>
+                            <div class="team-initials-fallback" @if($our_team->team_image_url) style="display:none;" @endif>
                                 <span>{{ $teamInitials }}</span>
                             </div>
 
-                            @if ($media)
-                                <img src="{{ $media->getUrl() }}"
+                            @if ($our_team->team_image_url)
+                                <img src="{{ $our_team->team_image_url }}"
                                     class="team-image"
                                     alt="{{ $teamName }}"
+                                    loading="lazy"
                                     onerror="this.style.display='none';this.previousElementSibling.style.display='flex';">
                             @endif
 
@@ -782,7 +770,6 @@
                     @php
                         $sponsorName = $sponsor->name ?? '--';
                         $sponsorInitials = collect(explode(' ', $sponsorName))->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))->take(2)->implode('');
-                        $sponsorImageUrl = $sponsor->getFirstMediaUrl('sponsor_image');
                     @endphp
 
                     <div class="col-6 col-md-3 col-lg-2">
@@ -791,10 +778,11 @@
                             target="_blank"
                             class="sponsor-card">
 
-                            @if ($sponsorImageUrl)
-                                <img src="{{ $sponsorImageUrl }}"
+                            @if ($sponsor->sponsor_image_url)
+                                <img src="{{ $sponsor->sponsor_image_url }}"
                                     class="img-fluid"
-                                    alt="{{ $sponsorName }}">
+                                    alt="{{ $sponsorName }}"
+                                    loading="lazy">
                             @else
                                 <div class="sponsor-initials-fallback">
                                     <span>{{ $sponsorInitials }}</span>
