@@ -99,7 +99,12 @@ class ShowValues extends Component
     public function destroy($id)
     {
         try {
-            OurValues::find($id)->delete();
+            $value = OurValues::find($id);
+            if (!$value) {
+                session()->flash('error', 'Value not found or already deleted.');
+                return;
+            }
+            $value->delete();
             session()->flash('success', "Values Deleted Successfully!!");
         } catch (\Exception $e) {
             session()->flash('error', "Something goes wrong while deleting values!!");

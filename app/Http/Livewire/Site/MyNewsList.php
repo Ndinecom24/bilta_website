@@ -21,26 +21,24 @@ class MyNewsList extends Component
 
     public function render()
     {
-        if( (! is_null($this->searchTerm ) )  ){
+        if (!is_null($this->searchTerm)) {
             $news = News::select('*')
                 ->where('status_id', config('constants.status.active'))
+                ->where('title', 'like', '%' . $this->searchTerm . '%')
                 ->orderBy('display_order')
                 ->orderBy('created_at', 'desc')
                 ->paginate(20);
-            $this->title = 'Results based on '.$this->searchTerm ;
-        }if( ($this->category_id != '0') ){
+            $this->title = 'Results based on ' . $this->searchTerm;
+        } elseif ($this->category_id != '0') {
             $news = News::select('*')
                 ->where('category_id', $this->category_id)
                 ->where('status_id', config('constants.status.active'))
                 ->orderBy('display_order')
                 ->orderBy('created_at', 'desc')
                 ->paginate(20);
-         try{
-            $this->title = 'Results based on '. ItemCategory::find( $this->category_id )->name ?? "non"   ;
-         }catch(\Exeception $exeception){
-            $this->title = 'Non ' ;
-         }
-        }else{
+            $category = ItemCategory::find($this->category_id);
+            $this->title = 'Results based on ' . ($category->name ?? 'Unknown');
+        } else {
             $news = News::select('*')
                 ->where('status_id', config('constants.status.active'))
                 ->orderBy('display_order')

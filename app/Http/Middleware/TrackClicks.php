@@ -50,10 +50,10 @@ class TrackClicks
                 $deviceType = str_contains($ua, 'android') || str_contains($ua, 'ios') ? 'Mobile' : 'Desktop';
 
                 Click::create([
-                    'url' => $request->fullUrl(),
+                    'url' => \Illuminate\Support\Str::limit($request->fullUrl(), 2000, ''),
                     'page_name' => \Route::currentRouteName() ?? 'Unknown',
                     'method' => $request->method(),
-                    'referrer' => $request->headers->get('referer'),
+                    'referrer' => \Illuminate\Support\Str::limit($request->headers->get('referer'), 2000, ''),
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->userAgent(),
 
