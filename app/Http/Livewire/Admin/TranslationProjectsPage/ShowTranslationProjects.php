@@ -40,7 +40,7 @@ class ShowTranslationProjects extends Component
         'author' => 'required',
         'display_order' => 'nullable|integer|min:0',
         'location' => 'required',
-        'location_map' => 'required',
+        'location_map' => 'nullable',
         'title_image' => 'nullable|image|max:5120', // 5MB Max
         'project_image' => 'nullable|array',
         'project_image.*' => 'image|max:5120', // 5MB Max per image
