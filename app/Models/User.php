@@ -47,6 +47,7 @@ class User extends Authenticatable
         'password_change',
         'password_reset_otp',
         'password_reset_otp_expires_at',
+        'profile_photo_path',
     ];
 
     /**
@@ -118,5 +119,27 @@ class User extends Authenticatable
             $label .= ' (' . $this->position . ')';
         }
         return $label;
+    }
+
+    /**
+     * Get profile photo URL, or null if none uploaded.
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_photo_path && \Storage::disk('public')->exists($this->profile_photo_path)) {
+            return asset('storage/' . $this->profile_photo_path);
+        }
+        return null;
+    }
+
+    /**
+     * Get initials from the user's name (max 2 letters).
+     */
+    public function getInitialsAttribute()
+    {
+        return collect(explode(' ', $this->name))
+            ->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))
+            ->take(2)
+            ->implode('');
     }
 }

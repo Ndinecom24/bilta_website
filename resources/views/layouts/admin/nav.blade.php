@@ -541,9 +541,22 @@
                 aria-expanded="false"
                 type="button">
 
-                <img class="img-profile rounded-circle"
-                    src="{{ asset('admin/img/undraw_profile.svg') }}"
-                    alt="Profile">
+                @if (auth()->user()->profile_photo_url)
+                    <img class="img-profile rounded-circle"
+                        src="{{ auth()->user()->profile_photo_url }}"
+                        alt="Profile"
+                        style="width: 36px; height: 36px; object-fit: cover;">
+                @else
+                    @php
+                        $navInitials = collect(explode(' ', auth()->user()->name ?? 'U'))->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))->take(2)->implode('');
+                        $navColors = ['#dc2626','#2563eb','#059669','#d97706','#7c3aed','#0891b2','#be185d','#4f46e5'];
+                        $navColorIdx = crc32(auth()->user()->name ?? 'U') % count($navColors);
+                    @endphp
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                        style="width: 36px; height: 36px; background: {{ $navColors[$navColorIdx] }}; color: #fff; font-weight: 700; font-size: .82rem; letter-spacing: 1px;">
+                        {{ $navInitials }}
+                    </div>
+                @endif
 
                 <div class="admin-user-name d-none d-lg-flex">
 
@@ -552,7 +565,7 @@
                     </strong>
 
                     <small>
-                        Administrator
+                        {{ auth()->user()->roles->first()->name ?? 'User' }}
                     </small>
 
                 </div>

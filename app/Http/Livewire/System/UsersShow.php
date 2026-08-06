@@ -12,9 +12,12 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class UsersShow extends Component
 {
+    use WithFileUploads;
+
     public $user, $user_id, $email, $name, $phone, $status_id, $password, $password_confirmation, $password_change, $role_id;
 
     // HR fields
@@ -33,6 +36,12 @@ class UsersShow extends Component
     public $otpEmailSent = false;
     public $otpEmailFailed = false;
     public $otpResetUser = null;
+
+    // Profile photo
+    public $profile_photo;
+
+    // Tab navigation
+    public $activeTab = 'profile';
 
     public $all_roles = [];
     public $selectedRoles = [];
@@ -284,6 +293,66 @@ class UsersShow extends Component
         $this->otpResetUser = null;
     }
 
+    /**
+     * Upload profile photo.
+     */
+    public function uploadProfilePhoto()
+    {
+        $this->validate([
+            'profile_photo' => 'required|image|max:2048', // 2MB max
+        ]);
+
+        try {
+            $user = User::findOrFail($this->user_id);
+
+            // Delete old photo if exists
+            if ($user->profile_photo_path && \Storage::disk('public')->exists($user->profile_photo_path)) {
+                \Storage::disk('public')->delete($user->profile_photo_path);
+            }
+
+            // Store new photo
+            $path = $this->profile_photo->store('profile-photos', 'public');
+            $user->profile_photo_path = $path;
+            $user->save();
+
+            $this->profile_photo = null;
+            $this->refreshUserData();
+            session()->flash('success', 'Profile photo updated successfully.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to upload profile photo: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove profile photo.
+     */
+    public function removeProfilePhoto()
+    {
+        try {
+            $user = User::findOrFail($this->user_id);
+
+            if ($user->profile_photo_path && \Storage::disk('public')->exists($user->profile_photo_path)) {
+                \Storage::disk('public')->delete($user->profile_photo_path);
+            }
+
+            $user->profile_photo_path = null;
+            $user->save();
+
+            $this->refreshUserData();
+            session()->flash('success', 'Profile photo removed.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to remove profile photo.');
+        }
+    }
+
+    /**
+     * Switch active tab.
+     */
+    public function setTab($tab)
+    {
+        $this->activeTab = $tab;
+    }
+
 
     public function destroy($id)
     {
@@ -304,8 +373,7 @@ class UsersShow extends Component
 
     public function cancel()
     {
-        $this->updateUser = false;
-        $this->showPasswordReset = false;
+        $this->activeTab = 'profile';
         $this->password = '';
         $this->password_confirmation = '';
         $this->lastOtp = null;
@@ -317,14 +385,12 @@ class UsersShow extends Component
 
     public function toggleEdit()
     {
-        $this->updateUser = true;
-        $this->showPasswordReset = false;
+        $this->activeTab = 'edit';
     }
 
     public function togglePasswordReset()
     {
-        $this->showPasswordReset = true;
-        $this->updateUser = false;
+        $this->activeTab = 'security';
     }
 
 
