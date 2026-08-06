@@ -52,7 +52,7 @@
                             </div>
                             <div class="col-lg-4 col-md-6 mb-3">
                                 <span class="font-weight-bold d-block mb-2">Default Role</span>
-                                <input type="text" class="form-control" value="Viewer (automatic)" readonly>
+                                <input type="text" class="form-control" value="Employee (automatic)" readonly>
                             </div>
                             <div class="col-lg-4 col-md-6 mb-3">
                                 <label class="font-weight-bold" for="userStatus">Status *</label>

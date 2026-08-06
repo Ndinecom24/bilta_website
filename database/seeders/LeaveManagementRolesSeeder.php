@@ -17,7 +17,7 @@ class LeaveManagementRolesSeeder extends Seeder
             ],
             'leave-approver' => [
                 'name' => 'Leave Approver',
-                'permissions' => ['view-dashboard', 'apply-leave'],
+                'permissions' => ['view-dashboard', 'apply-leave', 'manage-leave-applications'],
             ],
             'leave-officer' => [
                 'name' => 'Leave Officer',

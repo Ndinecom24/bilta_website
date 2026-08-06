@@ -30,7 +30,7 @@
 
     <div class="email-body">
         <p>Hello {{ $user->name }},</p>
-        <p>Your account is ready and has been assigned the default <strong>Viewer</strong> role.</p>
+        <p>Your account is ready and has been assigned the default <strong>Employee</strong> role.</p>
 
         <div class="credential-box">
             <div class="credential-row">

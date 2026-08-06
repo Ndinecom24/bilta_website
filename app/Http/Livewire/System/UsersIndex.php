@@ -107,9 +107,11 @@ class UsersIndex extends Component
                 'supervisor_id' => $this->supervisor_id ?: null,
             ]);
 
-            $viewerRole = Role::where('slug', 'viewer')->first();
-            if ($viewerRole) {
-                $user->roles()->syncWithoutDetaching([$viewerRole->id]);
+            // Assign 'employee' role by default (fallback to 'viewer' for backward compatibility)
+            $defaultRole = Role::where('slug', 'employee')->first()
+                ?? Role::where('slug', 'viewer')->first();
+            if ($defaultRole) {
+                $user->roles()->syncWithoutDetaching([$defaultRole->id]);
             }
 
             $mailSent = true;

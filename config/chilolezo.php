@@ -30,6 +30,11 @@ return [
             'description' => 'Read-only access to admin dashboard and content.',
         ],
         [
+            'name' => 'Employee',
+            'slug' => 'employee',
+            'description' => 'Standard staff member — can apply for leave, view announcements, and access shared documents.',
+        ],
+        [
             'name' => 'Leave Applicant',
             'slug' => 'leave-applicant',
             'description' => 'Can submit and track own leave applications.',
@@ -38,6 +43,11 @@ return [
             'name' => 'Leave Approver',
             'slug' => 'leave-approver',
             'description' => 'Can access leave approval queue and approve/reject stages assigned to their role.',
+        ],
+        [
+            'name' => 'Approver',
+            'slug' => 'approver',
+            'description' => 'Employee with additional rights to approve leave applications and manage shared documents.',
         ],
         [
             'name' => 'Leave Officer',
@@ -197,6 +207,7 @@ return [
         'leave-approver' => [
             'view-dashboard',
             'apply-leave',
+            'manage-leave-applications',
         ],
 
         'leave-officer' => [
@@ -220,6 +231,19 @@ return [
             'apply-leave',
             'manage-leave-balances',
             'manage-approval-workflows',
+        ],
+
+        'employee' => [
+            'view-dashboard',
+            'apply-leave',
+        ],
+
+        'approver' => [
+            'view-dashboard',
+            'apply-leave',
+            'manage-leave-applications',
+            'manage-announcements',
+            'manage-documents',
         ],
     ],
 
