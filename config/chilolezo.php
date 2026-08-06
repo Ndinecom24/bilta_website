@@ -109,6 +109,10 @@ return [
 
         // --- HR / Organisation ---
         ['name' => 'Manage Departments', 'slug' => 'manage-departments'],
+
+        // --- Internal Communications ---
+        ['name' => 'Manage Announcements', 'slug' => 'manage-announcements'],
+        ['name' => 'Manage Documents', 'slug' => 'manage-documents'],
     ],
 
     /*
@@ -151,6 +155,8 @@ return [
             'manage-leave-balances',
             'manage-approval-workflows',
             'manage-departments',
+            'manage-announcements',
+            'manage-documents',
         ],
 
         'editor' => [
@@ -171,6 +177,8 @@ return [
             'manage-audio',
             'manage-projects',
             'apply-leave',
+            'manage-announcements',
+            'manage-documents',
         ],
 
         'viewer' => [
