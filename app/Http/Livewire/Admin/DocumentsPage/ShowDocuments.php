@@ -100,7 +100,7 @@ class ShowDocuments extends Component
             ->get();
 
         $departments = Department::orderBy('name')->get();
-        $users = User::orderBy('first_name')->get();
+        $users = User::orderBy('name')->get();
 
         return view('livewire.admin.documents-page.index', compact(
             'folders', 'documents', 'folderTree', 'departments', 'users'

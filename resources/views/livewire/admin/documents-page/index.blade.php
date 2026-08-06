@@ -74,7 +74,7 @@
                     <small class="text-muted">
                         {{ $currentFolder->visibility_label }}
                         @if ($currentFolder->creator)
-                            &bull; Created by {{ $currentFolder->creator->first_name ?? 'Unknown' }}
+                            &bull; Created by {{ $currentFolder->creator->name ?? 'Unknown' }}
                         @endif
                         &bull; {{ $currentFolder->accessEntries()->count() }} access entries
                     </small>
@@ -276,7 +276,7 @@
                                         </td>
                                         <td><small class="text-muted">{{ $doc->formatted_size }}</small></td>
                                         <td><span class="badge badge-light border px-2" style="border-radius: 4px; font-size: .7rem;">{{ strtoupper($doc->extension) }}</span></td>
-                                        <td><small class="text-muted">{{ $doc->uploader->first_name ?? 'Unknown' }}</small></td>
+                                        <td><small class="text-muted">{{ $doc->uploader->name ?? 'Unknown' }}</small></td>
                                         <td><small class="text-muted">{{ $doc->created_at->format('d M Y') }}</small></td>
                                         <td class="text-right pr-3">
                                             <div class="d-flex justify-content-end" style="gap: 4px;">
@@ -333,7 +333,7 @@
                         <div class="alert alert-light border mb-3">
                             <i class="{{ $sharingFolder->visibility_icon }} mr-1"></i>
                             <strong>Visibility:</strong> {{ $sharingFolder->visibility_label }}
-                            &bull; <strong>Owner:</strong> {{ $sharingFolder->creator->first_name ?? 'System' }}
+                            &bull; <strong>Owner:</strong> {{ $sharingFolder->creator->name ?? 'System' }}
                         </div>
 
                         @if (session()->has('shareSuccess'))
@@ -365,7 +365,7 @@
                                             <select class="form-control form-control-sm" wire:model.defer="shareTargetId" style="border-radius: 8px;">
                                                 <option value="">Select user...</option>
                                                 @foreach ($users as $u)
-                                                    <option value="{{ $u->id }}">{{ $u->first_name }} {{ $u->last_name }}</option>
+                                                    <option value="{{ $u->id }}">{{ $u->name }}</option>
                                                 @endforeach
                                             </select>
                                         @endif
@@ -418,7 +418,7 @@
                                                         {{ \App\Models\Bilta\Department::find($entry->target_id)->name ?? 'Unknown' }}
                                                     @else
                                                         @php $targetUser = \App\Models\User::find($entry->target_id); @endphp
-                                                        {{ $targetUser ? ($targetUser->first_name . ' ' . $targetUser->last_name) : 'Unknown' }}
+                                                        {{ $targetUser ? $targetUser->name : 'Unknown' }}
                                                     @endif
                                                 </td>
                                                 <td>

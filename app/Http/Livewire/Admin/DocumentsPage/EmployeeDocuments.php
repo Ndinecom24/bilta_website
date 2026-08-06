@@ -138,7 +138,7 @@ class EmployeeDocuments extends Component
 
         // Data for share modal
         $departments = Department::orderBy('name')->get();
-        $users = User::where('id', '!=', $user->id)->orderBy('first_name')->get();
+        $users = User::where('id', '!=', $user->id)->orderBy('name')->get();
 
         return view('livewire.admin.documents-page.employee-browse', compact(
             'folders', 'documents', 'folderTree', 'folderPermission',
