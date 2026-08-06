@@ -46,7 +46,7 @@
                                 target="_blank"
                                 aria-label="Twitter">
 
-                                <i class="bi bi-twitter-x"></i>
+                                <i class="bi bi-twitter"></i>
 
                             </a>
 
