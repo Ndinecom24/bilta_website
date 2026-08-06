@@ -37,6 +37,10 @@ use App\Http\Livewire\Admin\LeavePage\MyLeaveApplications;
 use App\Http\Livewire\Admin\LeavePage\ShowLeaveBalances;
 use App\Http\Livewire\Admin\LeavePage\ShowApprovalWorkflows;
 use App\Http\Livewire\Admin\ShowTrainingCenter;
+use App\Http\Livewire\Admin\AnnouncementsPage\ShowAnnouncements;
+use App\Http\Livewire\Admin\AnnouncementsPage\EmployeeAnnouncements;
+use App\Http\Livewire\Admin\DocumentsPage\ShowDocuments;
+use App\Http\Livewire\Admin\DocumentsPage\EmployeeDocuments;
 
 
 use App\Http\Livewire\Site\Company\ShowAbout;
@@ -161,5 +165,17 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
 
         // Training Center — accessible to all authenticated users
         Route::get('/training', ShowTrainingCenter::class)->name('admin.training');
+
+        // Announcements & Memos — admin management
+        Route::get('/announcements', ShowAnnouncements::class)->middleware('permission:manage-announcements')->name('admin.announcements');
+
+        // Document Repository — admin management
+        Route::get('/documents', ShowDocuments::class)->middleware('permission:manage-documents')->name('admin.documents');
+
+        // Employee: Announcements (read-only)
+        Route::get('/my-announcements', EmployeeAnnouncements::class)->name('employee.announcements');
+
+        // Employee: Document Repository (read-only browse/download)
+        Route::get('/my-documents', EmployeeDocuments::class)->name('employee.documents');
     });
 });

@@ -724,6 +724,49 @@
     </li>
     @endcan
 
+    <!-- INTERNAL COMMUNICATIONS -->
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
+        Internal
+    </div>
+
+    <!-- Announcements (Employee view - all authenticated users) -->
+    <li class="nav-item {{ request()->routeIs('employee.announcements') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('employee.announcements') }}">
+            <i class="fas fa-fw fa-bullhorn"></i>
+            <span>Announcements</span>
+        </a>
+    </li>
+
+    <!-- Documents (Employee view - all authenticated users) -->
+    <li class="nav-item {{ request()->routeIs('employee.documents') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('employee.documents') }}">
+            <i class="fas fa-fw fa-folder-open"></i>
+            <span>Documents</span>
+        </a>
+    </li>
+
+    <!-- Announcements Admin -->
+    @can('manage-announcements')
+    <li class="nav-item {{ request()->routeIs('admin.announcements') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.announcements') }}">
+            <i class="fas fa-fw fa-megaphone"></i>
+            <span>Manage Announcements</span>
+        </a>
+    </li>
+    @endcan
+
+    <!-- Documents Admin -->
+    @can('manage-documents')
+    <li class="nav-item {{ request()->routeIs('admin.documents') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.documents') }}">
+            <i class="fas fa-fw fa-archive"></i>
+            <span>Manage Documents</span>
+        </a>
+    </li>
+    @endcan
+
     <!-- LEAVE MANAGEMENT -->
     @canany(['apply-leave', 'manage-leave-types', 'manage-leave-applications', 'manage-leave-balances', 'manage-approval-workflows'])
     <hr class="sidebar-divider">

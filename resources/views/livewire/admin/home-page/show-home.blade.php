@@ -150,6 +150,13 @@
         @endforeach
     </div>
 
+    {{-- Announcements Dashboard Widget --}}
+    <div class="row mb-2">
+        <div class="col-lg-12">
+            @livewire('admin.announcements-page.announcement-widget')
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-lg-8 mb-3">
             <div class="dashboard-chart-card">
