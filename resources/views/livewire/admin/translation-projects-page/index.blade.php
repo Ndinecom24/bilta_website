@@ -100,16 +100,10 @@
                                 @error('display_order') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
-                            <div class="col-lg-6 col-md-12 mb-3">
+                            <div class="col-lg-8 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="projectLocation">Location</label>
                                 <input id="projectLocation" type="text" class="form-control" wire:model.defer="location" placeholder="Project location">
                                 @error('location') <span class="text-danger d-block">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div class="col-lg-6 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="projectMap">Location Map URL</label>
-                                <input id="projectMap" type="text" class="form-control" wire:model.defer="location_map" placeholder="Map or embed URL">
-                                @error('location_map') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
                             {{-- Project Locations Section --}}

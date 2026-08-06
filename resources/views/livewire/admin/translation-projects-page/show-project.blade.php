@@ -87,7 +87,6 @@
                     <p><strong>Post Date:</strong> {{ $project->post_date }}</p>
                     <p><strong>Category:</strong> {{ optional($categories->firstWhere('id', $project->category_id))->name ?? '-' }}</p>
                     <p><strong>Location:</strong> {{ $project->location }}</p>
-                    <p><strong>Location Map:</strong> {{ $project->location_map }}</p>
 
                     {{-- Project Locations (multi-location) --}}
                     @if($project->locations && $project->locations->count() > 0)
@@ -197,12 +196,6 @@
                                     <label class="font-weight-bold" for="projectLocation">Location</label>
                                     <input id="projectLocation" type="text" class="form-control" wire:model.defer="location" placeholder="Enter location">
                                     @error('location') <span class="text-danger d-block">{{ $message }}</span> @enderror
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="font-weight-bold" for="projectLocationMap">Location Map</label>
-                                    <input id="projectLocationMap" type="text" class="form-control" wire:model.defer="location_map" placeholder="Enter map URL or text">
-                                    @error('location_map') <span class="text-danger d-block">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="col-md-4 mb-3">

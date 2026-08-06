@@ -32,7 +32,7 @@ class DetailTranslationProjects extends Component
         'category_id' => 'required',
         'display_order' => 'nullable|integer|min:0',
         'location' => 'required',
-        'location_map' => 'required',
+        'location_map' => 'nullable',
         'title_image' => 'nullable|max:3072',
         'project_image.*' => 'nullable|max:3072',
         'project_file.*' => 'nullable|max:3072',
