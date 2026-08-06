@@ -356,19 +356,49 @@
         });
 
         // Load content into Trix editor (for edit mode and reset)
+        // We store the pending content and apply it after Livewire finishes DOM updates
+        var pendingTrixContent = null;
+
         window.addEventListener('load-trix-content', function (event) {
             var fieldId = event.detail.field || 'projectDetails';
             var content = event.detail.content || '';
+            pendingTrixContent = { field: fieldId, content: content };
 
-            function loadContent() {
+            // Try immediately (works for reset/cancel where DOM doesn't change much)
+            applyTrixContent();
+        });
+
+        function applyTrixContent() {
+            if (!pendingTrixContent) return;
+
+            var fieldId = pendingTrixContent.field;
+            var content = pendingTrixContent.content;
+            var attempts = 0;
+            var maxAttempts = 20;
+
+            function tryLoad() {
                 var editor = document.querySelector('trix-editor[input="' + fieldId + '"]');
                 if (editor && editor.editor) {
                     editor.editor.loadHTML(content);
-                } else {
-                    setTimeout(loadContent, 100);
+                    pendingTrixContent = null;
+                } else if (attempts < maxAttempts) {
+                    attempts++;
+                    setTimeout(tryLoad, 100);
                 }
             }
-            setTimeout(loadContent, 50);
+            tryLoad();
+        }
+
+        // After Livewire processes a message and updates the DOM, apply pending content
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.Livewire) {
+                Livewire.hook('message.processed', function() {
+                    if (pendingTrixContent) {
+                        // Give the DOM a moment to fully settle after morph
+                        setTimeout(applyTrixContent, 150);
+                    }
+                });
+            }
         });
 
         function deleteOurProjectsItem(id) {
