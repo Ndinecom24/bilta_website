@@ -2,22 +2,60 @@
 
 namespace App\Http\Livewire\Admin\DocumentsPage;
 
+use App\Models\Bilta\Department;
 use App\Models\Bilta\Document;
 use App\Models\Bilta\DocumentFolder;
+use App\Models\Bilta\DocumentFolderAccess;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class EmployeeDocuments extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
+    // Navigation
     public $currentFolderId = null;
     public $currentFolder = null;
     public $breadcrumbs = [];
+
+    // Folder form
+    public $showFolderForm = false;
+    public $editingFolderId = null;
+    public $folderName = '';
+    public $folderDescription = '';
+    public $folderVisibility = 'everyone';
+
+    // File upload
+    public $uploadFiles = [];
+    public $fileDescription = '';
+    public $showUploadForm = false;
+
+    // Rename
+    public $renamingDocumentId = null;
+    public $newDocumentName = '';
+
+    // Sharing modal
+    public $showShareModal = false;
+    public $sharingFolderId = null;
+    public $sharingFolder = null;
+    public $shareTargetType = 'department'; // 'department' or 'user'
+    public $shareTargetId = '';
+    public $sharePermission = 'view';
+
+    // Search & Sort
     public $search = '';
     public $sortBy = 'name';
     public $sortDir = 'asc';
+
+    protected $listeners = [
+        'deleteFolder' => 'destroyFolder',
+        'deleteDocument' => 'destroyDocument',
+    ];
 
     public function mount($folderId = null)
     {
@@ -28,12 +66,22 @@ class EmployeeDocuments extends Component
 
     public function render()
     {
-        $folders = DocumentFolder::where('parent_id', $this->currentFolderId)
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
+        $user = auth()->user();
+        $isAdmin = $user->can('manage-documents');
 
-        $documentsQuery = Document::query();
+        // Build folder query with access control
+        $foldersQuery = DocumentFolder::where('parent_id', $this->currentFolderId)
+            ->orderBy('sort_order')
+            ->orderBy('name');
+
+        if (!$isAdmin) {
+            $foldersQuery->accessibleBy($user);
+        }
+
+        $folders = $foldersQuery->get();
+
+        // Documents query
+        $documentsQuery = Document::with(['uploader', 'folder']);
 
         if ($this->currentFolderId) {
             $documentsQuery->where('folder_id', $this->currentFolderId);
@@ -42,30 +90,78 @@ class EmployeeDocuments extends Component
         }
 
         if ($this->search) {
-            $folders = DocumentFolder::where('name', 'like', '%' . $this->search . '%')->get();
-            $documentsQuery = Document::where('name', 'like', '%' . $this->search . '%')
-                ->orWhere('original_name', 'like', '%' . $this->search . '%')
-                ->orWhere('description', 'like', '%' . $this->search . '%');
+            // Global search with access control
+            $foldersQuery = DocumentFolder::where('name', 'like', '%' . $this->search . '%');
+            if (!$isAdmin) {
+                $foldersQuery->accessibleBy($user);
+            }
+            $folders = $foldersQuery->get();
+
+            $documentsQuery = Document::with(['uploader', 'folder'])
+                ->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('original_name', 'like', '%' . $this->search . '%')
+                      ->orWhere('description', 'like', '%' . $this->search . '%');
+                });
+
+            // Filter documents by accessible folders for non-admins
+            if (!$isAdmin) {
+                $accessibleFolderIds = DocumentFolder::accessibleBy($user)->pluck('id');
+                $documentsQuery->where(function ($q) use ($accessibleFolderIds, $user) {
+                    $q->whereIn('folder_id', $accessibleFolderIds)
+                      ->orWhere('uploaded_by', $user->id);
+                });
+            }
         }
 
         $documents = $documentsQuery
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(25);
 
-        $folderTree = DocumentFolder::roots()
+        // Folder tree with access control
+        $folderTreeQuery = DocumentFolder::roots()
             ->with('allChildren')
             ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
+            ->orderBy('name');
 
-        return view('livewire.admin.documents-page.employee-browse', compact('folders', 'documents', 'folderTree'));
+        if (!$isAdmin) {
+            $folderTreeQuery->accessibleBy($user);
+        }
+
+        $folderTree = $folderTreeQuery->get();
+
+        // Get current folder permission for UI
+        $folderPermission = null;
+        if ($this->currentFolder) {
+            $folderPermission = $this->currentFolder->getPermissionFor($user);
+        }
+
+        // Data for share modal
+        $departments = Department::orderBy('name')->get();
+        $users = User::where('id', '!=', $user->id)->orderBy('first_name')->get();
+
+        return view('livewire.admin.documents-page.employee-browse', compact(
+            'folders', 'documents', 'folderTree', 'folderPermission',
+            'departments', 'users', 'isAdmin'
+        ));
     }
+
+    // ─── Folder Navigation ───────────────────────────────────────
 
     public function navigateToFolder($folderId)
     {
+        $folder = DocumentFolder::find($folderId);
+        if (!$folder) return;
+
+        // Access check
+        if (!$folder->isAccessibleBy(auth()->user())) {
+            session()->flash('error', 'You do not have access to this folder.');
+            return;
+        }
+
         $this->currentFolderId = $folderId;
-        $this->currentFolder = $folderId ? DocumentFolder::find($folderId) : null;
-        $this->breadcrumbs = $this->currentFolder ? $this->currentFolder->breadcrumb->toArray() : [];
+        $this->currentFolder = $folder;
+        $this->breadcrumbs = $folder->breadcrumb->toArray();
         $this->search = '';
         $this->resetPage();
     }
@@ -79,11 +175,319 @@ class EmployeeDocuments extends Component
         $this->resetPage();
     }
 
+    // ─── Folder CRUD ─────────────────────────────────────────────
+
+    public function toggleFolderForm()
+    {
+        $this->showFolderForm = !$this->showFolderForm;
+        if (!$this->showFolderForm) {
+            $this->resetFolderForm();
+        }
+    }
+
+    public function createFolder()
+    {
+        $this->validate([
+            'folderName' => 'required|string|max:255',
+            'folderDescription' => 'nullable|string|max:500',
+            'folderVisibility' => 'required|in:everyone,department,private',
+        ]);
+
+        $folder = DocumentFolder::create([
+            'name' => $this->folderName,
+            'slug' => Str::slug($this->folderName),
+            'parent_id' => $this->currentFolderId,
+            'description' => $this->folderDescription,
+            'visibility' => $this->folderVisibility,
+            'created_by' => auth()->id(),
+        ]);
+
+        // If department visibility and user has a department, auto-add their department
+        if ($this->folderVisibility === 'department' && auth()->user()->department_id) {
+            DocumentFolderAccess::create([
+                'folder_id' => $folder->id,
+                'target_type' => 'department',
+                'target_id' => auth()->user()->department_id,
+                'permission' => 'edit',
+                'granted_by' => auth()->id(),
+            ]);
+        }
+
+        session()->flash('success', 'Folder created successfully.');
+        $this->resetFolderForm();
+        $this->showFolderForm = false;
+    }
+
+    public function editFolder($id)
+    {
+        $folder = DocumentFolder::findOrFail($id);
+
+        if (!$folder->canManage(auth()->user())) {
+            session()->flash('error', 'You do not have permission to edit this folder.');
+            return;
+        }
+
+        $this->editingFolderId = $folder->id;
+        $this->folderName = $folder->name;
+        $this->folderDescription = $folder->description;
+        $this->folderVisibility = $folder->visibility;
+        $this->showFolderForm = true;
+    }
+
+    public function updateFolder()
+    {
+        $this->validate([
+            'folderName' => 'required|string|max:255',
+            'folderDescription' => 'nullable|string|max:500',
+            'folderVisibility' => 'required|in:everyone,department,private',
+        ]);
+
+        $folder = DocumentFolder::findOrFail($this->editingFolderId);
+
+        if (!$folder->canManage(auth()->user())) {
+            session()->flash('error', 'You do not have permission to edit this folder.');
+            return;
+        }
+
+        $folder->update([
+            'name' => $this->folderName,
+            'slug' => Str::slug($this->folderName),
+            'description' => $this->folderDescription,
+            'visibility' => $this->folderVisibility,
+        ]);
+
+        session()->flash('success', 'Folder updated.');
+        $this->resetFolderForm();
+        $this->showFolderForm = false;
+    }
+
+    public function destroyFolder($id)
+    {
+        try {
+            $folder = DocumentFolder::findOrFail($id);
+
+            if (!$folder->canManage(auth()->user())) {
+                session()->flash('error', 'You do not have permission to delete this folder.');
+                return;
+            }
+
+            // Delete all documents inside
+            foreach ($folder->documents as $doc) {
+                Storage::disk('public')->delete($doc->file_path);
+                $doc->delete();
+            }
+
+            // Delete access entries
+            $folder->accessEntries()->delete();
+            $folder->delete();
+
+            session()->flash('success', 'Folder deleted.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error deleting folder: ' . $e->getMessage());
+        }
+    }
+
+    // ─── File Upload ─────────────────────────────────────────────
+
+    public function toggleUploadForm()
+    {
+        $this->showUploadForm = !$this->showUploadForm;
+        if (!$this->showUploadForm) {
+            $this->uploadFiles = [];
+            $this->fileDescription = '';
+        }
+    }
+
+    public function uploadDocuments()
+    {
+        $this->validate([
+            'uploadFiles' => 'required|array|min:1',
+            'uploadFiles.*' => 'file|max:51200',
+            'fileDescription' => 'nullable|string|max:500',
+        ]);
+
+        if (!$this->currentFolderId) {
+            session()->flash('error', 'Please navigate to a folder before uploading.');
+            return;
+        }
+
+        $folder = DocumentFolder::find($this->currentFolderId);
+        if (!$folder || !$folder->canEdit(auth()->user())) {
+            session()->flash('error', 'You do not have permission to upload to this folder.');
+            return;
+        }
+
+        try {
+            foreach ($this->uploadFiles as $file) {
+                $originalName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $storedPath = $file->store('documents', 'public');
+
+                Document::create([
+                    'name' => pathinfo($originalName, PATHINFO_FILENAME),
+                    'original_name' => $originalName,
+                    'file_path' => $storedPath,
+                    'mime_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize(),
+                    'extension' => strtolower($extension),
+                    'description' => $this->fileDescription,
+                    'folder_id' => $this->currentFolderId,
+                    'uploaded_by' => auth()->id(),
+                ]);
+            }
+
+            session()->flash('success', count($this->uploadFiles) . ' file(s) uploaded successfully.');
+            $this->uploadFiles = [];
+            $this->fileDescription = '';
+            $this->showUploadForm = false;
+        } catch (\Exception $e) {
+            session()->flash('error', 'Upload error: ' . $e->getMessage());
+        }
+    }
+
+    // ─── File Management ─────────────────────────────────────────
+
+    public function startRename($docId)
+    {
+        $doc = Document::findOrFail($docId);
+        if (!$doc->canEdit(auth()->user())) {
+            session()->flash('error', 'You do not have permission to rename this file.');
+            return;
+        }
+        $this->renamingDocumentId = $docId;
+        $this->newDocumentName = $doc->name;
+    }
+
+    public function saveRename()
+    {
+        $this->validate(['newDocumentName' => 'required|string|max:255']);
+
+        $doc = Document::findOrFail($this->renamingDocumentId);
+        if (!$doc->canEdit(auth()->user())) {
+            session()->flash('error', 'You do not have permission to rename this file.');
+            return;
+        }
+
+        $doc->update(['name' => $this->newDocumentName]);
+        $this->renamingDocumentId = null;
+        $this->newDocumentName = '';
+        session()->flash('success', 'File renamed.');
+    }
+
+    public function cancelRename()
+    {
+        $this->renamingDocumentId = null;
+        $this->newDocumentName = '';
+    }
+
+    public function destroyDocument($id)
+    {
+        try {
+            $doc = Document::findOrFail($id);
+
+            if (!$doc->canManage(auth()->user())) {
+                session()->flash('error', 'You do not have permission to delete this file.');
+                return;
+            }
+
+            Storage::disk('public')->delete($doc->file_path);
+            $doc->shares()->delete();
+            $doc->delete();
+            session()->flash('success', 'File deleted.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error deleting file.');
+        }
+    }
+
     public function downloadDocument($id)
     {
         $doc = Document::findOrFail($id);
+
+        if (!$doc->isAccessibleBy(auth()->user())) {
+            session()->flash('error', 'You do not have access to this file.');
+            return;
+        }
+
         return Storage::disk('public')->download($doc->file_path, $doc->original_name);
     }
+
+    // ─── Sharing ─────────────────────────────────────────────────
+
+    public function openShareModal($folderId)
+    {
+        $folder = DocumentFolder::findOrFail($folderId);
+
+        if (!$folder->canManage(auth()->user())) {
+            session()->flash('error', 'You do not have permission to manage sharing for this folder.');
+            return;
+        }
+
+        $this->sharingFolderId = $folderId;
+        $this->sharingFolder = $folder;
+        $this->shareTargetType = 'department';
+        $this->shareTargetId = '';
+        $this->sharePermission = 'view';
+        $this->showShareModal = true;
+    }
+
+    public function closeShareModal()
+    {
+        $this->showShareModal = false;
+        $this->sharingFolderId = null;
+        $this->sharingFolder = null;
+    }
+
+    public function addShareEntry()
+    {
+        $this->validate([
+            'shareTargetType' => 'required|in:department,user',
+            'shareTargetId' => 'required|integer',
+            'sharePermission' => 'required|in:view,edit,manage',
+        ]);
+
+        $folder = DocumentFolder::findOrFail($this->sharingFolderId);
+
+        if (!$folder->canManage(auth()->user())) {
+            session()->flash('error', 'Permission denied.');
+            return;
+        }
+
+        // Remove existing entry for same target
+        DocumentFolderAccess::where('folder_id', $folder->id)
+            ->where('target_type', $this->shareTargetType)
+            ->where('target_id', $this->shareTargetId)
+            ->delete();
+
+        DocumentFolderAccess::create([
+            'folder_id' => $folder->id,
+            'target_type' => $this->shareTargetType,
+            'target_id' => $this->shareTargetId,
+            'permission' => $this->sharePermission,
+            'granted_by' => auth()->id(),
+        ]);
+
+        // Refresh folder data
+        $this->sharingFolder = $folder->fresh();
+        $this->shareTargetId = '';
+
+        session()->flash('shareSuccess', 'Access granted successfully.');
+    }
+
+    public function removeShareEntry($entryId)
+    {
+        $entry = DocumentFolderAccess::findOrFail($entryId);
+
+        if (!$entry->folder->canManage(auth()->user())) {
+            session()->flash('error', 'Permission denied.');
+            return;
+        }
+
+        $entry->delete();
+        $this->sharingFolder = DocumentFolder::find($this->sharingFolderId);
+        session()->flash('shareSuccess', 'Access removed.');
+    }
+
+    // ─── Sorting ─────────────────────────────────────────────────
 
     public function sortByColumn($column)
     {
@@ -93,5 +497,15 @@ class EmployeeDocuments extends Component
             $this->sortBy = $column;
             $this->sortDir = 'asc';
         }
+    }
+
+    // ─── Helpers ─────────────────────────────────────────────────
+
+    private function resetFolderForm()
+    {
+        $this->editingFolderId = null;
+        $this->folderName = '';
+        $this->folderDescription = '';
+        $this->folderVisibility = 'everyone';
     }
 }

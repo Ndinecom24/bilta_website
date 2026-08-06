@@ -6,7 +6,7 @@
             <h1 class="h3 mb-1 text-gray-800 font-weight-bold">
                 <i class="fas fa-folder-open text-primary mr-2"></i>Document Repository
             </h1>
-            <p class="mb-0 text-muted small">Organize and manage company documents in a hierarchical folder structure.</p>
+            <p class="mb-0 text-muted small">Manage all company documents. As admin, you have full access to every folder and file.</p>
         </div>
     </div>
 
@@ -67,6 +67,20 @@
                 </ol>
             </nav>
 
+            {{-- Current folder info --}}
+            @if ($currentFolder)
+                <div class="d-flex align-items-center mb-3 px-2">
+                    <i class="{{ $currentFolder->visibility_icon }} mr-2"></i>
+                    <small class="text-muted">
+                        {{ $currentFolder->visibility_label }}
+                        @if ($currentFolder->creator)
+                            &bull; Created by {{ $currentFolder->creator->first_name ?? 'Unknown' }}
+                        @endif
+                        &bull; {{ $currentFolder->accessEntries()->count() }} access entries
+                    </small>
+                </div>
+            @endif
+
             {{-- Search --}}
             <div class="mb-3">
                 <div class="input-group" style="border-radius: 10px; overflow: hidden;">
@@ -97,14 +111,22 @@
                             <i class="fas fa-folder mr-1"></i> {{ $editingFolderId ? 'Edit Folder' : 'Create Folder' }}
                         </h6>
                         <div class="row">
-                            <div class="col-md-5 mb-2">
+                            <div class="col-md-3 mb-2">
                                 <input type="text" class="form-control form-control-sm" style="border-radius: 8px;" wire:model.defer="folderName" placeholder="Folder name">
                                 @error('folderName') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
-                            <div class="col-md-5 mb-2">
+                            <div class="col-md-3 mb-2">
                                 <input type="text" class="form-control form-control-sm" style="border-radius: 8px;" wire:model.defer="folderDescription" placeholder="Description (optional)">
                             </div>
-                            <div class="col-md-2 mb-2">
+                            <div class="col-md-3 mb-2">
+                                <select class="form-control form-control-sm" style="border-radius: 8px;" wire:model.defer="folderVisibility">
+                                    <option value="everyone">Company-wide</option>
+                                    <option value="department">Departments Only</option>
+                                    <option value="private">Private</option>
+                                </select>
+                                <small class="text-muted">Who can see this folder</small>
+                            </div>
+                            <div class="col-md-3 mb-2">
                                 <button wire:click="{{ $editingFolderId ? 'updateFolder' : 'createFolder' }}" class="btn btn-sm btn-primary w-100" style="border-radius: 8px;">
                                     {{ $editingFolderId ? 'Update' : 'Create' }}
                                 </button>
@@ -159,13 +181,19 @@
                                  onmouseover="this.style.transform='translateY(-3px)'"
                                  onmouseout="this.style.transform='translateY(0)'">
                                 <div class="card-body py-3 px-2">
-                                    <i class="fas fa-folder text-warning mb-2" style="font-size: 2rem;"></i>
+                                    <div class="position-relative d-inline-block">
+                                        <i class="fas fa-folder text-warning mb-2" style="font-size: 2rem;"></i>
+                                        <i class="{{ $folder->visibility_icon }} position-absolute" style="font-size: .6rem; top: -2px; right: -10px;"></i>
+                                    </div>
                                     <p class="mb-0 small font-weight-bold text-gray-700 text-truncate">{{ $folder->name }}</p>
                                     <small class="text-muted">{{ $folder->documents()->count() }} files</small>
                                 </div>
                                 <div class="card-footer bg-transparent border-0 p-1">
                                     <button wire:click.stop="editFolder({{ $folder->id }})" class="btn btn-sm btn-link text-primary p-1" title="Edit">
                                         <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button wire:click.stop="openShareModal({{ $folder->id }})" class="btn btn-sm btn-link text-info p-1" title="Share / Access">
+                                        <i class="fas fa-share-alt"></i>
                                     </button>
                                     <button onclick="event.stopPropagation(); deleteFolder({{ $folder->id }})" class="btn btn-sm btn-link text-danger p-1" title="Delete">
                                         <i class="fas fa-trash-alt"></i>
@@ -219,6 +247,9 @@
                                     <th class="border-0" style="width: 80px;">
                                         <small class="text-uppercase font-weight-bold text-muted">Type</small>
                                     </th>
+                                    <th class="border-0" style="width: 100px;">
+                                        <small class="text-uppercase font-weight-bold text-muted">Uploaded By</small>
+                                    </th>
                                     <th class="border-0" style="width: 110px;" wire:click="sortByColumn('created_at')" style="cursor: pointer;">
                                         <small class="text-uppercase font-weight-bold text-muted">Uploaded</small>
                                     </th>
@@ -245,6 +276,7 @@
                                         </td>
                                         <td><small class="text-muted">{{ $doc->formatted_size }}</small></td>
                                         <td><span class="badge badge-light border px-2" style="border-radius: 4px; font-size: .7rem;">{{ strtoupper($doc->extension) }}</span></td>
+                                        <td><small class="text-muted">{{ $doc->uploader->first_name ?? 'Unknown' }}</small></td>
                                         <td><small class="text-muted">{{ $doc->created_at->format('d M Y') }}</small></td>
                                         <td class="text-right pr-3">
                                             <div class="d-flex justify-content-end" style="gap: 4px;">
@@ -262,7 +294,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center py-4">
+                                        <td colspan="7" class="text-center py-4">
                                             <i class="fas fa-file text-muted mb-2" style="font-size: 2rem; opacity: .3;"></i>
                                             <p class="text-muted mb-0 small">No files in this folder</p>
                                         </td>
@@ -284,6 +316,138 @@
             @endif
         </div>
     </div>
+
+    {{-- SHARE MODAL --}}
+    @if ($showShareModal && $sharingFolder)
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,.5);">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow" style="border-radius: 14px;">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title font-weight-bold">
+                            <i class="fas fa-share-alt text-primary mr-2"></i>Manage Access: {{ $sharingFolder->name }}
+                        </h5>
+                        <button type="button" class="close" wire:click="closeShareModal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        {{-- Current visibility --}}
+                        <div class="alert alert-light border mb-3">
+                            <i class="{{ $sharingFolder->visibility_icon }} mr-1"></i>
+                            <strong>Visibility:</strong> {{ $sharingFolder->visibility_label }}
+                            &bull; <strong>Owner:</strong> {{ $sharingFolder->creator->first_name ?? 'System' }}
+                        </div>
+
+                        @if (session()->has('shareSuccess'))
+                            <div class="alert alert-success py-2 mb-3">
+                                <i class="fas fa-check-circle mr-1"></i> {{ session('shareSuccess') }}
+                            </div>
+                        @endif
+
+                        {{-- Add share form --}}
+                        <div class="card border mb-3" style="border-radius: 10px;">
+                            <div class="card-body p-3">
+                                <h6 class="font-weight-bold text-gray-700 mb-3"><i class="fas fa-plus-circle mr-1"></i> Grant Access</h6>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <select class="form-control form-control-sm" wire:model="shareTargetType" style="border-radius: 8px;">
+                                            <option value="department">Department</option>
+                                            <option value="user">Individual</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        @if ($shareTargetType === 'department')
+                                            <select class="form-control form-control-sm" wire:model.defer="shareTargetId" style="border-radius: 8px;">
+                                                <option value="">Select department...</option>
+                                                @foreach ($departments as $dept)
+                                                    <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            <select class="form-control form-control-sm" wire:model.defer="shareTargetId" style="border-radius: 8px;">
+                                                <option value="">Select user...</option>
+                                                @foreach ($users as $u)
+                                                    <option value="{{ $u->id }}">{{ $u->first_name }} {{ $u->last_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        @endif
+                                        @error('shareTargetId') <small class="text-danger">{{ $message }}</small> @enderror
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <select class="form-control form-control-sm" wire:model.defer="sharePermission" style="border-radius: 8px;">
+                                            <option value="view">View Only</option>
+                                            <option value="edit">Can Edit</option>
+                                            <option value="manage">Full Control</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <button wire:click="addShareEntry" class="btn btn-sm btn-primary w-100" style="border-radius: 8px;">
+                                            <i class="fas fa-plus mr-1"></i> Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Current shares --}}
+                        <h6 class="font-weight-bold text-gray-700 mb-2"><i class="fas fa-users mr-1"></i> Current Access List</h6>
+                        @php
+                            $entries = $sharingFolder->accessEntries ?? collect();
+                        @endphp
+                        @if ($entries->count())
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered mb-0" style="border-radius: 8px; overflow: hidden;">
+                                    <thead style="background: #f8f9fc;">
+                                        <tr>
+                                            <th class="border-0"><small class="text-uppercase text-muted font-weight-bold">Type</small></th>
+                                            <th class="border-0"><small class="text-uppercase text-muted font-weight-bold">Name</small></th>
+                                            <th class="border-0"><small class="text-uppercase text-muted font-weight-bold">Permission</small></th>
+                                            <th class="border-0 text-right"><small class="text-uppercase text-muted font-weight-bold">Action</small></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($entries as $entry)
+                                            <tr>
+                                                <td>
+                                                    @if ($entry->target_type === 'department')
+                                                        <i class="fas fa-building text-info mr-1"></i> Department
+                                                    @else
+                                                        <i class="fas fa-user text-primary mr-1"></i> User
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($entry->target_type === 'department')
+                                                        {{ \App\Models\Bilta\Department::find($entry->target_id)->name ?? 'Unknown' }}
+                                                    @else
+                                                        @php $targetUser = \App\Models\User::find($entry->target_id); @endphp
+                                                        {{ $targetUser ? ($targetUser->first_name . ' ' . $targetUser->last_name) : 'Unknown' }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="badge {{ $entry->permission_badge }}">{{ $entry->permission_label }}</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <button wire:click="removeShareEntry({{ $entry->id }})" class="btn btn-sm btn-outline-danger px-2">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-center py-3 text-muted">
+                                <i class="fas fa-user-lock mb-2" style="font-size: 1.5rem; opacity: .4;"></i>
+                                <p class="mb-0 small">No specific access entries configured.</p>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary rounded-pill px-4" wire:click="closeShareModal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     {{-- SCRIPTS --}}
     <script>

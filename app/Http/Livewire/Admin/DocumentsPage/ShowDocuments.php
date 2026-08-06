@@ -2,8 +2,11 @@
 
 namespace App\Http\Livewire\Admin\DocumentsPage;
 
+use App\Models\Bilta\Department;
 use App\Models\Bilta\Document;
 use App\Models\Bilta\DocumentFolder;
+use App\Models\Bilta\DocumentFolderAccess;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -25,6 +28,7 @@ class ShowDocuments extends Component
     public $editingFolderId = null;
     public $folderName = '';
     public $folderDescription = '';
+    public $folderVisibility = 'everyone';
 
     // File upload
     public $uploadFiles = [];
@@ -34,6 +38,14 @@ class ShowDocuments extends Component
     // Rename
     public $renamingDocumentId = null;
     public $newDocumentName = '';
+
+    // Sharing modal
+    public $showShareModal = false;
+    public $sharingFolderId = null;
+    public $sharingFolder = null;
+    public $shareTargetType = 'department';
+    public $shareTargetId = '';
+    public $sharePermission = 'view';
 
     // Search
     public $search = '';
@@ -61,19 +73,18 @@ class ShowDocuments extends Component
             ->orderBy('name')
             ->get();
 
-        $documentsQuery = Document::query();
+        $documentsQuery = Document::with('uploader');
 
         if ($this->currentFolderId) {
             $documentsQuery->where('folder_id', $this->currentFolderId);
         } else {
-            // Show nothing at root, only folders
             $documentsQuery->whereRaw('1 = 0');
         }
 
         if ($this->search) {
-            // Global search across all folders and documents
             $folders = DocumentFolder::where('name', 'like', '%' . $this->search . '%')->get();
-            $documentsQuery = Document::where('name', 'like', '%' . $this->search . '%')
+            $documentsQuery = Document::with('uploader')
+                ->where('name', 'like', '%' . $this->search . '%')
                 ->orWhere('original_name', 'like', '%' . $this->search . '%')
                 ->orWhere('description', 'like', '%' . $this->search . '%');
         }
@@ -88,7 +99,12 @@ class ShowDocuments extends Component
             ->orderBy('name')
             ->get();
 
-        return view('livewire.admin.documents-page.index', compact('folders', 'documents', 'folderTree'));
+        $departments = Department::orderBy('name')->get();
+        $users = User::orderBy('first_name')->get();
+
+        return view('livewire.admin.documents-page.index', compact(
+            'folders', 'documents', 'folderTree', 'departments', 'users'
+        ));
     }
 
     // ─── Folder Navigation ───────────────────────────────────────
@@ -126,6 +142,7 @@ class ShowDocuments extends Component
         $this->validate([
             'folderName' => 'required|string|max:255',
             'folderDescription' => 'nullable|string|max:500',
+            'folderVisibility' => 'required|in:everyone,department,private',
         ]);
 
         DocumentFolder::create([
@@ -133,6 +150,7 @@ class ShowDocuments extends Component
             'slug' => Str::slug($this->folderName),
             'parent_id' => $this->currentFolderId,
             'description' => $this->folderDescription,
+            'visibility' => $this->folderVisibility,
             'created_by' => auth()->id(),
         ]);
 
@@ -147,6 +165,7 @@ class ShowDocuments extends Component
         $this->editingFolderId = $folder->id;
         $this->folderName = $folder->name;
         $this->folderDescription = $folder->description;
+        $this->folderVisibility = $folder->visibility;
         $this->showFolderForm = true;
     }
 
@@ -155,6 +174,7 @@ class ShowDocuments extends Component
         $this->validate([
             'folderName' => 'required|string|max:255',
             'folderDescription' => 'nullable|string|max:500',
+            'folderVisibility' => 'required|in:everyone,department,private',
         ]);
 
         $folder = DocumentFolder::findOrFail($this->editingFolderId);
@@ -162,6 +182,7 @@ class ShowDocuments extends Component
             'name' => $this->folderName,
             'slug' => Str::slug($this->folderName),
             'description' => $this->folderDescription,
+            'visibility' => $this->folderVisibility,
         ]);
 
         session()->flash('success', 'Folder updated.');
@@ -174,12 +195,12 @@ class ShowDocuments extends Component
         try {
             $folder = DocumentFolder::findOrFail($id);
 
-            // Delete all documents inside
             foreach ($folder->documents as $doc) {
                 Storage::disk('public')->delete($doc->file_path);
                 $doc->delete();
             }
 
+            $folder->accessEntries()->delete();
             $folder->delete();
             session()->flash('success', 'Folder deleted.');
         } catch (\Exception $e) {
@@ -202,7 +223,7 @@ class ShowDocuments extends Component
     {
         $this->validate([
             'uploadFiles' => 'required|array|min:1',
-            'uploadFiles.*' => 'file|max:51200', // 50MB max per file
+            'uploadFiles.*' => 'file|max:51200',
             'fileDescription' => 'nullable|string|max:500',
         ]);
 
@@ -271,6 +292,7 @@ class ShowDocuments extends Component
         try {
             $doc = Document::findOrFail($id);
             Storage::disk('public')->delete($doc->file_path);
+            $doc->shares()->delete();
             $doc->delete();
             session()->flash('success', 'File deleted.');
         } catch (\Exception $e) {
@@ -282,6 +304,61 @@ class ShowDocuments extends Component
     {
         $doc = Document::findOrFail($id);
         return Storage::disk('public')->download($doc->file_path, $doc->original_name);
+    }
+
+    // ─── Sharing ─────────────────────────────────────────────────
+
+    public function openShareModal($folderId)
+    {
+        $this->sharingFolderId = $folderId;
+        $this->sharingFolder = DocumentFolder::with('accessEntries')->findOrFail($folderId);
+        $this->shareTargetType = 'department';
+        $this->shareTargetId = '';
+        $this->sharePermission = 'view';
+        $this->showShareModal = true;
+    }
+
+    public function closeShareModal()
+    {
+        $this->showShareModal = false;
+        $this->sharingFolderId = null;
+        $this->sharingFolder = null;
+    }
+
+    public function addShareEntry()
+    {
+        $this->validate([
+            'shareTargetType' => 'required|in:department,user',
+            'shareTargetId' => 'required|integer',
+            'sharePermission' => 'required|in:view,edit,manage',
+        ]);
+
+        $folder = DocumentFolder::findOrFail($this->sharingFolderId);
+
+        DocumentFolderAccess::where('folder_id', $folder->id)
+            ->where('target_type', $this->shareTargetType)
+            ->where('target_id', $this->shareTargetId)
+            ->delete();
+
+        DocumentFolderAccess::create([
+            'folder_id' => $folder->id,
+            'target_type' => $this->shareTargetType,
+            'target_id' => $this->shareTargetId,
+            'permission' => $this->sharePermission,
+            'granted_by' => auth()->id(),
+        ]);
+
+        $this->sharingFolder = $folder->fresh()->load('accessEntries');
+        $this->shareTargetId = '';
+
+        session()->flash('shareSuccess', 'Access granted successfully.');
+    }
+
+    public function removeShareEntry($entryId)
+    {
+        DocumentFolderAccess::findOrFail($entryId)->delete();
+        $this->sharingFolder = DocumentFolder::with('accessEntries')->find($this->sharingFolderId);
+        session()->flash('shareSuccess', 'Access removed.');
     }
 
     // ─── Sorting ─────────────────────────────────────────────────
@@ -303,5 +380,6 @@ class ShowDocuments extends Component
         $this->editingFolderId = null;
         $this->folderName = '';
         $this->folderDescription = '';
+        $this->folderVisibility = 'everyone';
     }
 }
