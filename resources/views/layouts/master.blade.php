@@ -1729,7 +1729,7 @@ BiLTA is dedicated to Bible translation, literacy development, scripture engagem
                             <li class="mobile-nav-cta d-lg-none">
                                 <button class="btn btn-outline-theme" data-bs-toggle="modal"
                                     data-bs-target="#sponsorModal">
-                                    Sponsor
+                                    Partner
                                 </button>
                             </li>
 
@@ -1750,7 +1750,7 @@ BiLTA is dedicated to Bible translation, literacy development, scripture engagem
                         <button class="btn btn-outline-theme header-cta-desktop" data-bs-toggle="modal"
                             data-bs-target="#sponsorModal">
 
-                            Sponsor
+                            Partner
 
                         </button>
 

@@ -762,7 +762,7 @@
                 <span class="section-tag">Partners</span>
 
                 <h2 class="section-title mt-3">
-                    Trusted Sponsors & Partners
+                    Our Trusted Partners
                 </h2>
 
             </div>

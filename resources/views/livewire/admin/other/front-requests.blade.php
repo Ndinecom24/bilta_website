@@ -2,7 +2,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
             <h1 class="h4 mb-1 text-dark">Front-end Requests</h1>
-            <p class="text-muted mb-0">Newsletter subscriptions, sponsor inquiries, and donation tracking summary.</p>
+            <p class="text-muted mb-0">Newsletter subscriptions, partner inquiries, and donation tracking summary.</p>
         </div>
     </div>
 
@@ -19,7 +19,7 @@
         <div class="col-md-4 mb-3">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <div class="text-muted text-uppercase small font-weight-bold mb-1">Sponsor Inquiries</div>
+                    <div class="text-muted text-uppercase small font-weight-bold mb-1">Partner Inquiries</div>
                     <div class="h3 mb-0">{{ $sponsorInquiryCount }}</div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
         <div class="col-lg-7 mb-3">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Sponsor Inquiries</h5>
+                    <h5 class="mb-0">Partner Inquiries</h5>
                     <span class="badge badge-light">{{ $sponsorInquiryCount }}</span>
                 </div>
                 <div class="card-body">
@@ -106,7 +106,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center text-muted">No sponsor inquiries yet.</td>
+                                        <td colspan="4" class="text-center text-muted">No partner inquiries yet.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

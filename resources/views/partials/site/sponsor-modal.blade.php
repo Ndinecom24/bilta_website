@@ -23,7 +23,7 @@
                     <div class="col-md-4">
                         <div class="sponsor-tier-card">
                             <div class="sponsor-tier-icon"><i class="bi bi-bookmark-star"></i></div>
-                            <h6>Translation Sponsor</h6>
+                            <h6>Translation Partner</h6>
                             <p>Fund Bible translation in a specific language project</p>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                         <div class="sponsor-tier-card featured">
                             <div class="sponsor-tier-badge">Most Popular</div>
                             <div class="sponsor-tier-icon"><i class="bi bi-journal-richtext"></i></div>
-                            <h6>Ministry Sponsor</h6>
+                            <h6>Ministry Partner</h6>
                             <p>Support translation, literacy and scripture engagement</p>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                             <div class="d-grid gap-2">
                                 <button type="button" class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#sponsorInquiryModal">
                                     <i class="bi bi-send-fill me-2"></i>
-                                    Send Sponsorship Inquiry
+                                    Send Partnership Inquiry
                                 </button>
                                 <button type="button" class="btn btn-outline-theme"
                                     onclick="window.location.href='{{ route('site.home') }}#contact';">
@@ -132,7 +132,7 @@
                         <i class="bi bi-send-fill" style="color: #fff; font-size: 1.15rem;"></i>
                     </div>
                     <div>
-                        <h5 class="modal-title mb-0" id="sponsorInquiryModalLabel" style="font-weight: 800; font-size: 1.15rem;">Sponsorship Inquiry</h5>
+                        <h5 class="modal-title mb-0" id="sponsorInquiryModalLabel" style="font-weight: 800; font-size: 1.15rem;">Partnership Inquiry</h5>
                         <p class="mb-0" style="font-size: .8rem; opacity: .75; color: #fff;">We'd love to hear from you</p>
                     </div>
                 </div>
@@ -196,13 +196,13 @@
                     {{-- Sponsorship interest selector --}}
                     <div class="mb-3">
                         <label class="form-label" style="font-weight: 700; font-size: .85rem; color: #334155; margin-bottom: 6px;">
-                            <i class="bi bi-bookmark-star-fill me-1" style="color: #94a3b8;"></i> Sponsorship Interest
+                            <i class="bi bi-bookmark-star-fill me-1" style="color: #94a3b8;"></i> Partnership Interest
                         </label>
                         <div class="d-flex flex-wrap gap-2">
                             @php
                                 $interests = [
-                                    ['value' => 'Translation Sponsor', 'icon' => 'bi-bookmark-star', 'color' => '#2563eb'],
-                                    ['value' => 'Ministry Sponsor', 'icon' => 'bi-journal-richtext', 'color' => '#cd5b13'],
+                                    ['value' => 'Translation Partner', 'icon' => 'bi-bookmark-star', 'color' => '#2563eb'],
+                                    ['value' => 'Ministry Partner', 'icon' => 'bi-journal-richtext', 'color' => '#cd5b13'],
                                     ['value' => 'Strategic Partner', 'icon' => 'bi-globe-americas', 'color' => '#059669'],
                                 ];
                             @endphp
@@ -228,7 +228,7 @@
                         </label>
                         <textarea id="sponsor_message" name="sponsor_message"
                             class="form-control @error('sponsor_message') is-invalid @enderror"
-                            rows="4" placeholder="Tell us about your sponsorship interest, your organisation, and how you'd like to partner with BiLTA..."
+                            rows="4" placeholder="Tell us about your partnership interest, your organisation, and how you'd like to partner with BiLTA..."
                             required
                             style="border-radius: 12px; border: 1.5px solid #e2e8f0; padding: 12px 16px; font-size: .92rem; resize: vertical; transition: all .2s ease;"
                             onfocus="this.style.borderColor='#cd5b13'; this.style.boxShadow='0 0 0 3px rgba(205,91,19,.1)';"

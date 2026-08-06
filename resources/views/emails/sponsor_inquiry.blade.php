@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Sponsorship Inquiry</title>
+    <title>New Partnership Inquiry</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,8 +84,8 @@
 <body>
     <div class="email-container">
         <div class="email-header">
-            <h2>New Sponsorship Inquiry</h2>
-            <p>A new sponsorship request was submitted from the website.</p>
+            <h2>New Partnership Inquiry</h2>
+            <p>A new partnership request was submitted from the website.</p>
         </div>
 
         <div class="email-body">
@@ -105,7 +105,7 @@
         </div>
 
         <div class="footer">
-            <p>This inquiry was sent via the BiLTA sponsorship inquiry form.</p>
+            <p>This inquiry was sent via the BiLTA partnership inquiry form.</p>
         </div>
     </div>
 </body>

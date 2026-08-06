@@ -87,12 +87,12 @@ class ShowOurSponsors extends Component
 
 
             // Set Flash Sponsor
-            session()->flash('success', 'Our Sponsor Created Successfully!');
+            session()->flash('success', 'Our Partner Created Successfully!');
             // Reset Form Fields After Creating OurSponsor
             $this->resetFields();
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Something went wrong while creating sponsor description: '. $e->getMessage() );
+            session()->flash('error', 'Something went wrong while creating partner description: '. $e->getMessage() );
             $this->resetFields();
         }
     }
@@ -144,10 +144,10 @@ class ShowOurSponsors extends Component
 
             }
 
-            session()->flash('success', 'Our Sponsor Updated Successfully!');
+            session()->flash('success', 'Our Partner Updated Successfully!');
             $this->cancel();
         } catch (\Exception $e) {
-            session()->flash('error', 'Something went wrong while updating sponsor description!' . $e->getMessage());
+            session()->flash('error', 'Something went wrong while updating partner description!' . $e->getMessage());
             $this->cancel();
         }
     }
@@ -156,9 +156,9 @@ class ShowOurSponsors extends Component
     {
         try {
             Sponsor::find($id)->delete();
-            session()->flash('success', "Our Sponsor Deleted Successfully!");
+            session()->flash('success', "Our Partner Deleted Successfully!");
         } catch (\Exception $e) {
-            session()->flash('error', "Something went wrong while deleting sponsor description!");
+            session()->flash('error', "Something went wrong while deleting partner description!");
         }
     }
 

@@ -577,7 +577,7 @@
 
                 @can('manage-sponsors')
                 <a class="collapse-item" href="{{ route('admin.page.our.sponsors') }}">
-                    Sponsors
+                    Partners
                 </a>
                 @endcan
 

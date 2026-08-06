@@ -1,6 +1,6 @@
 <div>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Our Sponsors</h1>
+        <h1 class="h3 mb-0 text-gray-800">Our Partners</h1>
     </div>
 
     <div class="row">
@@ -27,7 +27,7 @@
         <div class="col-md-12 mb-3">
             <div class="card shadow-sm">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">{{ $updateSponsor ? 'Edit Sponsor' : 'Add Sponsor' }}</h5>
+                    <h5 class="mb-0">{{ $updateSponsor ? 'Edit Partner' : 'Add Partner' }}</h5>
 
                     @if ($updateSponsor)
                         <button wire:click="cancel" type="button" class="btn btn-sm btn-outline-secondary">Create New</button>
@@ -39,7 +39,7 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="sponsorName">Name</label>
-                                <input id="sponsorName" type="text" class="form-control" wire:model.defer="name" placeholder="Enter sponsor name">
+                                <input id="sponsorName" type="text" class="form-control" wire:model.defer="name" placeholder="Enter partner name">
                                 @error('name') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
@@ -68,19 +68,19 @@
 
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="sponsorDescription">Description</label>
-                                <textarea id="sponsorDescription" rows="4" class="form-control" wire:model.defer="description" placeholder="Write a short sponsor profile"></textarea>
+                                <textarea id="sponsorDescription" rows="4" class="form-control" wire:model.defer="description" placeholder="Write a short partner profile"></textarea>
                                 @error('description') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
                             @if ($updateSponsor && $oursponsor && $oursponsor->getFirstMedia('sponsor_image'))
                                 <div class="col-lg-12 col-md-12 mb-3">
-                                    <p class="font-weight-bold mb-1">Current Sponsor Logo</p>
-                                    <img src="{{ $oursponsor->getFirstMedia('sponsor_image')->getUrl() }}" style="max-height: 80px;" alt="Sponsor logo">
+                                    <p class="font-weight-bold mb-1">Current Partner Logo</p>
+                                    <img src="{{ $oursponsor->getFirstMedia('sponsor_image')->getUrl() }}" style="max-height: 80px;" alt="Partner logo">
                                 </div>
                             @endif
 
                             <div class="col-lg-12 col-md-12 mb-3">
-                                <label class="font-weight-bold" for="sponsorImage">{{ $updateSponsor ? 'Replace Image (optional)' : 'Sponsor Image' }}</label>
+                                <label class="font-weight-bold" for="sponsorImage">{{ $updateSponsor ? 'Replace Image (optional)' : 'Partner Image' }}</label>
                                 <input id="sponsorImage" type="file" class="form-control" wire:model="{{ $updateSponsor ? 'sponsor_image_update' : 'sponsor_image' }}">
                                 @if ($updateSponsor)
                                     @error('sponsor_image_update') <span class="text-danger d-block">{{ $message }}</span> @enderror
@@ -91,7 +91,7 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
-                            <button type="submit" class="btn btn-primary">{{ $updateSponsor ? 'Update Sponsor' : 'Save Sponsor' }}</button>
+                            <button type="submit" class="btn btn-primary">{{ $updateSponsor ? 'Update Partner' : 'Save Partner' }}</button>
                             @if ($updateSponsor)
                                 <button wire:click.prevent="cancel" type="button" class="btn btn-outline-danger">Cancel Edit</button>
                             @endif
@@ -104,7 +104,7 @@
         <div class="col-md-12 mb-2">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">Sponsor Records</h5>
+                    <h5 class="mb-0">Partner Records</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -134,7 +134,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No sponsor records found.</td>
+                                        <td colspan="6" class="text-center">No partner records found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -151,7 +151,7 @@
 
     <script>
         function deleteOurSponsor(id) {
-            if (confirm("Are you sure to delete this sponsor?")) {
+            if (confirm("Are you sure to delete this partner?")) {
                 window.livewire.emit('deleteOurSponsor', id);
             }
         }

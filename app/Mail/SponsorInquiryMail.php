@@ -20,7 +20,7 @@ class SponsorInquiryMail extends Mailable
 
     public function build()
     {
-        return $this->subject('New Sponsorship Inquiry')
+        return $this->subject('New Partnership Inquiry')
             ->view('emails.sponsor_inquiry');
     }
 }

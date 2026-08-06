@@ -74,7 +74,7 @@ return [
         ['name' => 'Manage Services', 'slug' => 'manage-services'],
         ['name' => 'Manage Contact Us', 'slug' => 'manage-contact-us'],
         ['name' => 'Manage Chairman Message', 'slug' => 'manage-chairman-message'],
-        ['name' => 'Manage Sponsors', 'slug' => 'manage-sponsors'],
+        ['name' => 'Manage Partners', 'slug' => 'manage-sponsors'],
         ['name' => 'View Emails', 'slug' => 'view-emails'],
         ['name' => 'View Front Requests', 'slug' => 'view-front-requests'],
         ['name' => 'Manage Team', 'slug' => 'manage-team'],

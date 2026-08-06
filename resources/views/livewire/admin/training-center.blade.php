@@ -288,7 +288,7 @@
                         <tr><td>Services</td><td>Services offered by BiLTA</td><td>manage-services</td></tr>
                         <tr><td>Contact Us</td><td>Phone, email, address, social media links</td><td>manage-contact-us</td></tr>
                         <tr><td>Chairman Message</td><td>Chairman's message and photo</td><td>manage-chairman-message</td></tr>
-                        <tr><td>Sponsors</td><td>Sponsor logos and details</td><td>manage-sponsors</td></tr>
+                        <tr><td>Partners</td><td>Partner logos and details</td><td>manage-sponsors</td></tr>
                         <tr><td>Our Team</td><td>Leadership team profiles and photos</td><td>manage-team</td></tr>
                     </tbody>
                 </table>
