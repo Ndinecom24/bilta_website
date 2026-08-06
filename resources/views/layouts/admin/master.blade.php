@@ -21,9 +21,9 @@
     <link href="{{ asset('/admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/site-redesign.css') }}" rel="stylesheet">
 
-    <!-- Trix Editor -->
-    <link rel="stylesheet" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
-    <script src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+    <!-- Trix Editor (local) -->
+    <link rel="stylesheet" href="{{ asset('vendor/trix/trix.css') }}">
+    <script src="{{ asset('vendor/trix/trix.umd.min.js') }}"></script>
 
     <style>
         :root {
