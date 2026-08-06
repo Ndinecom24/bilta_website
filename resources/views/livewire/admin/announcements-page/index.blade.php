@@ -114,12 +114,118 @@
 
                     <div class="col-lg-3 col-md-6 mb-3">
                         <label class="font-weight-bold small text-gray-700">Visibility</label>
-                        <select class="form-control @error('visibility') is-invalid @enderror" wire:model.defer="visibility" style="border-radius: 10px;">
+                        <select class="form-control @error('visibility') is-invalid @enderror" wire:model="visibility" style="border-radius: 10px;">
                             <option value="all">All Employees</option>
                             <option value="department">Specific Departments</option>
                             <option value="specific">Specific Employees</option>
                         </select>
                         @error('visibility') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                {{-- Conditional: Department multi-select --}}
+                @if ($visibility === 'department')
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="font-weight-bold small text-gray-700">
+                                <i class="fas fa-building mr-1 text-primary"></i> Select Departments <span class="text-danger">*</span>
+                            </label>
+                            <div class="border rounded-lg p-3 bg-light" style="border-radius: 10px !important; max-height: 220px; overflow-y: auto;">
+                                @foreach ($departments as $dept)
+                                    <div class="custom-control custom-checkbox mb-2">
+                                        <input type="checkbox" class="custom-control-input" id="dept_{{ $dept->id }}"
+                                               wire:model.defer="selectedDepartments" value="{{ $dept->id }}">
+                                        <label class="custom-control-label d-flex align-items-center justify-content-between" for="dept_{{ $dept->id }}">
+                                            <span>{{ $dept->name }}</span>
+                                            <span class="badge badge-primary badge-pill ml-2" style="font-size: .7rem;">
+                                                {{ $dept->members()->count() }} {{ Str::plural('member', $dept->members()->count()) }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @error('selectedDepartments') <span class="text-danger small d-block mt-1">{{ $message }}</span> @enderror
+
+                            {{-- Preview employees in selected departments --}}
+                            @if (!empty($selectedDepartments))
+                                @php
+                                    $deptUsers = $users->whereIn('department_id', $selectedDepartments);
+                                @endphp
+                                @if ($deptUsers->count())
+                                    <div class="mt-2 border rounded-lg p-3" style="border-radius: 10px !important; max-height: 200px; overflow-y: auto; background: #f0f7ff;">
+                                        <small class="font-weight-bold text-primary d-block mb-2">
+                                            <i class="fas fa-users mr-1"></i> {{ $deptUsers->count() }} {{ Str::plural('employee', $deptUsers->count()) }} will be notified:
+                                        </small>
+                                        <div class="d-flex flex-wrap" style="gap: 6px;">
+                                            @foreach ($deptUsers as $u)
+                                                <span class="badge badge-light border px-2 py-1" style="border-radius: 6px; font-size: .75rem;">
+                                                    {{ $u->name }}
+                                                    @if ($u->position) <small class="text-muted">({{ $u->position }})</small> @endif
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Conditional: Employee multi-select --}}
+                @if ($visibility === 'specific')
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="font-weight-bold small text-gray-700">
+                                <i class="fas fa-user-check mr-1 text-success"></i> Select Employees <span class="text-danger">*</span>
+                            </label>
+                            <div class="border rounded-lg p-3 bg-light" style="border-radius: 10px !important; max-height: 300px; overflow-y: auto;">
+                                @php
+                                    $groupedUsers = $users->groupBy(function ($u) {
+                                        return $u->departmentRelation->name ?? 'No Department';
+                                    })->sortKeys();
+                                @endphp
+                                @foreach ($groupedUsers as $deptName => $deptMembers)
+                                    <div class="mb-3">
+                                        <small class="font-weight-bold text-uppercase text-muted d-block mb-1" style="font-size: .7rem; letter-spacing: .05em;">
+                                            <i class="fas fa-building mr-1"></i> {{ $deptName }}
+                                        </small>
+                                        @foreach ($deptMembers as $emp)
+                                            <div class="custom-control custom-checkbox ml-3 mb-1">
+                                                <input type="checkbox" class="custom-control-input" id="user_{{ $emp->id }}"
+                                                       wire:model.defer="selectedUsers" value="{{ $emp->id }}">
+                                                <label class="custom-control-label" for="user_{{ $emp->id }}">
+                                                    {{ $emp->name }}
+                                                    @if ($emp->position) <small class="text-muted">({{ $emp->position }})</small> @endif
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+                            @error('selectedUsers') <span class="text-danger small d-block mt-1">{{ $message }}</span> @enderror
+
+                            {{-- Selection summary --}}
+                            @if (!empty($selectedUsers))
+                                <div class="mt-2 border rounded-lg p-2" style="border-radius: 10px !important; background: #f0fff4;">
+                                    <small class="font-weight-bold text-success">
+                                        <i class="fas fa-check-circle mr-1"></i> {{ count($selectedUsers) }} {{ Str::plural('employee', count($selectedUsers)) }} selected
+                                    </small>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Send Email Notification Toggle --}}
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="sendEmailToggle" wire:model.defer="sendEmail">
+                            <label class="custom-control-label font-weight-bold small text-gray-700" for="sendEmailToggle">
+                                <i class="fas fa-envelope mr-1 text-info"></i> Send email notification to targeted employees
+                            </label>
+                        </div>
+                        <small class="text-muted ml-4 pl-2">When enabled, an email will be sent to all employees matching the visibility selection above.</small>
                     </div>
                 </div>
 
@@ -214,22 +320,38 @@
         <div class="card-body pb-0">
             {{-- Filters --}}
             <div class="row mb-3">
-                <div class="col-lg-4 col-md-6 mb-2">
+                <div class="col-lg-3 col-md-6 mb-2">
                     <input type="text" class="form-control form-control-sm" style="border-radius: 8px;" wire:model.debounce.300ms="search" placeholder="Search by title...">
                 </div>
-                <div class="col-lg-3 col-md-3 mb-2">
+                <div class="col-lg-2 col-md-3 mb-2">
                     <select class="form-control form-control-sm" style="border-radius: 8px;" wire:model="filterType">
                         <option value="">All Types</option>
                         <option value="memo">Memos</option>
                         <option value="announcement">Announcements</option>
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-3 mb-2">
+                <div class="col-lg-2 col-md-3 mb-2">
                     <select class="form-control form-control-sm" style="border-radius: 8px;" wire:model="filterPriority">
                         <option value="">All Priorities</option>
                         <option value="high">High</option>
                         <option value="normal">Normal</option>
                         <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-3 mb-2">
+                    <select class="form-control form-control-sm" style="border-radius: 8px;" wire:model="filterVisibility">
+                        <option value="">All Audiences</option>
+                        <option value="all">All Employees</option>
+                        <option value="department">Departments</option>
+                        <option value="specific">Specific Users</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-3 mb-2">
+                    <select class="form-control form-control-sm" style="border-radius: 8px;" wire:model="filterStatus">
+                        <option value="">All Statuses</option>
+                        @foreach ($statuses as $st)
+                            <option value="{{ $st->id }}">{{ $st->name }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -243,6 +365,7 @@
                         <th class="border-0" style="width: 100px;"><small class="text-uppercase font-weight-bold text-muted">Type</small></th>
                         <th class="border-0" style="width: 90px;"><small class="text-uppercase font-weight-bold text-muted">Priority</small></th>
                         <th class="border-0" style="width: 110px;"><small class="text-uppercase font-weight-bold text-muted">Date</small></th>
+                        <th class="border-0" style="width: 100px;"><small class="text-uppercase font-weight-bold text-muted">Audience</small></th>
                         <th class="border-0" style="width: 90px;"><small class="text-uppercase font-weight-bold text-muted">Status</small></th>
                         <th class="border-0 text-center" style="width: 60px;"><small class="text-uppercase font-weight-bold text-muted">Read</small></th>
                         <th class="border-0 text-right pr-4" style="width: 200px;"><small class="text-uppercase font-weight-bold text-muted">Actions</small></th>
@@ -269,6 +392,23 @@
                                 <small class="font-weight-bold text-gray-700">{{ $item->publish_date->format('d M Y') }}</small>
                                 @if ($item->expiry_date)
                                     <br><small class="text-muted">Exp: {{ $item->expiry_date->format('d M Y') }}</small>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($item->visibility === 'all')
+                                    <span class="badge badge-success px-2 py-1" style="border-radius: 6px; font-size: .7rem;">
+                                        <i class="fas fa-globe-americas mr-1"></i> All
+                                    </span>
+                                @elseif ($item->visibility === 'department')
+                                    @php $deptCount = count($item->visible_to['department_ids'] ?? []); @endphp
+                                    <span class="badge badge-info px-2 py-1" style="border-radius: 6px; font-size: .7rem;" title="{{ $deptCount }} department(s)">
+                                        <i class="fas fa-building mr-1"></i> {{ $deptCount }} {{ Str::plural('dept', $deptCount) }}
+                                    </span>
+                                @elseif ($item->visibility === 'specific')
+                                    @php $userCount = count($item->visible_to['user_ids'] ?? []); @endphp
+                                    <span class="badge badge-warning px-2 py-1" style="border-radius: 6px; font-size: .7rem;" title="{{ $userCount }} employee(s)">
+                                        <i class="fas fa-user-check mr-1"></i> {{ $userCount }} {{ Str::plural('user', $userCount) }}
+                                    </span>
                                 @endif
                             </td>
                             <td>
@@ -307,7 +447,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center py-5">
+                            <td colspan="8" class="text-center py-5">
                                 <i class="fas fa-bullhorn text-muted mb-3" style="font-size: 2.5rem; opacity: .3;"></i>
                                 <p class="text-muted mb-0 font-weight-bold">No {{ $showArchived ? 'archived' : '' }} announcements found</p>
                             </td>
