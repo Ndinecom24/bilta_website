@@ -97,8 +97,8 @@ BiLTA is dedicated to Bible translation, literacy development, scripture engagem
         <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
         {{-- Non-critical CSS: load asynchronously --}}
-        <link rel="preload" href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet"></noscript>
+        <link rel="preload" href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet"></noscript>
 
         <link rel="preload" href="{{ asset('assets/vendor/aos/aos.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet"></noscript>

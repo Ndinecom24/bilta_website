@@ -50,6 +50,11 @@
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
 
+    # Fonts — allow cross-origin requests (www/non-www)
+    <FilesMatch "\.(woff|woff2|ttf|otf|eot)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+
     # HTML — no cache (dynamic content)
     <FilesMatch "\.(html|php)$">
         Header set Cache-Control "no-cache, no-store, must-revalidate"
