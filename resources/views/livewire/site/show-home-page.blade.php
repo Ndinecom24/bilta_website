@@ -196,6 +196,7 @@
                                         <img src="{{ $missionImage }}"
                                             class="img-fluid mission-image"
                                             alt="Bible Translation Work {{ $index + 1 }}"
+                                            width="800" height="500"
                                             loading="lazy">
                                         <div class="mission-slide-overlay"></div>
                                     </div>
@@ -376,6 +377,7 @@
                             <img src="{{ $newsItem->news_image_url ?? asset('assets/img/placeholder.png') }}"
                                 class="news-image"
                                 alt="{{ $newsItem->title ?? 'News' }}"
+                                width="400" height="220"
                                 loading="lazy">
 
                             <div class="news-body">
@@ -442,6 +444,7 @@
                             <img src="{{ $chairmanPhotoUrl }}"
                                 class="img-fluid rounded-circle shadow-lg chairperson-image"
                                 alt="{{ $chairman->name ?? 'Chairperson' }}"
+                                width="320" height="320"
                                 loading="lazy">
 
                         @else
@@ -586,6 +589,7 @@
                                 <img src="{{ $our_team->team_image_url }}"
                                     class="team-image"
                                     alt="{{ $teamName }}"
+                                    width="300" height="320"
                                     loading="lazy"
                                     onerror="this.style.display='none';this.previousElementSibling.style.display='flex';">
                             @endif
@@ -782,6 +786,7 @@
                                 <img src="{{ $sponsor->sponsor_image_url }}"
                                     class="img-fluid"
                                     alt="{{ $sponsorName }}"
+                                    width="160" height="80"
                                     loading="lazy">
                             @else
                                 <div class="sponsor-initials-fallback">

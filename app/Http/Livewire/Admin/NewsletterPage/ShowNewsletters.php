@@ -22,6 +22,7 @@ class ShowNewsletters extends Component
     public $newsletter_pdf;
     public $header_image;
     public $newsletter;
+    public $showSubscribersList = false;
 
     public $updateItem = false;
     protected $listeners = [
@@ -36,8 +37,8 @@ class ShowNewsletters extends Component
         'status_id' => 'required|exists:statuses,id',
         'display_order' => 'nullable|integer|min:0',
         'newsletter_pdf' => 'nullable|array',
-        'newsletter_pdf.*' => 'file|mimes:pdf|max:10240', // 10MB per PDF
-        'header_image' => 'nullable|image|max:5120', // 5MB banner image
+        'newsletter_pdf.*' => 'file|mimes:pdf|max:20480', // 20MB per PDF
+        'header_image' => 'nullable|image|max:10240', // 10MB banner image
     ];
 
     public function render()
@@ -52,9 +53,17 @@ class ShowNewsletters extends Component
 
         $statuses = Status::get();
         $subscriberCount = NewsletterSubscriber::count();
+        $subscribers = NewsletterSubscriber::select('id', 'email', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('livewire.admin.newsletter-page.index')
-            ->with(compact('newsletters', 'statuses', 'subscriberCount'));
+            ->with(compact('newsletters', 'statuses', 'subscriberCount', 'subscribers'));
+    }
+
+    public function toggleSubscribersList()
+    {
+        $this->showSubscribersList = !$this->showSubscribersList;
     }
 
     public function store()

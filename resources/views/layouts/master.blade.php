@@ -96,11 +96,15 @@ BiLTA is dedicated to Bible translation, literacy development, scripture engagem
     ========================================================= --}}
         <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
-        <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+        {{-- Non-critical CSS: load asynchronously --}}
+        <link rel="preload" href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet"></noscript>
 
-        <link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet">
+        <link rel="preload" href="{{ asset('assets/vendor/aos/aos.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet"></noscript>
 
-        <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+        <link rel="preload" href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet"></noscript>
 
         {{-- =========================================================
         MAIN CSS
@@ -1808,19 +1812,21 @@ BiLTA is dedicated to Bible translation, literacy development, scripture engagem
         {{-- =========================================================
         VENDOR JS
     ========================================================= --}}
-        <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}" defer></script>
 
-        <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
+        <script src="{{ asset('assets/vendor/aos/aos.js') }}" defer></script>
 
-        <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}" defer></script>
 
         {{-- =========================================================
         APP INIT
     ========================================================= --}}
         <script>
-            AOS.init({
-                duration: 800,
-                once: true
+            document.addEventListener('DOMContentLoaded', function() {
+                AOS.init({
+                    duration: 800,
+                    once: true
+                });
             });
 
             // =========================================================

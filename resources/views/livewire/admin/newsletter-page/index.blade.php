@@ -11,11 +11,59 @@
             <p class="mb-0 text-muted small">Create, manage, and send newsletters to your subscribers.</p>
         </div>
         <div class="d-flex align-items-center" style="gap: 10px;">
-            <span class="px-3 py-2 rounded-pill text-white font-weight-bold" style="background: linear-gradient(135deg, #4e73df, #224abe); font-size: .85rem;">
-                <i class="fas fa-users mr-1"></i> {{ $subscriberCount }} subscriber{{ $subscriberCount !== 1 ? 's' : '' }}
-            </span>
+            <button type="button"
+                    wire:click="toggleSubscribersList"
+                    class="border-0 bg-transparent p-0">
+                <span class="px-3 py-2 rounded-pill text-white font-weight-bold" style="background: linear-gradient(135deg, #4e73df, #224abe); font-size: .85rem;">
+                    <i class="fas fa-users mr-1"></i> {{ $subscriberCount }} subscriber{{ $subscriberCount !== 1 ? 's' : '' }}
+                </span>
+            </button>
         </div>
     </div>
+
+    @if ($showSubscribersList)
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: hidden;">
+            <div class="card-header bg-light d-flex align-items-center justify-content-between">
+                <h6 class="mb-0 text-gray-800 font-weight-bold">
+                    <i class="fas fa-users text-primary mr-1"></i>
+                    Newsletter Subscribers
+                </h6>
+                <button type="button" wire:click="toggleSubscribersList" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                    Close
+                </button>
+            </div>
+            <div class="card-body p-0">
+                @if ($subscribers->count())
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead style="background: #f8f9fc;">
+                                <tr>
+                                    <th class="border-0 pl-3">
+                                        <small class="text-uppercase font-weight-bold text-muted" style="letter-spacing: .05em;">Email</small>
+                                    </th>
+                                    <th class="border-0" style="width: 170px;">
+                                        <small class="text-uppercase font-weight-bold text-muted" style="letter-spacing: .05em;">Subscribed</small>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($subscribers as $subscriber)
+                                    <tr>
+                                        <td class="pl-3 text-gray-800">{{ $subscriber->email }}</td>
+                                        <td class="text-muted small">
+                                            {{ optional($subscriber->created_at)->format('d M Y') ?? '-' }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-3 text-muted small">No subscribers found.</div>
+                @endif
+            </div>
+        </div>
+    @endif
 
     {{-- ============================================================
         ALERTS
@@ -211,7 +259,7 @@
                                 <div>
                                     <i class="fas fa-cloud-upload-alt text-primary mb-2" style="font-size: 1.5rem;"></i>
                                     <p class="mb-0 small text-muted">Click or drag to upload banner image</p>
-                                    <small class="text-muted">Max 5 MB &bull; Recommended: 1200&times;400px</small>
+                                    <small class="text-muted">Max 10 MB &bull; Recommended: 1200&times;400px</small>
                                 </div>
                                 <div wire:loading wire:target="header_image" class="mt-2">
                                     <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
@@ -232,7 +280,7 @@
                                 <div>
                                     <i class="fas fa-file-upload text-danger mb-2" style="font-size: 1.5rem;"></i>
                                     <p class="mb-0 small text-muted">Click or drag to upload PDF files</p>
-                                    <small class="text-muted">Max 10 MB per file &bull; Multiple allowed</small>
+                                    <small class="text-muted">Max 20 MB per file &bull; Multiple allowed</small>
                                 </div>
                                 <div wire:loading wire:target="newsletter_pdf" class="mt-2">
                                     <div class="spinner-border spinner-border-sm text-primary" role="status"></div>

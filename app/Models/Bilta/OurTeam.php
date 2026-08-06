@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class OurTeam extends Model implements HasMedia
 {
@@ -28,4 +29,14 @@ class OurTeam extends Model implements HasMedia
         'twitter_url',
         'created_by'
     ];
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('optimized')
+            ->width(400)
+            ->height(420)
+            ->sharpen(10)
+            ->quality(80)
+            ->nonQueued();
+    }
 }

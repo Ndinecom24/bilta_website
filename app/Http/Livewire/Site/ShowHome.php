@@ -23,6 +23,20 @@ class ShowHome extends Component
      */
     private const CACHE_TTL = 6 * 60 * 60;
 
+    /**
+     * Get the optimized URL for a media item, falling back to original.
+     */
+    private static function optimizedUrl($media): ?string
+    {
+        if (!$media) {
+            return null;
+        }
+
+        return $media->hasGeneratedConversion('optimized')
+            ? $media->getUrl('optimized')
+            : $media->getUrl();
+    }
+
     public function render()
     {
         $testimonials = cache()->remember('home_testimonials', self::CACHE_TTL, function () {
@@ -40,8 +54,7 @@ class ShowHome extends Component
                 ->orderBy('created_at', 'desc')
                 ->get()
                 ->map(function ($team) {
-                    $media = $team->getFirstMedia('team_images');
-                    $team->team_image_url = $media ? $media->getUrl() : null;
+                    $team->team_image_url = self::optimizedUrl($team->getFirstMedia('team_images'));
                     $team->unsetRelation('media'); // drop heavy relation before caching
                     return $team;
                 });
@@ -66,10 +79,10 @@ class ShowHome extends Component
 
             return [
                 'model' => $home_intro,
-                'hero_image_url' => $home_intro->getFirstMediaUrl('home_intro_images') ?: null,
+                'hero_image_url' => self::optimizedUrl($home_intro->getFirstMedia('home_intro_images')),
                 'mission_slider_images' => $home_intro
                     ->getMedia('mission_slider_images')
-                    ->map(fn($media) => $media->getUrl())
+                    ->map(fn($m) => self::optimizedUrl($m))
                     ->filter()
                     ->values()
                     ->all(),
@@ -83,11 +96,13 @@ class ShowHome extends Component
         // Cache chairman with pre-resolved photo URL
         $chairmanData = cache()->remember('chairman_data', self::CACHE_TTL, function () {
             $chairman = ChairmanMessage::with('media')->latest()->first();
-            $photoUrl = $chairman ? $chairman->getFirstMediaUrl('chairman_photo') : null;
-            if ($chairman) {
-                $chairman->unsetRelation('media');
+            if (!$chairman) {
+                return ['model' => null, 'photo_url' => null];
             }
-            return ['model' => $chairman, 'photo_url' => $photoUrl ?: null];
+            $media = $chairman->getFirstMedia('chairman_photo');
+            $photoUrl = self::optimizedUrl($media);
+            $chairman->unsetRelation('media');
+            return ['model' => $chairman, 'photo_url' => $photoUrl];
         });
         $chairman = $chairmanData['model'];
         $chairmanPhotoUrl = $chairmanData['photo_url'];
@@ -99,7 +114,7 @@ class ShowHome extends Component
                 ->orderBy('created_at', 'desc')
                 ->get()
                 ->map(function ($sponsor) {
-                    $sponsor->sponsor_image_url = $sponsor->getFirstMediaUrl('sponsor_image') ?: null;
+                    $sponsor->sponsor_image_url = self::optimizedUrl($sponsor->getFirstMedia('sponsor_image'));
                     $sponsor->unsetRelation('media');
                     return $sponsor;
                 });
@@ -123,8 +138,7 @@ class ShowHome extends Component
                 ->take(3)
                 ->get()
                 ->map(function ($news) {
-                    $media = $news->getFirstMedia('news_images');
-                    $news->news_image_url = $media ? $media->getUrl() : null;
+                    $news->news_image_url = self::optimizedUrl($news->getFirstMedia('news_images'));
                     $news->unsetRelation('media');
                     return $news;
                 });
