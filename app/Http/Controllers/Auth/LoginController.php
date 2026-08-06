@@ -45,6 +45,11 @@ class LoginController extends Controller
         $user->logins = $user->logins + 1 ;
         $user->last_login = now();
         $user->save();
+
+        // If user must change password, redirect to forced change page
+        if ($user->password_change == 1) {
+            return redirect()->route('force.password.change');
+        }
     }
 
 }

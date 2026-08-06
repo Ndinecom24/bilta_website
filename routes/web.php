@@ -41,6 +41,7 @@ use App\Http\Livewire\Admin\AnnouncementsPage\ShowAnnouncements;
 use App\Http\Livewire\Admin\AnnouncementsPage\EmployeeAnnouncements;
 use App\Http\Livewire\Admin\DocumentsPage\ShowDocuments;
 use App\Http\Livewire\Admin\DocumentsPage\EmployeeDocuments;
+use App\Http\Livewire\Auth\ForcePasswordChange;
 
 
 use App\Http\Livewire\Site\Company\ShowAbout;
@@ -79,6 +80,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Auth::routes();
+
+// Force password change (after admin OTP reset)
+Route::get('/force-password-change', ForcePasswordChange::class)
+    ->middleware('auth')
+    ->name('force.password.change');
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -44,6 +44,9 @@ class User extends Authenticatable
         'logins',
         'last_login',
         'status_id',
+        'password_change',
+        'password_reset_otp',
+        'password_reset_otp_expires_at',
     ];
 
     /**
@@ -65,6 +68,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'date_of_birth' => 'date',
         'date_joined' => 'date',
+        'password_reset_otp_expires_at' => 'datetime',
     ];
 
     // ──────────────────────────────────────

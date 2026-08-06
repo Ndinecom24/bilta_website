@@ -6,7 +6,9 @@ use App\Models\Bilta\Department;
 use App\Models\System\Role;
 use App\Models\System\Status;
 use App\Models\User;
+use App\Mail\PasswordResetOtpMail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -25,6 +27,12 @@ class UsersShow extends Component
     public $showPasswordReset = false;
     public $isOwnProfile = false;
     public $canManage = false;
+
+    // OTP password reset
+    public $lastOtp = null;
+    public $otpEmailSent = false;
+    public $otpEmailFailed = false;
+    public $otpResetUser = null;
 
     public $all_roles = [];
     public $selectedRoles = [];
@@ -202,7 +210,9 @@ class UsersShow extends Component
             // Update user
             User::find($this->user_id)->fill([
                 'password' => Hash::make($this->password),
-                'password_change' => 0
+                'password_change' => 0,
+                'password_reset_otp' => null,
+                'password_reset_otp_expires_at' => null,
             ])->save();
             $this->user = User::find($this->user_id);
             session()->flash('success', 'User password reset successfully.');
@@ -214,6 +224,64 @@ class UsersShow extends Component
             session()->flash('error', 'Something goes wrong while updating user password!!');
             $this->cancel();
         }
+    }
+
+    /**
+     * Generate OTP, set as temp password, flag user for forced change, send email.
+     */
+    public function resetPasswordWithOtp()
+    {
+        if (!$this->canManage) {
+            session()->flash('error', 'You do not have permission to reset passwords.');
+            return;
+        }
+
+        // Cannot reset own password via OTP
+        if ($this->isOwnProfile) {
+            session()->flash('error', 'You cannot OTP-reset your own password. Use the manual password reset instead.');
+            return;
+        }
+
+        try {
+            // Generate a 6-digit OTP
+            $otp = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+
+            $user = User::findOrFail($this->user_id);
+            $user->password = Hash::make($otp);
+            $user->password_change = 1;
+            $user->password_reset_otp = $otp;
+            $user->password_reset_otp_expires_at = now()->addHours(72);
+            $user->save();
+
+            // Store OTP for admin display
+            $this->lastOtp = $otp;
+            $this->otpResetUser = $user->name;
+
+            // Send email
+            $this->otpEmailSent = false;
+            $this->otpEmailFailed = false;
+            try {
+                Mail::to($user->email)->send(new PasswordResetOtpMail($user, $otp, auth()->user()->name));
+                $this->otpEmailSent = true;
+            } catch (\Exception $mailEx) {
+                $this->otpEmailFailed = true;
+            }
+
+            $this->refreshUserData();
+        } catch (\Exception $e) {
+            session()->flash('error', 'Something went wrong while resetting password: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Dismiss the OTP display card.
+     */
+    public function dismissOtp()
+    {
+        $this->lastOtp = null;
+        $this->otpEmailSent = false;
+        $this->otpEmailFailed = false;
+        $this->otpResetUser = null;
     }
 
 
@@ -240,6 +308,10 @@ class UsersShow extends Component
         $this->showPasswordReset = false;
         $this->password = '';
         $this->password_confirmation = '';
+        $this->lastOtp = null;
+        $this->otpEmailSent = false;
+        $this->otpEmailFailed = false;
+        $this->otpResetUser = null;
         $this->refreshUserData();
     }
 

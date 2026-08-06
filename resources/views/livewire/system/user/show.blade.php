@@ -50,15 +50,71 @@
                     <p><b>Status</b>: {{ $user->status->name ?? '--' }}</p>
                     <p><b>Total Logins</b>: {{ $user->logins ?? 0 }}</p>
                     <p class="mb-0"><b>Last Login</b>: {{ $user->last_login ?? '--' }}</p>
+                    @if ($user->password_change == 1)
+                        <p class="mt-2 mb-0">
+                            <span class="badge badge-warning text-dark" style="font-size: .82rem; padding: 5px 10px;">
+                                <i class="fas fa-exclamation-triangle mr-1"></i> Password change required on next login
+                            </span>
+                        </p>
+                    @endif
                 </div>
                 <div class="card-footer d-flex flex-wrap gap-2">
                     <button wire:click="togglePasswordReset" class="btn btn-warning btn-sm">Password Reset</button>
+                    @if ($canManage && !$isOwnProfile)
+                        <button wire:click="resetPasswordWithOtp" class="btn btn-outline-danger btn-sm"
+                            onclick="return confirm('This will reset the user\'s password and send them a one-time password via email. Continue?')">
+                            <i class="fas fa-key mr-1"></i> Send OTP Reset
+                        </button>
+                    @endif
                     <button wire:click="toggleEdit" class="btn btn-primary btn-sm">Edit</button>
                     @if ($canManage)
                     <button onclick="deleteUser({{ $user->id }})" class="btn btn-danger btn-sm">Delete</button>
                     @endif
                 </div>
             </div>
+
+            {{-- OTP Result Card --}}
+            @if ($lastOtp)
+                <div class="card shadow-sm mt-3 border-left-danger">
+                    <div class="card-header d-flex align-items-center justify-content-between bg-light">
+                        <h5 class="mb-0 text-danger"><i class="fas fa-key mr-1"></i> Password Reset OTP</h5>
+                        <button wire:click="dismissOtp" type="button" class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2">A one-time password has been generated for <strong>{{ $otpResetUser }}</strong>.</p>
+
+                        @if ($otpEmailSent)
+                            <div class="alert alert-success py-2 mb-3">
+                                <i class="fas fa-check-circle mr-1"></i> OTP has been sent to the user's email.
+                            </div>
+                        @endif
+
+                        @if ($otpEmailFailed)
+                            <div class="alert alert-danger py-2 mb-3">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Email could not be sent. Please share the OTP manually.
+                            </div>
+                        @endif
+
+                        <div class="text-center p-3 rounded" style="background: #fef2f2; border: 2px dashed #fca5a5;">
+                            <small class="d-block text-muted text-uppercase font-weight-bold mb-1" style="letter-spacing: 2px;">One-Time Password</small>
+                            <span id="otpDisplay" class="d-block" style="font-size: 2rem; font-weight: 800; letter-spacing: 8px; color: #dc2626; font-family: 'Courier New', monospace;">{{ $lastOtp }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyOtp()">
+                                <i class="fas fa-copy mr-1"></i> Copy OTP
+                            </button>
+                        </div>
+
+                        <div class="mt-3 p-2 rounded" style="background: #fffbeb; border: 1px solid #fde68a;">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle mr-1 text-warning"></i>
+                                The user must log in with this OTP as their password. They will be prompted to set a new password immediately. The OTP expires in 72 hours.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             @if($updateUser)
                 <div class="card shadow-sm">
@@ -313,6 +369,25 @@
         function deleteUser(id) {
             if (confirm("Are you sure to delete this user?")) {
                 window.livewire.emit('deleteUser', id);
+            }
+        }
+
+        function copyOtp() {
+            var otp = document.getElementById('otpDisplay');
+            if (otp) {
+                var text = otp.innerText.trim();
+                navigator.clipboard.writeText(text).then(function() {
+                    alert('OTP copied to clipboard!');
+                }).catch(function() {
+                    // Fallback
+                    var ta = document.createElement('textarea');
+                    ta.value = text;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    alert('OTP copied to clipboard!');
+                });
             }
         }
     </script>

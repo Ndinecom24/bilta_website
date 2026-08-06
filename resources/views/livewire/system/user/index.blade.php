@@ -199,7 +199,12 @@
                                         <td>{{ $user->departmentRelation->name ?? ($user->department ?? '—') }}</td>
                                         <td>{{ $user->supervisor->name ?? '—' }}</td>
                                         <td>{{ $user->roles->count() }}</td>
-                                        <td>{{ $user->status->name ?? '--' }}</td>
+                                        <td>
+                                            {{ $user->status->name ?? '--' }}
+                                            @if ($user->password_change == 1)
+                                                <br><span class="badge badge-warning text-dark" style="font-size: .7rem;"><i class="fas fa-key mr-1"></i>OTP Reset</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <a href="{{ route('system.users.show', $user->uuid ?? '0') }}"
                                                onclick="event.preventDefault(); document.getElementById('user-profile-form{{ $user->uuid ?? '0' }}').submit();"
