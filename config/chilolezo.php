@@ -242,8 +242,6 @@ return [
             'view-dashboard',
             'apply-leave',
             'manage-leave-applications',
-            'manage-announcements',
-            'manage-documents',
         ],
     ],
 

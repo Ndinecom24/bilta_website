@@ -20,8 +20,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             RolePermissionSeeder::class,
-            LeaveManagementRolesSeeder::class,
-            AnnouncementDocumentPermissionsSeeder::class,
             DepartmentSeeder::class,
             LeaveTypeSeeder::class,
         ]);
