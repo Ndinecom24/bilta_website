@@ -59,13 +59,7 @@ class ShowTranslationProjects extends Component
         $statuses = Status::get();
         $categories = ItemCategory::where('type', 'Projects')->get();
 
-
-        $this->dispatchBrowserEvent('fillTrixFields', [
-            'short_description' => $this->short_description,
-            'details' => $this->details,
-        ]);
-         
-            return view('livewire.admin.translation-projects-page.index')
+        return view('livewire.admin.translation-projects-page.index')
             ->with(compact('translation_projects', 'statuses', 'categories'));
     }
 
@@ -206,6 +200,8 @@ class ShowTranslationProjects extends Component
         $this->project_image = null ;
         $this->project_file = null ;
         $this->projectLocations = [];
+
+        $this->dispatchBrowserEvent('load-trix-content', ['content' => '', 'field' => 'projectDetails']);
     }
 
     public function edit($id)
@@ -244,7 +240,7 @@ class ShowTranslationProjects extends Component
             ]];
         }
 
-        $this->dispatchBrowserEvent('load-trix-content', ['content' => $our_projects->details ?? '']);
+        $this->dispatchBrowserEvent('load-trix-content', ['content' => $our_projects->details ?? '', 'field' => 'projectDetails']);
     }
 
     public function update()

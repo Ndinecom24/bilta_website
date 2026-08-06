@@ -339,20 +339,36 @@
             event.preventDefault();
         });
 
-        // Sync Trix editor content to Livewire (deferred — no re-render)
+        // Sync Trix editor content to Livewire on every change
         document.addEventListener('trix-change', function (event) {
             var input = event.target.inputElement;
             if (input && input.id === 'projectDetails') {
-                @this.set('details', input.value, true);
+                // Update the hidden input value
+                input.value = event.target.innerHTML;
+                // Sync to Livewire without triggering a re-render (deferred)
+                var component = Livewire.find(
+                    event.target.closest('[wire\\:id]').getAttribute('wire:id')
+                );
+                if (component) {
+                    component.set('details', event.target.innerHTML, true);
+                }
             }
         });
 
-        // Populate Trix editor when editing an existing project
+        // Load content into Trix editor (for edit mode and reset)
         window.addEventListener('load-trix-content', function (event) {
-            var editor = document.querySelector('trix-editor[input="projectDetails"]');
-            if (editor && editor.editor) {
-                editor.editor.loadHTML(event.detail.content || '');
+            var fieldId = event.detail.field || 'projectDetails';
+            var content = event.detail.content || '';
+
+            function loadContent() {
+                var editor = document.querySelector('trix-editor[input="' + fieldId + '"]');
+                if (editor && editor.editor) {
+                    editor.editor.loadHTML(content);
+                } else {
+                    setTimeout(loadContent, 100);
+                }
             }
+            setTimeout(loadContent, 50);
         });
 
         function deleteOurProjectsItem(id) {
