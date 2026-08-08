@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Bilta\Department;
+use App\Models\System\UserFile;
 use App\Models\System\Status;
 use App\Permissions\HasPermissionsTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -96,6 +98,11 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'supervisor_id');
     }
 
+    public function files()
+    {
+        return $this->hasMany(UserFile::class)->latest();
+    }
+
     // ──────────────────────────────────────
     // Accessors
     // ──────────────────────────────────────
@@ -126,7 +133,7 @@ class User extends Authenticatable
      */
     public function getProfilePhotoUrlAttribute()
     {
-        if ($this->profile_photo_path && \Storage::disk('public')->exists($this->profile_photo_path)) {
+        if ($this->profile_photo_path && Storage::disk('public')->exists($this->profile_photo_path)) {
             return asset('storage/' . $this->profile_photo_path);
         }
         return null;

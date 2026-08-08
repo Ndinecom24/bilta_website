@@ -240,6 +240,14 @@
                         <i class="fas fa-briefcase mr-1"></i> Employment
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ $activeTab === 'files' ? 'active font-weight-bold' : '' }}" href="#" wire:click.prevent="setTab('files')" style="border-radius: 8px 8px 0 0;">
+                        <i class="fas fa-folder-open mr-1"></i> User Files
+                        @if(!empty($userFiles))
+                            <span class="badge badge-light ml-1">{{ count($userFiles) }}</span>
+                        @endif
+                    </a>
+                </li>
                 @if ($canManage)
                 <li class="nav-item">
                     <a class="nav-link {{ $activeTab === 'roles' ? 'active font-weight-bold' : '' }}" href="#" wire:click.prevent="setTab('roles')" style="border-radius: 8px 8px 0 0;">
@@ -412,6 +420,118 @@
                                     <small class="text-muted text-uppercase font-weight-bold" style="letter-spacing: 1px; font-size: .68rem;">Account Created</small>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- ═══════════ TAB: USER FILES ═══════════ --}}
+            @if ($activeTab === 'files')
+                <div class="card shadow-sm border-top-0" style="border-radius: 0 0 8px 8px;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="font-weight-bold text-primary mb-0"><i class="fas fa-folder-open mr-1"></i> Employee Documents</h6>
+                            <span class="badge badge-secondary">{{ count($userFiles) }} file(s)</span>
+                        </div>
+
+                        @if($canManageUserFiles)
+                            <div class="p-3 rounded mb-4" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                                <h6 class="font-weight-bold mb-3" style="font-size: .95rem;"><i class="fas fa-upload mr-1 text-success"></i> Upload New File</h6>
+                                <form wire:submit.prevent="uploadUserFile">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="userFileType" class="font-weight-bold" style="font-size: .85rem;">File Type *</label>
+                                            <select id="userFileType" class="form-control" wire:model.defer="user_file_type" required>
+                                                @foreach($userFileTypeOptions as $typeValue => $typeLabel)
+                                                    <option value="{{ $typeValue }}">{{ $typeLabel }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('user_file_type') <span class="text-danger d-block" style="font-size: .82rem;">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="userFileTitle" class="font-weight-bold" style="font-size: .85rem;">Title (Optional)</label>
+                                            <input id="userFileTitle" type="text" class="form-control" wire:model.defer="user_file_title" placeholder="e.g. 2026 Offer Letter">
+                                            @error('user_file_title') <span class="text-danger d-block" style="font-size: .82rem;">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="userFileInput" class="font-weight-bold" style="font-size: .85rem;">Document File *</label>
+                                            <input id="userFileInput" type="file" class="form-control" wire:model="user_file" required>
+                                            @error('user_file') <span class="text-danger d-block" style="font-size: .82rem;">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="userFileDescription" class="font-weight-bold" style="font-size: .85rem;">Description (Optional)</label>
+                                            <textarea id="userFileDescription" class="form-control" rows="2" wire:model.defer="user_file_description" placeholder="Any notes about this document"></textarea>
+                                            @error('user_file_description') <span class="text-danger d-block" style="font-size: .82rem;">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <button type="submit" class="btn btn-primary btn-sm" wire:loading.attr="disabled" wire:target="uploadUserFile,user_file">
+                                            <i class="fas fa-save mr-1"></i> Upload File
+                                        </button>
+                                        <div wire:loading wire:target="uploadUserFile,user_file" class="text-muted ml-3" style="font-size: .85rem;">
+                                            <span class="spinner-border spinner-border-sm mr-1"></span> Uploading...
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
+
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead style="background: #f8fafc;">
+                                    <tr>
+                                        <th style="width: 45px;">#</th>
+                                        <th>File</th>
+                                        <th>Type</th>
+                                        <th>Uploaded</th>
+                                        <th>By</th>
+                                        <th style="width: 180px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($userFiles as $index => $file)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>
+                                                <div class="font-weight-bold">{{ $file->title ?: $file->file_name }}</div>
+                                                <div class="text-muted" style="font-size: .78rem;">
+                                                    {{ $file->file_name }} • {{ $this->formatFileSize($file->file_size) }}
+                                                </div>
+                                                @if($file->description)
+                                                    <div class="text-muted" style="font-size: .78rem;">{{ $file->description }}</div>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-info" style="font-size: .72rem;">{{ $this->userFileTypeLabel($file->file_type) }}</span>
+                                            </td>
+                                            <td>{{ $file->created_at ? $file->created_at->format('d M Y H:i') : '—' }}</td>
+                                            <td>{{ $file->uploader->name ?? 'System' }}</td>
+                                            <td>
+                                                <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary py-0 px-2" title="View">
+                                                    <i class="fas fa-eye mr-1"></i>View
+                                                </a>
+                                                <a href="{{ asset('storage/' . $file->file_path) }}" download class="btn btn-sm btn-outline-success py-0 px-2" title="Download">
+                                                    <i class="fas fa-download mr-1"></i>Download
+                                                </a>
+                                                @if($canManageUserFiles)
+                                                    <button wire:click="deleteUserFile({{ $file->id }})" type="button" class="btn btn-sm btn-outline-danger py-0 px-2"
+                                                        onclick="return confirm('Delete this file?')">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted py-4">
+                                                <i class="fas fa-folder-open fa-2x d-block mb-2 text-muted"></i>
+                                                No employee files uploaded yet.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

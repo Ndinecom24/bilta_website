@@ -5,11 +5,13 @@ namespace App\Http\Livewire\System;
 use App\Models\Bilta\Department;
 use App\Models\System\Role;
 use App\Models\System\Status;
+use App\Models\System\UserFile;
 use App\Models\User;
 use App\Mail\PasswordResetOtpMail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -30,6 +32,7 @@ class UsersShow extends Component
     public $showPasswordReset = false;
     public $isOwnProfile = false;
     public $canManage = false;
+    public $canManageUserFiles = false;
 
     // OTP password reset
     public $lastOtp = null;
@@ -42,6 +45,41 @@ class UsersShow extends Component
 
     // Tab navigation
     public $activeTab = 'profile';
+
+    // Employee files
+    public $user_file;
+    public $user_file_type;
+    public $user_file_title;
+    public $user_file_description;
+    public $userFiles = [];
+
+    public $userFileTypeOptions = [
+        'offer_letter' => 'Offer Letter',
+        'appointment_letter' => 'Appointment Letter',
+        'employment_contract' => 'Employment Contract',
+        'contract_renewal' => 'Contract Renewal',
+        'job_description' => 'Job Description',
+        'resume_cv' => 'Resume / CV',
+        'qualifications' => 'Qualifications / Certificates',
+        'professional_license' => 'Professional License',
+        'nrc_passport' => 'NRC / Passport Copy',
+        'tax_napsa' => 'Tax / NAPSA Documents',
+        'bank_details_form' => 'Bank Details Form',
+        'medical_records' => 'Medical / Fitness Records',
+        'performance_review' => 'Performance Review',
+        'promotion_letter' => 'Promotion Letter',
+        'disciplinary_notice' => 'Disciplinary Notice',
+        'warning_letter' => 'Warning Letter',
+        'training_certificate' => 'Training Certificate',
+        'leave_document' => 'Leave Supporting Document',
+        'transfer_letter' => 'Transfer Letter',
+        'id_card_copy' => 'Staff ID Card Copy',
+        'clearance_form' => 'Clearance Form',
+        'exit_interview' => 'Exit Interview',
+        'resignation_letter' => 'Resignation Letter',
+        'termination_letter' => 'Termination Letter',
+        'other' => 'Other',
+    ];
 
     public $all_roles = [];
     public $selectedRoles = [];
@@ -86,16 +124,22 @@ class UsersShow extends Component
             abort(404);
         }
 
+        /** @var User $authUser */
+        $authUser = auth()->user();
+
         // Non-admin users can only view their own profile
         $isOwnProfile = auth()->id() === $user->id;
-        $isAdmin = auth()->user()->hasRole('admin') || auth()->user()->can('manage-users');
+        $isAdmin = $authUser->hasRole('admin') || $authUser->can('manage-users');
+        $isHr = $authUser->hasRole('hr');
+        $canViewOthers = $isAdmin || $isHr;
 
-        if (!$isOwnProfile && !$isAdmin) {
+        if (!$isOwnProfile && !$canViewOthers) {
             abort(403, 'You do not have permission to view this profile.');
         }
 
         $this->isOwnProfile = $isOwnProfile;
         $this->canManage = $isAdmin;
+        $this->canManageUserFiles = $canViewOthers;
 
         $user->load('roles');
         $this->user = $user;
@@ -122,6 +166,7 @@ class UsersShow extends Component
 
         $this->statuses = Status::select('id', 'name')->get();
         $this->refreshUserData();
+        $this->user_file_type = 'offer_letter';
     }
 
     public function render()
@@ -135,10 +180,94 @@ class UsersShow extends Component
 
     private function refreshUserData()
     {
-        $this->user = User::with('roles', 'status')->findOrFail($this->user->id);
+        $this->user = User::with('roles', 'status', 'files.uploader')->findOrFail($this->user->id);
         $this->all_roles = Role::whereNotIn('id', $this->user->roles->pluck('id')->toArray())
             ->orderBy('name')
             ->get();
+        $this->userFiles = $this->user->files;
+    }
+
+    public function uploadUserFile()
+    {
+        if (!$this->canManageUserFiles) {
+            session()->flash('error', 'You do not have permission to upload employee files.');
+            return;
+        }
+
+        $this->validate([
+            'user_file' => 'required|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp,txt,csv',
+            'user_file_type' => ['required', Rule::in(array_keys($this->userFileTypeOptions))],
+            'user_file_title' => 'nullable|string|max:150',
+            'user_file_description' => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            $storedPath = $this->user_file->store('user-files/' . $this->user_id, 'public');
+
+            UserFile::create([
+                'user_id' => $this->user_id,
+                'uploaded_by' => auth()->id(),
+                'file_type' => $this->user_file_type,
+                'title' => $this->user_file_title ?: null,
+                'description' => $this->user_file_description ?: null,
+                'file_name' => $this->user_file->getClientOriginalName(),
+                'file_path' => $storedPath,
+                'mime_type' => $this->user_file->getMimeType(),
+                'file_size' => $this->user_file->getSize() ?: 0,
+            ]);
+
+            $this->reset(['user_file', 'user_file_title', 'user_file_description']);
+            $this->user_file_type = 'offer_letter';
+            $this->refreshUserData();
+
+            session()->flash('success', 'Employee file uploaded successfully.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to upload file: ' . $e->getMessage());
+        }
+    }
+
+    public function deleteUserFile($fileId)
+    {
+        if (!$this->canManageUserFiles) {
+            session()->flash('error', 'You do not have permission to delete employee files.');
+            return;
+        }
+
+        $file = UserFile::where('user_id', $this->user_id)->find($fileId);
+        if (!$file) {
+            session()->flash('error', 'File not found.');
+            return;
+        }
+
+        try {
+            if ($file->file_path && Storage::disk('public')->exists($file->file_path)) {
+                Storage::disk('public')->delete($file->file_path);
+            }
+            $file->delete();
+            $this->refreshUserData();
+            session()->flash('success', 'Employee file deleted successfully.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to delete file.');
+        }
+    }
+
+    public function formatFileSize($bytes)
+    {
+        $size = (int) $bytes;
+        if ($size <= 0) {
+            return '0 B';
+        }
+
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $power = min((int) floor(log($size, 1024)), count($units) - 1);
+        $value = $size / (1024 ** $power);
+
+        return number_format($value, $power === 0 ? 0 : 1) . ' ' . $units[$power];
+    }
+
+    public function userFileTypeLabel($type)
+    {
+        return $this->userFileTypeOptions[$type] ?? 'Other';
     }
 
     public function roleAttachButton()
@@ -306,8 +435,8 @@ class UsersShow extends Component
             $user = User::findOrFail($this->user_id);
 
             // Delete old photo if exists
-            if ($user->profile_photo_path && \Storage::disk('public')->exists($user->profile_photo_path)) {
-                \Storage::disk('public')->delete($user->profile_photo_path);
+            if ($user->profile_photo_path && Storage::disk('public')->exists($user->profile_photo_path)) {
+                Storage::disk('public')->delete($user->profile_photo_path);
             }
 
             // Store new photo
@@ -331,8 +460,8 @@ class UsersShow extends Component
         try {
             $user = User::findOrFail($this->user_id);
 
-            if ($user->profile_photo_path && \Storage::disk('public')->exists($user->profile_photo_path)) {
-                \Storage::disk('public')->delete($user->profile_photo_path);
+            if ($user->profile_photo_path && Storage::disk('public')->exists($user->profile_photo_path)) {
+                Storage::disk('public')->delete($user->profile_photo_path);
             }
 
             $user->profile_photo_path = null;
