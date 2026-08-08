@@ -97,9 +97,19 @@
         width: 100%;
     }
 
+    .admin-brand-logo-shell {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        padding: 2px;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.55), rgba(205, 91, 19, 0.45));
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.26);
+        flex-shrink: 0;
+    }
+
     .admin-brand-logo {
-        width: 52px;
-        height: 52px;
+        width: 100%;
+        height: 100%;
 
         object-fit: contain;
 
@@ -113,10 +123,38 @@
             0 6px 16px rgba(0, 0, 0, 0.2);
     }
 
+    .admin-brand-copy {
+        display: flex;
+        flex-direction: column;
+        gap: .16rem;
+        min-width: 0;
+    }
+
+    .admin-brand-topline {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        width: fit-content;
+        padding: .16rem .42rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        font-size: .58rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: #9ca3af;
+        line-height: 1;
+    }
+
+    .admin-brand-topline i {
+        color: #cd5b13;
+    }
+
     .admin-brand-title {
         color: #fff;
 
-        font-size: 1rem;
+        font-size: .95rem;
 
         font-weight: 800;
 
@@ -139,24 +177,50 @@
     }
 
     .admin-brand-subtitle {
-        color: #8a909a;
+        color: #94a3b8;
 
-        font-size: .72rem;
-        font-weight: 500;
+        font-size: .62rem;
+        font-weight: 600;
+        letter-spacing: .03em;
+        text-transform: uppercase;
 
         opacity: .85;
+    }
+
+    .admin-brand-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: .28rem;
+        flex-wrap: wrap;
+        margin-top: .16rem;
+    }
+
+    .admin-brand-online-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.22);
+    }
+
+    .admin-brand-online-text {
+        font-size: .56rem;
+        color: #a3aab5;
+        letter-spacing: .02em;
+        font-weight: 600;
+        text-transform: uppercase;
     }
 
     .admin-role-pill {
         display: inline-flex;
         align-items: center;
         gap: .35rem;
-        margin-top: .45rem;
-        padding: .2rem .55rem;
+        margin-top: 0;
+        padding: .16rem .46rem;
         border-radius: 999px;
-        font-size: .65rem;
+        font-size: .56rem;
         font-weight: 700;
-        letter-spacing: .04em;
+        letter-spacing: .03em;
         text-transform: uppercase;
         border: 1px solid rgba(255, 255, 255, 0.16);
         background: rgba(255, 255, 255, 0.08);
@@ -480,17 +544,30 @@
         }
 
         .admin-brand-title {
-            font-size: .92rem;
+            font-size: .86rem;
         }
 
         .admin-brand-subtitle {
-            font-size: .65rem;
+            font-size: .54rem;
         }
 
         .admin-brand-logo {
-            width: 42px;
-            height: 42px;
             border-radius: 12px;
+        }
+
+        .admin-brand-logo-shell {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            padding: 1px;
+        }
+
+        .admin-brand-topline {
+            font-size: .5rem;
+        }
+
+        .admin-brand-online-text {
+            font-size: .5rem;
         }
 
         .admin-sidebar .sidebar-brand {
@@ -531,22 +608,33 @@
     <a class="sidebar-brand" href="{{ route('admin.home') }}">
         <div class="admin-brand-wrap">
 
-            <img src="{{ asset('layout/images/bilta_logo_one.png') }}"
-                class="admin-brand-logo"
-                alt="BiLTA Logo">
+            <div class="admin-brand-logo-shell">
+                <img src="{{ asset('layout/images/bilta_logo_one.png') }}"
+                    class="admin-brand-logo"
+                    alt="BiLTA Logo">
+            </div>
 
-            <div>
+            <div class="admin-brand-copy">
+                <div class="admin-brand-topline">
+                    <i class="fas fa-shield-alt"></i>
+                    Portal
+                </div>
+
                 <div class="admin-brand-title">
-                    BiLTA Admin
+                    BiLTA
                 </div>
 
                 <div class="admin-brand-subtitle">
-                    Content Management Hub
+                    Admin
                 </div>
 
-                <div class="admin-role-pill">
-                    <i class="fas {{ $isAdminUser ? 'fa-user-shield' : 'fa-user' }}"></i>
-                    {{ $isAdminUser ? 'Administrator' : 'Employee Access' }}
+                <div class="admin-brand-meta">
+                    <div class="admin-role-pill">
+                        <i class="fas {{ $isAdminUser ? 'fa-user-shield' : 'fa-user' }}"></i>
+                        {{ $isAdminUser ? 'Admin' : 'Staff' }}
+                    </div>
+                    <span class="admin-brand-online-dot" aria-hidden="true"></span>
+                    <span class="admin-brand-online-text">Online</span>
                 </div>
             </div>
 
