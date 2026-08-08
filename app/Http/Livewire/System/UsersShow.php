@@ -8,6 +8,7 @@ use App\Models\System\Status;
 use App\Models\System\UserFile;
 use App\Models\User;
 use App\Mail\PasswordResetOtpMail;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -52,6 +53,9 @@ class UsersShow extends Component
     public $user_file_title;
     public $user_file_description;
     public $userFiles = [];
+    public $file_filter_type = '';
+    public $file_filter_date_from = '';
+    public $file_filter_date_to = '';
 
     public $userFileTypeOptions = [
         'offer_letter' => 'Offer Letter',
@@ -184,7 +188,76 @@ class UsersShow extends Component
         $this->all_roles = Role::whereNotIn('id', $this->user->roles->pluck('id')->toArray())
             ->orderBy('name')
             ->get();
-        $this->userFiles = $this->user->files;
+        $this->userFiles = UserFile::with('uploader')
+            ->where('user_id', $this->user->id)
+            ->latest()
+            ->get();
+    }
+
+    public function getFilteredUserFilesProperty()
+    {
+        $files = collect($this->userFiles);
+
+        if (!empty($this->file_filter_type)) {
+            $files = $files->where('file_type', $this->file_filter_type);
+        }
+
+        if (!empty($this->file_filter_date_from)) {
+            $dateFrom = Carbon::parse($this->file_filter_date_from)->startOfDay();
+            $files = $files->filter(function ($file) use ($dateFrom) {
+                return $file->created_at && $file->created_at->greaterThanOrEqualTo($dateFrom);
+            });
+        }
+
+        if (!empty($this->file_filter_date_to)) {
+            $dateTo = Carbon::parse($this->file_filter_date_to)->endOfDay();
+            $files = $files->filter(function ($file) use ($dateTo) {
+                return $file->created_at && $file->created_at->lessThanOrEqualTo($dateTo);
+            });
+        }
+
+        return $files->values();
+    }
+
+    public function resetUserFileFilters()
+    {
+        $this->file_filter_type = '';
+        $this->file_filter_date_from = '';
+        $this->file_filter_date_to = '';
+    }
+
+    public function exportUserFilesCsv()
+    {
+        $files = $this->filteredUserFiles;
+
+        if ($files->isEmpty()) {
+            session()->flash('error', 'No files available for the selected filter.');
+            return;
+        }
+
+        $filename = 'employee-files-' . $this->user->id . '-' . now()->format('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($files) {
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, ['Title', 'File Name', 'Type', 'Size', 'Uploaded By', 'Uploaded At', 'Description']);
+
+            foreach ($files as $file) {
+                fputcsv($handle, [
+                    $file->title ?: $file->file_name,
+                    $file->file_name,
+                    $this->userFileTypeLabel($file->file_type),
+                    $this->formatFileSize($file->file_size),
+                    $file->uploader->name ?? 'System',
+                    $file->created_at ? $file->created_at->format('Y-m-d H:i:s') : '',
+                    $file->description ?? '',
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 
     public function uploadUserFile()

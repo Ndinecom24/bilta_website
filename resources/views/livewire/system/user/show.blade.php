@@ -429,9 +429,38 @@
             @if ($activeTab === 'files')
                 <div class="card shadow-sm border-top-0" style="border-radius: 0 0 8px 8px;">
                     <div class="card-body">
+                        @php($filteredFiles = $this->filteredUserFiles)
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h6 class="font-weight-bold text-primary mb-0"><i class="fas fa-folder-open mr-1"></i> Employee Documents</h6>
-                            <span class="badge badge-secondary">{{ count($userFiles) }} file(s)</span>
+                            <span class="badge badge-secondary">{{ count($filteredFiles) }} file(s)</span>
+                        </div>
+
+                        <div class="p-3 rounded mb-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                            <div class="row align-items-end">
+                                <div class="col-md-4 mb-2">
+                                    <label for="fileFilterType" class="font-weight-bold" style="font-size: .82rem;">Filter by Type</label>
+                                    <select id="fileFilterType" class="form-control form-control-sm" wire:model="file_filter_type">
+                                        <option value="">All Types</option>
+                                        @foreach($userFileTypeOptions as $typeValue => $typeLabel)
+                                            <option value="{{ $typeValue }}">{{ $typeLabel }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label for="fileDateFrom" class="font-weight-bold" style="font-size: .82rem;">Date From</label>
+                                    <input id="fileDateFrom" type="date" class="form-control form-control-sm" wire:model="file_filter_date_from">
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label for="fileDateTo" class="font-weight-bold" style="font-size: .82rem;">Date To</label>
+                                    <input id="fileDateTo" type="date" class="form-control form-control-sm" wire:model="file_filter_date_to">
+                                </div>
+                                <div class="col-md-2 mb-2 text-right">
+                                    <button type="button" wire:click="resetUserFileFilters" class="btn btn-sm btn-outline-secondary mr-1">Reset</button>
+                                    <button type="button" wire:click="exportUserFilesCsv" class="btn btn-sm btn-outline-primary" @if(count($filteredFiles) === 0) disabled @endif>
+                                        <i class="fas fa-file-csv"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
                         @if($canManageUserFiles)
@@ -490,7 +519,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($userFiles as $index => $file)
+                                    @forelse($filteredFiles as $index => $file)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>
