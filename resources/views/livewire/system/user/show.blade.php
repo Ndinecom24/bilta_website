@@ -429,10 +429,10 @@
             @if ($activeTab === 'files')
                 <div class="card shadow-sm border-top-0" style="border-radius: 0 0 8px 8px;">
                     <div class="card-body">
-                        @php($filteredFiles = $this->filteredUserFiles)
+                        @php($paginatedFiles = $this->paginatedUserFiles)
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h6 class="font-weight-bold text-primary mb-0"><i class="fas fa-folder-open mr-1"></i> Employee Documents</h6>
-                            <span class="badge badge-secondary">{{ count($filteredFiles) }} file(s)</span>
+                            <span class="badge badge-secondary">{{ $paginatedFiles->total() }} file(s)</span>
                         </div>
 
                         <div class="p-3 rounded mb-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
@@ -454,9 +454,17 @@
                                     <label for="fileDateTo" class="font-weight-bold" style="font-size: .82rem;">Date To</label>
                                     <input id="fileDateTo" type="date" class="form-control form-control-sm" wire:model="file_filter_date_to">
                                 </div>
-                                <div class="col-md-2 mb-2 text-right">
+                                <div class="col-md-2 mb-2">
+                                    <label for="filesPerPage" class="font-weight-bold" style="font-size: .82rem;">Per Page</label>
+                                    <select id="filesPerPage" class="form-control form-control-sm" wire:model="filesPerPage">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mt-2 text-right">
                                     <button type="button" wire:click="resetUserFileFilters" class="btn btn-sm btn-outline-secondary mr-1">Reset</button>
-                                    <button type="button" wire:click="exportUserFilesCsv" class="btn btn-sm btn-outline-primary" @if(count($filteredFiles) === 0) disabled @endif>
+                                    <button type="button" wire:click="exportUserFilesCsv" class="btn btn-sm btn-outline-primary" @if($paginatedFiles->total() === 0) disabled @endif>
                                         <i class="fas fa-file-csv"></i>
                                     </button>
                                 </div>
@@ -519,9 +527,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($filteredFiles as $index => $file)
+                                    @forelse($paginatedFiles as $index => $file)
                                         <tr>
-                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ ($paginatedFiles->firstItem() ?? 1) + $index }}</td>
                                             <td>
                                                 <div class="font-weight-bold">{{ $file->title ?: $file->file_name }}</div>
                                                 <div class="text-muted" style="font-size: .78rem;">
@@ -562,6 +570,12 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        @if($paginatedFiles->hasPages())
+                            <div class="mt-3">
+                                {{ $paginatedFiles->links() }}
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endif

@@ -16,10 +16,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class UsersShow extends Component
 {
     use WithFileUploads;
+    use WithPagination;
 
     public $user, $user_id, $email, $name, $phone, $status_id, $password, $password_confirmation, $password_change, $role_id;
 
@@ -52,7 +54,7 @@ class UsersShow extends Component
     public $user_file_type;
     public $user_file_title;
     public $user_file_description;
-    public $userFiles = [];
+    public $filesPerPage = 10;
     public $file_filter_type = '';
     public $file_filter_date_from = '';
     public $file_filter_date_to = '';
@@ -188,35 +190,33 @@ class UsersShow extends Component
         $this->all_roles = Role::whereNotIn('id', $this->user->roles->pluck('id')->toArray())
             ->orderBy('name')
             ->get();
-        $this->userFiles = UserFile::with('uploader')
-            ->where('user_id', $this->user->id)
-            ->latest()
-            ->get();
     }
 
-    public function getFilteredUserFilesProperty()
+    public function getUserFilesQueryProperty()
     {
-        $files = collect($this->userFiles);
+        $query = UserFile::with('uploader')
+            ->where('user_id', $this->user->id);
 
         if (!empty($this->file_filter_type)) {
-            $files = $files->where('file_type', $this->file_filter_type);
+            $query->where('file_type', $this->file_filter_type);
         }
 
         if (!empty($this->file_filter_date_from)) {
             $dateFrom = Carbon::parse($this->file_filter_date_from)->startOfDay();
-            $files = $files->filter(function ($file) use ($dateFrom) {
-                return $file->created_at && $file->created_at->greaterThanOrEqualTo($dateFrom);
-            });
+            $query->where('created_at', '>=', $dateFrom);
         }
 
         if (!empty($this->file_filter_date_to)) {
             $dateTo = Carbon::parse($this->file_filter_date_to)->endOfDay();
-            $files = $files->filter(function ($file) use ($dateTo) {
-                return $file->created_at && $file->created_at->lessThanOrEqualTo($dateTo);
-            });
+            $query->where('created_at', '<=', $dateTo);
         }
 
-        return $files->values();
+        return $query->latest();
+    }
+
+    public function getPaginatedUserFilesProperty()
+    {
+        return $this->userFilesQuery->paginate($this->filesPerPage);
     }
 
     public function resetUserFileFilters()
@@ -224,11 +224,32 @@ class UsersShow extends Component
         $this->file_filter_type = '';
         $this->file_filter_date_from = '';
         $this->file_filter_date_to = '';
+        $this->resetPage();
+    }
+
+    public function updatedFileFilterType()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFileFilterDateFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFileFilterDateTo()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFilesPerPage()
+    {
+        $this->resetPage();
     }
 
     public function exportUserFilesCsv()
     {
-        $files = $this->filteredUserFiles;
+        $files = $this->userFilesQuery->get();
 
         if ($files->isEmpty()) {
             session()->flash('error', 'No files available for the selected filter.');
@@ -292,6 +313,7 @@ class UsersShow extends Component
             $this->reset(['user_file', 'user_file_title', 'user_file_description']);
             $this->user_file_type = 'offer_letter';
             $this->refreshUserData();
+            $this->resetPage();
 
             session()->flash('success', 'Employee file uploaded successfully.');
         } catch (\Exception $e) {
@@ -318,6 +340,7 @@ class UsersShow extends Component
             }
             $file->delete();
             $this->refreshUserData();
+            $this->resetPage();
             session()->flash('success', 'Employee file deleted successfully.');
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to delete file.');
