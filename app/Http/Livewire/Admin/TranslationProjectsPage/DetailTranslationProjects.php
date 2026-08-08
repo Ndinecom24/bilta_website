@@ -14,7 +14,7 @@ class DetailTranslationProjects extends Component
     use WithFileUploads;
 
     public $our_projects_id, $project, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id, $display_order,
-        $location, $location_map;
+        $location;
     public $title_image, $project_image, $project_file;
 
     public $updateProjectsItem = false;
@@ -32,7 +32,6 @@ class DetailTranslationProjects extends Component
         'category_id' => 'required',
         'display_order' => 'nullable|integer|min:0',
         'location' => 'required',
-        'location_map' => 'nullable',
         'title_image' => 'nullable|max:3072',
         'project_image.*' => 'nullable|max:3072',
         'project_file.*' => 'nullable|max:3072',
@@ -64,7 +63,6 @@ class DetailTranslationProjects extends Component
         $this->display_order = 0;
         $this->status_id = '';
         $this->location = '';
-        $this->location_map = '';
         $this->title_image = null;
         $this->project_image = null;
         $this->project_file = null;
@@ -80,7 +78,6 @@ class DetailTranslationProjects extends Component
         $this->post_date = $our_projects->post_date;
         $this->author = $our_projects->author;
         $this->location = $our_projects->location;
-        $this->location_map = $our_projects->location_map;
         $this->short_description = $our_projects->short_description;
         $this->category_id = $our_projects->category_id;
         $this->display_order = $our_projects->display_order ?? 0;
@@ -101,7 +98,6 @@ class DetailTranslationProjects extends Component
                     'post_date' => $this->post_date,
                     'author' => $this->author,
                     'location' => $this->location,
-                    'location_map' => $this->location_map,
                     'short_description' => $this->short_description,
                     'category_id' => $this->category_id,
                     'display_order' => $this->display_order ?? 0,

@@ -19,7 +19,7 @@ class ShowTranslationProjects extends Component
     use WithFileUploads;
 
     public $our_projects_id, $project, $details, $title, $short_description, $post_date, $author, $status_id, $created_by, $category_id, $display_order
-    , $location, $location_map, $latitude, $longitude ;
+    , $location, $latitude, $longitude ;
     public $title_image, $project_image , $project_file ;
 
     // Multiple locations support
@@ -40,7 +40,6 @@ class ShowTranslationProjects extends Component
         'author' => 'required',
         'display_order' => 'nullable|integer|min:0',
         'location' => 'required',
-        'location_map' => 'nullable',
         'title_image' => 'nullable|image|max:5120', // 5MB Max
         'project_image' => 'nullable|array',
         'project_image.*' => 'image|max:5120', // 5MB Max per image
@@ -51,7 +50,7 @@ class ShowTranslationProjects extends Component
     public function render()
     {
                 $translation_projects = Projects::select('id', 'title', 'details', 'short_description', 'post_date', 'author',
-                    'created_by', 'status_id', 'location', 'location_map', 'display_order'
+                    'created_by', 'status_id', 'location', 'display_order'
                 )
                         ->orderBy('display_order')
                         ->orderBy('created_at', 'desc')
@@ -134,7 +133,6 @@ class ShowTranslationProjects extends Component
                     'display_order' => $this->display_order ?? 0,
                     'status_id' => $this->status_id,
                     'location' => $this->location,
-                    'location_map' => $this->location_map,
                     'latitude' => $this->latitude,
                     'longitude' => $this->longitude,
                     'created_by' => auth()->user()->id
@@ -193,7 +191,6 @@ class ShowTranslationProjects extends Component
         $this->display_order = 0;
         $this->status_id = '';
         $this->location = '';
-        $this->location_map = '';
         $this->latitude = null;
         $this->longitude = null;
         $this->title_image = null ;
@@ -216,7 +213,6 @@ class ShowTranslationProjects extends Component
         $this->post_date = $our_projects->post_date;
         $this->author = $our_projects->author;
         $this->location = $our_projects->location;
-        $this->location_map = $our_projects->location_map;
         $this->latitude = $our_projects->latitude;
         $this->longitude = $our_projects->longitude;
         $this->short_description = $our_projects->short_description;
@@ -257,7 +253,6 @@ class ShowTranslationProjects extends Component
                     'post_date' => $this->post_date,
                     'author' => $this->author,
                     'location' => $this->location,
-                    'location_map' => $this->location_map,
                     'latitude' => $this->latitude,
                     'longitude' => $this->longitude,
                     'short_description' => $this->short_description,

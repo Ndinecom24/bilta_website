@@ -26,7 +26,6 @@ class Projects  extends Model implements HasMedia
         'author',
         'short_description' ,
         'location' ,
-        'location_map' ,
         'latitude' ,
         'longitude' ,
         'category_id' ,
