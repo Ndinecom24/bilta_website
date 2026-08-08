@@ -2,12 +2,14 @@
 
 namespace App\Http\Livewire\Admin\DocumentsPage;
 
+use App\Mail\DocumentsUploadedMail;
 use App\Models\Bilta\Department;
 use App\Models\Bilta\Document;
 use App\Models\Bilta\DocumentFolder;
 use App\Models\Bilta\DocumentFolderAccess;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -29,6 +31,8 @@ class EmployeeDocuments extends Component
     public $folderName = '';
     public $folderDescription = '';
     public $folderVisibility = 'everyone';
+    public $folderDepartmentIds = [];
+    public $folderUserIds = [];
 
     // File upload
     public $uploadFiles = [];
@@ -151,7 +155,9 @@ class EmployeeDocuments extends Component
     public function navigateToFolder($folderId)
     {
         $folder = DocumentFolder::find($folderId);
-        if (!$folder) return;
+        if (!$folder) {
+            return;
+        }
 
         // Access check
         if (!$folder->isAccessibleBy(auth()->user())) {
@@ -190,8 +196,10 @@ class EmployeeDocuments extends Component
         $this->validate([
             'folderName' => 'required|string|max:255',
             'folderDescription' => 'nullable|string|max:500',
-            'folderVisibility' => 'required|in:everyone,department,private',
+            'folderVisibility' => 'required|in:everyone,department,specific,private',
         ]);
+
+        $this->validateFolderVisibilityTargets();
 
         $folder = DocumentFolder::create([
             'name' => $this->folderName,
@@ -202,16 +210,7 @@ class EmployeeDocuments extends Component
             'created_by' => auth()->id(),
         ]);
 
-        // If department visibility and user has a department, auto-add their department
-        if ($this->folderVisibility === 'department' && auth()->user()->department_id) {
-            DocumentFolderAccess::create([
-                'folder_id' => $folder->id,
-                'target_type' => 'department',
-                'target_id' => auth()->user()->department_id,
-                'permission' => 'edit',
-                'granted_by' => auth()->id(),
-            ]);
-        }
+        $this->syncFolderVisibilityTargets($folder);
 
         session()->flash('success', 'Folder created successfully.');
         $this->resetFolderForm();
@@ -231,6 +230,16 @@ class EmployeeDocuments extends Component
         $this->folderName = $folder->name;
         $this->folderDescription = $folder->description;
         $this->folderVisibility = $folder->visibility;
+        $this->folderDepartmentIds = $folder->accessEntries()
+            ->where('target_type', 'department')
+            ->pluck('target_id')
+            ->map(fn ($id) => (string) $id)
+            ->toArray();
+        $this->folderUserIds = $folder->accessEntries()
+            ->where('target_type', 'user')
+            ->pluck('target_id')
+            ->map(fn ($id) => (string) $id)
+            ->toArray();
         $this->showFolderForm = true;
     }
 
@@ -239,8 +248,10 @@ class EmployeeDocuments extends Component
         $this->validate([
             'folderName' => 'required|string|max:255',
             'folderDescription' => 'nullable|string|max:500',
-            'folderVisibility' => 'required|in:everyone,department,private',
+            'folderVisibility' => 'required|in:everyone,department,specific,private',
         ]);
+
+        $this->validateFolderVisibilityTargets();
 
         $folder = DocumentFolder::findOrFail($this->editingFolderId);
 
@@ -255,6 +266,8 @@ class EmployeeDocuments extends Component
             'description' => $this->folderDescription,
             'visibility' => $this->folderVisibility,
         ]);
+
+        $this->syncFolderVisibilityTargets($folder);
 
         session()->flash('success', 'Folder updated.');
         $this->resetFolderForm();
@@ -318,12 +331,14 @@ class EmployeeDocuments extends Component
         }
 
         try {
+            $uploadedDocuments = collect();
+
             foreach ($this->uploadFiles as $file) {
                 $originalName = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
                 $storedPath = $file->store('documents', 'public');
 
-                Document::create([
+                $doc = Document::create([
                     'name' => pathinfo($originalName, PATHINFO_FILENAME),
                     'original_name' => $originalName,
                     'file_path' => $storedPath,
@@ -334,9 +349,35 @@ class EmployeeDocuments extends Component
                     'folder_id' => $this->currentFolderId,
                     'uploaded_by' => auth()->id(),
                 ]);
+
+                $uploadedDocuments->push($doc);
             }
 
-            session()->flash('success', count($this->uploadFiles) . ' file(s) uploaded successfully.');
+            $notified = 0;
+            if ($uploadedDocuments->isNotEmpty()) {
+                $recipients = $this->getFolderNotificationRecipients($folder);
+                foreach ($recipients as $recipient) {
+                    try {
+                        Mail::to($recipient->email)->send(new DocumentsUploadedMail(
+                            $recipient,
+                            auth()->user(),
+                            $folder,
+                            $uploadedDocuments,
+                            $this->fileDescription
+                        ));
+                        $notified++;
+                    } catch (\Exception $mailException) {
+                        // Continue uploading workflow even if some email notifications fail.
+                    }
+                }
+            }
+
+            $successMessage = count($this->uploadFiles) . ' file(s) uploaded successfully.';
+            if ($notified > 0) {
+                $successMessage .= ' Notification email sent to ' . $notified . ' user(s).';
+            }
+
+            session()->flash('success', $successMessage);
             $this->uploadFiles = [];
             $this->fileDescription = '';
             $this->showUploadForm = false;
@@ -408,7 +449,7 @@ class EmployeeDocuments extends Component
             return;
         }
 
-        return Storage::disk('public')->download($doc->file_path, $doc->original_name);
+        return response()->download(storage_path('app/public/' . $doc->file_path), $doc->original_name);
     }
 
     // ─── Sharing ─────────────────────────────────────────────────
@@ -507,5 +548,93 @@ class EmployeeDocuments extends Component
         $this->folderName = '';
         $this->folderDescription = '';
         $this->folderVisibility = 'everyone';
+        $this->folderDepartmentIds = [];
+        $this->folderUserIds = [];
+    }
+
+    private function validateFolderVisibilityTargets()
+    {
+        if ($this->folderVisibility === 'department') {
+            $this->validate([
+                'folderDepartmentIds' => 'required|array|min:1',
+                'folderDepartmentIds.*' => 'exists:departments,id',
+            ]);
+        }
+
+        if ($this->folderVisibility === 'specific') {
+            $this->validate([
+                'folderUserIds' => 'required|array|min:1',
+                'folderUserIds.*' => 'exists:users,id',
+            ]);
+        }
+    }
+
+    private function syncFolderVisibilityTargets(DocumentFolder $folder)
+    {
+        $folder->accessEntries()
+            ->where('permission', 'view')
+            ->whereIn('target_type', ['department', 'user'])
+            ->delete();
+
+        if ($this->folderVisibility === 'department') {
+            foreach ($this->folderDepartmentIds as $departmentId) {
+                DocumentFolderAccess::create([
+                    'folder_id' => $folder->id,
+                    'target_type' => 'department',
+                    'target_id' => (int) $departmentId,
+                    'permission' => 'view',
+                    'granted_by' => auth()->id(),
+                ]);
+            }
+        }
+
+        if ($this->folderVisibility === 'specific') {
+            foreach ($this->folderUserIds as $userId) {
+                DocumentFolderAccess::create([
+                    'folder_id' => $folder->id,
+                    'target_type' => 'user',
+                    'target_id' => (int) $userId,
+                    'permission' => 'view',
+                    'granted_by' => auth()->id(),
+                ]);
+            }
+        }
+    }
+
+    private function getFolderNotificationRecipients(DocumentFolder $folder)
+    {
+        $departmentIds = $folder->accessEntries()
+            ->where('target_type', 'department')
+            ->pluck('target_id')
+            ->unique()
+            ->values();
+
+        $userIds = $folder->accessEntries()
+            ->where('target_type', 'user')
+            ->pluck('target_id')
+            ->unique()
+            ->values();
+
+        $usersQuery = User::query()->whereNotNull('email')->where('id', '!=', auth()->id());
+
+        if ($folder->visibility === 'everyone') {
+            $users = $usersQuery->get();
+            return $users->unique('id')->values();
+        }
+
+        if ($departmentIds->isNotEmpty() || $userIds->isNotEmpty()) {
+            $usersQuery->where(function ($query) use ($departmentIds, $userIds) {
+                if ($departmentIds->isNotEmpty()) {
+                    $query->orWhereIn('department_id', $departmentIds->all());
+                }
+                if ($userIds->isNotEmpty()) {
+                    $query->orWhereIn('id', $userIds->all());
+                }
+            });
+        } else {
+            return collect();
+        }
+
+        return $usersQuery->get()->unique('id')->values();
     }
 }

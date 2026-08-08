@@ -237,6 +237,7 @@ class DocumentFolder extends Model
         return match ($this->visibility) {
             'everyone' => 'Company-wide',
             'department' => 'Departments',
+            'specific' => 'Specific Employees',
             'private' => 'Private',
             default => 'Unknown',
         };
@@ -250,6 +251,7 @@ class DocumentFolder extends Model
         return match ($this->visibility) {
             'everyone' => 'fas fa-globe text-success',
             'department' => 'fas fa-building text-info',
+            'specific' => 'fas fa-user-friends text-primary',
             'private' => 'fas fa-lock text-warning',
             default => 'fas fa-question text-muted',
         };
