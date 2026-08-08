@@ -119,13 +119,39 @@
                                 <input type="text" class="form-control form-control-sm" style="border-radius: 8px;" wire:model.defer="folderDescription" placeholder="Description (optional)">
                             </div>
                             <div class="col-md-3 mb-2">
-                                <select class="form-control form-control-sm" style="border-radius: 8px;" wire:model.defer="folderVisibility">
+                                <label for="folderVisibility" class="small font-weight-bold mb-1">Visibility</label>
+                                <select id="folderVisibility" class="form-control form-control-sm" style="border-radius: 8px;" wire:model="folderVisibility">
                                     <option value="everyone">Company-wide</option>
                                     <option value="department">Departments Only</option>
+                                    <option value="specific">Specific Employees</option>
                                     <option value="private">Private</option>
                                 </select>
                                 <small class="text-muted">Who can see this folder</small>
                             </div>
+                            @if ($folderVisibility === 'department')
+                                <div class="col-md-3 mb-2">
+                                    <label for="folderDepartmentIds" class="small font-weight-bold mb-1">Departments</label>
+                                    <select id="folderDepartmentIds" class="form-control form-control-sm" style="border-radius: 8px;" wire:model.defer="folderDepartmentIds" multiple size="4">
+                                        @foreach($departments as $dept)
+                                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">Multi-select allowed.</small>
+                                    @error('folderDepartmentIds') <small class="text-danger d-block">{{ $message }}</small> @enderror
+                                </div>
+                            @endif
+                            @if ($folderVisibility === 'specific')
+                                <div class="col-md-3 mb-2">
+                                    <label for="folderUserIds" class="small font-weight-bold mb-1">Individuals</label>
+                                    <select id="folderUserIds" class="form-control form-control-sm" style="border-radius: 8px;" wire:model.defer="folderUserIds" multiple size="4">
+                                        @foreach($users as $u)
+                                            <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">Multi-select employees.</small>
+                                    @error('folderUserIds') <small class="text-danger d-block">{{ $message }}</small> @enderror
+                                </div>
+                            @endif
                             <div class="col-md-3 mb-2">
                                 <button wire:click="{{ $editingFolderId ? 'updateFolder' : 'createFolder' }}" class="btn btn-sm btn-primary w-100" style="border-radius: 8px;">
                                     {{ $editingFolderId ? 'Update' : 'Create' }}

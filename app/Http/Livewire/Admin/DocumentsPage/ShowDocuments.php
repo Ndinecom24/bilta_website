@@ -29,6 +29,8 @@ class ShowDocuments extends Component
     public $folderName = '';
     public $folderDescription = '';
     public $folderVisibility = 'everyone';
+    public $folderDepartmentIds = [];
+    public $folderUserIds = [];
 
     // File upload
     public $uploadFiles = [];
@@ -142,10 +144,12 @@ class ShowDocuments extends Component
         $this->validate([
             'folderName' => 'required|string|max:255',
             'folderDescription' => 'nullable|string|max:500',
-            'folderVisibility' => 'required|in:everyone,department,private',
+            'folderVisibility' => 'required|in:everyone,department,specific,private',
         ]);
 
-        DocumentFolder::create([
+        $this->validateFolderVisibilityTargets();
+
+        $folder = DocumentFolder::create([
             'name' => $this->folderName,
             'slug' => Str::slug($this->folderName),
             'parent_id' => $this->currentFolderId,
@@ -153,6 +157,8 @@ class ShowDocuments extends Component
             'visibility' => $this->folderVisibility,
             'created_by' => auth()->id(),
         ]);
+
+        $this->syncFolderVisibilityTargets($folder);
 
         session()->flash('success', 'Folder created successfully.');
         $this->resetFolderForm();
@@ -166,6 +172,16 @@ class ShowDocuments extends Component
         $this->folderName = $folder->name;
         $this->folderDescription = $folder->description;
         $this->folderVisibility = $folder->visibility;
+        $this->folderDepartmentIds = $folder->accessEntries()
+            ->where('target_type', 'department')
+            ->pluck('target_id')
+            ->map(fn ($id) => (string) $id)
+            ->toArray();
+        $this->folderUserIds = $folder->accessEntries()
+            ->where('target_type', 'user')
+            ->pluck('target_id')
+            ->map(fn ($id) => (string) $id)
+            ->toArray();
         $this->showFolderForm = true;
     }
 
@@ -174,8 +190,10 @@ class ShowDocuments extends Component
         $this->validate([
             'folderName' => 'required|string|max:255',
             'folderDescription' => 'nullable|string|max:500',
-            'folderVisibility' => 'required|in:everyone,department,private',
+            'folderVisibility' => 'required|in:everyone,department,specific,private',
         ]);
+
+        $this->validateFolderVisibilityTargets();
 
         $folder = DocumentFolder::findOrFail($this->editingFolderId);
         $folder->update([
@@ -184,6 +202,8 @@ class ShowDocuments extends Component
             'description' => $this->folderDescription,
             'visibility' => $this->folderVisibility,
         ]);
+
+        $this->syncFolderVisibilityTargets($folder);
 
         session()->flash('success', 'Folder updated.');
         $this->resetFolderForm();
@@ -303,7 +323,7 @@ class ShowDocuments extends Component
     public function downloadDocument($id)
     {
         $doc = Document::findOrFail($id);
-        return Storage::disk('public')->download($doc->file_path, $doc->original_name);
+        return response()->download(storage_path('app/public/' . $doc->file_path), $doc->original_name);
     }
 
     // ─── Sharing ─────────────────────────────────────────────────
@@ -381,5 +401,56 @@ class ShowDocuments extends Component
         $this->folderName = '';
         $this->folderDescription = '';
         $this->folderVisibility = 'everyone';
+        $this->folderDepartmentIds = [];
+        $this->folderUserIds = [];
+    }
+
+    private function validateFolderVisibilityTargets()
+    {
+        if ($this->folderVisibility === 'department') {
+            $this->validate([
+                'folderDepartmentIds' => 'required|array|min:1',
+                'folderDepartmentIds.*' => 'exists:departments,id',
+            ]);
+        }
+
+        if ($this->folderVisibility === 'specific') {
+            $this->validate([
+                'folderUserIds' => 'required|array|min:1',
+                'folderUserIds.*' => 'exists:users,id',
+            ]);
+        }
+    }
+
+    private function syncFolderVisibilityTargets(DocumentFolder $folder)
+    {
+        $folder->accessEntries()
+            ->where('permission', 'view')
+            ->whereIn('target_type', ['department', 'user'])
+            ->delete();
+
+        if ($this->folderVisibility === 'department') {
+            foreach ($this->folderDepartmentIds as $departmentId) {
+                DocumentFolderAccess::create([
+                    'folder_id' => $folder->id,
+                    'target_type' => 'department',
+                    'target_id' => (int) $departmentId,
+                    'permission' => 'view',
+                    'granted_by' => auth()->id(),
+                ]);
+            }
+        }
+
+        if ($this->folderVisibility === 'specific') {
+            foreach ($this->folderUserIds as $userId) {
+                DocumentFolderAccess::create([
+                    'folder_id' => $folder->id,
+                    'target_type' => 'user',
+                    'target_id' => (int) $userId,
+                    'permission' => 'view',
+                    'granted_by' => auth()->id(),
+                ]);
+            }
+        }
     }
 }
