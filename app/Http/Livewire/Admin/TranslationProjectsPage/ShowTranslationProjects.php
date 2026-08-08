@@ -11,6 +11,7 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Schema;
 
 class ShowTranslationProjects extends Component
 {
@@ -108,6 +109,41 @@ class ShowTranslationProjects extends Component
         }
     }
 
+    private function hasLegacyLocationMapColumn(): bool
+    {
+        static $hasColumn = null;
+
+        if ($hasColumn === null) {
+            $hasColumn = Schema::hasColumn('projects', 'location_map');
+        }
+
+        return $hasColumn;
+    }
+
+    private function projectPayload(): array
+    {
+        $payload = [
+            'title' => $this->title,
+            'details' => $this->details,
+            'post_date' => $this->post_date,
+            'author' => $this->author,
+            'short_description' => $this->short_description,
+            'category_id' => $this->category_id,
+            'display_order' => $this->display_order ?? 0,
+            'status_id' => $this->status_id,
+            'location' => $this->location,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'created_by' => auth()->user()->id,
+        ];
+
+        if ($this->hasLegacyLocationMapColumn()) {
+            $payload['location_map'] = $this->location;
+        }
+
+        return $payload;
+    }
+
     public function store()
     {
         // Validate Form Request
@@ -123,20 +159,7 @@ class ShowTranslationProjects extends Component
                     'short_description' => $this->short_description,
                     'location' => $this->location,
                 ],
-                [
-                    'title' => $this->title,
-                    'details' => $this->details,
-                    'post_date' => $this->post_date,
-                    'author' => $this->author,
-                    'short_description' => $this->short_description,
-                    'category_id' => $this->category_id,
-                    'display_order' => $this->display_order ?? 0,
-                    'status_id' => $this->status_id,
-                    'location' => $this->location,
-                    'latitude' => $this->latitude,
-                    'longitude' => $this->longitude,
-                    'created_by' => auth()->user()->id
-                ]
+                $this->projectPayload()
             );
 
             // Sync multiple locations
@@ -247,20 +270,7 @@ class ShowTranslationProjects extends Component
         try {
             // Update our_projects
             Projects::find($this->our_projects_id)->fill(
-                [
-                    'title' => $this->title,
-                    'details' => $this->details,
-                    'post_date' => $this->post_date,
-                    'author' => $this->author,
-                    'location' => $this->location,
-                    'latitude' => $this->latitude,
-                    'longitude' => $this->longitude,
-                    'short_description' => $this->short_description,
-                    'category_id' => $this->category_id,
-                    'display_order' => $this->display_order ?? 0,
-                    'status_id' => $this->status_id,
-                    'created_by' => auth()->user()->id
-                ]
+                $this->projectPayload()
             )->save();
 
             // Sync multiple locations

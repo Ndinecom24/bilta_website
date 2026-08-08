@@ -12,6 +12,9 @@ use App\Models\Bilta\Projects;
 use App\Models\Bilta\Testimonial;
 use App\Models\Bilta\News;
 use App\Models\Bilta\Click;
+use App\Models\Bilta\Announcement;
+use App\Models\Bilta\Document;
+use App\Models\Bilta\LeaveApplication;
 use App\Models\ContactMessage;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +31,9 @@ class ShowAdminHome extends Component
     public $recentNews = [];
     public $recentMessages = [];
     public $clickTrendLabels = [], $clickTrendData = [];
+    public $announcementCount = 0;
+    public $documentCount = 0;
+    public $myLeaveCount = 0;
 
     public function mount()
     {
@@ -36,6 +42,9 @@ class ShowAdminHome extends Component
         $this->testimonialCount = Testimonial::count();
         $this->messageCount = ContactMessage::count();
         $this->newsCount = News::count();
+        $this->announcementCount = Announcement::published()->notArchived()->count();
+        $this->documentCount = Document::count();
+        $this->myLeaveCount = LeaveApplication::where('user_id', auth()->id())->count();
 
         // Project category chart
         $projectGroups = Projects::selectRaw('count(*) as total, category_id')

@@ -8,6 +8,7 @@ use App\Models\System\Status;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Support\Facades\Schema;
 
 class DetailTranslationProjects extends Component
 {
@@ -92,18 +93,7 @@ class DetailTranslationProjects extends Component
 
         try {
             Projects::find($this->our_projects_id)->fill(
-                [
-                    'title' => $this->title,
-                    'details' => $this->details,
-                    'post_date' => $this->post_date,
-                    'author' => $this->author,
-                    'location' => $this->location,
-                    'short_description' => $this->short_description,
-                    'category_id' => $this->category_id,
-                    'display_order' => $this->display_order ?? 0,
-                    'status_id' => $this->status_id,
-                    'created_by' => auth()->user()->id,
-                ]
+                $this->projectPayload()
             )->save();
 
             $projects = Projects::find($this->our_projects_id);
@@ -163,5 +153,38 @@ class DetailTranslationProjects extends Component
     {
         Media::find($item)->delete();
         session()->flash('success', 'Projects File Deleted Successfully!!');
+    }
+
+    private function hasLegacyLocationMapColumn(): bool
+    {
+        static $hasColumn = null;
+
+        if ($hasColumn === null) {
+            $hasColumn = Schema::hasColumn('projects', 'location_map');
+        }
+
+        return $hasColumn;
+    }
+
+    private function projectPayload(): array
+    {
+        $payload = [
+            'title' => $this->title,
+            'details' => $this->details,
+            'post_date' => $this->post_date,
+            'author' => $this->author,
+            'location' => $this->location,
+            'short_description' => $this->short_description,
+            'category_id' => $this->category_id,
+            'display_order' => $this->display_order ?? 0,
+            'status_id' => $this->status_id,
+            'created_by' => auth()->user()->id,
+        ];
+
+        if ($this->hasLegacyLocationMapColumn()) {
+            $payload['location_map'] = $this->location;
+        }
+
+        return $payload;
     }
 }

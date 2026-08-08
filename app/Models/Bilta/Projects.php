@@ -16,8 +16,6 @@ class Projects  extends Model implements HasMedia
     use HasFactory;
     use \Illuminate\Database\Eloquent\SoftDeletes;
 
-    use HasFactory;
-
     protected $table = 'projects';
     protected $fillable = [
         'title',
@@ -26,6 +24,7 @@ class Projects  extends Model implements HasMedia
         'author',
         'short_description' ,
         'location' ,
+        'location_map' ,
         'latitude' ,
         'longitude' ,
         'category_id' ,

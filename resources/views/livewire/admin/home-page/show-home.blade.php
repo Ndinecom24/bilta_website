@@ -66,6 +66,19 @@
         box-shadow: 0 14px 30px rgba(15, 23, 42, .08);
     }
 
+    .dashboard-stat-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        height: 100%;
+    }
+
+    .dashboard-stat-link:hover,
+    .dashboard-stat-link:focus {
+        text-decoration: none;
+        color: inherit;
+    }
+
     .dashboard-stat-label {
         font-size: .74rem;
         letter-spacing: .06em;
@@ -121,22 +134,128 @@
     .dashboard-chart-body {
         padding: .65rem .8rem .95rem;
     }
+
+    .dashboard-links-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, .05);
+        margin-bottom: 1rem;
+    }
+
+    .dashboard-links-header {
+        border-bottom: 1px solid #e2e8f0;
+        padding: .9rem 1rem;
+    }
+
+    .dashboard-links-title {
+        margin: 0;
+        font-size: .95rem;
+        font-weight: 700;
+        color: #111147;
+    }
+
+    .dashboard-links-subtitle {
+        margin: .2rem 0 0;
+        color: #64748b;
+        font-size: .82rem;
+    }
+
+    .dashboard-links-body {
+        padding: .9rem;
+    }
+
+    .dashboard-link-item {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: .75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all .2s ease;
+        height: 100%;
+    }
+
+    .dashboard-link-item:hover {
+        border-color: #bfdbfe;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, .08);
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+
+    .dashboard-link-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .95rem;
+        background: #eff6ff;
+        color: #1d4ed8;
+        flex-shrink: 0;
+    }
+
+    .dashboard-link-label {
+        font-size: .88rem;
+        font-weight: 700;
+        color: #111147;
+        line-height: 1.2;
+        margin-bottom: .2rem;
+    }
+
+    .dashboard-link-meta {
+        font-size: .76rem;
+        color: #64748b;
+        line-height: 1.3;
+    }
 </style>
+
+    @php
+        $isAdminDashboard = auth()->user()->hasRole('admin') || auth()->user()->canany([
+            'manage-projects',
+            'manage-news',
+            'manage-testimonials',
+            'view-emails',
+            'view-analytics',
+            'manage-announcements',
+            'manage-documents',
+            'manage-leave-applications',
+        ]);
+    @endphp
 
     <div class="dashboard-hero">
         <div class="dashboard-hero-title">Dashboard Overview</div>
-        <p class="dashboard-hero-subtitle">Monitor content performance, engagement trends, and latest activity at a glance.</p>
+        <p class="dashboard-hero-subtitle">
+            {{ $isAdminDashboard
+                ? 'Monitor content performance, engagement trends, and latest activity at a glance.'
+                : 'Access your employee tools quickly and stay updated with announcements, documents, and leave requests.' }}
+        </p>
     </div>
 
     <div class="row mb-2">
-        @foreach ([
-            ['label' => 'Users', 'count' => $userCount, 'icon' => 'fas fa-users', 'class' => 'users'],
-            ['label' => 'Projects', 'count' => $projectCount, 'icon' => 'fas fa-project-diagram', 'class' => 'projects'],
-            ['label' => 'Testimonials', 'count' => $testimonialCount, 'icon' => 'fas fa-comments', 'class' => 'testimonials'],
-            ['label' => 'Messages', 'count' => $messageCount, 'icon' => 'fas fa-envelope', 'class' => 'messages'],
-            ['label' => 'News', 'count' => $newsCount, 'icon' => 'fas fa-newspaper', 'class' => 'news'],
-        ] as $card)
-            <div class="col-xl col-lg-4 col-md-6 mb-3">
+        @php
+            $cards = $isAdminDashboard
+                ? [
+                    ['label' => 'Users', 'count' => $userCount, 'icon' => 'fas fa-users', 'class' => 'users', 'route' => auth()->user()->hasRole('admin') ? route('system.users') : null],
+                    ['label' => 'Projects', 'count' => $projectCount, 'icon' => 'fas fa-project-diagram', 'class' => 'projects', 'route' => auth()->user()->can('manage-projects') ? route('admin.page.item.projects') : null],
+                    ['label' => 'Testimonials', 'count' => $testimonialCount, 'icon' => 'fas fa-comments', 'class' => 'testimonials', 'route' => auth()->user()->can('manage-testimonials') ? route('admin.page.testimonial') : null],
+                    ['label' => 'Messages', 'count' => $messageCount, 'icon' => 'fas fa-envelope', 'class' => 'messages', 'route' => auth()->user()->can('view-emails') ? route('admin.page.contact.emails') : null],
+                    ['label' => 'News', 'count' => $newsCount, 'icon' => 'fas fa-newspaper', 'class' => 'news', 'route' => auth()->user()->can('manage-news') ? route('admin.page.item.news') : null],
+                ]
+                : [
+                    ['label' => 'Announcements', 'count' => $announcementCount, 'icon' => 'fas fa-bell', 'class' => 'news', 'route' => route('employee.announcements')],
+                    ['label' => 'Documents', 'count' => $documentCount, 'icon' => 'fas fa-folder-open', 'class' => 'projects', 'route' => route('employee.documents')],
+                    ['label' => 'My Leave Requests', 'count' => $myLeaveCount, 'icon' => 'fas fa-user-clock', 'class' => 'messages', 'route' => auth()->user()->can('apply-leave') ? route('admin.leave.my-applications') : route('admin.training')],
+                ];
+        @endphp
+
+        @foreach ($cards as $card)
+            <div class="{{ $isAdminDashboard ? 'col-xl col-lg-4 col-md-6' : 'col-lg-4 col-md-6' }} mb-3">
+                @if (!empty($card['route']))
+                    <a href="{{ $card['route'] }}" class="dashboard-stat-link">
+                @endif
                 <div class="dashboard-stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <div class="dashboard-stat-label">{{ $card['label'] }}</div>
@@ -146,9 +265,142 @@
                         <i class="{{ $card['icon'] }}"></i>
                     </div>
                 </div>
+                @if (!empty($card['route']))
+                    </a>
+                @endif
             </div>
         @endforeach
     </div>
+
+    <div class="dashboard-links-card">
+        <div class="dashboard-links-header">
+            <h6 class="dashboard-links-title">Dashboard Links</h6>
+            <p class="dashboard-links-subtitle">
+                {{ $isAdminDashboard
+                    ? 'Use these shortcuts to jump directly to your most important admin tasks.'
+                    : 'Use these shortcuts to access your day-to-day employee tools quickly.' }}
+            </p>
+        </div>
+        <div class="dashboard-links-body">
+            <div class="row">
+                @can('manage-projects')
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                        <a href="{{ route('admin.page.item.projects') }}" class="dashboard-link-item">
+                            <div class="dashboard-link-icon"><i class="fas fa-language"></i></div>
+                            <div>
+                                <div class="dashboard-link-label">Translation Projects</div>
+                                <div class="dashboard-link-meta">Manage project records and details</div>
+                            </div>
+                        </a>
+                    </div>
+                @endcan
+
+                @can('manage-news')
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                        <a href="{{ route('admin.page.item.news') }}" class="dashboard-link-item">
+                            <div class="dashboard-link-icon"><i class="fas fa-newspaper"></i></div>
+                            <div>
+                                <div class="dashboard-link-label">News & Updates</div>
+                                <div class="dashboard-link-meta">Create and publish news posts</div>
+                            </div>
+                        </a>
+                    </div>
+                @endcan
+
+                @can('view-analytics')
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                        <a href="{{ route('admin.page.live.analytics.clicks') }}" class="dashboard-link-item">
+                            <div class="dashboard-link-icon"><i class="fas fa-chart-line"></i></div>
+                            <div>
+                                <div class="dashboard-link-label">Live Analytics</div>
+                                <div class="dashboard-link-meta">Track clicks and traffic behavior</div>
+                            </div>
+                        </a>
+                    </div>
+                @endcan
+
+                @can('manage-announcements')
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                        <a href="{{ route('admin.announcements') }}" class="dashboard-link-item">
+                            <div class="dashboard-link-icon"><i class="fas fa-bullhorn"></i></div>
+                            <div>
+                                <div class="dashboard-link-label">Announcements</div>
+                                <div class="dashboard-link-meta">Post memos and internal updates</div>
+                            </div>
+                        </a>
+                    </div>
+                @endcan
+
+                @can('manage-documents')
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                        <a href="{{ route('admin.documents') }}" class="dashboard-link-item">
+                            <div class="dashboard-link-icon"><i class="fas fa-folder-open"></i></div>
+                            <div>
+                                <div class="dashboard-link-label">Documents</div>
+                                <div class="dashboard-link-meta">Organize files and downloads</div>
+                            </div>
+                        </a>
+                    </div>
+                @endcan
+
+                @can('manage-leave-applications')
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                        <a href="{{ route('admin.leave.applications') }}" class="dashboard-link-item">
+                            <div class="dashboard-link-icon"><i class="fas fa-calendar-check"></i></div>
+                            <div>
+                                <div class="dashboard-link-label">Leave Applications</div>
+                                <div class="dashboard-link-meta">Review and process staff leave</div>
+                            </div>
+                        </a>
+                    </div>
+                @endcan
+
+                @can('apply-leave')
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                        <a href="{{ route('admin.leave.my-applications') }}" class="dashboard-link-item">
+                            <div class="dashboard-link-icon"><i class="fas fa-user-clock"></i></div>
+                            <div>
+                                <div class="dashboard-link-label">My Leave</div>
+                                <div class="dashboard-link-meta">Submit and track your requests</div>
+                            </div>
+                        </a>
+                    </div>
+                @endcan
+
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                    <a href="{{ route('admin.training') }}" class="dashboard-link-item">
+                        <div class="dashboard-link-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <div>
+                            <div class="dashboard-link-label">Training Center</div>
+                            <div class="dashboard-link-meta">Learn roles, workflows, and tools</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                    <a href="{{ route('employee.announcements') }}" class="dashboard-link-item">
+                        <div class="dashboard-link-icon"><i class="fas fa-bell"></i></div>
+                        <div>
+                            <div class="dashboard-link-label">My Announcements</div>
+                            <div class="dashboard-link-meta">View published internal notices</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-3">
+                    <a href="{{ route('employee.documents') }}" class="dashboard-link-item">
+                        <div class="dashboard-link-icon"><i class="fas fa-file-download"></i></div>
+                        <div>
+                            <div class="dashboard-link-label">My Documents</div>
+                            <div class="dashboard-link-meta">Browse and download shared files</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if ($isAdminDashboard)
 
     {{-- Announcements Dashboard Widget --}}
     <div class="row mb-2">
@@ -304,55 +556,73 @@
             </div>
         </div>
     </div>
+    @else
+    <div class="dashboard-chart-card mb-3">
+        <div class="dashboard-chart-header">
+            <h6 class="dashboard-chart-title">Employee Workspace</h6>
+        </div>
+        <div class="dashboard-chart-body">
+            <p class="mb-0 text-muted">Your dashboard is simplified for quick daily actions. Use the totals and dashboard links above to open announcements, documents, leave requests, and training resources.</p>
+        </div>
+    </div>
+    @endif
 
 @push('custom-scripts')
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script>
     document.addEventListener('livewire:load', function () {
-        Highcharts.chart('projectChart', {
-            chart: { type: 'column' },
-            title: { text: null },
-            credits: { enabled: false },
-            xAxis: { categories: {!! json_encode($chartLabels) !!} },
-            yAxis: { min: 0, title: { text: 'Projects' } },
-            series: [{ name: 'Projects', data: {!! json_encode($chartData) !!}, color: '#0ea5e9' }]
-        });
+        if (document.getElementById('projectChart')) {
+            Highcharts.chart('projectChart', {
+                chart: { type: 'column' },
+                title: { text: null },
+                credits: { enabled: false },
+                xAxis: { categories: {!! json_encode($chartLabels) !!} },
+                yAxis: { min: 0, title: { text: 'Projects' } },
+                series: [{ name: 'Projects', data: {!! json_encode($chartData) !!}, color: '#0ea5e9' }]
+            });
+        }
 
-        Highcharts.chart('clicksChart', {
-            chart: { type: 'column' },
-            title: { text: null },
-            credits: { enabled: false },
-            xAxis: {
-                categories: {!! json_encode($clickChartUrls) !!},
-                labels: { rotation: -45, style: { fontSize: '10px' } }
-            },
-            yAxis: { min: 0, title: { text: 'Click Count' } },
-            tooltip: { shared: true },
-            plotOptions: { column: { grouping: true, shadow: false } },
-            series: [
-                { name: 'Today', data: {!! json_encode($clicksToday) !!}, color: '#2563eb' },
-                { name: 'This Week', data: {!! json_encode($clicksWeek) !!}, color: '#059669' },
-                { name: 'This Month', data: {!! json_encode($clicksMonth) !!}, color: '#cd5b13' }
-            ]
-        });
+        if (document.getElementById('clicksChart')) {
+            Highcharts.chart('clicksChart', {
+                chart: { type: 'column' },
+                title: { text: null },
+                credits: { enabled: false },
+                xAxis: {
+                    categories: {!! json_encode($clickChartUrls) !!},
+                    labels: { rotation: -45, style: { fontSize: '10px' } }
+                },
+                yAxis: { min: 0, title: { text: 'Click Count' } },
+                tooltip: { shared: true },
+                plotOptions: { column: { grouping: true, shadow: false } },
+                series: [
+                    { name: 'Today', data: {!! json_encode($clicksToday) !!}, color: '#2563eb' },
+                    { name: 'This Week', data: {!! json_encode($clicksWeek) !!}, color: '#059669' },
+                    { name: 'This Month', data: {!! json_encode($clicksMonth) !!}, color: '#cd5b13' }
+                ]
+            });
+        }
 
-        Highcharts.chart('newsGraph', {
-            chart: { type: 'line' },
-            title: { text: null },
-            credits: { enabled: false },
-            xAxis: { categories: {!! json_encode($newsChartLabels) !!} },
-            yAxis: { min: 0, title: { text: 'News Posts' } },
-            series: [{ name: 'News', data: {!! json_encode($newsChartData) !!}, color: '#cd5b13' }]
-        });
+        if (document.getElementById('newsGraph')) {
+            Highcharts.chart('newsGraph', {
+                chart: { type: 'line' },
+                title: { text: null },
+                credits: { enabled: false },
+                xAxis: { categories: {!! json_encode($newsChartLabels) !!} },
+                yAxis: { min: 0, title: { text: 'News Posts' } },
+                series: [{ name: 'News', data: {!! json_encode($newsChartData) !!}, color: '#cd5b13' }]
+            });
+        }
 
-        Highcharts.chart('clickTrendChart', {
-            chart: { type: 'areaspline' },
-            title: { text: null },
-            credits: { enabled: false },
-            xAxis: { categories: {!! json_encode($clickTrendLabels) !!} },
-            yAxis: { min: 0, title: { text: 'Clicks' } },
-            series: [{ name: 'Daily Clicks', data: {!! json_encode($clickTrendData) !!}, color: '#1d4ed8' }]
-        });
+        if (document.getElementById('clickTrendChart')) {
+            Highcharts.chart('clickTrendChart', {
+                chart: { type: 'areaspline' },
+                title: { text: null },
+                credits: { enabled: false },
+                xAxis: { categories: {!! json_encode($clickTrendLabels) !!} },
+                yAxis: { min: 0, title: { text: 'Clicks' } },
+                series: [{ name: 'Daily Clicks', data: {!! json_encode($clickTrendData) !!}, color: '#1d4ed8' }]
+            });
+        }
     });
 </script>
 @endpush
