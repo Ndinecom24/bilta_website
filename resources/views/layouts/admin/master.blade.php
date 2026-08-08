@@ -13,9 +13,6 @@
 
     <!-- Fonts & Icons -->
     <link href="{{ asset('admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
 
     <!-- Core Styles -->
     <link href="{{ asset('/admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
@@ -54,7 +51,7 @@
         }
 
         * {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
 
         html {
