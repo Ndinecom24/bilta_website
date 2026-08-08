@@ -147,6 +147,26 @@
         opacity: .85;
     }
 
+    .admin-role-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        margin-top: .45rem;
+        padding: .2rem .55rem;
+        border-radius: 999px;
+        font-size: .65rem;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.08);
+        color: #e2e8f0;
+    }
+
+    .admin-role-pill i {
+        font-size: .62rem;
+    }
+
     /* ===================================
         DIVIDERS & HEADINGS
     ==================================== */
@@ -213,6 +233,17 @@
 
     .admin-sidebar .nav-item .nav-link span {
         flex: 1;
+    }
+
+    .admin-sidebar .menu-arrow {
+        color: #7c8490;
+        font-size: .72rem;
+        transition: transform .2s ease, color .2s ease;
+    }
+
+    .admin-sidebar .nav-link[aria-expanded="true"] .menu-arrow {
+        transform: rotate(180deg);
+        color: #cd5b13;
     }
 
     /* Hover */
@@ -324,6 +355,20 @@
     .admin-sidebar .collapse-inner .collapse-item.active {
         background: rgba(205, 91, 19, 0.10);
 
+        color: #cd5b13;
+    }
+
+    .admin-sidebar .collapse-inner .collapse-item i {
+        width: 16px;
+        margin-right: .35rem;
+        color: #94a3b8;
+        font-size: .76rem;
+        text-align: center;
+    }
+
+    .admin-sidebar .collapse-inner .collapse-item.active i,
+    .admin-sidebar .collapse-inner .collapse-item:hover i,
+    .admin-sidebar .collapse-inner .collapse-item:focus i {
         color: #cd5b13;
     }
 
@@ -476,6 +521,10 @@
     }
 </style>
 
+@php
+    $isAdminUser = auth()->check() ? auth()->user()->hasRole('admin') : false;
+@endphp
+
 <ul class="navbar-nav sidebar sidebar-dark accordion admin-sidebar" id="accordionSidebar">
 
     <!-- BRAND -->
@@ -493,6 +542,11 @@
 
                 <div class="admin-brand-subtitle">
                     Content Management Hub
+                </div>
+
+                <div class="admin-role-pill">
+                    <i class="fas {{ $isAdminUser ? 'fa-user-shield' : 'fa-user' }}"></i>
+                    {{ $isAdminUser ? 'Administrator' : 'Employee Access' }}
                 </div>
             </div>
 
@@ -525,11 +579,12 @@
             href="#"
             data-toggle="collapse"
             data-target="#collapseCompany"
-            aria-expanded="true"
+            aria-expanded="{{ request()->routeIs('admin.page.intro') || request()->routeIs('admin.company.about-us') || request()->routeIs('admin.company.values') || request()->routeIs('admin.company.services') || request()->routeIs('admin.company.contact-us') || request()->routeIs('admin.page.chairmans.messages') || request()->routeIs('admin.page.our.sponsors') || request()->routeIs('admin.page.contact.emails') || request()->routeIs('admin.page.front.requests') || request()->routeIs('admin.page.our-team') ? 'true' : 'false' }}"
             aria-controls="collapseCompany">
 
             <i class="fas fa-building"></i>
             <span>Company Information</span>
+            <i class="fas fa-chevron-down menu-arrow"></i>
 
         </a>
 
@@ -540,61 +595,71 @@
             <div class="collapse-inner">
 
                 @can('manage-home-intro')
-                <a class="collapse-item" href="{{ route('admin.page.intro') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.intro') ? 'active' : '' }}" href="{{ route('admin.page.intro') }}">
+                    <i class="fas fa-home"></i>
                     Home Intro
                 </a>
                 @endcan
 
                 @can('manage-about-us')
-                <a class="collapse-item" href="{{ route('admin.company.about-us') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.company.about-us') ? 'active' : '' }}" href="{{ route('admin.company.about-us') }}">
+                    <i class="fas fa-address-card"></i>
                     About Us
                 </a>
                 @endcan
 
                 @can('manage-values')
-                <a class="collapse-item" href="{{ route('admin.company.values') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.company.values') ? 'active' : '' }}" href="{{ route('admin.company.values') }}">
+                    <i class="fas fa-gem"></i>
                     Our Values
                 </a>
                 @endcan
 
                 @can('manage-services')
-                <a class="collapse-item" href="{{ route('admin.company.services') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.company.services') ? 'active' : '' }}" href="{{ route('admin.company.services') }}">
+                    <i class="fas fa-briefcase"></i>
                     Services
                 </a>
                 @endcan
 
                 @can('manage-contact-us')
-                <a class="collapse-item" href="{{ route('admin.company.contact-us') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.company.contact-us') ? 'active' : '' }}" href="{{ route('admin.company.contact-us') }}">
+                    <i class="fas fa-address-book"></i>
                     Contact Us
                 </a>
                 @endcan
 
                 @can('manage-chairman-message')
-                <a class="collapse-item" href="{{ route('admin.page.chairmans.messages') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.chairmans.messages') ? 'active' : '' }}" href="{{ route('admin.page.chairmans.messages') }}">
+                    <i class="fas fa-comment-dots"></i>
                     Chairman Message
                 </a>
                 @endcan
 
                 @can('manage-sponsors')
-                <a class="collapse-item" href="{{ route('admin.page.our.sponsors') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.our.sponsors') ? 'active' : '' }}" href="{{ route('admin.page.our.sponsors') }}">
+                    <i class="fas fa-handshake"></i>
                     Partners
                 </a>
                 @endcan
 
                 @can('view-emails')
-                <a class="collapse-item" href="{{ route('admin.page.contact.emails') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.contact.emails') ? 'active' : '' }}" href="{{ route('admin.page.contact.emails') }}">
+                    <i class="fas fa-envelope-open-text"></i>
                     Email Messages
                 </a>
                 @endcan
 
                 @can('view-front-requests')
-                <a class="collapse-item" href="{{ route('admin.page.front.requests') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.front.requests') ? 'active' : '' }}" href="{{ route('admin.page.front.requests') }}">
+                    <i class="fas fa-inbox"></i>
                     Front Requests
                 </a>
                 @endcan
 
                 @can('manage-team')
-                <a class="collapse-item" href="{{ route('admin.page.our-team') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.our-team') ? 'active' : '' }}" href="{{ route('admin.page.our-team') }}">
+                    <i class="fas fa-user-friends"></i>
                     Our Team
                 </a>
                 @endcan
@@ -618,11 +683,12 @@
             href="#"
             data-toggle="collapse"
             data-target="#collapsePages"
-            aria-expanded="true"
+            aria-expanded="{{ request()->routeIs('admin.company.faqs') || request()->routeIs('admin.page.weekly-prayer-points') || request()->routeIs('admin.page.item.news') || request()->routeIs('admin.page.item.newsletters') || request()->routeIs('admin.page.testimonies') || request()->routeIs('admin.page.testimonial') || request()->routeIs('admin.page.item.gallery') || request()->routeIs('admin.page.item.videos') || request()->routeIs('admin.page.item.audio') || request()->routeIs('admin.page.item.projects') || request()->routeIs('admin.page.item.projects.map') || request()->routeIs('admin.page.item.category') || request()->routeIs('admin.page.live.analytics.clicks') ? 'true' : 'false' }}"
             aria-controls="collapsePages">
 
             <i class="fas fa-layer-group"></i>
             <span>Content Pages</span>
+            <i class="fas fa-chevron-down menu-arrow"></i>
 
         </a>
 
@@ -633,76 +699,88 @@
             <div class="collapse-inner">
 
                 @can('manage-faqs')
-                <a class="collapse-item" href="{{ route('admin.company.faqs') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.company.faqs') ? 'active' : '' }}" href="{{ route('admin.company.faqs') }}">
+                    <i class="fas fa-question-circle"></i>
                     FAQs
                 </a>
                 @endcan
 
                 @can('manage-prayer-points')
-                <a class="collapse-item" href="{{ route('admin.page.weekly-prayer-points') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.weekly-prayer-points') ? 'active' : '' }}" href="{{ route('admin.page.weekly-prayer-points') }}">
+                    <i class="fas fa-praying-hands"></i>
                     Prayer Points
                 </a>
                 @endcan
 
                 @can('manage-news')
-                <a class="collapse-item" href="{{ route('admin.page.item.news') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.item.news') ? 'active' : '' }}" href="{{ route('admin.page.item.news') }}">
+                    <i class="fas fa-newspaper"></i>
                     News
                 </a>
                 @endcan
 
                 @can('manage-newsletters')
-                <a class="collapse-item" href="{{ route('admin.page.item.newsletters') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.item.newsletters') ? 'active' : '' }}" href="{{ route('admin.page.item.newsletters') }}">
+                    <i class="fas fa-paper-plane"></i>
                     Newsletters
                 </a>
                 @endcan
 
                 @can('manage-testimonies')
-                <a class="collapse-item" href="{{ route('admin.page.testimonies') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.testimonies') ? 'active' : '' }}" href="{{ route('admin.page.testimonies') }}">
+                    <i class="fas fa-comment-alt"></i>
                     Testimonies
                 </a>
                 @endcan
 
                 @can('manage-testimonials')
-                <a class="collapse-item" href="{{ route('admin.page.testimonial') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.testimonial') ? 'active' : '' }}" href="{{ route('admin.page.testimonial') }}">
+                    <i class="fas fa-quote-right"></i>
                     Short Testimonials
                 </a>
                 @endcan
 
                 @can('manage-gallery')
-                <a class="collapse-item" href="{{ route('admin.page.item.gallery') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.item.gallery') ? 'active' : '' }}" href="{{ route('admin.page.item.gallery') }}">
+                    <i class="fas fa-images"></i>
                     Gallery
                 </a>
                 @endcan
 
                 @can('manage-videos')
-                <a class="collapse-item" href="{{ route('admin.page.item.videos') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.item.videos') ? 'active' : '' }}" href="{{ route('admin.page.item.videos') }}">
+                    <i class="fas fa-video"></i>
                     Videos
                 </a>
                 @endcan
 
                 @can('manage-audio')
-                <a class="collapse-item" href="{{ route('admin.page.item.audio') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.item.audio') ? 'active' : '' }}" href="{{ route('admin.page.item.audio') }}">
+                    <i class="fas fa-headphones"></i>
                     Audio
                 </a>
                 @endcan
 
                 @can('manage-projects')
-                <a class="collapse-item" href="{{ route('admin.page.item.projects') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.item.projects') ? 'active' : '' }}" href="{{ route('admin.page.item.projects') }}">
+                    <i class="fas fa-language"></i>
                     Projects
                 </a>
-                <a class="collapse-item" href="{{ route('admin.page.item.projects.map') }}">
-                    <i class="fas fa-map-marked-alt mr-1"></i> Projects Map
+                <a class="collapse-item {{ request()->routeIs('admin.page.item.projects.map') ? 'active' : '' }}" href="{{ route('admin.page.item.projects.map') }}">
+                    <i class="fas fa-map-marked-alt"></i> Projects Map
                 </a>
                 @endcan
 
                 @can('manage-categories')
-                <a class="collapse-item" href="{{ route('admin.page.item.category') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.item.category') ? 'active' : '' }}" href="{{ route('admin.page.item.category') }}">
+                    <i class="fas fa-tags"></i>
                     Categories
                 </a>
                 @endcan
 
                 @can('view-analytics')
-                <a class="collapse-item" href="{{ route('admin.page.live.analytics.clicks') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.page.live.analytics.clicks') ? 'active' : '' }}" href="{{ route('admin.page.live.analytics.clicks') }}">
+                    <i class="fas fa-chart-line"></i>
                     Analytics
                 </a>
                 @endcan
@@ -751,7 +829,7 @@
     @can('manage-announcements')
     <li class="nav-item {{ request()->routeIs('admin.announcements') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.announcements') }}">
-            <i class="fas fa-fw fa-megaphone"></i>
+            <i class="fas fa-fw fa-bullhorn"></i>
             <span>Manage Announcements</span>
         </a>
     </li>
@@ -785,6 +863,7 @@
             aria-controls="collapseLeave">
             <i class="fas fa-fw fa-calendar-alt"></i>
             <span>Leave</span>
+            <i class="fas fa-chevron-down menu-arrow"></i>
         </a>
 
         <div id="collapseLeave"
@@ -795,31 +874,36 @@
             <div class="bg-white py-2 collapse-inner rounded">
 
                 @can('apply-leave')
-                <a class="collapse-item" href="{{ route('admin.leave.my-applications') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.leave.my-applications') ? 'active' : '' }}" href="{{ route('admin.leave.my-applications') }}">
+                    <i class="fas fa-user-clock"></i>
                     My Leave
                 </a>
                 @endcan
 
                 @can('manage-leave-applications')
-                <a class="collapse-item" href="{{ route('admin.leave.applications') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.leave.applications') ? 'active' : '' }}" href="{{ route('admin.leave.applications') }}">
+                    <i class="fas fa-clipboard-list"></i>
                     All Applications
                 </a>
                 @endcan
 
                 @can('manage-leave-types')
-                <a class="collapse-item" href="{{ route('admin.leave.types') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.leave.types') ? 'active' : '' }}" href="{{ route('admin.leave.types') }}">
+                    <i class="fas fa-calendar-week"></i>
                     Leave Types
                 </a>
                 @endcan
 
                 @can('manage-leave-balances')
-                <a class="collapse-item" href="{{ route('admin.leave.balances') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.leave.balances') ? 'active' : '' }}" href="{{ route('admin.leave.balances') }}">
+                    <i class="fas fa-balance-scale"></i>
                     Leave Balances
                 </a>
                 @endcan
 
                 @can('manage-approval-workflows')
-                <a class="collapse-item" href="{{ route('admin.leave.workflows') }}">
+                <a class="collapse-item {{ request()->routeIs('admin.leave.workflows') ? 'active' : '' }}" href="{{ route('admin.leave.workflows') }}">
+                    <i class="fas fa-project-diagram"></i>
                     Approval Workflows
                 </a>
                 @endcan
@@ -844,11 +928,12 @@
             href="#"
             data-toggle="collapse"
             data-target="#collapseSettings"
-            aria-expanded="true"
+            aria-expanded="{{ request()->routeIs('system.roles') || request()->routeIs('system.permissions') || request()->routeIs('system.statuses') ? 'true' : 'false' }}"
             aria-controls="collapseSettings">
 
             <i class="fas fa-cogs"></i>
             <span>System Settings</span>
+            <i class="fas fa-chevron-down menu-arrow"></i>
 
         </a>
 
@@ -859,19 +944,22 @@
             <div class="collapse-inner">
 
                 @can('manage-roles')
-                <a class="collapse-item" href="{{ route('system.roles') }}">
+                <a class="collapse-item {{ request()->routeIs('system.roles') ? 'active' : '' }}" href="{{ route('system.roles') }}">
+                    <i class="fas fa-user-shield"></i>
                     Roles
                 </a>
                 @endcan
 
                 @can('manage-permissions')
-                <a class="collapse-item" href="{{ route('system.permissions') }}">
+                <a class="collapse-item {{ request()->routeIs('system.permissions') ? 'active' : '' }}" href="{{ route('system.permissions') }}">
+                    <i class="fas fa-key"></i>
                     Permissions
                 </a>
                 @endcan
 
                 @can('manage-statuses')
-                <a class="collapse-item" href="{{ route('system.statuses') }}">
+                <a class="collapse-item {{ request()->routeIs('system.statuses') ? 'active' : '' }}" href="{{ route('system.statuses') }}">
+                    <i class="fas fa-toggle-on"></i>
                     Statuses
                 </a>
                 @endcan
@@ -891,7 +979,7 @@
 
             <i class="fas fa-users-cog"></i>
 
-            <span>Users Management</span>
+            <span>User Accounts</span>
 
         </a>
 
