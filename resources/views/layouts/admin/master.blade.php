@@ -12,7 +12,7 @@
     <title>BiLTA • Admin Dashboard</title>
 
     <!-- Fonts & Icons -->
-    <link href="{{ asset('admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="/admin/vendor/fontawesome-free/css/all.min.css?v=20260808" rel="stylesheet">
 
     <!-- Core Styles -->
     <link href="{{ asset('/admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
