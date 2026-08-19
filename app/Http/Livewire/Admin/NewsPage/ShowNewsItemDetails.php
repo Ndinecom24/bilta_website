@@ -145,6 +145,8 @@ class ShowNewsItemDetails extends Component
         $this->status_id = $our_news->status_id;
         $this->our_news_id = $our_news->id;
         $this->updateNewsItem = true;
+
+        $this->dispatchBrowserEvent('load-trix-content', ['content' => $this->details]);
     }
 
     public function update()

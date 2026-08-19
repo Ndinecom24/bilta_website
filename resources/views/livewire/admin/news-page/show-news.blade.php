@@ -116,8 +116,12 @@
                                 </div>
 
                                 <div class="col-md-12 mb-3">
-                                    <label class="font-weight-bold" for="newsDetails">Details</label>
-                                    <textarea id="newsDetails" rows="6" class="form-control" wire:model.defer="details" placeholder="Enter details"></textarea>
+                                    <label class="font-weight-bold" for="newsDetailsEdit">Details</label>
+                                    <input id="newsDetailsEdit" type="hidden" wire:model.defer="details">
+                                    <div wire:ignore>
+                                        <trix-editor input="newsDetailsEdit" class="bg-white" style="min-height: 350px;"></trix-editor>
+                                    </div>
+                                    <small class="text-muted d-block mt-1">Use the editor toolbar to format headings, lists, links, and emphasis.</small>
                                     @error('details') <span class="text-danger d-block">{{ $message }}</span> @enderror
                                 </div>
 
@@ -188,6 +192,26 @@
     </div>
 
     <script>
+        document.addEventListener('trix-file-accept', function (event) {
+            event.preventDefault();
+        });
+
+        // Sync Trix editor content to Livewire (deferred — no re-render)
+        document.addEventListener('trix-change', function (event) {
+            var input = event.target.inputElement;
+            if (input && input.id === 'newsDetailsEdit') {
+                @this.set('details', input.value, true);
+            }
+        });
+
+        // Populate Trix editor when editing an existing news item
+        window.addEventListener('load-trix-content', function (event) {
+            var editor = document.querySelector('trix-editor[input="newsDetailsEdit"]');
+            if (editor && editor.editor) {
+                editor.editor.loadHTML(event.detail.content || '');
+            }
+        });
+
         function deleteOurNewsItem(id) {
             if (confirm("Are you sure you want to delete this record?")) {
                 window.livewire.emit('deleteNews', id);
