@@ -56,7 +56,9 @@
                             <div class="col-lg-12 col-md-12 mb-3">
                                 <label class="font-weight-bold" for="newsDetails">Details</label>
                                 <input id="newsDetails" type="hidden" wire:model.defer="details">
-                                <trix-editor input="newsDetails" class="bg-white" style="min-height: 350px;"></trix-editor>
+                                <div wire:ignore>
+                                    <trix-editor input="newsDetails" class="bg-white" style="min-height: 350px;"></trix-editor>
+                                </div>
                                 <small class="text-muted d-block mt-1">Use the editor toolbar to format headings, lists, links, and emphasis.</small>
                                 @error('details') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
@@ -200,7 +202,7 @@
                                         <td>{{ $our_news_item->display_order ?? 0 }}</td>
                                         <td>{{ sizeOf($our_news_item->getMedia('news_images')) }}</td>
                                         <td>{{ sizeOf($our_news_item->getMedia('news_pdfs')) }}</td>
-                                        <td></td>
+                                        <td>
                                             <button wire:click="edit({{ $our_news_item->id }})" class="btn btn-primary btn-sm">Edit</button>
                                             <a href="{{ route('admin.page.item.news.details', $our_news_item->id) }}" class="btn btn-outline-primary btn-sm">Details</a>
                                             <button onclick="deleteOurNewsItem({{ $our_news_item->id }})" class="btn btn-danger btn-sm">Delete</button>
