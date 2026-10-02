@@ -1061,7 +1061,7 @@
 
     <!-- USERS -->
     @can('manage-users')
-    <li class="nav-item {{ request()->routeIs('system.users') ? 'active' : '' }}">
+    <li class="nav-item {{ request()->routeIs('system.users', 'system.user-analytics') ? 'active' : '' }}">
 
         <a class="nav-link" href="{{ route('system.users') }}">
 
@@ -1071,6 +1071,12 @@
 
         </a>
 
+    </li>
+    <li class="nav-item {{ request()->routeIs('system.user-analytics') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('system.user-analytics') }}">
+            <i class="fas fa-chart-line"></i>
+            <span>User Usage Analytics</span>
+        </a>
     </li>
     @endcan
     @endcanany

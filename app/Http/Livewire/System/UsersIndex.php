@@ -15,7 +15,13 @@ use Livewire\WithPagination;
 
 class UsersIndex extends Component
 {
-    use WithPagination ;
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
+    public $search = '';
+    public $perPage = 20;
+    public $showCreateForm = false;
     public  $user_id, $email, $name, $phone, $status_id, $password_change, $role_id ;
 
     // HR fields
@@ -49,11 +55,37 @@ class UsersIndex extends Component
 
     public function render()
     {
-        $users = User::with('departmentRelation', 'supervisor')->select('*')->paginate(20);
+        $users = User::with('departmentRelation', 'supervisor', 'status', 'roles')
+            ->when($this->search, function ($query) {
+                $term = '%' . trim($this->search) . '%';
+                $query->where(function ($searchQuery) use ($term) {
+                    $searchQuery->where('name', 'like', $term)
+                        ->orWhere('email', 'like', $term)
+                        ->orWhere('phone', 'like', $term)
+                        ->orWhere('employee_id', 'like', $term);
+                });
+            })
+            ->orderBy('name')
+            ->paginate((int) $this->perPage);
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
         $supervisors = User::orderBy('name')->select('id', 'name', 'position')->get();
         return view('livewire.system.user.index')->with(compact('users', 'statuses', 'departments', 'supervisors'));
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function toggleCreateForm()
+    {
+        $this->showCreateForm = !$this->showCreateForm;
     }
 
     public function resetFields(){
@@ -77,6 +109,7 @@ class UsersIndex extends Component
         $this->supervisor_id = '';
     }
     public function store(){
+        $this->showCreateForm = true;
         // Validate Form Request
         $this->validate();
         try{
@@ -132,6 +165,7 @@ class UsersIndex extends Component
 
             // Reset Form Fields After Creating User
             $this->resetFields();
+            $this->showCreateForm = false;
 
         }catch(\Exception $e){
             // Set Flash Message

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -42,9 +43,11 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        $user->logins = $user->logins + 1 ;
-        $user->last_login = now();
-        $user->save();
+        DB::table('users')->where('id', $user->id)->update([
+            'logins' => DB::raw('COALESCE(logins, 0) + 1'),
+            'last_login' => now(),
+            'updated_at' => now(),
+        ]);
 
         // If user must change password, redirect to forced change page
         if ($user->password_change == 1) {

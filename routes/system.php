@@ -10,6 +10,7 @@ Route::prefix('system')->middleware('role:admin')->group(function () {
     Route::get('roles', \App\Http\Livewire\System\RolesIndex::class)->name('system.roles');
     Route::get('roles/{role}', \App\Http\Livewire\System\RolesShow::class)->name('system.roles.show');
     Route::get('users', \App\Http\Livewire\System\UsersIndex::class)->name('system.users');
+    Route::get('user-analytics', \App\Http\Livewire\System\UserAnalytics::class)->name('system.user-analytics');
 });
 
 // User profile — accessible to all authenticated users (self-access or admin)

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Bilta\Department;
+use App\Models\Bilta\Click;
 use App\Models\System\UserFile;
 use App\Models\System\Status;
 use App\Permissions\HasPermissionsTrait;
@@ -101,6 +102,11 @@ class User extends Authenticatable
     public function files()
     {
         return $this->hasMany(UserFile::class)->latest();
+    }
+
+    public function clicks()
+    {
+        return $this->hasMany(Click::class);
     }
 
     // ──────────────────────────────────────

@@ -4,6 +4,14 @@
             <h1 class="h4 mb-1 text-dark">Users</h1>
             <p class="text-muted mb-0">Create and review system users, roles, and account status.</p>
         </div>
+        <div class="d-flex flex-wrap mt-3 mt-sm-0">
+            <a href="{{ route('system.user-analytics') }}" class="btn btn-outline-primary btn-sm mr-2 mb-2 mb-sm-0">
+                <i class="fas fa-chart-line mr-1"></i> Usage analytics
+            </a>
+            <button class="btn btn-primary btn-sm" type="button" wire:click="toggleCreateForm" aria-expanded="{{ $showCreateForm ? 'true' : 'false' }}" aria-controls="createUserForm">
+                <i class="fas {{ $showCreateForm ? 'fa-times' : 'fa-user-plus' }} mr-1"></i> {{ $showCreateForm ? 'Close form' : 'Add user' }}
+            </button>
+        </div>
     </div>
 
     <div class="row">
@@ -26,7 +34,7 @@
         </div>
 
         <div class="col-md-12 mb-3">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm {{ $showCreateForm ? '' : 'd-none' }}" id="createUserForm">
                 <div class="card-header">
                     <h5 class="mb-0">Add User</h5>
                 </div>
@@ -164,9 +172,20 @@
 
         <div class="col-md-12 mb-2">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">System Users</h5>
-                    <span class="badge badge-light">{{ $users->total() }} Items</span>
+                <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+                    <div class="mb-2 mb-md-0">
+                        <h5 class="mb-0">System Users</h5>
+                        <small class="text-muted">{{ $users->total() }} total accounts</small>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center">
+                        <input type="search" class="form-control form-control-sm mr-2 mb-2 mb-sm-0" style="min-width: 220px;" placeholder="Search name, email, phone..." wire:model.debounce.350ms="search" aria-label="Search users">
+                        <select class="form-control form-control-sm" style="width: auto;" wire:model="perPage" aria-label="Users per page">
+                            <option value="10">10 per page</option>
+                            <option value="20">20 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -181,6 +200,8 @@
                                     <th>Supervisor</th>
                                     <th>Role Count</th>
                                     <th>Status</th>
+                                    <th>Logins</th>
+                                    <th>Last Login</th>
                                     <th style="width: 120px;">Action</th>
                                 </tr>
                             </thead>
@@ -202,9 +223,11 @@
                                         <td>
                                             {{ $user->status->name ?? '--' }}
                                             @if ($user->password_change == 1)
-                                                <br><span class="badge badge-warning text-dark" style="font-size: .7rem;"><i class="fas fa-key mr-1"></i>OTP Reset</span>
+                                                <br><span class="badge badge-warning text-dark" style="font-size: .7rem;" title="User must change the temporary password before continuing"><i class="fas fa-key mr-1"></i>Password change required</span>
                                             @endif
                                         </td>
+                                        <td>{{ number_format((int) $user->logins) }}</td>
+                                        <td>{{ $user->last_login ? \Illuminate\Support\Carbon::parse($user->last_login)->format('M j, Y H:i') : 'Never' }}</td>
                                         <td>
                                             <a href="{{ route('system.users.show', $user->uuid ?? '0') }}"
                                                onclick="event.preventDefault(); document.getElementById('user-profile-form{{ $user->uuid ?? '0' }}').submit();"
@@ -216,15 +239,24 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted">No Users Found.</td>
+                                        <td colspan="11" class="text-center text-muted py-4">No users match your search.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
 
-                    <div class="mt-3">
-                        {{ $users->links() }}
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3">
+                        <small class="text-muted mb-2 mb-md-0">
+                            @if ($users->total())
+                                Showing {{ $users->firstItem() }}–{{ $users->lastItem() }} of {{ $users->total() }} users
+                            @else
+                                Showing 0 users
+                            @endif
+                        </small>
+                        <div class="mb-0">
+                            {{ $users->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
