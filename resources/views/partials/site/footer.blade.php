@@ -121,11 +121,11 @@
 
                 </div>
 
-                {{-- MINISTRY AREAS --}}
+                {{-- SERVICES --}}
                 <div class="col-lg-3 col-md-6">
 
                     <h5 class="footer-title">
-                        Ministry Areas
+                        Services
                     </h5>
 
                     <ul class="footer-links">

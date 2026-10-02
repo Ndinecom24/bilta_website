@@ -204,7 +204,7 @@
                                 <div>
                                     <i class="fas fa-file-upload text-warning mb-2" style="font-size: 1.5rem;"></i>
                                     <p class="mb-0 small text-muted">Click or drag to upload PDFs or images</p>
-                                    <small class="text-muted">Max 10 MB per file &bull; Multiple allowed</small>
+                                    <small class="text-muted">Max 50 MB per file &bull; Multiple allowed</small>
                                 </div>
                                 <div wire:loading wire:target="attachments" class="mt-2">
                                     <div class="spinner-border spinner-border-sm text-primary" role="status"></div>

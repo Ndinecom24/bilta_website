@@ -12,14 +12,18 @@
                         <article class="news-card h-100">
                             <div class="news-card-body d-flex flex-column">
                                 <span class="news-badge" style="position: static; align-self: flex-start; margin-bottom: 14px;">
-                                    Ministry Service
+                                    {{ $service->created_at?->format('M Y') ?? 'Service' }}
                                 </span>
 
                                 <h4 class="news-title">{{ $service->title ?? 'Service' }}</h4>
 
-                                <p class="news-description mb-0">
+                                <p class="news-description mb-3">
                                     {{ \Illuminate\Support\Str::limit(strip_tags($service->description ?? ''), 220) }}
                                 </p>
+
+                                <a href="{{ route('services.details', $service->id) }}" class="btn btn-outline-theme btn-sm mt-auto">
+                                    View Details <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
                             </div>
                         </article>
                     </div>

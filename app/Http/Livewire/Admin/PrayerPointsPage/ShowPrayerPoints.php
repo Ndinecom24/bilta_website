@@ -35,7 +35,7 @@ class ShowPrayerPoints extends Component
         'scriptures' => 'nullable|string',
         'banner_image' => 'nullable|image|max:5120',
         'attachments' => 'nullable|array',
-        'attachments.*' => 'file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
+        'attachments.*' => 'file|mimes:pdf,jpg,jpeg,png,webp|max:51200',
     ];
 
     public function render()

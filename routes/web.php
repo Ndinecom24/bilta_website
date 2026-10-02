@@ -12,6 +12,7 @@ use App\Http\Livewire\Admin\Company\ShowContactUsDetails;
 use App\Http\Livewire\Admin\Company\ShowHomeIntro;
 use App\Http\Livewire\Admin\Company\ShowLeadershipTeam;
 use App\Http\Livewire\Admin\Company\ShowServices;
+use App\Http\Livewire\Admin\Company\ShowServiceDetails;
 use App\Http\Livewire\Admin\Company\ShowValues;
 use App\Http\Livewire\Admin\FaqsPage\ShowFaqs;
 use App\Http\Livewire\Admin\GalleryPage\ShowItemGallery;
@@ -55,6 +56,7 @@ use App\Http\Livewire\Site\MyTranslationProjectsList;
 use App\Http\Livewire\Site\ShowGallery;
 use App\Http\Livewire\Site\ShowHome;
 use App\Http\Livewire\Site\ShowServices as SiteShowServices;
+use App\Http\Livewire\Site\ShowServiceDetails as SiteShowServiceDetails;
 use App\Http\Livewire\Site\ShowProjectsMap;
 use App\Http\Livewire\Site\ShowTranslationProjectDetails;
 use App\Http\Livewire\Site\ShowVideos;
@@ -96,6 +98,7 @@ Route::get('/home', ShowHome::class)->name('site.home');
 Route::prefix('bilta/site')->group(function () {
     Route::get('/about', ShowAbout::class)->name('about');
     Route::get('/services', SiteShowServices::class)->name('services');
+    Route::get('/services/{service}/details', SiteShowServiceDetails::class)->name('services.details');
     Route::get('/videos', ShowVideos::class)->name('videos');
     Route::get('/Gallery', ShowGallery::class)->name('gallery');
     Route::get('/Faqs', MyFaqs::class)->name('faqs');
@@ -131,6 +134,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         // Company Information — permission-protected
         Route::get('/company/about-us', ShowAboutUs::class)->middleware('permission:manage-about-us')->name('admin.company.about-us');
         Route::get('/company/services', ShowServices::class)->middleware('permission:manage-services')->name('admin.company.services');
+        Route::get('/company/services/{service}/details', ShowServiceDetails::class)->middleware('permission:manage-services')->name('admin.company.services.details');
         Route::get('/company/values', ShowValues::class)->middleware('permission:manage-values')->name('admin.company.values');
         Route::get('/company/contact-us', ShowContactUsDetails::class)->middleware('permission:manage-contact-us')->name('admin.company.contact-us');
         Route::get('/company/faqs', ShowFaqs::class)->middleware('permission:manage-faqs')->name('admin.company.faqs');

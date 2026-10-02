@@ -251,5 +251,6 @@
                 window.livewire.emit('deleteNews', id);
             }
         }
+        
     </script>
 </div>

@@ -63,6 +63,7 @@ class AdminAndDemoSeeder extends Seeder
     private function seedAdminUsers(int $activeStatusId, $now): int
     {
         $adminUsers = [
+
             [
                 'name' => 'BiLTA Super Admin',
                 'email' => 'admin@bilta.org',
@@ -75,6 +76,7 @@ class AdminAndDemoSeeder extends Seeder
                 'phone' => '+260977000002',
                 'password' => 'Content@12345',
             ],
+
         ];
 
         foreach ($adminUsers as $adminUser) {

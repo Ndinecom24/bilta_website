@@ -85,6 +85,7 @@
                                         <td>{{ $service->title }}</td>
                                         <td>{{ \Illuminate\Support\Str::limit($service->description, 180) }}</td>
                                         <td>
+                                            <a href="{{ route('admin.company.services.details', $service->id) }}" class="btn btn-info btn-sm">View</a>
                                             <button wire:click="edit({{ $service->id }})" class="btn btn-primary btn-sm">Edit</button>
                                             <button onclick="deleteOurServices({{ $service->id }})" class="btn btn-danger btn-sm">Delete</button>
                                         </td>
