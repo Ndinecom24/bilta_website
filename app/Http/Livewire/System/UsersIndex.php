@@ -7,6 +7,7 @@ use App\Models\System\Role;
 use App\Models\System\Status;
 use App\Mail\NewUserWelcomeMail;
 use App\Models\User;
+use App\Services\UserPasswordEnforcement;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -22,6 +23,7 @@ class UsersIndex extends Component
     public $search = '';
     public $perPage = 20;
     public $showCreateForm = false;
+    public $confirmInactiveReset = false;
     public  $user_id, $email, $name, $phone, $status_id, $password_change, $role_id ;
 
     // HR fields
@@ -70,7 +72,14 @@ class UsersIndex extends Component
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
         $supervisors = User::orderBy('name')->select('id', 'name', 'position')->get();
-        return view('livewire.system.user.index')->with(compact('users', 'statuses', 'departments', 'supervisors'));
+        $passwordEnforcement = app(UserPasswordEnforcement::class);
+        $pendingPasswordChanges = $passwordEnforcement->countPendingPasswordChanges();
+        $inactiveUsersDueForReset = $passwordEnforcement->countInactiveUsersDueForReset();
+
+        return view('livewire.system.user.index')->with(compact(
+            'users', 'statuses', 'departments', 'supervisors',
+            'pendingPasswordChanges', 'inactiveUsersDueForReset'
+        ));
     }
 
     public function updatingSearch()
@@ -86,6 +95,56 @@ class UsersIndex extends Component
     public function toggleCreateForm()
     {
         $this->showCreateForm = !$this->showCreateForm;
+    }
+
+    public function sendPasswordReminders()
+    {
+        if (!$this->canManagePasswordEnforcement()) {
+            abort(403);
+        }
+
+        $result = app(UserPasswordEnforcement::class)->sendPendingPasswordReminders(true);
+        session()->flash('success', "Password reminders sent: {$result['sent']}; failed: {$result['failed']}.");
+    }
+
+    public function confirmInactivePasswordResets()
+    {
+        if (!$this->canManagePasswordEnforcement()) {
+            abort(403);
+        }
+
+        $this->confirmInactiveReset = true;
+    }
+
+    public function forceInactivePasswordResets()
+    {
+        if (!$this->canManagePasswordEnforcement()) {
+            abort(403);
+        }
+
+        if (!$this->confirmInactiveReset) {
+            return;
+        }
+
+        $result = app(UserPasswordEnforcement::class)->forceResetInactiveUsers(true);
+        $this->confirmInactiveReset = false;
+        session()->flash('success', "Inactive-user password resets issued: {$result['sent']}; failed: {$result['failed']}. Eligible administrators are excluded from automatic resets.");
+    }
+
+    public function cancelInactivePasswordResets()
+    {
+        $this->confirmInactiveReset = false;
+    }
+
+    private function canManagePasswordEnforcement()
+    {
+        $userId = auth()->id();
+
+        return $userId && Role::where('slug', 'admin')
+            ->whereHas('users', function ($query) use ($userId) {
+                $query->where('users.id', $userId);
+            })
+            ->exists();
     }
 
     public function resetFields(){
@@ -150,6 +209,8 @@ class UsersIndex extends Component
             $mailSent = true;
             try {
                 Mail::to($user->email)->send(new NewUserWelcomeMail($user, $temporaryPassword));
+                $user->password_reminder_sent_at = now();
+                $user->save();
             } catch (\Exception $mailException) {
                 $mailSent = false;
             }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -53,6 +54,27 @@ class LoginController extends Controller
         if ($user->password_change == 1) {
             return redirect()->route('force.password.change');
         }
+    }
+
+    protected function attemptLogin(Request $request)
+    {
+        $user = User::where($this->username(), $request->input($this->username()))->first();
+
+        // Expired security reset codes must not continue to authenticate.
+        if (
+            $user
+            && $user->password_change == 1
+            && $user->password_reset_otp
+            && $user->password_reset_otp_expires_at
+            && $user->password_reset_otp_expires_at->isPast()
+        ) {
+            return false;
+        }
+
+        return $this->guard()->attempt(
+            $this->credentials($request),
+            $request->boolean('remember')
+        );
     }
 
 }

@@ -50,6 +50,7 @@ class User extends Authenticatable
         'password_change',
         'password_reset_otp',
         'password_reset_otp_expires_at',
+        'password_reminder_sent_at',
         'profile_photo_path',
     ];
 
@@ -73,6 +74,7 @@ class User extends Authenticatable
         'date_of_birth' => 'date',
         'date_joined' => 'date',
         'password_reset_otp_expires_at' => 'datetime',
+        'password_reminder_sent_at' => 'datetime',
     ];
 
     // ──────────────────────────────────────

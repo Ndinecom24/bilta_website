@@ -34,6 +34,42 @@
         </div>
 
         <div class="col-md-12 mb-3">
+            <div class="card border-left-warning shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
+                        <div class="mb-3 mb-lg-0">
+                            <h6 class="font-weight-bold text-dark mb-1"><i class="fas fa-shield-alt text-warning mr-1"></i> Password follow-up</h6>
+                            <small class="text-muted">{{ $pendingPasswordChanges }} active account(s) still require a password change. {{ $inactiveUsersDueForReset }} non-admin account(s) have had no login for at least 90 days.</small>
+                        </div>
+                        <div class="d-flex flex-wrap">
+                            <button type="button" class="btn btn-outline-primary btn-sm mr-2 mb-2 mb-lg-0" wire:click="sendPasswordReminders" {{ $pendingPasswordChanges ? '' : 'disabled' }}>
+                                <i class="fas fa-envelope mr-1"></i> Send password reminders ({{ $pendingPasswordChanges }})
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-sm mb-2 mb-lg-0" wire:click="confirmInactivePasswordResets" {{ $inactiveUsersDueForReset ? '' : 'disabled' }}>
+                                <i class="fas fa-user-lock mr-1"></i> Review inactive resets ({{ $inactiveUsersDueForReset }})
+                            </button>
+                        </div>
+                    </div>
+
+                    @if ($confirmInactiveReset)
+                        <div class="alert alert-danger mt-3 mb-0" role="alert">
+                            <strong>Confirm forced password resets?</strong>
+                            <p class="mb-2">This will replace the temporary passwords for {{ $inactiveUsersDueForReset }} eligible active, non-admin accounts last used 90+ days ago (including accounts never used and created 90+ days ago). They will need the emailed one-time password to sign in and choose a new password. The code expires after 72 hours; expired codes require another password reset.</p>
+                            <div class="d-flex flex-wrap">
+                                <button type="button" class="btn btn-danger btn-sm mr-2" wire:click="forceInactivePasswordResets" wire:loading.attr="disabled">
+                                    <span wire:loading.remove wire:target="forceInactivePasswordResets">Confirm and send reset emails</span>
+                                    <span wire:loading wire:target="forceInactivePasswordResets">Sending emails...</span>
+                                </button>
+                                <button type="button" class="btn btn-light btn-sm" wire:click="cancelInactivePasswordResets">Cancel</button>
+                            </div>
+                        </div>
+                    @endif
+                    <small class="text-muted d-block mt-2">A daily scheduled process sends reminders and enforces resets for qualifying inactive accounts. Administrator accounts are excluded from automatic inactivity resets to reduce lockout risk.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-3">
             <div class="card shadow-sm {{ $showCreateForm ? '' : 'd-none' }}" id="createUserForm">
                 <div class="card-header">
                     <h5 class="mb-0">Add User</h5>

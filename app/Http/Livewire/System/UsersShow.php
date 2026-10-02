@@ -497,6 +497,8 @@ class UsersShow extends Component
             try {
                 Mail::to($user->email)->send(new PasswordResetOtpMail($user, $otp, auth()->user()->name));
                 $this->otpEmailSent = true;
+                $user->password_reminder_sent_at = now();
+                $user->save();
             } catch (\Exception $mailEx) {
                 $this->otpEmailFailed = true;
             }
