@@ -114,13 +114,21 @@ class Document extends Model
 
         if ($userShare) $permissions[] = $userShare->permission;
 
-        if ($user->department_id) {
-            $deptShare = $this->shares()
-                ->where('target_type', 'department')
-                ->where('target_id', $user->department_id)
-                ->first();
+        $departmentIds = collect([$user->department_id])
+            ->merge($user->departmentResponsibilities()->pluck('departments.id'))
+            ->filter()
+            ->unique()
+            ->values();
 
-            if ($deptShare) $permissions[] = $deptShare->permission;
+        if ($departmentIds->isNotEmpty()) {
+            $departmentPermissions = $this->shares()
+                ->where('target_type', 'department')
+                ->whereIn('target_id', $departmentIds)
+                ->pluck('permission');
+
+            foreach ($departmentPermissions as $permission) {
+                $permissions[] = $permission;
+            }
         }
 
         if (empty($permissions)) return null;

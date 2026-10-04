@@ -116,8 +116,10 @@
                 <div class="card-header d-flex justify-content-between align-items-center" style="background: #cd5b13; color: white;">
                     <h5 class="mb-0" style="color: white;"><i class="fas fa-file-alt"></i> Application Details — Ref #{{ $viewingApplication->id }}</h5>
                     <div class="d-flex align-items-center">
-                        {{ $viewingApplication  }}
-                        @if ($viewingApplication->status == 'approved')
+                        @if (in_array($viewingApplication->status, ['approved', 'rejected', 'cancelled'], true))
+                            <a href="{{ route('admin.leave.applications.pdf', $viewingApplication->id) }}" class="btn btn-sm btn-light mr-2 no-print">
+                                <i class="fas fa-file-pdf mr-1"></i> Download PDF
+                            </a>
                             <button type="button" class="btn btn-sm btn-light mr-2 no-print" onclick="printApprovedLeaveForm()">
                                 <i class="fas fa-print mr-1"></i> Print Approved Form
                             </button>
@@ -241,6 +243,8 @@
                                         <small class="text-muted d-block mt-1" style="font-size:.72rem;">
                                             @if ($historyForStage)
                                                 <i class="fas fa-user-check"></i> {{ $historyForStage->actor->name ?? 'Unknown' }}
+                                            @elseif ($stg->role && strtolower($stg->role->slug) === 'supervisor')
+                                                <span class="d-block"><i class="fas fa-user"></i> {{ $viewingApplication->user->supervisor->name ?? 'No supervisor assigned' }}</span>
                                             @elseif ($stg->role && $stg->role->users->count())
                                                 @foreach ($stg->role->users as $approver)
                                                     <span class="d-block"><i class="fas fa-user"></i> {{ $approver->name }}</span>
@@ -292,7 +296,12 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $hist->actor->name ?? '-' }}</td>
-                                                <td>{{ $hist->comment ?? '—' }}</td>
+                                                <td>
+                                                    {{ $hist->comment ?? '—' }}
+                                                    @if ($hist->signature_path && \Illuminate\Support\Facades\Storage::disk('local')->exists($hist->signature_path))
+                                                        <br><img src="data:image/png;base64,{{ base64_encode(\Illuminate\Support\Facades\Storage::disk('local')->get($hist->signature_path)) }}" alt="{{ $hist->actor->name ?? 'Approver' }} signature" style="max-width: 150px; max-height: 55px;">
+                                                    @endif
+                                                </td>
                                                 <td>{{ $hist->created_at->format('d M Y H:i') }}</td>
                                             </tr>
                                         @endforeach
@@ -317,7 +326,7 @@
                     </div>
 
 
-  @if ($viewingApplication->status === 'pending' && $viewingApplication->currentStage && auth()->user()->roles->contains('id', $viewingApplication->currentStage->role_id))
+    @if ($this->canActOnApplication($viewingApplication))
                                                 <button wire:click="startReview({{ $viewingApplication->id }}, 'approved')" class="btn btn-success btn-sm no-print">Approve</button>
                                                 <button wire:click="startReview({{ $viewingApplication->id }}, 'rejected')" class="btn btn-danger btn-sm no-print">Reject</button>
                                             @endif 
@@ -337,9 +346,11 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="font-weight-bold">Comment (optional)</label>
+                        <label class="font-weight-bold">Comment (required)</label>
                         <textarea class="form-control" wire:model.defer="reviewComment" rows="3" placeholder="Add a comment for the applicant..."></textarea>
                     </div>
+                    @include('livewire.admin.leave-page.partials.signature-pad', ['signatureId' => 'admin-leave-signature-' . $reviewingId])
+                    @error('signatureData') <span class="text-danger d-block mb-2">{{ $message }}</span> @enderror
                     <div class="d-flex gap-2">
                         <button wire:click="submitReview" class="btn btn-{{ $reviewAction === 'approved' ? 'success' : 'danger' }}  m-1" wire:loading.attr="disabled">
                             <span wire:loading.remove wire:target="submitReview">Confirm {{ ucfirst($reviewAction) }}</span>

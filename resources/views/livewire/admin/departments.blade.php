@@ -114,7 +114,7 @@
                                         </td>
                                         <td><span class="badge bg-secondary text-white">{{ $dept->code ?? '—' }}</span></td>
                                         <td>{{ $dept->head->name ?? '—' }}</td>
-                                        <td><span class="badge bg-info text-white">{{ $dept->members_count }}</span></td>
+                                        <td><span class="badge bg-info text-white">{{ $dept->members_count + $dept->responsibility_members_count }}</span></td>
                                         <td>
                                             @if ($dept->status_id == 1)
                                                 <span class="badge bg-success text-white">Active</span>

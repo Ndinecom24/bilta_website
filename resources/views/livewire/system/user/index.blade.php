@@ -135,6 +135,38 @@
                                 </select>
                                 @error('department_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
+                            <div class="col-12 mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="font-weight-bold mb-0">Added responsibilities</span>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" wire:click="addResponsibility">
+                                        <i class="fas fa-plus mr-1"></i> Add department and position
+                                    </button>
+                                </div>
+                                <small class="text-muted d-block mb-2">Add each additional department with the position held there. The primary department above remains separate.</small>
+                                @error('additionalResponsibilities') <span class="text-danger d-block mb-2">{{ $message }}</span> @enderror
+                                @foreach($additionalResponsibilities as $index => $responsibility)
+                                    <div class="row align-items-end mb-2" wire:key="new-responsibility-{{ $index }}">
+                                        <div class="col-md-5 mb-2 mb-md-0">
+                                            <label class="small font-weight-bold" for="newResponsibilityDepartment{{ $index }}">Department</label>
+                                            <select id="newResponsibilityDepartment{{ $index }}" class="form-control" wire:model.defer="additionalResponsibilities.{{ $index }}.department_id">
+                                                <option value="">-- Select department --</option>
+                                                @foreach($departments as $dept)
+                                                    <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error("additionalResponsibilities.$index.department_id") <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="col-md-5 mb-2 mb-md-0">
+                                            <label class="small font-weight-bold" for="newResponsibilityPosition{{ $index }}">Position in this department</label>
+                                            <input id="newResponsibilityPosition{{ $index }}" type="text" class="form-control" wire:model.defer="additionalResponsibilities.{{ $index }}.position" placeholder="e.g. Acting Administrator">
+                                            @error("additionalResponsibilities.$index.position") <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-danger btn-block" wire:click="removeResponsibility({{ $index }})">Remove</button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                             <div class="col-lg-3 col-md-6 mb-3">
                                 <label class="font-weight-bold">Supervisor</label>
                                 <select class="form-control" wire:model.defer="supervisor_id">
@@ -199,8 +231,14 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
-                            <button type="submit" class="btn btn-primary">Create User</button>
+                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="store">
+                                <span wire:loading.remove wire:target="store"><i class="fas fa-user-plus mr-1"></i> Create User</span>
+                                <span wire:loading wire:target="store"><i class="fas fa-spinner fa-spin mr-1" aria-hidden="true"></i> Creating user...</span>
+                            </button>
                         </div>
+                        <output wire:loading wire:target="store" class="text-primary mt-2 d-block" aria-live="polite">
+                            <span class="spinner-border spinner-border-sm mr-1" aria-hidden="true"></span> Please wait while the account is created and the welcome email is attempted.
+                        </output>
                     </form>
                 </div>
             </div>
@@ -253,7 +291,12 @@
                                         </td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->phone }}</td>
-                                        <td>{{ $user->departmentRelation->name ?? ($user->department ?? '—') }}</td>
+                                        <td>
+                                            {{ $user->departmentRelation->name ?? ($user->department ?? '—') }}
+                                            @foreach($user->departmentResponsibilities as $responsibility)
+                                                <br><small class="text-muted">{{ $responsibility->name }}{{ $responsibility->pivot->position ? ' — '.$responsibility->pivot->position : '' }}</small>
+                                            @endforeach
+                                        </td>
                                         <td>{{ $user->supervisor->name ?? '—' }}</td>
                                         <td>{{ $user->roles->count() }}</td>
                                         <td>

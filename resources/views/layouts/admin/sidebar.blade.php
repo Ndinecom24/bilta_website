@@ -934,7 +934,7 @@
     @endcan
 
     <!-- LEAVE MANAGEMENT -->
-    @canany(['apply-leave', 'manage-leave-types', 'manage-leave-applications', 'manage-leave-balances', 'manage-approval-workflows'])
+    @canany(['apply-leave', 'manage-leave-types', 'manage-leave-applications', 'approve-reject-leave', 'manage-leave-balances', 'manage-approval-workflows'])
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
@@ -968,7 +968,7 @@
                 </a>
                 @endcan
 
-                @can('manage-leave-applications')
+                @canany(['manage-leave-applications', 'approve-reject-leave'])
                 <a class="collapse-item {{ request()->routeIs('admin.leave.applications') ? 'active' : '' }}" href="{{ route('admin.leave.applications') }}">
                     <i class="fas fa-clipboard-list"></i>
                     All Applications

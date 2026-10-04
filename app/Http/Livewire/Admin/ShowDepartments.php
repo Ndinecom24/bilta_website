@@ -32,7 +32,7 @@ class ShowDepartments extends Component
     public function render()
     {
         $departments = Department::with('head', 'status')
-            ->withCount('members')
+            ->withCount('members', 'responsibilityMembers')
             ->orderBy('name')
             ->paginate(15);
 
@@ -102,7 +102,7 @@ class ShowDepartments extends Component
     public function destroy($id)
     {
         $dept = Department::findOrFail($id);
-        if ($dept->members()->count() > 0) {
+        if ($dept->members()->exists() || $dept->responsibilityMembers()->exists()) {
             session()->flash('error', 'Cannot delete department with assigned members. Reassign members first.');
             return;
         }

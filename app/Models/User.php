@@ -91,6 +91,13 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class, 'department_id');
     }
 
+    public function departmentResponsibilities()
+    {
+        return $this->belongsToMany(Department::class, 'user_department_responsibilities')
+            ->withPivot('position')
+            ->withTimestamps();
+    }
+
     public function supervisor()
     {
         return $this->belongsTo(User::class, 'supervisor_id');

@@ -27,6 +27,13 @@ class Department extends Model
         return $this->hasMany(User::class, 'department_id');
     }
 
+    public function responsibilityMembers()
+    {
+        return $this->belongsToMany(User::class, 'user_department_responsibilities')
+            ->withPivot('position')
+            ->withTimestamps();
+    }
+
     public function status()
     {
         return $this->belongsTo(Status::class);

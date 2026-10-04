@@ -636,6 +636,7 @@
 
     <!-- Livewire -->
     @livewireScripts
+    <script src="{{ asset('js/leave-signature-pad.js') }}"></script>
 
     @stack('custom-scripts')
 

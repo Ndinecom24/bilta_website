@@ -9,6 +9,7 @@ use App\Mail\NewUserWelcomeMail;
 use App\Models\User;
 use App\Services\UserPasswordEnforcement;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -28,6 +29,7 @@ class UsersIndex extends Component
 
     // HR fields
     public $position, $department_id, $nrc, $man_number, $employee_id;
+    public $additionalResponsibilities = [];
     public $date_of_birth, $gender, $date_joined, $contract_type;
     public $address, $emergency_contact_name, $emergency_contact_phone;
     public $supervisor_id;
@@ -45,6 +47,9 @@ class UsersIndex extends Component
         'status_id' => 'required',
         'position' => 'nullable|string|max:100',
         'department_id' => 'nullable|exists:departments,id',
+        'additionalResponsibilities' => 'array',
+        'additionalResponsibilities.*.department_id' => 'required|exists:departments,id',
+        'additionalResponsibilities.*.position' => 'nullable|string|max:100',
         'nrc' => 'nullable|string|max:30',
         'man_number' => 'nullable|string|max:30',
         'employee_id' => 'nullable|string|max:50',
@@ -57,7 +62,7 @@ class UsersIndex extends Component
 
     public function render()
     {
-        $users = User::with('departmentRelation', 'supervisor', 'status', 'roles')
+        $users = User::with('departmentRelation', 'departmentResponsibilities', 'supervisor', 'status', 'roles')
             ->when($this->search, function ($query) {
                 $term = '%' . trim($this->search) . '%';
                 $query->where(function ($searchQuery) use ($term) {
@@ -71,7 +76,12 @@ class UsersIndex extends Component
             ->paginate((int) $this->perPage);
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
-        $supervisors = User::orderBy('name')->select('id', 'name', 'position')->get();
+        $supervisors = User::whereHas('roles', function ($query) {
+            $query->whereRaw('LOWER(roles.slug) = ?', ['supervisor']);
+            })
+            ->orderBy('name')
+            ->select('id', 'name', 'position')
+            ->get();
         $passwordEnforcement = app(UserPasswordEnforcement::class);
         $pendingPasswordChanges = $passwordEnforcement->countPendingPasswordChanges();
         $inactiveUsersDueForReset = $passwordEnforcement->countInactiveUsersDueForReset();
@@ -155,6 +165,7 @@ class UsersIndex extends Component
         $this->role_id = '';
         $this->position = '';
         $this->department_id = '';
+        $this->additionalResponsibilities = [];
         $this->nrc = '';
         $this->man_number = '';
         $this->employee_id = '';
@@ -167,10 +178,36 @@ class UsersIndex extends Component
         $this->emergency_contact_phone = '';
         $this->supervisor_id = '';
     }
+    public function addResponsibility()
+    {
+        $this->additionalResponsibilities[] = ['department_id' => '', 'position' => ''];
+    }
+
+    public function removeResponsibility($index)
+    {
+        unset($this->additionalResponsibilities[$index]);
+        $this->additionalResponsibilities = array_values($this->additionalResponsibilities);
+    }
+
     public function store(){
         $this->showCreateForm = true;
         // Validate Form Request
         $this->validate();
+        if ($this->supervisor_id && !User::whereKey($this->supervisor_id)->whereHas('roles', function ($query) {
+            $query->whereRaw('LOWER(roles.slug) = ?', ['supervisor']);
+        })->exists()) {
+            $this->addError('supervisor_id', 'The selected user must have the Supervisor role.');
+            return;
+        }
+        $responsibilityDepartmentIds = array_filter(array_column($this->additionalResponsibilities, 'department_id'));
+        if (count($responsibilityDepartmentIds) !== count(array_unique($responsibilityDepartmentIds))) {
+            $this->addError('additionalResponsibilities', 'Select each additional department only once.');
+            return;
+        }
+        if ($this->department_id && in_array((string) $this->department_id, array_map('strval', $responsibilityDepartmentIds), true)) {
+            $this->addError('additionalResponsibilities', 'The primary department cannot also be listed as an added responsibility.');
+            return;
+        }
         try{
             $uuid = Str::uuid()->toString();
             $temporaryPassword = Str::random(12);
@@ -206,13 +243,27 @@ class UsersIndex extends Component
                 $user->roles()->syncWithoutDetaching([$defaultRole->id]);
             }
 
+            $responsibilities = [];
+            foreach ($this->additionalResponsibilities as $responsibility) {
+                if (!empty($responsibility['department_id'])) {
+                    $responsibilities[$responsibility['department_id']] = [
+                        'position' => $responsibility['position'] ?: null,
+                    ];
+                }
+            }
+            $user->departmentResponsibilities()->sync($responsibilities);
+
             $mailSent = true;
             try {
                 Mail::to($user->email)->send(new NewUserWelcomeMail($user, $temporaryPassword));
                 $user->password_reminder_sent_at = now();
                 $user->save();
-            } catch (\Exception $mailException) {
+            } catch (\Throwable $mailException) {
                 $mailSent = false;
+                Log::error('New user welcome email failed.', [
+                    'user_id' => $user->id,
+                    'exception' => $mailException,
+                ]);
             }
 
 

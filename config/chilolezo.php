@@ -45,6 +45,11 @@ return [
             'description' => 'Can access leave approval queue and approve/reject stages assigned to their role.',
         ],
         [
+            'name' => 'Supervisor',
+            'slug' => 'supervisor',
+            'description' => 'Employee who may be assigned as a staff member’s direct supervisor.',
+        ],
+        [
             'name' => 'Approver',
             'slug' => 'approver',
             'description' => 'Employee with additional rights to approve leave applications and manage shared documents.',
@@ -116,6 +121,7 @@ return [
         ['name' => 'Apply for Leave', 'slug' => 'apply-leave'],
         ['name' => 'Manage Leave Balances', 'slug' => 'manage-leave-balances'],
         ['name' => 'Manage Approval Workflows', 'slug' => 'manage-approval-workflows'],
+        ['name' => 'Approve or Reject Leave Applications', 'slug' => 'approve-reject-leave'],
 
         // --- HR / Organisation ---
         ['name' => 'Manage Departments', 'slug' => 'manage-departments'],
@@ -161,6 +167,7 @@ return [
             'view-analytics',
             'manage-leave-types',
             'manage-leave-applications',
+            'approve-reject-leave',
             'apply-leave',
             'manage-leave-balances',
             'manage-approval-workflows',
@@ -208,12 +215,14 @@ return [
             'view-dashboard',
             'apply-leave',
             'manage-leave-applications',
+            'approve-reject-leave',
         ],
 
         'leave-officer' => [
             'view-dashboard',
             'manage-leave-types',
             'manage-leave-applications',
+            'approve-reject-leave',
             'apply-leave',
             'manage-leave-balances',
         ],
@@ -228,6 +237,7 @@ return [
             'view-dashboard',
             'manage-leave-types',
             'manage-leave-applications',
+            'approve-reject-leave',
             'apply-leave',
             'manage-leave-balances',
             'manage-approval-workflows',
@@ -242,6 +252,12 @@ return [
             'view-dashboard',
             'apply-leave',
             'manage-leave-applications',
+            'approve-reject-leave',
+        ],
+        'supervisor' => [
+            'view-dashboard',
+            'apply-leave',
+            'approve-reject-leave',
         ],
     ],
 

@@ -12,9 +12,14 @@ class PermissionMiddleware
      *
      * Usage: ->middleware('permission:manage-news')
      */
-    public function handle(Request $request, Closure $next, $permission)
+    public function handle(Request $request, Closure $next, ...$permissions)
     {
-        if (! $request->user() || ! $request->user()->can($permission)) {
+        $user = $request->user();
+        $hasPermission = $user && collect($permissions)->contains(function ($permission) use ($user) {
+            return $user->can($permission);
+        });
+
+        if (! $hasPermission) {
             abort(403, 'You do not have permission to access this page.');
         }
 

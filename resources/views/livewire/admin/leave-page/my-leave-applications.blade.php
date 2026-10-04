@@ -297,6 +297,16 @@
                                     <input type="text" class="form-control bg-light" value="{{ date('d M Y') }}" readonly>
                                 </div>
                             </div>
+                            <div class="mb-2">
+                                <label class="font-weight-bold small d-block">Electronic signature <span class="text-danger">(required)</span></label>
+                                <div wire:ignore>
+                                    <canvas data-leave-signature-canvas data-input-id="applicant-signature-input" style="display:block;width:100%;max-width:620px;height:130px;border:1px solid #ced4da;border-radius:4px;background:#fff;touch-action:none;cursor:crosshair;"></canvas>
+                                </div>
+                                <input id="applicant-signature-input" type="hidden" wire:model.defer="applicantSignatureData">
+                                <button type="button" class="btn btn-sm btn-outline-secondary mt-2" data-clear-leave-signature="applicant-signature-input">Clear signature</button>
+                                <small class="form-text text-muted">Sign above with a mouse, touch screen, or stylus to confirm this declaration.</small>
+                                @error('applicantSignatureData') <span class="text-danger small d-block">{{ $message }}</span> @enderror
+                            </div>
                         </div>
 
                         {{-- Important Notes --}}
@@ -412,10 +422,9 @@
                             <span class="tagline" style="font-size: 0.75rem;">Ref #{{ $viewingApplication->id }} — {{ $viewingApplication->created_at->format('d M Y') }}</span>
                         </div>
                         <div class="d-flex align-items-center">
-                            @if ($viewingApplication->status === 'approved')
-                                <button type="button" class="btn btn-sm btn-light mr-2 no-print" onclick="window.print()">
-                                    <i class="fas fa-print mr-1"></i> Print Approved Form
-                                </button>
+                            @if (in_array($viewingApplication->status, ['approved', 'rejected', 'cancelled'], true))
+                                <a href="{{ route('admin.leave.applications.pdf', $viewingApplication->id) }}" class="btn btn-sm btn-light mr-2 no-print"><i class="fas fa-file-pdf mr-1"></i> Download PDF</a>
+                                <button type="button" class="btn btn-sm btn-light mr-2 no-print" onclick="window.print()"><i class="fas fa-print mr-1"></i> Print</button>
                             @endif
                             <button wire:click="closeView" class="btn btn-sm btn-light no-print">Close</button>
                         </div>
@@ -476,6 +485,24 @@
                     </div>
                     @endif
 
+                    {{-- Applicant Declaration --}}
+                    <div class="bilta-section" style="background:#f8faf9;">
+                        <h5 class="bilta-section-title"><i class="fas fa-check-double"></i> APPLICANT DECLARATION</h5>
+                        <p class="small">I wish to apply for leave as stated above. The information provided is accurate and I understand this application will follow the organisation's approval workflow.</p>
+                        <div class="row align-items-center">
+                            <div class="col-md-4"><small class="text-muted d-block">SIGNED BY (Applicant)</small><strong>{{ $viewingApplication->user->name ?? '—' }}</strong></div>
+                            <div class="col-md-4"><small class="text-muted d-block">DATE</small>{{ optional($viewingApplication->applicant_signed_at)->format('d M Y H:i') ?? '—' }}</div>
+                            <div class="col-md-4">
+                                <small class="text-muted d-block">ELECTRONIC SIGNATURE</small>
+                                @if ($viewingApplication->applicant_signature_path && \Illuminate\Support\Facades\Storage::disk('local')->exists($viewingApplication->applicant_signature_path))
+                                    <img src="data:image/png;base64,{{ base64_encode(\Illuminate\Support\Facades\Storage::disk('local')->get($viewingApplication->applicant_signature_path)) }}" alt="Applicant electronic signature" style="max-width:180px;max-height:60px;">
+                                @else
+                                    <span class="text-muted">Not recorded</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Status --}}
                     <div class="bilta-section">
                         <h5 class="bilta-section-title"><i class="fas fa-info-circle"></i> STATUS</h5>
@@ -523,6 +550,8 @@
                                     <small class="text-muted d-block mt-1" style="font-size:.72rem;">
                                         @if ($historyForStage)
                                             <i class="fas fa-user-check"></i> {{ $historyForStage->actor->name ?? 'Unknown' }}
+                                        @elseif ($stg->role && strtolower($stg->role->slug) === 'supervisor')
+                                            <span class="d-block"><i class="fas fa-user"></i> {{ $viewingApplication->user->supervisor->name ?? 'No supervisor assigned' }}</span>
                                         @elseif ($stg->role && $stg->role->users->count())
                                             @foreach ($stg->role->users as $approver)
                                                 <span class="d-block"><i class="fas fa-user"></i> {{ $approver->name }}</span>
@@ -572,7 +601,12 @@
                                                 @endif
                                             </td>
                                             <td>{{ $hist->actor->name ?? '-' }}</td>
-                                            <td>{{ $hist->comment ?? '—' }}</td>
+                                            <td>
+                                                {{ $hist->comment ?? '—' }}
+                                                @if ($hist->signature_path && \Illuminate\Support\Facades\Storage::disk('local')->exists($hist->signature_path))
+                                                    <br><img src="data:image/png;base64,{{ base64_encode(\Illuminate\Support\Facades\Storage::disk('local')->get($hist->signature_path)) }}" alt="{{ $hist->actor->name ?? 'Approver' }} signature" style="max-width: 150px; max-height: 55px;">
+                                                @endif
+                                            </td>
                                             <td>{{ $hist->created_at->format('d M Y H:i') }}</td>
                                         </tr>
                                     @endforeach
@@ -585,7 +619,7 @@
                     {{-- ===== APPROVE / REJECT ACTION PANEL ===== --}}
 
                     
-                    @if ($viewingApplication->status === 'pending' && $viewingApplication->currentStage && auth()->user()->roles->contains('id', $viewingApplication->currentStage->role_id))
+                    @if ($this->canActOnApplication($viewingApplication))
                     <div class="bilta-section" style="border: 2px solid #cd5b13; background: #fff7ed;">
                         <h5 class="bilta-section-title"><i class="fas fa-gavel"></i> YOUR ACTION REQUIRED — {{ $viewingApplication->currentStage->name }}</h5>
                         <p class="small text-muted mb-2">You have the role <strong>{{ $viewingApplication->currentStage->role->name ?? '-' }}</strong> required to act on this application at the current stage. Please review all details above before making your decision.</p>
@@ -595,6 +629,9 @@
                             <textarea class="form-control" wire:model.defer="reviewComment" rows="3" placeholder="Provide your reason for approving or rejecting this application (required)"></textarea>
                             @error('reviewComment') <span class="text-danger small d-block mt-1">{{ $message }}</span> @enderror
                         </div>
+
+                        @include('livewire.admin.leave-page.partials.signature-pad', ['signatureId' => 'my-leave-signature-' . $viewingApplication->id])
+                        @error('signatureData') <span class="text-danger d-block mb-2">{{ $message }}</span> @enderror
 
                         <div class="d-flex flex-wrap gap-2">
                             <button wire:click="submitReview('approved')" class="btn btn-success px-4 no-print"

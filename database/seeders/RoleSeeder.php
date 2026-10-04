@@ -15,10 +15,18 @@ class RoleSeeder extends Seeder
         $roles = config('chilolezo.roles', []);
 
         foreach ($roles as $role) {
-            Role::firstOrCreate(
-                ['slug' => $role['slug']],
-                ['name' => $role['name']]
-            );
+            $existingRole = Role::whereRaw('LOWER(slug) = ?', [strtolower($role['slug'])])->first();
+
+            if ($existingRole) {
+                $existingRole->slug = $role['slug'];
+                $existingRole->name = $role['name'];
+                $existingRole->save();
+            } else {
+                Role::create([
+                    'slug' => $role['slug'],
+                    'name' => $role['name'],
+                ]);
+            }
         }
 
         $this->command->info('Roles seeded: ' . count($roles));

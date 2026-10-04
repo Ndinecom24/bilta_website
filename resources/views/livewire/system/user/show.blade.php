@@ -161,6 +161,9 @@
                             <div>
                                 <small class="text-muted d-block" style="font-size: .7rem; text-transform: uppercase; letter-spacing: 1px;">Department</small>
                                 <span style="font-size: .88rem;">{{ $user->departmentRelation->name ?? ($user->department ?? '—') }}</span>
+                                @foreach($user->departmentResponsibilities as $responsibility)
+                                    <small class="text-muted d-block">{{ $responsibility->name }}{{ $responsibility->pivot->position ? ' — '.$responsibility->pivot->position : '' }}</small>
+                                @endforeach
                             </div>
                         </div>
                         <div class="list-group-item d-flex align-items-center py-2 px-3">
@@ -368,6 +371,9 @@
                                 <div class="p-3 rounded" style="background: #f8fafc;">
                                     <small class="text-muted d-block mb-1" style="font-size: .7rem; text-transform: uppercase; letter-spacing: 1px;">Department</small>
                                     <span class="font-weight-bold">{{ $user->departmentRelation->name ?? ($user->department ?? '—') }}</span>
+                                    @foreach($user->departmentResponsibilities as $responsibility)
+                                        <small class="text-muted d-block">{{ $responsibility->name }}{{ $responsibility->pivot->position ? ' — '.$responsibility->pivot->position : '' }}</small>
+                                    @endforeach
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -724,6 +730,34 @@
                                             <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="font-weight-bold mb-0" style="font-size: .85rem;">Added department responsibilities</span>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" wire:click="addResponsibility"><i class="fas fa-plus mr-1"></i> Add responsibility</button>
+                                    </div>
+                                    <small class="text-muted d-block mb-2">Each added department can have its own position.</small>
+                                    @error('additionalResponsibilities') <span class="text-danger d-block mb-2">{{ $message }}</span> @enderror
+                                    @foreach($additionalResponsibilities as $index => $responsibility)
+                                        <div class="row align-items-end mb-2" wire:key="profile-responsibility-{{ $index }}">
+                                            <div class="col-md-5 mb-2 mb-md-0">
+                                                <label class="small font-weight-bold" for="profileResponsibilityDepartment{{ $index }}">Department</label>
+                                                <select id="profileResponsibilityDepartment{{ $index }}" class="form-control" wire:model.defer="additionalResponsibilities.{{ $index }}.department_id">
+                                                    <option value="">-- Select department --</option>
+                                                    @foreach($departments as $dept)
+                                                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error("additionalResponsibilities.$index.department_id") <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div class="col-md-5 mb-2 mb-md-0">
+                                                <label class="small font-weight-bold" for="profileResponsibilityPosition{{ $index }}">Position</label>
+                                                <input id="profileResponsibilityPosition{{ $index }}" type="text" class="form-control" wire:model.defer="additionalResponsibilities.{{ $index }}.position" placeholder="Position in this department">
+                                                @error("additionalResponsibilities.$index.position") <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div class="col-md-2"><button type="button" class="btn btn-outline-danger btn-block" wire:click="removeResponsibility({{ $index }})">Remove</button></div>
+                                        </div>
+                                    @endforeach
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="font-weight-bold" style="font-size: .85rem;">Supervisor</label>

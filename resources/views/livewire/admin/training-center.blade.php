@@ -526,9 +526,9 @@
                 <h4>Adding Stages</h4>
                 <ol>
                     <li>In the workflow detail, click <strong>"Add Stage"</strong>.</li>
-                    <li>Enter a name (e.g., "Supervisor Review"), select a <strong>Role</strong>, and set the <strong>Stage Order</strong> (1, 2, 3...).</li>
+                    <li>Enter a name (e.g., "Supervisor Review"), select a <strong>Role</strong>, and set the <strong>Stage Order</strong> (1, 2, 3...). For a stage assigned to the <strong>Supervisor</strong> role, the applicant’s own assigned supervisor is the approver.</li>
                     <li>The system auto-assigns the first stage as "Start" and the last as "End".</li>
-                    <li>Any user with the assigned role can approve at that stage.</li>
+                    <li>Approvers must have the <strong>Approve or Reject Leave Applications</strong> permission and the assigned stage role. For Supervisor stages, only the applicant’s designated supervisor can act.</li>
                 </ol>
 
                 <div class="tip-box tip-success">

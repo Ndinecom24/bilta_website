@@ -113,6 +113,7 @@ class ShowAnnouncements extends Component
         $departments = Department::orderBy('name')->get();
         $users = User::where('status_id', config('constants.status.active'))
             ->orderBy('name')
+            ->with('departmentResponsibilities:id,name')
             ->get(['id', 'name', 'email', 'position', 'department_id']);
 
         return view('livewire.admin.announcements-page.index', compact('announcements', 'statuses', 'departments', 'users'));
@@ -131,7 +132,12 @@ class ShowAnnouncements extends Component
 
         if ($this->visibility === 'department') {
             return User::where('status_id', config('constants.status.active'))
-                ->whereIn('department_id', $this->selectedDepartments)
+                ->where(function ($query) {
+                    $query->whereIn('department_id', $this->selectedDepartments)
+                        ->orWhereHas('departmentResponsibilities', function ($responsibilities) {
+                            $responsibilities->whereIn('departments.id', $this->selectedDepartments);
+                        });
+                })
                 ->whereNotNull('email')
                 ->get();
         }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CookieConsentController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LeaveApplicationPdfController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\NewsletterController;
 use App\Http\Controllers\Site\SponsorInquiryController;
@@ -168,7 +169,8 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
 
         // Leave Management — permission-protected
         Route::get('/leave/types', ShowLeaveTypes::class)->middleware('permission:manage-leave-types')->name('admin.leave.types');
-        Route::get('/leave/applications', ShowLeaveApplications::class)->middleware('permission:manage-leave-applications')->name('admin.leave.applications');
+        Route::get('/leave/applications', ShowLeaveApplications::class)->middleware('permission:manage-leave-applications,approve-reject-leave')->name('admin.leave.applications');
+        Route::get('/leave/applications/{id}/pdf', [LeaveApplicationPdfController::class, 'download'])->name('admin.leave.applications.pdf');
         Route::get('/leave/my-applications', MyLeaveApplications::class)->middleware('permission:apply-leave')->name('admin.leave.my-applications');
         Route::get('/leave/balances', ShowLeaveBalances::class)->middleware('permission:manage-leave-balances')->name('admin.leave.balances');
         Route::get('/leave/workflows', ShowApprovalWorkflows::class)->middleware('permission:manage-approval-workflows')->name('admin.leave.workflows');

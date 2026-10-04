@@ -16,6 +16,7 @@ class LeaveApplication extends Model
         'start_date', 'end_date', 'resume_date',
         'days_requested', 'reason', 'document_path', 'status',
         'acting_name', 'acting_cell', 'acting_position',
+        'applicant_signature_path', 'applicant_signed_at',
         'reviewed_by', 'reviewed_at', 'review_comment',
         'workflow_id', 'current_stage_id',
     ];
@@ -25,6 +26,7 @@ class LeaveApplication extends Model
         'end_date' => 'date',
         'resume_date' => 'date',
         'reviewed_at' => 'datetime',
+        'applicant_signed_at' => 'datetime',
         'days_requested' => 'float',
     ];
 

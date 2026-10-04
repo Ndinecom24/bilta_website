@@ -13,7 +13,7 @@ class ApprovalHistory extends Model
     protected $table = 'approval_history';
 
     protected $fillable = [
-        'leave_application_id', 'stage_id', 'acted_by', 'action', 'comment',
+        'leave_application_id', 'stage_id', 'acted_by', 'action', 'comment', 'signature_path',
     ];
 
     /* ---- Relationships ---- */

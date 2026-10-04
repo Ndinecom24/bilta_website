@@ -11,7 +11,9 @@ use App\Models\Bilta\LeaveApplication;
 use App\Models\Bilta\LeaveBalance;
 use App\Models\Bilta\LeaveType;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -36,6 +38,8 @@ class MyLeaveApplications extends Component
     // Review state
     public $reviewComment = '';
     public $reviewAction = '';
+    public $signatureData = '';
+    public $applicantSignatureData = '';
 
     protected $rules = [
         'leave_type_id' => 'required|exists:leave_types,id',
@@ -49,6 +53,7 @@ class MyLeaveApplications extends Component
         'acting_name' => 'nullable|string|max:255',
         'acting_cell' => 'nullable|string|max:20',
         'acting_position' => 'nullable|string|max:100',
+        'applicantSignatureData' => 'required|string|max:1000000',
     ];
 
     public function render()
@@ -103,6 +108,7 @@ class MyLeaveApplications extends Component
         $this->acting_name = '';
         $this->acting_cell = '';
         $this->acting_position = '';
+        $this->applicantSignatureData = '';
     }
 
     public function updatedStartDate() { $this->calculateDays(); $this->calculateResumeDate(); }
@@ -132,6 +138,7 @@ class MyLeaveApplications extends Component
     public function store()
     {
         $this->validate();
+        $applicantSignaturePath = $this->storeSignatureData($this->applicantSignatureData, 'applicantSignatureData');
 
         // Require "Others" specification
         $selectedType = LeaveType::find($this->leave_type_id);
@@ -169,6 +176,8 @@ class MyLeaveApplications extends Component
                 'days_requested' => $this->days_requested,
                 'reason' => $this->reason,
                 'document_path' => $documentPath,
+                'applicant_signature_path' => $applicantSignaturePath,
+                'applicant_signed_at' => now(),
                 'acting_name' => $this->acting_user_id ? (User::find($this->acting_user_id)->name ?? $this->acting_name) : ($this->acting_name ?: null),
                 'acting_cell' => $this->acting_cell ?: null,
                 'acting_position' => $this->acting_position ?: null,
@@ -209,6 +218,10 @@ class MyLeaveApplications extends Component
 
     public function viewApplication($id)
     {
+        $application = LeaveApplication::with('currentStage.role', 'user')->findOrFail($id);
+        if ((int) $application->user_id !== (int) auth()->id() && !$this->canActOnApplication($application)) {
+            abort(403, 'You are not assigned to review this leave application.');
+        }
         $this->viewingId = $id;
     }
 
@@ -217,6 +230,7 @@ class MyLeaveApplications extends Component
         $this->viewingId = null;
         $this->reviewComment = '';
         $this->reviewAction = '';
+        $this->signatureData = '';
     }
 
     /**
@@ -224,12 +238,21 @@ class MyLeaveApplications extends Component
      */
     public function canActOnApplication(LeaveApplication $application): bool
     {
-        if ($application->status !== 'pending' || !$application->currentStage) {
+        $actor = auth()->user();
+        if (!$actor || (int) $application->user_id === (int) $actor->id || !$actor->can('approve-reject-leave') || $application->status !== 'pending' || !$application->currentStage) {
             return false;
         }
 
-        $requiredRoleId = $application->currentStage->role_id;
-        return auth()->user()->roles->contains('id', $requiredRoleId);
+        $stageRole = $application->currentStage->role;
+        if (!$stageRole || !$actor->roles->contains('id', $stageRole->id)) {
+            return false;
+        }
+
+        if (strtolower($stageRole->slug) === 'supervisor') {
+            return $actor->hasRole('supervisor') && (int) $application->user->supervisor_id === (int) $actor->id;
+        }
+
+        return true;
     }
 
     /**
@@ -237,10 +260,15 @@ class MyLeaveApplications extends Component
      */
     public function submitReview($action)
     {
+        if (!in_array($action, ['approved', 'rejected'], true)) {
+            abort(422, 'Invalid review action.');
+        }
+
         $this->reviewAction = $action;
 
         $this->validate([
             'reviewComment' => 'required|string|min:3|max:1000',
+            'signatureData' => 'nullable|string|max:1000000',
         ], [
             'reviewComment.required' => 'Please provide a reason for your decision.',
             'reviewComment.min' => 'The reason must be at least 3 characters.',
@@ -260,6 +288,7 @@ class MyLeaveApplications extends Component
 
         $currentStage = $application->currentStage;
         $actorName = auth()->user()->name;
+        $signaturePath = $this->storeSignature();
 
         // Record approval history
         ApprovalHistory::create([
@@ -268,6 +297,7 @@ class MyLeaveApplications extends Component
             'acted_by' => auth()->id(),
             'action' => $action,
             'comment' => $this->reviewComment,
+            'signature_path' => $signaturePath,
         ]);
 
         if ($action === 'rejected') {
@@ -324,7 +354,39 @@ class MyLeaveApplications extends Component
 
         $this->reviewComment = '';
         $this->reviewAction = '';
+        $this->signatureData = '';
         $this->viewingId = null;
+    }
+
+    private function storeSignature(): ?string
+    {
+        return $this->storeSignatureData($this->signatureData, 'signatureData');
+    }
+
+    private function storeSignatureData(?string $data, string $field): ?string
+    {
+        if (!$data) {
+            return null;
+        }
+
+        if (!preg_match('/^data:image\/png;base64,([A-Za-z0-9+\/=]+)$/', $data, $matches)) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                $field => 'The signature image is invalid. Please sign again or clear it.',
+            ]);
+        }
+
+        $image = base64_decode($matches[1], true);
+        $imageInfo = $image === false ? false : @getimagesizefromstring($image);
+        if ($image === false || strlen($image) > 500000 || !$imageInfo || $imageInfo['mime'] !== 'image/png') {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                $field => 'The signature must be a valid PNG under 500 KB.',
+            ]);
+        }
+
+        $path = 'leave-signatures/' . auth()->id() . '/' . Str::uuid() . '.png';
+        Storage::disk('local')->put($path, $image);
+
+        return $path;
     }
 
     /**
@@ -362,9 +424,23 @@ class MyLeaveApplications extends Component
     private function notifyStageApprovers(LeaveApplication $application, $stage)
     {
         try {
-            $approvers = User::whereHas('roles', function ($q) use ($stage) {
-                $q->where('roles.id', $stage->role_id);
-            })->get();
+            $stage->loadMissing('role');
+            if ($stage->role && strtolower($stage->role->slug) === 'supervisor') {
+                $supervisorId = $application->user()->value('supervisor_id');
+                $approvers = $supervisorId
+                    ? User::whereKey($supervisorId)->whereHas('roles', function ($query) {
+                        $query->where('roles.slug', 'supervisor');
+                    })->get()->filter(function ($user) {
+                        return $user->can('approve-reject-leave');
+                    })
+                    : collect();
+            } else {
+                $approvers = User::whereHas('roles', function ($query) use ($stage) {
+                    $query->where('roles.id', $stage->role_id);
+                })->get()->filter(function ($user) {
+                    return $user->can('approve-reject-leave');
+                });
+            }
 
             foreach ($approvers as $approver) {
                 Mail::to($approver->email)->send(new LeaveApprovalRequestMail($application, $stage));

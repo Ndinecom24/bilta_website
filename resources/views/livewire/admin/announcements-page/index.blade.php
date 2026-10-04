@@ -138,7 +138,7 @@
                                         <label class="custom-control-label d-flex align-items-center justify-content-between" for="dept_{{ $dept->id }}">
                                             <span>{{ $dept->name }}</span>
                                             <span class="badge badge-primary badge-pill ml-2" style="font-size: .7rem;">
-                                                {{ $dept->members()->count() }} {{ Str::plural('member', $dept->members()->count()) }}
+                                                {{ $dept->members()->count() + $dept->responsibilityMembers()->count() }} {{ Str::plural('member', $dept->members()->count() + $dept->responsibilityMembers()->count()) }}
                                             </span>
                                         </label>
                                     </div>
@@ -149,7 +149,12 @@
                             {{-- Preview employees in selected departments --}}
                             @if (!empty($selectedDepartments))
                                 @php
-                                    $deptUsers = $users->whereIn('department_id', $selectedDepartments);
+                                    $deptUsers = $users->filter(function ($user) use ($selectedDepartments) {
+                                        return in_array($user->department_id, $selectedDepartments)
+                                            || $user->departmentResponsibilities->contains(function ($department) use ($selectedDepartments) {
+                                                return in_array($department->id, $selectedDepartments);
+                                            });
+                                    });
                                 @endphp
                                 @if ($deptUsers->count())
                                     <div class="mt-2 border rounded-lg p-3" style="border-radius: 10px !important; max-height: 200px; overflow-y: auto; background: #f0f7ff;">

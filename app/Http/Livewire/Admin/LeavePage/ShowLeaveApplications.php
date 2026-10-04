@@ -10,6 +10,8 @@ use App\Models\Bilta\LeaveBalance;
 use App\Models\Bilta\LeaveType;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -25,6 +27,7 @@ class ShowLeaveApplications extends Component
     public $reviewingId = null;
     public $reviewComment = '';
     public $reviewAction = '';
+    public $signatureData = '';
 
     // View detail
     public $viewingApplication = null;
@@ -33,7 +36,10 @@ class ShowLeaveApplications extends Component
 
     public function render()
     {
-        $query = LeaveApplication::with(['user', 'leaveType', 'reviewer', 'currentStage.role', 'workflow'])
+        $actor = auth()->user();
+        $visibleApplications = $this->visibleApplicationsQuery($actor);
+        $query = (clone $visibleApplications)
+            ->with(['user', 'leaveType', 'reviewer', 'currentStage.role', 'workflow'])
             ->orderByRaw("FIELD(status, 'pending', 'approved', 'rejected', 'cancelled')")
             ->orderBy('created_at', 'desc');
 
@@ -48,26 +54,75 @@ class ShowLeaveApplications extends Component
         }
 
         $applications = $query->paginate(20);
-        $users = User::orderBy('name')->get(['id', 'name']);
+        $users = User::whereIn('id', (clone $visibleApplications)->select('user_id')->distinct())
+            ->orderBy('name')
+            ->get(['id', 'name']);
 
-        // Summary stats
+        // Keep the summary counts within the same visibility boundary as the queue.
         $stats = [
-            'pending' => LeaveApplication::where('status', 'pending')->count(),
-            'approved' => LeaveApplication::where('status', 'approved')->whereYear('start_date', date('Y'))->count(),
-            'rejected' => LeaveApplication::where('status', 'rejected')->whereYear('start_date', date('Y'))->count(),
-            'total' => LeaveApplication::whereYear('start_date', date('Y'))->count(),
+            'pending' => (clone $visibleApplications)->where('status', 'pending')->count(),
+            'approved' => (clone $visibleApplications)->where('status', 'approved')->whereYear('start_date', date('Y'))->count(),
+            'rejected' => (clone $visibleApplications)->where('status', 'rejected')->whereYear('start_date', date('Y'))->count(),
+            'total' => (clone $visibleApplications)->whereYear('start_date', date('Y'))->count(),
         ];
 
         return view('livewire.admin.leave-page.leave-applications', compact('applications', 'users', 'stats'));
     }
 
+    private function visibleApplicationsQuery(User $actor)
+    {
+        $query = LeaveApplication::query();
+
+        if ($actor->can('manage-leave-applications')) {
+            return $query;
+        }
+
+        $departmentIds = $this->teamDepartmentIds($actor);
+        $query->where(function ($visible) use ($actor) {
+            $visible->where('user_id', $actor->id);
+        });
+
+        $query->orWhere(function ($visible) use ($actor, $departmentIds) {
+            if ($actor->can('approve-reject-leave')) {
+                $visible->whereHas('user', function ($applicant) use ($actor, $departmentIds) {
+                    $applicant->where('supervisor_id', $actor->id);
+                    if ($departmentIds->isNotEmpty()) {
+                        $applicant->orWhereIn('department_id', $departmentIds)
+                            ->orWhereHas('departmentResponsibilities', function ($responsibilities) use ($departmentIds) {
+                                $responsibilities->whereIn('departments.id', $departmentIds);
+                            });
+                    }
+                });
+            }
+
+            if ($actor->hasRole('supervisor')) {
+                $visible->orWhereHas('user', function ($applicant) use ($actor) {
+                    $applicant->where('supervisor_id', $actor->id);
+                });
+            }
+        });
+
+        return $query;
+    }
+
+    private function teamDepartmentIds(User $actor)
+    {
+        return collect([$actor->department_id])
+            ->merge($actor->departmentResponsibilities()->pluck('departments.id'))
+            ->filter()
+            ->unique()
+            ->values();
+    }
+
     public function viewApplication($id)
     {
-        $this->viewingApplication = LeaveApplication::with([
+        $application = $this->visibleApplicationsQuery(auth()->user())->with([
             'user', 'leaveType', 'reviewer',
             'currentStage.role.users', 'workflow.stages.role.users',
             'approvalHistory.actor', 'approvalHistory.stage',
         ])->findOrFail($id);
+
+        $this->viewingApplication = $application;
     }
 
     public function closeView()
@@ -80,17 +135,33 @@ class ShowLeaveApplications extends Component
      */
     public function canActOnApplication(LeaveApplication $application): bool
     {
-        if ($application->status !== 'pending' || !$application->currentStage) {
+        $actor = auth()->user();
+        if (!$actor || (int) $application->user_id === (int) $actor->id || !$actor->can('approve-reject-leave') || $application->status !== 'pending' || !$application->currentStage) {
             return false;
         }
 
-        // Check if current user has the role required for this stage
-        $requiredRoleId = $application->currentStage->role_id;
-        return auth()->user()->roles->contains('id', $requiredRoleId);
+        if (!$this->visibleApplicationsQuery($actor)->whereKey($application->id)->exists()) {
+            return false;
+        }
+
+        $stageRole = $application->currentStage->role;
+        if (!$stageRole || !$actor->roles->contains('id', $stageRole->id)) {
+            return false;
+        }
+
+        if (strtolower($stageRole->slug) === 'supervisor') {
+            return $actor->hasRole('supervisor') && (int) $application->user->supervisor_id === (int) $actor->id;
+        }
+
+        return true;
     }
 
     public function startReview($id, $action)
     {
+        if (!in_array($action, ['approved', 'rejected'], true)) {
+            abort(422, 'Invalid review action.');
+        }
+
         $application = LeaveApplication::with('currentStage')->findOrFail($id);
 
         if (!$this->canActOnApplication($application)) {
@@ -101,6 +172,7 @@ class ShowLeaveApplications extends Component
         $this->reviewingId = $id;
         $this->reviewAction = $action;
         $this->reviewComment = '';
+        $this->signatureData = '';
     }
 
     public function cancelReview()
@@ -108,10 +180,43 @@ class ShowLeaveApplications extends Component
         $this->reviewingId = null;
         $this->reviewComment = '';
         $this->reviewAction = '';
+        $this->signatureData = '';
+    }
+
+    private function storeSignature(): ?string
+    {
+        if (!$this->signatureData) {
+            return null;
+        }
+
+        if (!preg_match('/^data:image\/png;base64,([A-Za-z0-9+\/=]+)$/', $this->signatureData, $matches)) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'signatureData' => 'The signature image is invalid. Please sign again or clear it.',
+            ]);
+        }
+
+        $image = base64_decode($matches[1], true);
+        $imageInfo = $image === false ? false : @getimagesizefromstring($image);
+        if ($image === false || strlen($image) > 500000 || !$imageInfo || $imageInfo['mime'] !== 'image/png') {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'signatureData' => 'The signature must be a valid PNG under 500 KB.',
+            ]);
+        }
+
+        $path = 'leave-signatures/' . auth()->id() . '/' . Str::uuid() . '.png';
+        Storage::disk('local')->put($path, $image);
+
+        return $path;
     }
 
     public function submitReview()
     {
+        $this->validate([
+            'reviewAction' => 'required|in:approved,rejected',
+            'reviewComment' => 'required|string|min:3|max:1000',
+            'signatureData' => 'nullable|string|max:1000000',
+        ]);
+
         $application = LeaveApplication::with(['currentStage', 'user', 'leaveType'])->findOrFail($this->reviewingId);
 
         if ($application->status !== 'pending') {
@@ -128,6 +233,7 @@ class ShowLeaveApplications extends Component
 
         $currentStage = $application->currentStage;
         $actorName = auth()->user()->name;
+        $signaturePath = $this->storeSignature();
 
         // Record approval history
         ApprovalHistory::create([
@@ -136,6 +242,7 @@ class ShowLeaveApplications extends Component
             'acted_by' => auth()->id(),
             'action' => $this->reviewAction,
             'comment' => $this->reviewComment,
+            'signature_path' => $signaturePath,
         ]);
 
         if ($this->reviewAction === 'rejected') {
@@ -202,6 +309,10 @@ class ShowLeaveApplications extends Component
 
     public function destroy($id)
     {
+        if (!auth()->user()->can('manage-leave-applications')) {
+            abort(403);
+        }
+
         try {
             LeaveApplication::find($id)->delete();
             session()->flash('success', 'Leave application deleted successfully!');
@@ -238,9 +349,23 @@ class ShowLeaveApplications extends Component
     private function notifyStageApprovers(LeaveApplication $application, $stage)
     {
         try {
-            $approvers = User::whereHas('roles', function ($q) use ($stage) {
-                $q->where('roles.id', $stage->role_id);
-            })->get();
+            $stage->loadMissing('role');
+            if ($stage->role && strtolower($stage->role->slug) === 'supervisor') {
+                $supervisorId = $application->user()->value('supervisor_id');
+                $approvers = $supervisorId
+                    ? User::whereKey($supervisorId)->whereHas('roles', function ($query) {
+                        $query->where('roles.slug', 'supervisor');
+                    })->get()->filter(function ($user) {
+                        return $user->can('approve-reject-leave');
+                    })
+                    : collect();
+            } else {
+                $approvers = User::whereHas('roles', function ($query) use ($stage) {
+                    $query->where('roles.id', $stage->role_id);
+                })->get()->filter(function ($user) {
+                    return $user->can('approve-reject-leave');
+                });
+            }
 
             foreach ($approvers as $approver) {
                 Mail::to($approver->email)->send(new LeaveApprovalRequestMail($application, $stage));

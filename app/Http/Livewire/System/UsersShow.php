@@ -27,6 +27,7 @@ class UsersShow extends Component
 
     // HR fields
     public $position, $department_id, $nrc, $man_number, $employee_id;
+    public $additionalResponsibilities = [];
     public $date_of_birth, $gender, $date_joined, $contract_type;
     public $address, $emergency_contact_name, $emergency_contact_phone;
     public $supervisor_id;
@@ -107,6 +108,9 @@ class UsersShow extends Component
             'status_id' => 'required',
             'position' => 'nullable|string|max:100',
             'department_id' => 'nullable|exists:departments,id',
+            'additionalResponsibilities' => 'array',
+            'additionalResponsibilities.*.department_id' => 'required|exists:departments,id',
+            'additionalResponsibilities.*.position' => 'nullable|string|max:100',
             'nrc' => 'nullable|string|max:30',
             'man_number' => 'nullable|string|max:30',
             'employee_id' => 'nullable|string|max:50',
@@ -158,6 +162,13 @@ class UsersShow extends Component
         // HR fields
         $this->position = $user->position;
         $this->department_id = $user->department_id;
+        $this->additionalResponsibilities = $user->departmentResponsibilities
+            ->map(function ($department) {
+                return [
+                    'department_id' => (string) $department->id,
+                    'position' => $department->pivot->position,
+                ];
+            })->values()->all();
         $this->nrc = $user->nrc;
         $this->man_number = $user->man_number;
         $this->employee_id = $user->employee_id;
@@ -180,13 +191,19 @@ class UsersShow extends Component
         $roles = Role::orderBy('name')->get();
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
-        $supervisors = User::where('id', '!=', $this->user_id)->orderBy('name')->select('id', 'name', 'position')->get();
+        $supervisors = User::where('id', '!=', $this->user_id)
+            ->whereHas('roles', function ($query) {
+                $query->whereRaw('LOWER(roles.slug) = ?', ['supervisor']);
+            })
+            ->orderBy('name')
+            ->select('id', 'name', 'position')
+            ->get();
         return view('livewire.system.user.show')->with(compact('roles', 'statuses', 'departments', 'supervisors'));
     }
 
     private function refreshUserData()
     {
-        $this->user = User::with('roles', 'status', 'files.uploader')->findOrFail($this->user->id);
+        $this->user = User::with('roles', 'status', 'files.uploader', 'departmentResponsibilities')->findOrFail($this->user->id);
         $this->all_roles = Role::whereNotIn('id', $this->user->roles->pluck('id')->toArray())
             ->orderBy('name')
             ->get();
@@ -406,9 +423,25 @@ class UsersShow extends Component
     {
         // Validate request
         $this->validate();
+        if ($this->supervisor_id && !User::whereKey($this->supervisor_id)->whereHas('roles', function ($query) {
+            $query->whereRaw('LOWER(roles.slug) = ?', ['supervisor']);
+        })->exists()) {
+            $this->addError('supervisor_id', 'The selected user must have the Supervisor role.');
+            return;
+        }
+        $responsibilityDepartmentIds = array_filter(array_column($this->additionalResponsibilities, 'department_id'));
+        if (count($responsibilityDepartmentIds) !== count(array_unique($responsibilityDepartmentIds))) {
+            $this->addError('additionalResponsibilities', 'Select each additional department only once.');
+            return;
+        }
+        if ($this->department_id && in_array((string) $this->department_id, array_map('strval', $responsibilityDepartmentIds), true)) {
+            $this->addError('additionalResponsibilities', 'The primary department cannot also be listed as an added responsibility.');
+            return;
+        }
         try {
             // Update user
-            User::find($this->user_id)->fill([
+            $user = User::findOrFail($this->user_id);
+            $user->fill([
                 'name' => $this->name,
                 'email' => $this->email,
                 'phone' => $this->phone,
@@ -427,7 +460,16 @@ class UsersShow extends Component
                 'emergency_contact_phone' => $this->emergency_contact_phone ?: null,
                 'supervisor_id' => $this->supervisor_id ?: null,
             ])->save();
-            $this->user = User::find($this->user_id);
+            $responsibilities = [];
+            foreach ($this->additionalResponsibilities as $responsibility) {
+                if (!empty($responsibility['department_id'])) {
+                    $responsibilities[$responsibility['department_id']] = [
+                        'position' => $responsibility['position'] ?: null,
+                    ];
+                }
+            }
+            $user->departmentResponsibilities()->sync($responsibilities);
+            $this->user = User::with('departmentResponsibilities')->find($this->user_id);
             session()->flash('success', 'User updated successfully.');
 
             $this->cancel();
@@ -435,6 +477,17 @@ class UsersShow extends Component
             session()->flash('error', 'Something goes wrong while updating user!!');
             $this->cancel();
         }
+    }
+
+    public function addResponsibility()
+    {
+        $this->additionalResponsibilities[] = ['department_id' => '', 'position' => ''];
+    }
+
+    public function removeResponsibility($index)
+    {
+        unset($this->additionalResponsibilities[$index]);
+        $this->additionalResponsibilities = array_values($this->additionalResponsibilities);
     }
 
     public function updatePassword()

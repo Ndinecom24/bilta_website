@@ -15,9 +15,13 @@ class LeaveManagementRolesSeeder extends Seeder
                 'name' => 'Leave Applicant',
                 'permissions' => ['view-dashboard', 'apply-leave'],
             ],
+            'supervisor' => [
+                'name' => 'Supervisor',
+                'permissions' => ['view-dashboard', 'apply-leave', 'approve-reject-leave'],
+            ],
             'leave-approver' => [
                 'name' => 'Leave Approver',
-                'permissions' => ['view-dashboard', 'apply-leave', 'manage-leave-applications'],
+                'permissions' => ['view-dashboard', 'apply-leave', 'manage-leave-applications', 'approve-reject-leave'],
             ],
             'leave-officer' => [
                 'name' => 'Leave Officer',
@@ -25,6 +29,7 @@ class LeaveManagementRolesSeeder extends Seeder
                     'view-dashboard',
                     'manage-leave-types',
                     'manage-leave-applications',
+                    'approve-reject-leave',
                     'apply-leave',
                     'manage-leave-balances',
                 ],
@@ -39,6 +44,7 @@ class LeaveManagementRolesSeeder extends Seeder
                     'view-dashboard',
                     'manage-leave-types',
                     'manage-leave-applications',
+                    'approve-reject-leave',
                     'apply-leave',
                     'manage-leave-balances',
                     'manage-approval-workflows',
