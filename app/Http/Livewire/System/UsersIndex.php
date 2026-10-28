@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\System;
 
 use App\Models\Bilta\Department;
+use App\Models\Bilta\Position;
 use App\Models\System\Role;
 use App\Models\System\Status;
 use App\Mail\NewUserWelcomeMail;
@@ -28,7 +29,7 @@ class UsersIndex extends Component
     public  $user_id, $email, $name, $phone, $status_id, $password_change, $role_id ;
 
     // HR fields
-    public $position, $department_id, $nrc, $man_number, $employee_id;
+    public $position, $position_id, $department_id, $nrc, $man_number, $employee_id;
     public $additionalResponsibilities = [];
     public $date_of_birth, $gender, $date_joined, $contract_type;
     public $address, $emergency_contact_name, $emergency_contact_phone;
@@ -46,10 +47,12 @@ class UsersIndex extends Component
         'email'=>'required|email|unique:users,email',
         'status_id' => 'required',
         'position' => 'nullable|string|max:100',
+        'position_id' => 'nullable|exists:positions,id',
         'department_id' => 'nullable|exists:departments,id',
         'additionalResponsibilities' => 'array',
         'additionalResponsibilities.*.department_id' => 'required|exists:departments,id',
         'additionalResponsibilities.*.position' => 'nullable|string|max:100',
+        'additionalResponsibilities.*.position_id' => 'nullable|exists:positions,id',
         'nrc' => 'nullable|string|max:30',
         'man_number' => 'nullable|string|max:30',
         'employee_id' => 'nullable|string|max:50',
@@ -62,7 +65,7 @@ class UsersIndex extends Component
 
     public function render()
     {
-        $users = User::with('departmentRelation', 'departmentResponsibilities', 'supervisor', 'status', 'roles')
+        $users = User::with('departmentRelation', 'positionRelation', 'departmentResponsibilities', 'supervisor', 'status', 'roles')
             ->when($this->search, function ($query) {
                 $term = '%' . trim($this->search) . '%';
                 $query->where(function ($searchQuery) use ($term) {
@@ -76,20 +79,29 @@ class UsersIndex extends Component
             ->paginate((int) $this->perPage);
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
+        $positions = Position::where('status_id', 1)->orderBy('name')->get();
         $supervisors = User::whereHas('roles', function ($query) {
             $query->whereRaw('LOWER(roles.slug) = ?', ['supervisor']);
             })
             ->orderBy('name')
-            ->select('id', 'name', 'position')
+            ->select('id', 'name', 'position', 'position_id')
             ->get();
         $passwordEnforcement = app(UserPasswordEnforcement::class);
         $pendingPasswordChanges = $passwordEnforcement->countPendingPasswordChanges();
         $inactiveUsersDueForReset = $passwordEnforcement->countInactiveUsersDueForReset();
 
         return view('livewire.system.user.index')->with(compact(
-            'users', 'statuses', 'departments', 'supervisors',
+            'users', 'statuses', 'departments', 'positions', 'supervisors',
             'pendingPasswordChanges', 'inactiveUsersDueForReset'
         ));
+    }
+
+    public function updatedPositionId($value)
+    {
+        if ($value) {
+            $pos = Position::find($value);
+            $this->position = $pos ? $pos->name : '';
+        }
     }
 
     public function updatingSearch()
@@ -164,6 +176,7 @@ class UsersIndex extends Component
         $this->status_id = '';
         $this->role_id = '';
         $this->position = '';
+        $this->position_id = null;
         $this->department_id = '';
         $this->additionalResponsibilities = [];
         $this->nrc = '';
@@ -180,7 +193,7 @@ class UsersIndex extends Component
     }
     public function addResponsibility()
     {
-        $this->additionalResponsibilities[] = ['department_id' => '', 'position' => ''];
+        $this->additionalResponsibilities[] = ['department_id' => '', 'position' => '', 'position_id' => ''];
     }
 
     public function removeResponsibility($index)
@@ -211,6 +224,15 @@ class UsersIndex extends Component
         try{
             $uuid = Str::uuid()->toString();
             $temporaryPassword = Str::random(12);
+
+            $posId = $this->position_id ?: null;
+            $posName = $this->position ?: null;
+            if ($posId && empty($posName)) {
+                $posName = Position::find($posId)?->name;
+            } elseif ($posName && empty($posId)) {
+                $posId = Position::where('name', $posName)->value('id');
+            }
+
             // Create User
             $user = User::create([
                 'name'=>$this->name,
@@ -221,7 +243,8 @@ class UsersIndex extends Component
                 'logins' => 0 ,
                 'password' => Hash::make($temporaryPassword),
                 'uuid'=>$uuid,
-                'position' => $this->position ?: null,
+                'position' => $posName,
+                'position_id' => $posId,
                 'department_id' => $this->department_id ?: null,
                 'nrc' => $this->nrc ?: null,
                 'man_number' => $this->man_number ?: null,
@@ -246,8 +269,16 @@ class UsersIndex extends Component
             $responsibilities = [];
             foreach ($this->additionalResponsibilities as $responsibility) {
                 if (!empty($responsibility['department_id'])) {
+                    $rPosId = !empty($responsibility['position_id']) ? $responsibility['position_id'] : null;
+                    $rPosName = !empty($responsibility['position']) ? $responsibility['position'] : null;
+                    if ($rPosId && empty($rPosName)) {
+                        $rPosName = Position::find($rPosId)?->name;
+                    } elseif ($rPosName && empty($rPosId)) {
+                        $rPosId = Position::where('name', $rPosName)->value('id');
+                    }
                     $responsibilities[$responsibility['department_id']] = [
-                        'position' => $responsibility['position'] ?: null,
+                        'position' => $rPosName,
+                        'position_id' => $rPosId,
                     ];
                 }
             }

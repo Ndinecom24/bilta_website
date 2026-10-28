@@ -312,9 +312,11 @@
                                                 <button wire:click="startRename({{ $doc->id }})" class="btn btn-sm btn-outline-primary px-2" title="Rename">
                                                     <i class="fas fa-pen"></i>
                                                 </button>
+                                                @canany(['delete-documents', 'manage-documents'])
                                                 <button onclick="deleteDocument({{ $doc->id }})" class="btn btn-sm btn-outline-danger px-2" title="Delete">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
+                                                @endcanany
                                             </div>
                                         </td>
                                     </tr>

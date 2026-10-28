@@ -21,7 +21,9 @@ class LeaveApplicationPdfController extends Controller
 
         $actor = $request->user();
         $isApplicant = (int) $application->user_id === (int) $actor->id;
-        $isManager = $actor->can('manage-leave-applications');
+        $isManager = $actor->can('manage-leave-applications')
+            || $actor->can('view-all-leave-applications')
+            || $actor->hasRole('senior-executive');
         $isSupervisorOfApplicant = $actor->hasRole('supervisor')
             && (int) $application->user->supervisor_id === (int) $actor->id;
         $teamDepartmentIds = collect([$actor->department_id])

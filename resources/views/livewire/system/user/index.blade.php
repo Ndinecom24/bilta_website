@@ -122,7 +122,13 @@
 
                             <div class="col-lg-3 col-md-6 mb-3">
                                 <label class="font-weight-bold">Position / Title</label>
-                                <input type="text" class="form-control" wire:model.defer="position" placeholder="e.g. Translator">
+                                <select class="form-control" wire:model="position_id">
+                                    <option value="">-- Select Position --</option>
+                                    @foreach($positions as $pos)
+                                        <option value="{{ $pos->id }}">{{ $pos->name }}{{ $pos->code ? ' ('.$pos->code.')' : '' }}</option>
+                                    @endforeach
+                                </select>
+                                @error('position_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-lg-3 col-md-6 mb-3">
@@ -158,8 +164,13 @@
                                         </div>
                                         <div class="col-md-5 mb-2 mb-md-0">
                                             <label class="small font-weight-bold" for="newResponsibilityPosition{{ $index }}">Position in this department</label>
-                                            <input id="newResponsibilityPosition{{ $index }}" type="text" class="form-control" wire:model.defer="additionalResponsibilities.{{ $index }}.position" placeholder="e.g. Acting Administrator">
-                                            @error("additionalResponsibilities.$index.position") <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                            <select id="newResponsibilityPosition{{ $index }}" class="form-control" wire:model.defer="additionalResponsibilities.{{ $index }}.position_id">
+                                                <option value="">-- Select position --</option>
+                                                @foreach($positions as $pos)
+                                                    <option value="{{ $pos->id }}">{{ $pos->name }}{{ $pos->code ? ' ('.$pos->code.')' : '' }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error("additionalResponsibilities.$index.position_id") <span class="text-danger d-block">{{ $message }}</span> @enderror
                                         </div>
                                         <div class="col-md-2">
                                             <button type="button" class="btn btn-outline-danger btn-block" wire:click="removeResponsibility({{ $index }})">Remove</button>
@@ -285,8 +296,10 @@
                                         <td>{{ $users->firstItem() + $key }}</td>
                                         <td>
                                             {{ $user->name }}
-                                            @if ($user->position)
-                                                <br><small class="text-muted">{{ $user->position }}</small>
+                                            @if ($user->positionRelation)
+                                                <br><small class="text-muted"><i class="fas fa-id-badge mr-1 text-primary"></i>{{ $user->positionRelation->name }}</small>
+                                            @elseif ($user->position)
+                                                <br><small class="text-muted"><i class="fas fa-id-badge mr-1 text-primary"></i>{{ $user->position }}</small>
                                             @endif
                                         </td>
                                         <td>{{ $user->email }}</td>

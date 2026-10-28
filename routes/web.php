@@ -89,6 +89,10 @@ Route::get('/force-password-change', ForcePasswordChange::class)
     ->middleware('auth')
     ->name('force.password.change');
 
+// Employee portal redirects
+Route::redirect('/my-announcements', '/bilta/zadmin/home/my-announcements');
+Route::redirect('/my-documents', '/bilta/zadmin/home/my-documents');
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// SITE
@@ -164,19 +168,20 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         // Newsletters
         Route::get('/item/newsletters', ShowNewsletters::class)->middleware('permission:manage-newsletters')->name('admin.page.item.newsletters');
 
-        // Departments
+        // Departments & Positions
         Route::get('/departments', \App\Http\Livewire\Admin\ShowDepartments::class)->middleware('permission:manage-departments')->name('admin.departments');
+        Route::get('/positions', \App\Http\Livewire\Admin\ShowPositions::class)->middleware('permission:manage-positions')->name('admin.positions');
 
         // Leave Management — permission-protected
         Route::get('/leave/types', ShowLeaveTypes::class)->middleware('permission:manage-leave-types')->name('admin.leave.types');
-        Route::get('/leave/applications', ShowLeaveApplications::class)->middleware('permission:manage-leave-applications,approve-reject-leave')->name('admin.leave.applications');
+        Route::get('/leave/applications', ShowLeaveApplications::class)->middleware('permission:manage-leave-applications,approve-reject-leave,view-all-leave-applications')->name('admin.leave.applications');
         Route::get('/leave/applications/{id}/pdf', [LeaveApplicationPdfController::class, 'download'])->name('admin.leave.applications.pdf');
         Route::get('/leave/my-applications', MyLeaveApplications::class)->middleware('permission:apply-leave')->name('admin.leave.my-applications');
         Route::get('/leave/balances', ShowLeaveBalances::class)->middleware('permission:manage-leave-balances')->name('admin.leave.balances');
         Route::get('/leave/workflows', ShowApprovalWorkflows::class)->middleware('permission:manage-approval-workflows')->name('admin.leave.workflows');
 
-        // Training Center — accessible to all authenticated users
-        Route::get('/training', ShowTrainingCenter::class)->name('admin.training');
+        // Training Center — accessible to all authenticated users with training permission
+        Route::get('/training', ShowTrainingCenter::class)->middleware('permission:view-training')->name('admin.training');
 
         // Announcements & Memos — admin management
         Route::get('/announcements', ShowAnnouncements::class)->middleware('permission:manage-announcements')->name('admin.announcements');
@@ -185,9 +190,9 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/documents', ShowDocuments::class)->middleware('permission:manage-documents')->name('admin.documents');
 
         // Employee: Announcements (read-only)
-        Route::get('/my-announcements', EmployeeAnnouncements::class)->name('employee.announcements');
+        Route::get('/my-announcements', EmployeeAnnouncements::class)->middleware('permission:view-announcements')->name('employee.announcements');
 
         // Employee: Document Repository (read-only browse/download)
-        Route::get('/my-documents', EmployeeDocuments::class)->name('employee.documents');
+        Route::get('/my-documents', EmployeeDocuments::class)->middleware('permission:view-documents')->name('employee.documents');
     });
 });

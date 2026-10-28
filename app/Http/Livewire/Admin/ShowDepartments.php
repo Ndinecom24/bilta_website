@@ -51,6 +51,11 @@ class ShowDepartments extends Component
 
     public function store()
     {
+        if (!auth()->user()->can('create-departments') && !auth()->user()->can('manage-departments')) {
+            session()->flash('error', 'You do not have permission to create departments.');
+            return;
+        }
+
         $this->validate();
 
         Department::create([
@@ -69,6 +74,11 @@ class ShowDepartments extends Component
 
     public function edit($id)
     {
+        if (!auth()->user()->can('edit-departments') && !auth()->user()->can('manage-departments')) {
+            session()->flash('error', 'You do not have permission to edit departments.');
+            return;
+        }
+
         $dept = Department::findOrFail($id);
         $this->department_id = $dept->id;
         $this->name          = $dept->name;
@@ -82,6 +92,11 @@ class ShowDepartments extends Component
 
     public function update()
     {
+        if (!auth()->user()->can('edit-departments') && !auth()->user()->can('manage-departments')) {
+            session()->flash('error', 'You do not have permission to edit departments.');
+            return;
+        }
+
         $this->validate();
 
         $dept = Department::findOrFail($this->department_id);
@@ -101,6 +116,11 @@ class ShowDepartments extends Component
 
     public function destroy($id)
     {
+        if (!auth()->user()->can('delete-departments') && !auth()->user()->can('manage-departments')) {
+            session()->flash('error', 'You do not have permission to delete departments.');
+            return;
+        }
+
         $dept = Department::findOrFail($id);
         if ($dept->members()->exists() || $dept->responsibilityMembers()->exists()) {
             session()->flash('error', 'Cannot delete department with assigned members. Reassign members first.');

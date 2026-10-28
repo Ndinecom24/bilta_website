@@ -174,7 +174,7 @@
 
             {{-- CTA --}}
             <div style="text-align: center; margin-top: 24px;">
-                <a href="{{ url('/my-announcements') }}" class="cta-button">
+                <a href="{{ route('employee.announcements') }}" class="cta-button">
                     View in Portal &rarr;
                 </a>
             </div>

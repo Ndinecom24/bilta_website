@@ -17,11 +17,23 @@ class RoleMiddleware
 
     public function handle($request, Closure $next, $role, $permission = null)
     {
-        if(!$request->user()->hasRole($role)) {
+        $user = $request->user();
+
+        if (!$user) {
             abort(404);
         }
 
-        if($permission !== null && !$request->user()->can($permission)) {
+        // Allow comma-separated or pipe-separated roles: e.g. 'admin,super-admin' or 'admin|system-admin'
+        $roles = preg_split('/[,|]/', $role);
+        $hasAnyRole = collect($roles)->contains(function ($r) use ($user) {
+            return $user->hasRole(trim($r));
+        });
+
+        if (!$hasAnyRole) {
+            abort(404);
+        }
+
+        if ($permission !== null && !$user->can($permission)) {
             abort(404);
         }
 

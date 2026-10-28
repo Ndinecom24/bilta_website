@@ -417,7 +417,9 @@
                                         <td>{{ $app->created_at->format('d M Y') }}</td>
                                         <td>
                                             <button wire:click="viewApplication({{ $app->id }})" class="btn btn-info btn-sm">View</button>
-                                           
+                                            @canany(['delete-leave-applications', 'manage-leave-applications'])
+                                            <button onclick="deleteLeaveApplication({{ $app->id }})" class="btn btn-danger btn-sm">Delete</button>
+                                            @endcanany
                                         </td>
                                     </tr>
                                 @empty

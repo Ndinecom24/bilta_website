@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class AdminAndDemoSeeder extends Seeder
 {
     private const ABOUT_TEXT_MAX = 191;
+    private const CREATED_AT_EXPR = 'NOW()';
 
     public function run()
     {
@@ -503,25 +504,30 @@ class AdminAndDemoSeeder extends Seeder
 
     /**
      * Assign roles to the default admin users.
-     * admin@bilta.org   → admin role
-     * content@bilta.org → content-manager role
+     * admin@bilta.org   → super-admin, admin, employee
+     * content@bilta.org → content-manager, employee
      */
     private function assignUserRoles(): void
     {
         $assignments = [
-            'admin@bilta.org' => 'admin',
-            'content@bilta.org' => 'content-manager',
+            'admin@bilta.org' => ['super-admin', 'admin', 'employee'],
+            'content@bilta.org' => ['content-manager', 'employee'],
         ];
 
-        foreach ($assignments as $email => $roleSlug) {
+        foreach ($assignments as $email => $roleSlugs) {
             $userId = DB::table('users')->where('email', $email)->value('id');
-            $roleId = DB::table('roles')->where('slug', $roleSlug)->value('id');
+            if (!$userId) {
+                continue;
+            }
 
-            if ($userId && $roleId) {
-                if (!DB::table('users_roles')->where('user_id', $userId)->where('role_id', $roleId)->exists()) {
-                    DB::table('users_roles')->insert(
-                        ['user_id' => $userId, 'role_id' => $roleId, 'updated_at' => now(), 'created_at' => now()]
-                    );
+            foreach ((array) $roleSlugs as $roleSlug) {
+                $roleId = DB::table('roles')->where('slug', $roleSlug)->value('id');
+                if ($roleId) {
+                    if (!DB::table('users_roles')->where('user_id', $userId)->where('role_id', $roleId)->exists()) {
+                        DB::table('users_roles')->insert(
+                            ['user_id' => $userId, 'role_id' => $roleId, 'updated_at' => now(), 'created_at' => now()]
+                        );
+                    }
                 }
             }
         }

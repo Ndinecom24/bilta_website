@@ -118,6 +118,11 @@ class ShowApprovalWorkflows extends Component
 
     public function destroyWorkflow($id)
     {
+        if (!auth()->user()->can('manage-approval-workflows')) {
+            session()->flash('error', 'You do not have permission to delete workflows.');
+            return;
+        }
+
         try {
             ApprovalWorkflow::find($id)?->delete();
             if ($this->managingWorkflowId == $id) {
@@ -239,6 +244,11 @@ class ShowApprovalWorkflows extends Component
 
     public function destroyStage($id)
     {
+        if (!auth()->user()->can('manage-approval-workflows')) {
+            session()->flash('error', 'You do not have permission to delete stages.');
+            return;
+        }
+
         try {
             ApprovalWorkflowStage::find($id)?->delete();
             $this->autoFixStartEnd();

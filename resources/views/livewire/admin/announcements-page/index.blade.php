@@ -238,7 +238,7 @@
                 <div class="mb-3">
                     <label class="font-weight-bold small text-gray-700">Content</label>
                     <input id="announcementContent" type="hidden" wire:model.defer="content">
-                    <div class="border rounded-lg overflow-hidden" style="border-radius: 10px !important;">
+                    <div wire:ignore class="border rounded-lg overflow-hidden" style="border-radius: 10px !important;">
                         <trix-editor input="announcementContent" class="bg-white" style="min-height: 250px;"></trix-editor>
                     </div>
                     @error('content') <span class="text-danger small d-block mt-1">{{ $message }}</span> @enderror
@@ -444,9 +444,11 @@
                                             <i class="fas fa-undo"></i>
                                         </button>
                                     @endif
+                                    @canany(['delete-announcements', 'manage-announcements'])
                                     <button onclick="deleteAnnouncement({{ $item->id }})" class="btn btn-sm btn-outline-danger rounded-pill px-3" title="Delete">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
+                                    @endcanany
                                 </div>
                             </td>
                         </tr>
@@ -469,26 +471,44 @@
 
     {{-- SCRIPTS --}}
     <script>
-        document.addEventListener('trix-file-accept', function(e) { e.preventDefault(); });
+        if (!window.__trixAnnouncementInitialized) {
+            window.__trixAnnouncementInitialized = true;
 
-        document.addEventListener('trix-change', function(e) {
-            var input = e.target.inputElement;
-            if (input && input.id === 'announcementContent') {
-                @this.set('content', input.value, true);
-            }
-        });
+            document.addEventListener('trix-file-accept', function(e) {
+                e.preventDefault();
+            });
 
-        window.addEventListener('load-trix-content', function(e) {
-            function loadContent() {
-                var editor = document.querySelector('trix-editor[input="announcementContent"]');
-                if (editor && editor.editor) {
-                    editor.editor.loadHTML(e.detail.content || '');
-                } else {
-                    setTimeout(loadContent, 100);
+            document.addEventListener('trix-change', function(e) {
+                var input = e.target.inputElement || document.getElementById('announcementContent');
+                if (input && input.id === 'announcementContent') {
+                    var val = input.value;
+                    if (typeof @this !== 'undefined') {
+                        @this.set('content', val, true);
+                    } else if (window.Livewire) {
+                        var el = e.target.closest('[wire\\:id]');
+                        if (el) {
+                            var comp = window.Livewire.find(el.getAttribute('wire:id'));
+                            if (comp) comp.set('content', val, true);
+                        }
+                    }
                 }
-            }
-            setTimeout(loadContent, 50);
-        });
+            });
+
+            window.addEventListener('load-trix-content', function(e) {
+                var attempts = 0;
+                var maxAttempts = 20;
+                function loadContent() {
+                    var editor = document.querySelector('trix-editor[input="announcementContent"]');
+                    if (editor && editor.editor) {
+                        editor.editor.loadHTML(e.detail.content || '');
+                    } else if (attempts < maxAttempts) {
+                        attempts++;
+                        setTimeout(loadContent, 100);
+                    }
+                }
+                setTimeout(loadContent, 50);
+            });
+        }
 
         function deleteAnnouncement(id) {
             if (confirm("Are you sure you want to delete this announcement?")) {

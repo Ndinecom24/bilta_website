@@ -134,8 +134,10 @@
 
                     {{-- Name & Position --}}
                     <h5 class="text-white font-weight-bold mb-0">{{ $user->name }}</h5>
-                    @if ($user->position)
-                        <small class="text-white" style="opacity: .8;">{{ $user->position }}</small>
+                    @if ($user->positionRelation)
+                        <small class="text-white" style="opacity: .85;"><i class="fas fa-id-badge mr-1"></i>{{ $user->positionRelation->name }}</small>
+                    @elseif ($user->position)
+                        <small class="text-white" style="opacity: .85;"><i class="fas fa-id-badge mr-1"></i>{{ $user->position }}</small>
                     @endif
                 </div>
 
@@ -364,7 +366,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="p-3 rounded" style="background: #f8fafc;">
                                     <small class="text-muted d-block mb-1" style="font-size: .7rem; text-transform: uppercase; letter-spacing: 1px;">Position</small>
-                                    <span class="font-weight-bold">{{ $user->position ?? '—' }}</span>
+                                    <span class="font-weight-bold">{{ $user->positionRelation->name ?? ($user->position ?? '—') }}</span>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -720,7 +722,13 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="font-weight-bold" style="font-size: .85rem;">Position</label>
-                                    <input type="text" class="form-control" wire:model.defer="position">
+                                    <select class="form-control" wire:model="position_id">
+                                        <option value="">-- Select Position --</option>
+                                        @foreach($positions as $pos)
+                                            <option value="{{ $pos->id }}">{{ $pos->name }}{{ $pos->code ? ' ('.$pos->code.')' : '' }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('position_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="font-weight-bold" style="font-size: .85rem;">Department</label>
@@ -752,8 +760,13 @@
                                             </div>
                                             <div class="col-md-5 mb-2 mb-md-0">
                                                 <label class="small font-weight-bold" for="profileResponsibilityPosition{{ $index }}">Position</label>
-                                                <input id="profileResponsibilityPosition{{ $index }}" type="text" class="form-control" wire:model.defer="additionalResponsibilities.{{ $index }}.position" placeholder="Position in this department">
-                                                @error("additionalResponsibilities.$index.position") <span class="text-danger d-block">{{ $message }}</span> @enderror
+                                                <select id="profileResponsibilityPosition{{ $index }}" class="form-control" wire:model.defer="additionalResponsibilities.{{ $index }}.position_id">
+                                                    <option value="">-- Select position --</option>
+                                                    @foreach($positions as $pos)
+                                                        <option value="{{ $pos->id }}">{{ $pos->name }}{{ $pos->code ? ' ('.$pos->code.')' : '' }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error("additionalResponsibilities.$index.position_id") <span class="text-danger d-block">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="col-md-2"><button type="button" class="btn btn-outline-danger btn-block" wire:click="removeResponsibility({{ $index }})">Remove</button></div>
                                         </div>

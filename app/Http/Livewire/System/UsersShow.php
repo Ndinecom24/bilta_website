@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\System;
 
 use App\Models\Bilta\Department;
+use App\Models\Bilta\Position;
 use App\Models\System\Role;
 use App\Models\System\Status;
 use App\Models\System\UserFile;
@@ -26,7 +27,7 @@ class UsersShow extends Component
     public $user, $user_id, $email, $name, $phone, $status_id, $password, $password_confirmation, $password_change, $role_id;
 
     // HR fields
-    public $position, $department_id, $nrc, $man_number, $employee_id;
+    public $position, $position_id, $department_id, $nrc, $man_number, $employee_id;
     public $additionalResponsibilities = [];
     public $date_of_birth, $gender, $date_joined, $contract_type;
     public $address, $emergency_contact_name, $emergency_contact_phone;
@@ -107,10 +108,12 @@ class UsersShow extends Component
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($this->user_id)],
             'status_id' => 'required',
             'position' => 'nullable|string|max:100',
+            'position_id' => 'nullable|exists:positions,id',
             'department_id' => 'nullable|exists:departments,id',
             'additionalResponsibilities' => 'array',
             'additionalResponsibilities.*.department_id' => 'required|exists:departments,id',
             'additionalResponsibilities.*.position' => 'nullable|string|max:100',
+            'additionalResponsibilities.*.position_id' => 'nullable|exists:positions,id',
             'nrc' => 'nullable|string|max:30',
             'man_number' => 'nullable|string|max:30',
             'employee_id' => 'nullable|string|max:50',
@@ -139,8 +142,13 @@ class UsersShow extends Component
 
         // Non-admin users can only view their own profile
         $isOwnProfile = auth()->id() === $user->id;
-        $isAdmin = $authUser->hasRole('admin') || $authUser->can('manage-users');
-        $isHr = $authUser->hasRole('hr');
+        $isAdmin = $authUser->hasRole('admin')
+            || $authUser->hasRole('super-admin')
+            || $authUser->can('manage-users');
+        $isHr = $authUser->hasRole('hr')
+            || $authUser->hasRole('hr-manager')
+            || $authUser->hasRole('hr-officer')
+            || $authUser->can('manage-hr-profiles');
         $canViewOthers = $isAdmin || $isHr;
 
         if (!$isOwnProfile && !$canViewOthers) {
@@ -161,12 +169,14 @@ class UsersShow extends Component
 
         // HR fields
         $this->position = $user->position;
+        $this->position_id = $user->position_id;
         $this->department_id = $user->department_id;
         $this->additionalResponsibilities = $user->departmentResponsibilities
             ->map(function ($department) {
                 return [
                     'department_id' => (string) $department->id,
                     'position' => $department->pivot->position,
+                    'position_id' => $department->pivot->position_id ?? null,
                 ];
             })->values()->all();
         $this->nrc = $user->nrc;
@@ -191,14 +201,23 @@ class UsersShow extends Component
         $roles = Role::orderBy('name')->get();
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
+        $positions = Position::where('status_id', 1)->orderBy('name')->get();
         $supervisors = User::where('id', '!=', $this->user_id)
             ->whereHas('roles', function ($query) {
                 $query->whereRaw('LOWER(roles.slug) = ?', ['supervisor']);
             })
             ->orderBy('name')
-            ->select('id', 'name', 'position')
+            ->select('id', 'name', 'position', 'position_id')
             ->get();
-        return view('livewire.system.user.show')->with(compact('roles', 'statuses', 'departments', 'supervisors'));
+        return view('livewire.system.user.show')->with(compact('roles', 'statuses', 'departments', 'positions', 'supervisors'));
+    }
+
+    public function updatedPositionId($value)
+    {
+        if ($value) {
+            $pos = Position::find($value);
+            $this->position = $pos ? $pos->name : '';
+        }
     }
 
     private function refreshUserData()
@@ -390,7 +409,7 @@ class UsersShow extends Component
 
     public function attachRole()
     {
-        if (!$this->canManage) {
+        if (!auth()->user()->can('manage-user-roles') && !$this->canManage) {
             session()->flash('error', 'You do not have permission to manage roles.');
             return;
         }
@@ -409,7 +428,7 @@ class UsersShow extends Component
 
     public function detachRole($id)
     {
-        if (!$this->canManage) {
+        if (!auth()->user()->can('manage-user-roles') && !$this->canManage) {
             session()->flash('error', 'You do not have permission to manage roles.');
             return;
         }
@@ -441,12 +460,22 @@ class UsersShow extends Component
         try {
             // Update user
             $user = User::findOrFail($this->user_id);
+
+            $posId = $this->position_id ?: null;
+            $posName = $this->position ?: null;
+            if ($posId && empty($posName)) {
+                $posName = Position::find($posId)?->name;
+            } elseif ($posName && empty($posId)) {
+                $posId = Position::where('name', $posName)->value('id');
+            }
+
             $user->fill([
                 'name' => $this->name,
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'status_id' => $this->status_id,
-                'position' => $this->position ?: null,
+                'position' => $posName,
+                'position_id' => $posId,
                 'department_id' => $this->department_id ?: null,
                 'nrc' => $this->nrc ?: null,
                 'man_number' => $this->man_number ?: null,
@@ -463,13 +492,21 @@ class UsersShow extends Component
             $responsibilities = [];
             foreach ($this->additionalResponsibilities as $responsibility) {
                 if (!empty($responsibility['department_id'])) {
+                    $rPosId = !empty($responsibility['position_id']) ? $responsibility['position_id'] : null;
+                    $rPosName = !empty($responsibility['position']) ? $responsibility['position'] : null;
+                    if ($rPosId && empty($rPosName)) {
+                        $rPosName = Position::find($rPosId)?->name;
+                    } elseif ($rPosName && empty($rPosId)) {
+                        $rPosId = Position::where('name', $rPosName)->value('id');
+                    }
                     $responsibilities[$responsibility['department_id']] = [
-                        'position' => $responsibility['position'] ?: null,
+                        'position' => $rPosName,
+                        'position_id' => $rPosId,
                     ];
                 }
             }
             $user->departmentResponsibilities()->sync($responsibilities);
-            $this->user = User::with('departmentResponsibilities')->find($this->user_id);
+            $this->user = User::with('departmentResponsibilities', 'positionRelation', 'departmentRelation')->find($this->user_id);
             session()->flash('success', 'User updated successfully.');
 
             $this->cancel();
@@ -636,7 +673,7 @@ class UsersShow extends Component
 
     public function destroy($id)
     {
-        if (!$this->canManage) {
+        if (!auth()->user()->can('delete-users') && !auth()->user()->hasRole('super-admin') && !auth()->user()->hasRole('admin')) {
             session()->flash('error', 'You do not have permission to delete users.');
             return;
         }

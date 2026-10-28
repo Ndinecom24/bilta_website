@@ -881,37 +881,52 @@
     @endcanany
 
     <!-- DEPARTMENTS -->
-    @can('manage-departments')
+    @canany(['manage-departments', 'create-departments', 'edit-departments'])
     <li class="nav-item {{ request()->routeIs('admin.departments') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.departments') }}">
             <i class="fas fa-fw fa-building"></i>
             <span>Departments</span>
         </a>
     </li>
-    @endcan
+    @endcanany
+
+    <!-- POSITIONS -->
+    @canany(['manage-positions', 'create-positions', 'edit-positions'])
+    <li class="nav-item {{ request()->routeIs('admin.positions') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.positions') }}">
+            <i class="fas fa-fw fa-id-badge"></i>
+            <span>Positions</span>
+        </a>
+    </li>
+    @endcanany
 
     <!-- INTERNAL COMMUNICATIONS -->
+    @canany(['view-announcements', 'view-documents', 'manage-announcements', 'manage-documents'])
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
         Internal
     </div>
 
-    <!-- Announcements (Employee view - all authenticated users) -->
+    <!-- Announcements (Employee view) -->
+    @can('view-announcements')
     <li class="nav-item {{ request()->routeIs('employee.announcements') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('employee.announcements') }}">
             <i class="fas fa-fw fa-bullhorn"></i>
             <span>Announcements</span>
         </a>
     </li>
+    @endcan
 
-    <!-- Documents (Employee view - all authenticated users) -->
+    <!-- Documents (Employee view) -->
+    @can('view-documents')
     <li class="nav-item {{ request()->routeIs('employee.documents') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('employee.documents') }}">
             <i class="fas fa-fw fa-folder-open"></i>
             <span>Documents</span>
         </a>
     </li>
+    @endcan
 
     <!-- Announcements Admin -->
     @can('manage-announcements')
@@ -932,6 +947,7 @@
         </a>
     </li>
     @endcan
+    @endcanany
 
     <!-- LEAVE MANAGEMENT -->
     @canany(['apply-leave', 'manage-leave-types', 'manage-leave-applications', 'approve-reject-leave', 'manage-leave-balances', 'manage-approval-workflows'])
@@ -968,12 +984,12 @@
                 </a>
                 @endcan
 
-                @canany(['manage-leave-applications', 'approve-reject-leave'])
+                @canany(['manage-leave-applications', 'approve-reject-leave', 'view-all-leave-applications'])
                 <a class="collapse-item {{ request()->routeIs('admin.leave.applications') ? 'active' : '' }}" href="{{ route('admin.leave.applications') }}">
                     <i class="fas fa-clipboard-list"></i>
                     All Applications
                 </a>
-                @endcan
+                @endcanany
 
                 @can('manage-leave-types')
                 <a class="collapse-item {{ request()->routeIs('admin.leave.types') ? 'active' : '' }}" href="{{ route('admin.leave.types') }}">
@@ -1082,6 +1098,7 @@
     @endcanany
 
     <!-- TRAINING CENTER -->
+    @can('view-training')
     <hr class="sidebar-divider">
     <div class="sidebar-heading">Help & Training</div>
     <li class="nav-item {{ request()->routeIs('admin.training') ? 'active' : '' }}">
@@ -1090,6 +1107,7 @@
             <span>Training Center</span>
         </a>
     </li>
+    @endcan
 
     <hr class="sidebar-divider mt-3">
 

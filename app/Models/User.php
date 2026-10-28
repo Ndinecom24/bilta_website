@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Bilta\Department;
+use App\Models\Bilta\Position;
 use App\Models\Bilta\Click;
 use App\Models\System\UserFile;
 use App\Models\System\Status;
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'position',
+        'position_id',
         'department',
         'department_id',
         'nrc',
@@ -91,10 +93,15 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class, 'department_id');
     }
 
+    public function positionRelation()
+    {
+        return $this->belongsTo(Position::class, 'position_id');
+    }
+
     public function departmentResponsibilities()
     {
         return $this->belongsToMany(Department::class, 'user_department_responsibilities')
-            ->withPivot('position')
+            ->withPivot('position', 'position_id')
             ->withTimestamps();
     }
 
@@ -132,13 +139,23 @@ class User extends Authenticatable
     }
 
     /**
+     * Return position title from the positions table,
+     * falling back to the legacy text 'position' column.
+     */
+    public function getPositionNameAttribute()
+    {
+        return $this->positionRelation->name ?? $this->position ?? '—';
+    }
+
+    /**
      * Full name with position for display.
      */
     public function getDisplayLabelAttribute()
     {
+        $pos = $this->positionRelation->name ?? $this->position;
         $label = $this->name;
-        if ($this->position) {
-            $label .= ' (' . $this->position . ')';
+        if ($pos) {
+            $label .= ' (' . $pos . ')';
         }
         return $label;
     }

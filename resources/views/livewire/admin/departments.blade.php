@@ -1,10 +1,12 @@
 <div>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Departments</h1>
+        @canany(['create-departments', 'manage-departments'])
         <button wire:click="toggleForm" class="btn btn-{{ $showForm ? 'outline-secondary' : 'primary' }}">
             <i class="fas fa-{{ $showForm ? 'times' : 'plus' }}"></i>
             {{ $showForm ? 'Close' : 'Add Department' }}
         </button>
+        @endcanany
     </div>
 
     <div class="row">
@@ -123,8 +125,12 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @canany(['edit-departments', 'manage-departments'])
                                             <button wire:click="edit({{ $dept->id }})" class="btn btn-warning btn-sm">Edit</button>
+                                            @endcanany
+                                            @canany(['delete-departments', 'manage-departments'])
                                             <button onclick="deleteDepartment({{ $dept->id }})" class="btn btn-danger btn-sm">Delete</button>
+                                            @endcanany
                                         </td>
                                     </tr>
                                 @empty

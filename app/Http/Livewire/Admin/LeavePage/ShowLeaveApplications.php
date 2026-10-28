@@ -73,7 +73,8 @@ class ShowLeaveApplications extends Component
     {
         $query = LeaveApplication::query();
 
-        if ($actor->can('manage-leave-applications')) {
+        // Managers, executives, and users with global visibility can see all applications
+        if ($actor->can('manage-leave-applications') || $actor->can('view-all-leave-applications') || $actor->hasRole('senior-executive')) {
             return $query;
         }
 
@@ -309,7 +310,7 @@ class ShowLeaveApplications extends Component
 
     public function destroy($id)
     {
-        if (!auth()->user()->can('manage-leave-applications')) {
+        if (!auth()->user()->can('delete-leave-applications') && !auth()->user()->can('manage-leave-applications')) {
             abort(403);
         }
 

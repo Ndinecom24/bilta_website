@@ -309,6 +309,11 @@ class ShowDocuments extends Component
 
     public function destroyDocument($id)
     {
+        if (!auth()->user()->can('delete-documents') && !auth()->user()->can('manage-documents')) {
+            session()->flash('error', 'You do not have permission to delete documents.');
+            return;
+        }
+
         try {
             $doc = Document::findOrFail($id);
             Storage::disk('public')->delete($doc->file_path);

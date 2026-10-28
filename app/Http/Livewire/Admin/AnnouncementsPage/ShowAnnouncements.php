@@ -7,6 +7,7 @@ use App\Models\Bilta\Announcement;
 use App\Models\Bilta\Department;
 use App\Models\System\Status;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -168,7 +169,7 @@ class ShowAnnouncements extends Component
                 try {
                     Mail::to($user->email)->queue(new AnnouncementNotificationMail($announcement));
                 } catch (\Exception $e) {
-                    \Log::error("Failed to send announcement email to {$user->email}: " . $e->getMessage());
+                    Log::error("Failed to send announcement email to {$user->email}: " . $e->getMessage());
                 }
             }
         }
@@ -237,8 +238,8 @@ class ShowAnnouncements extends Component
         $this->title = $item->title;
         $this->type = $item->type;
         $this->content = $item->content;
-        $this->publish_date = $item->publish_date?->format('Y-m-d');
-        $this->expiry_date = $item->expiry_date?->format('Y-m-d');
+        $this->publish_date = $item->publish_date ? $item->publish_date->format('Y-m-d') : null;
+        $this->expiry_date = $item->expiry_date ? $item->expiry_date->format('Y-m-d') : null;
         $this->priority = $item->priority;
         $this->visibility = $item->visibility;
         $this->status_id = $item->status_id;
@@ -308,6 +309,11 @@ class ShowAnnouncements extends Component
 
     public function destroy($id)
     {
+        if (!auth()->user()->can('delete-announcements') && !auth()->user()->can('manage-announcements')) {
+            session()->flash('error', 'You do not have permission to delete announcements.');
+            return;
+        }
+
         try {
             Announcement::findOrFail($id)->delete();
             session()->flash('success', 'Announcement deleted.');
@@ -345,6 +351,8 @@ class ShowAnnouncements extends Component
         $this->attachments = [];
         $this->announcement = null;
         $this->announcement_id = null;
+
+        $this->dispatchBrowserEvent('load-trix-content', ['content' => '']);
     }
 
     private function saveAttachments(Announcement $announcement)
