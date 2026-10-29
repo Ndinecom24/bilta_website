@@ -43,7 +43,7 @@ class ShowPositions extends Component
             'name'          => 'required|string|max:100',
             'code'          => 'nullable|string|max:20',
             'department_id' => 'nullable|exists:departments,id',
-            'description'   => 'nullable|string|max:500',
+            'description'   => 'nullable|string|max:5000',
             'status_id'     => 'required|integer',
         ];
     }
