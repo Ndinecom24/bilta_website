@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin\LeavePage;
 
+use App\Http\Livewire\Admin\LeavePage\Concerns\OverridesLeaveStatus;
 use App\Mail\LeaveApprovalRequestMail;
 use App\Mail\LeaveStatusUpdateMail;
 use App\Mail\LeaveSubmissionConfirmationMail;
@@ -11,6 +12,8 @@ use App\Models\Bilta\LeaveApplication;
 use App\Models\Bilta\LeaveBalance;
 use App\Models\Bilta\LeaveType;
 use App\Models\User;
+use App\Services\Leave\LeaveApproverResolver;
+use App\Services\Leave\LeaveStatusOverrideService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -20,7 +23,7 @@ use Livewire\WithPagination;
 
 class MyLeaveApplications extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithPagination, WithFileUploads, OverridesLeaveStatus;
 
     // Leave form fields
     public $leave_type_id, $other_leave_type_text;
@@ -74,15 +77,23 @@ class MyLeaveApplications extends Component
         if ($this->viewingId) {
             $viewingApplication = LeaveApplication::with([
                 'user.supervisor', 'user.departmentRelation', 'leaveType',
-                'currentStage.role.users', 'workflow.stages.role.users',
+                'currentStage.role', 'workflow.stages.role',
                 'approvalHistory.actor', 'approvalHistory.stage',
             ])->find($this->viewingId);
         }
 
+        $stageProgress = $viewingApplication
+            ? app(LeaveApproverResolver::class)->stageProgress($viewingApplication)
+            : collect();
+
+        $overrideOptions = ($viewingApplication && $this->overridingId)
+            ? app(LeaveStatusOverrideService::class)->targetsFor($viewingApplication)
+            : [];
+
         $allUsers = User::orderBy('name')->select('id', 'name', 'position', 'phone')->get();
 
         return view('livewire.admin.leave-page.my-leave-applications', compact(
-            'applications', 'leaveTypes', 'balances', 'viewingApplication', 'allUsers'
+            'applications', 'leaveTypes', 'balances', 'viewingApplication', 'allUsers', 'stageProgress', 'overrideOptions'
         ));
     }
 
@@ -231,28 +242,21 @@ class MyLeaveApplications extends Component
         $this->reviewComment = '';
         $this->reviewAction = '';
         $this->signatureData = '';
+        $this->cancelOverride();
     }
 
     /**
      * Check if the current user can act on the viewed application at its current stage.
+     * Direct supervisors and the people assigned to the applicant's branch for the stage role can act.
      */
     public function canActOnApplication(LeaveApplication $application): bool
     {
         $actor = auth()->user();
-        if (!$actor || (int) $application->user_id === (int) $actor->id || !$actor->can('approve-reject-leave') || $application->status !== 'pending' || !$application->currentStage) {
+        if (!$actor) {
             return false;
         }
 
-        $stageRole = $application->currentStage->role;
-        if (!$stageRole || !$actor->roles->contains('id', $stageRole->id)) {
-            return false;
-        }
-
-        if (strtolower($stageRole->slug) === 'supervisor') {
-            return $actor->hasRole('supervisor') && (int) $application->user->supervisor_id === (int) $actor->id;
-        }
-
-        return true;
+        return app(LeaveApproverResolver::class)->canAct($actor, $application);
     }
 
     /**
@@ -424,23 +428,9 @@ class MyLeaveApplications extends Component
     private function notifyStageApprovers(LeaveApplication $application, $stage)
     {
         try {
-            $stage->loadMissing('role');
-            if ($stage->role && strtolower($stage->role->slug) === 'supervisor') {
-                $supervisorId = $application->user()->value('supervisor_id');
-                $approvers = $supervisorId
-                    ? User::whereKey($supervisorId)->whereHas('roles', function ($query) {
-                        $query->where('roles.slug', 'supervisor');
-                    })->get()->filter(function ($user) {
-                        return $user->can('approve-reject-leave');
-                    })
-                    : collect();
-            } else {
-                $approvers = User::whereHas('roles', function ($query) use ($stage) {
-                    $query->where('roles.id', $stage->role_id);
-                })->get()->filter(function ($user) {
-                    return $user->can('approve-reject-leave');
-                });
-            }
+            // Only the people who can really act on this application (direct supervisor,
+            // branch-assigned approvers, or everyone with the role when no branch is set).
+            $approvers = app(LeaveApproverResolver::class)->approversFor($application, $stage);
 
             foreach ($approvers as $approver) {
                 Mail::to($approver->email)->send(new LeaveApprovalRequestMail($application, $stage));

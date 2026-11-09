@@ -229,7 +229,73 @@
                     </div>
                     @endcanany
 
-                    {{-- Employees --}}
+                    {{-- Leave approvers for this branch --}}
+                    <div class="border rounded p-3 mb-3" style="border-left: 4px solid #cd5b13 !important;">
+                        <h6 class="font-weight-bold mb-1"><i class="fas fa-user-check mr-1"></i> Leave approvers for this branch</h6>
+                        <p class="small text-muted mb-3">
+                            Choose who acts in each role for staff in <strong>{{ $b->name }}</strong>.
+                            For the <strong>Supervisor</strong> stage the applicant's own supervisor and the supervisors chosen here can approve.
+                            For any other role only the people chosen here can approve; if nobody is chosen, everyone holding that role can.
+                            A person can be assigned to as many branches as needed.
+                        </p>
+
+                        <div class="row">
+                            <div class="col-lg-6 mb-3">
+                                <h6 class="small font-weight-bold text-uppercase text-muted">Current assignments</h6>
+                                @forelse ($approverAssignments as $roleId => $rows)
+                                    <div class="mb-2">
+                                        <span class="badge bg-secondary text-white">{{ optional($rows->first()->role)->name ?: 'Role' }}</span>
+                                        <div class="mt-1">
+                                            @foreach ($rows as $row)
+                                                <span class="badge badge-light border mr-1 mb-1 py-2">
+                                                    {{ optional($row->user)->name ?: 'Unknown user' }}
+                                                    @canany(['edit-branches', 'manage-branches'])
+                                                    <a href="#" wire:click.prevent="removeApprover({{ $row->id }})" class="text-danger ml-1" title="Remove" onclick="return confirm('Remove this approver from the branch?')">&times;</a>
+                                                    @endcanany
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @empty
+                                    <small class="text-muted">No approvers assigned yet. Leave applications follow each role's default behaviour.</small>
+                                @endforelse
+                            </div>
+
+                            @canany(['edit-branches', 'manage-branches'])
+                            <div class="col-lg-6 mb-3">
+                                <h6 class="small font-weight-bold text-uppercase text-muted">Assign people to a role</h6>
+                                <select class="form-control form-control-sm mb-2" wire:model="approverRoleId">
+                                    <option value="">-- Select role --</option>
+                                    @foreach ($approverRoles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('approverRoleId') <span class="text-danger small d-block mb-1">{{ $message }}</span> @enderror
+
+                                @if ($approverRoleId)
+                                    <div class="border rounded bg-white p-2 mb-2" style="max-height: 220px; overflow-y: auto;">
+                                        @forelse ($approverCandidates as $candidate)
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="approver-{{ $candidate->id }}" value="{{ $candidate->id }}" wire:model="approverUserIds">
+                                                <label class="custom-control-label" for="approver-{{ $candidate->id }}">
+                                                    {{ $candidate->name }}
+                                                    @if ($candidate->position) <small class="text-muted">— {{ $candidate->position }}</small> @endif
+                                                </label>
+                                            </div>
+                                        @empty
+                                            <small class="text-muted">No users hold this role yet. Give the role to a user first.</small>
+                                        @endforelse
+                                    </div>
+                                    <button wire:click="saveApprovers" class="btn btn-sm btn-primary" wire:loading.attr="disabled" wire:target="saveApprovers">
+                                        <span wire:loading.remove wire:target="saveApprovers">Save approvers</span>
+                                        <span wire:loading wire:target="saveApprovers"><i class="fas fa-spinner fa-spin"></i> Saving...</span>
+                                    </button>
+                                    <small class="text-muted d-block mt-1">Ticked people replace the current list for this role in this branch.</small>
+                                @endif
+                            </div>
+                            @endcanany
+                        </div>
+                    </div>
                     <h6 class="font-weight-bold">Employees</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-hover">

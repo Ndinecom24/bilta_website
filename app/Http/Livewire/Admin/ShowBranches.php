@@ -2,8 +2,12 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Bilta\ApprovalWorkflowStage;
 use App\Models\Bilta\Branch;
+use App\Models\Bilta\BranchApprover;
+use App\Models\System\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -33,6 +37,10 @@ class ShowBranches extends Component
     public $isEdit = false;
     public $viewingId = null;
     public $assignUserId = '';
+
+    // Leave approvers (role -> people) for the branch being viewed
+    public $approverRoleId = '';
+    public $approverUserIds = [];
 
     protected $listeners = ['deleteBranch' => 'destroy'];
 
@@ -96,8 +104,38 @@ class ShowBranches extends Component
 
         $branches = $query->orderByDesc('employees_count')->orderBy('name')->paginate(15);
 
+        $approverRoles = collect();
+        $approverCandidates = collect();
+        $approverAssignments = collect();
+        if ($this->viewingId) {
+            // Roles that review leave: every role used in a leave workflow, plus Supervisor.
+            $approverRoles = Role::whereIn('id', ApprovalWorkflowStage::whereHas('workflow', function ($w) {
+                    $w->where('form_type', 'leave');
+                })->select('role_id'))
+                ->orWhere('slug', 'supervisor')
+                ->orderBy('name')
+                ->get(['id', 'name', 'slug']);
+
+            if ($this->approverRoleId) {
+                $approverCandidates = User::whereHas('roles', function ($r) {
+                    $r->where('roles.id', $this->approverRoleId);
+                })->orderBy('name')->get(['users.id', 'users.name', 'users.position']);
+            }
+
+            $approverAssignments = BranchApprover::with(['role', 'user'])
+                ->where('branch_id', $this->viewingId)
+                ->get()
+                ->sortBy(function ($row) {
+                    return optional($row->role)->name . '|' . optional($row->user)->name;
+                })
+                ->groupBy('role_id');
+        }
+
         return view('livewire.admin.branches', [
             'branches'     => $branches,
+            'approverRoles'       => $approverRoles,
+            'approverCandidates'  => $approverCandidates,
+            'approverAssignments' => $approverAssignments,
             'stats'        => $this->overallStats(),
             'users'        => User::orderBy('name')->get(['id', 'name']),
             'detail'       => $this->viewingId ? $this->branchDetail((int) $this->viewingId) : null,
@@ -275,12 +313,14 @@ class ShowBranches extends Component
     {
         $this->viewingId = Branch::findOrFail($id)->id;
         $this->assignUserId = '';
+        $this->resetApproverForm();
     }
 
     public function closeView()
     {
         $this->viewingId = null;
         $this->assignUserId = '';
+        $this->resetApproverForm();
     }
 
     public function assignEmployee()
@@ -308,6 +348,83 @@ class ShowBranches extends Component
 
         User::whereKey($userId)->where('branch_id', $this->viewingId)->update(['branch_id' => null]);
         session()->flash('success', 'Employee removed from branch.');
+    }
+
+    /* ---- Leave approvers (role + people for this branch) ---- */
+
+    /**
+     * Picking a role pre-ticks the people already assigned for it.
+     */
+    public function updatedApproverRoleId($value)
+    {
+        $this->loadApproverSelection();
+    }
+
+    private function loadApproverSelection(): void
+    {
+        $this->approverUserIds = ($this->viewingId && $this->approverRoleId)
+            ? BranchApprover::where('branch_id', $this->viewingId)
+                ->where('role_id', $this->approverRoleId)
+                ->pluck('user_id')
+                ->map(function ($id) {
+                    return (string) $id;
+                })->all()
+            : [];
+    }
+
+    private function resetApproverForm(): void
+    {
+        $this->approverRoleId = '';
+        $this->approverUserIds = [];
+    }
+
+    public function saveApprovers()
+    {
+        if (!$this->allows('edit-branches') || !$this->viewingId) {
+            session()->flash('error', 'You do not have permission to assign branch approvers.');
+            return;
+        }
+
+        $this->validate([
+            'approverRoleId' => 'required|exists:roles,id',
+            'approverUserIds' => 'array',
+            'approverUserIds.*' => 'exists:users,id',
+        ], [
+            'approverRoleId.required' => 'Select a role first.',
+        ]);
+
+        $branchId = (int) $this->viewingId;
+        $roleId = (int) $this->approverRoleId;
+
+        // Only people who actually hold the role can be assigned for it.
+        $userIds = User::whereIn('id', (array) $this->approverUserIds)
+            ->whereHas('roles', function ($r) use ($roleId) {
+                $r->where('roles.id', $roleId);
+            })->pluck('id');
+
+        DB::transaction(function () use ($branchId, $roleId, $userIds) {
+            BranchApprover::where('branch_id', $branchId)->where('role_id', $roleId)
+                ->whereNotIn('user_id', $userIds)->delete();
+
+            foreach ($userIds as $userId) {
+                BranchApprover::firstOrCreate(['branch_id' => $branchId, 'role_id' => $roleId, 'user_id' => $userId]);
+            }
+        });
+
+        $this->loadApproverSelection();
+        session()->flash('success', 'Branch approvers saved.');
+    }
+
+    public function removeApprover($assignmentId)
+    {
+        if (!$this->allows('edit-branches') || !$this->viewingId) {
+            session()->flash('error', 'You do not have permission to assign branch approvers.');
+            return;
+        }
+
+        BranchApprover::whereKey($assignmentId)->where('branch_id', $this->viewingId)->delete();
+        $this->loadApproverSelection();
+        session()->flash('success', 'Approver removed from branch.');
     }
 
     /* ---- Helpers ---- */

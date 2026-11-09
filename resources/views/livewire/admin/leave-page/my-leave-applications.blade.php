@@ -523,49 +523,7 @@
                     @if ($viewingApplication->workflow)
                     <div class="bilta-section">
                         <h5 class="bilta-section-title"><i class="fas fa-project-diagram"></i> APPROVAL WORKFLOW — {{ $viewingApplication->workflow->name }}</h5>
-                        <div class="d-flex flex-wrap align-items-center gap-2 my-2">
-                            @foreach ($viewingApplication->workflow->stages as $stg)
-                                @php
-                                    $historyForStage = $viewingApplication->approvalHistory->where('stage_id', $stg->id)->last();
-                                    $isCurrent = $viewingApplication->current_stage_id == $stg->id;
-                                    if ($historyForStage && $historyForStage->action === 'approved') {
-                                        $badgeClass = 'bg-success text-white';
-                                        $icon = 'fa-check-circle';
-                                    } elseif ($historyForStage && $historyForStage->action === 'rejected') {
-                                        $badgeClass = 'bg-danger text-white';
-                                        $icon = 'fa-times-circle';
-                                    } elseif ($isCurrent) {
-                                        $badgeClass = 'bg-warning text-dark';
-                                        $icon = 'fa-hourglass-half';
-                                    } else {
-                                        $badgeClass = 'bg-light text-muted border';
-                                        $icon = 'fa-circle';
-                                    }
-                                @endphp
-                                <div class="text-center" style="min-width:120px;">
-                                    <span class="badge {{ $badgeClass }} px-3 py-2 d-block">
-                                        <i class="fas {{ $icon }} mr-1"></i>
-                                        {{ $stg->stage_order }}. {{ $stg->name }}
-                                    </span>
-                                    <small class="text-muted d-block mt-1" style="font-size:.72rem;">
-                                        @if ($historyForStage)
-                                            <i class="fas fa-user-check"></i> {{ $historyForStage->actor->name ?? 'Unknown' }}
-                                        @elseif ($stg->role && strtolower($stg->role->slug) === 'supervisor')
-                                            <span class="d-block"><i class="fas fa-user"></i> {{ $viewingApplication->user->supervisor->name ?? 'No supervisor assigned' }}</span>
-                                        @elseif ($stg->role && $stg->role->users->count())
-                                            @foreach ($stg->role->users as $approver)
-                                                <span class="d-block"><i class="fas fa-user"></i> {{ $approver->name }}</span>
-                                            @endforeach
-                                        @else
-                                            <span class="text-muted">{{ $stg->role->name ?? 'No role' }}</span>
-                                        @endif
-                                    </small>
-                                </div>
-                                @if (!$loop->last)
-                                    <i class="fas fa-arrow-right text-muted align-self-start mt-3"></i>
-                                @endif
-                            @endforeach
-                        </div>
+                        @include('livewire.admin.leave-page.partials.workflow-pipeline', ['stageProgress' => $stageProgress, 'application' => $viewingApplication])
                         @if ($viewingApplication->currentStage)
                             <p class="text-muted small mt-1">Currently awaiting: <strong>{{ $viewingApplication->currentStage->name }}</strong></p>
                         @endif
@@ -596,6 +554,8 @@
                                                     <span class="badge bg-success text-white">Approved</span>
                                                 @elseif ($hist->action === 'rejected')
                                                     <span class="badge bg-danger text-white">Rejected</span>
+                                                @elseif ($hist->action === 'overridden')
+                                                    <span class="badge bg-dark text-white">Admin Override</span>
                                                 @else
                                                     <span class="badge bg-warning text-dark">{{ ucfirst($hist->action) }}</span>
                                                 @endif
@@ -645,6 +605,55 @@
                         </div>
                     </div>
                     @endif
+
+                    {{-- ===== ADMIN: MOVE FORWARDS / BACKWARDS OR CHANGE STATUS ===== --}}
+                    @can('override-leave-status')
+                    <div class="bilta-section no-print" style="border: 2px solid #f3b33d; background: #fffbea;">
+                        <h5 class="bilta-section-title"><i class="fas fa-undo-alt"></i> ADMINISTRATOR — MOVE / CHANGE STATUS</h5>
+
+                        @if ($overridingId && (int) $overridingId === (int) $viewingApplication->id)
+                            <p class="mb-2">Currently:
+                                <strong>
+                                    @if ($viewingApplication->status === 'pending' && $viewingApplication->currentStage)
+                                        Pending at "{{ $viewingApplication->currentStage->name }}"
+                                    @else
+                                        {{ ucfirst($viewingApplication->status) }}
+                                    @endif
+                                </strong>
+                            </p>
+                            <div class="alert alert-info small">
+                                This overrides the normal approval workflow. Move the application forwards or backwards to any stage, or set a final status. Leave balances are adjusted automatically, the change is logged in the approval history, and the applicant is notified.
+                            </div>
+                            <div class="mb-3">
+                                <label class="font-weight-bold small">MOVE TO</label>
+                                <select class="form-control" wire:model.defer="overrideTarget">
+                                    <option value="">-- Select stage or status --</option>
+                                    @foreach ($overrideOptions as $value => $label)
+                                        <option value="{{ $value }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                                @error('overrideTarget') <span class="text-danger small d-block mt-1">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="font-weight-bold small">REASON (required)</label>
+                                <textarea class="form-control" wire:model.defer="overrideComment" rows="3" placeholder="Explain why this application is being moved..."></textarea>
+                                @error('overrideComment') <span class="text-danger small d-block mt-1">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button wire:click="submitOverride" class="btn btn-warning px-4" wire:loading.attr="disabled">
+                                    <span wire:loading.remove wire:target="submitOverride">Confirm Move</span>
+                                    <span wire:loading wire:target="submitOverride"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                                </button>
+                                <button wire:click="cancelOverride" class="btn btn-outline-secondary ml-2" wire:loading.attr="disabled" wire:target="submitOverride">Cancel</button>
+                            </div>
+                        @else
+                            <p class="small text-muted mb-2">Move this application to any workflow stage (forwards or backwards) or set a final status.</p>
+                            <button wire:click="startOverride({{ $viewingApplication->id }})" class="btn btn-warning">
+                                <i class="fas fa-undo-alt mr-1"></i> Move / Change Status
+                            </button>
+                        @endif
+                    </div>
+                    @endcan
 
                 </div>
             </div>

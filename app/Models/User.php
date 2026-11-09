@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Bilta\Department;
 use App\Models\Bilta\Branch;
+use App\Models\Bilta\BranchApprover;
 use App\Models\Bilta\Position;
 use App\Models\Bilta\Click;
 use App\Models\System\UserFile;
@@ -123,6 +124,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Department::class, 'user_department_responsibilities')
             ->withPivot('position', 'position_id')
             ->withTimestamps();
+    }
+
+    public function branchApprovals()
+    {
+        return $this->hasMany(BranchApprover::class, 'user_id');
     }
 
     public function supervisor()

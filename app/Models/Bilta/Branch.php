@@ -31,6 +31,11 @@ class Branch extends Model
         return $this->hasMany(User::class, 'branch_id');
     }
 
+    public function approvers()
+    {
+        return $this->hasMany(BranchApprover::class);
+    }
+
     public function status()
     {
         return $this->belongsTo(Status::class);

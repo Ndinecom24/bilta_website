@@ -216,49 +216,7 @@
                         <div class="col-md-12 mt-3">
                             <hr>
                             <h6 class="font-weight-bold"><i class="fas fa-project-diagram"></i> Workflow Progress — {{ $viewingApplication->workflow->name }}</h6>
-                            <div class="d-flex flex-wrap align-items-center gap-2 my-2">
-                                @foreach ($viewingApplication->workflow->stages as $stg)
-                                    @php
-                                        $historyForStage = $viewingApplication->approvalHistory->where('stage_id', $stg->id)->last();
-                                        $isCurrent = $viewingApplication->current_stage_id == $stg->id;
-                                        if ($historyForStage && $historyForStage->action === 'approved') {
-                                            $badgeClass = 'bg-success text-white';
-                                            $icon = 'fa-check-circle';
-                                        } elseif ($historyForStage && $historyForStage->action === 'rejected') {
-                                            $badgeClass = 'bg-danger text-white';
-                                            $icon = 'fa-times-circle';
-                                        } elseif ($isCurrent) {
-                                            $badgeClass = 'bg-warning text-dark';
-                                            $icon = 'fa-hourglass-half';
-                                        } else {
-                                            $badgeClass = 'bg-light text-muted border';
-                                            $icon = 'fa-circle';
-                                        }
-                                    @endphp
-                                    <div class="text-center" style="min-width:120px;">
-                                        <span class="badge {{ $badgeClass }} px-3 py-2 d-block">
-                                            <i class="fas {{ $icon }} mr-1"></i>
-                                            {{ $stg->stage_order }}. {{ $stg->name }}
-                                        </span>
-                                        <small class="text-muted d-block mt-1" style="font-size:.72rem;">
-                                            @if ($historyForStage)
-                                                <i class="fas fa-user-check"></i> {{ $historyForStage->actor->name ?? 'Unknown' }}
-                                            @elseif ($stg->role && strtolower($stg->role->slug) === 'supervisor')
-                                                <span class="d-block"><i class="fas fa-user"></i> {{ $viewingApplication->user->supervisor->name ?? 'No supervisor assigned' }}</span>
-                                            @elseif ($stg->role && $stg->role->users->count())
-                                                @foreach ($stg->role->users as $approver)
-                                                    <span class="d-block"><i class="fas fa-user"></i> {{ $approver->name }}</span>
-                                                @endforeach
-                                            @else
-                                                <span class="text-muted">{{ $stg->role->name ?? 'No role' }}</span>
-                                            @endif
-                                        </small>
-                                    </div>
-                                    @if (!$loop->last)
-                                        <i class="fas fa-arrow-right text-muted align-self-start mt-3"></i>
-                                    @endif
-                                @endforeach
-                            </div>
+                            @include('livewire.admin.leave-page.partials.workflow-pipeline', ['stageProgress' => $stageProgress, 'application' => $viewingApplication])
 
                             @if ($viewingApplication->currentStage)
                                 <p class="text-muted small">Currently at: <strong>{{ $viewingApplication->currentStage->name }}</strong> ({{ $viewingApplication->currentStage->role->name ?? '-' }})</p>
@@ -334,7 +292,7 @@
                                             @endif
                                             @can('override-leave-status')
                                                 <button wire:click="startOverride({{ $viewingApplication->id }})" class="btn btn-warning btn-sm no-print">
-                                                    <i class="fas fa-undo-alt mr-1"></i> Change / Reverse Status
+                                                    <i class="fas fa-undo-alt mr-1"></i> Move / Change Status
                                                 </button>
                                             @endcan
 
@@ -376,24 +334,30 @@
         <div class="col-md-12 mb-3">
             <div class="card shadow-sm border-warning">
                 <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0"><i class="fas fa-undo-alt"></i> Change Status — Leave Application #{{ $overridingId }}</h5>
+                    <h5 class="mb-0"><i class="fas fa-undo-alt"></i> Move / Change Status — Leave Application #{{ $overridingId }}</h5>
                 </div>
                 <div class="card-body">
-                    <p class="mb-2">Current status: <strong>{{ ucfirst($viewingApplication->status) }}</strong></p>
+                    <p class="mb-2">Currently:
+                        <strong>
+                            @if ($viewingApplication->status === 'pending' && $viewingApplication->currentStage)
+                                Pending at "{{ $viewingApplication->currentStage->name }}"
+                            @else
+                                {{ ucfirst($viewingApplication->status) }}
+                            @endif
+                        </strong>
+                    </p>
                     <div class="alert alert-info small">
-                        This overrides the normal approval workflow. Leave balances are adjusted automatically, the change is logged in the approval history, and the applicant is notified. Setting the status to Pending re-opens the application at the first workflow stage.
+                        This overrides the normal approval workflow. Move the application forwards or backwards to any stage, or set a final status. Leave balances are adjusted automatically, the change is logged in the approval history, and the applicant is notified.
                     </div>
                     <div class="mb-3">
-                        <label class="font-weight-bold">New Status</label>
-                        <select class="form-control" wire:model.defer="overrideStatus">
-                            <option value="">-- Select new status --</option>
-                            @foreach (['pending' => 'Pending (re-open)', 'approved' => 'Approved', 'rejected' => 'Rejected', 'cancelled' => 'Cancelled'] as $value => $label)
-                                @if ($value !== $viewingApplication->status)
-                                    <option value="{{ $value }}">{{ $label }}</option>
-                                @endif
+                        <label class="font-weight-bold">Move to</label>
+                        <select class="form-control" wire:model.defer="overrideTarget">
+                            <option value="">-- Select stage or status --</option>
+                            @foreach ($overrideOptions as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
                             @endforeach
                         </select>
-                        @error('overrideStatus') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('overrideTarget') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-3">
                         <label class="font-weight-bold">Reason (required)</label>

@@ -3,13 +3,15 @@
 namespace App\Http\Livewire\Admin\LeavePage;
 
 use App\Mail\LeaveApprovalRequestMail;
+use App\Http\Livewire\Admin\LeavePage\Concerns\OverridesLeaveStatus;
 use App\Mail\LeaveStatusUpdateMail;
 use App\Models\Bilta\ApprovalHistory;
-use Illuminate\Support\Facades\DB;
 use App\Models\Bilta\LeaveApplication;
 use App\Models\Bilta\LeaveBalance;
 use App\Models\Bilta\LeaveType;
 use App\Models\User;
+use App\Services\Leave\LeaveApproverResolver;
+use App\Services\Leave\LeaveStatusOverrideService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -18,7 +20,7 @@ use Livewire\WithPagination;
 
 class ShowLeaveApplications extends Component
 {
-    use WithPagination;
+    use WithPagination, OverridesLeaveStatus;
 
     public $filterStatus = '';
     public $filterYear = '';
@@ -29,11 +31,6 @@ class ShowLeaveApplications extends Component
     public $reviewComment = '';
     public $reviewAction = '';
     public $signatureData = '';
-
-    // Admin status override
-    public $overridingId = null;
-    public $overrideStatus = '';
-    public $overrideComment = '';
 
     // View detail
     public $viewingApplication = null;
@@ -72,7 +69,15 @@ class ShowLeaveApplications extends Component
             'total' => (clone $visibleApplications)->whereYear('start_date', date('Y'))->count(),
         ];
 
-        return view('livewire.admin.leave-page.leave-applications', compact('applications', 'users', 'stats'));
+        $stageProgress = $this->viewingApplication
+            ? app(LeaveApproverResolver::class)->stageProgress($this->viewingApplication)
+            : collect();
+
+        $overrideOptions = ($this->overridingId && $this->viewingApplication)
+            ? app(LeaveStatusOverrideService::class)->targetsFor($this->viewingApplication)
+            : [];
+
+        return view('livewire.admin.leave-page.leave-applications', compact('applications', 'users', 'stats', 'stageProgress', 'overrideOptions'));
     }
 
     private function visibleApplicationsQuery(User $actor)
@@ -85,11 +90,12 @@ class ShowLeaveApplications extends Component
         }
 
         $departmentIds = $this->teamDepartmentIds($actor);
+        $branchIds = app(LeaveApproverResolver::class)->branchIdsFor($actor);
         $query->where(function ($visible) use ($actor) {
             $visible->where('user_id', $actor->id);
         });
 
-        $query->orWhere(function ($visible) use ($actor, $departmentIds) {
+        $query->orWhere(function ($visible) use ($actor, $departmentIds, $branchIds) {
             if ($actor->can('approve-reject-leave')) {
                 $visible->whereHas('user', function ($applicant) use ($actor, $departmentIds) {
                     $applicant->where('supervisor_id', $actor->id);
@@ -105,6 +111,13 @@ class ShowLeaveApplications extends Component
             if ($actor->hasRole('supervisor')) {
                 $visible->orWhereHas('user', function ($applicant) use ($actor) {
                     $applicant->where('supervisor_id', $actor->id);
+                });
+            }
+
+            // Staff of any branch this user has been assigned to as an approver
+            if ($actor->can('approve-reject-leave') && $branchIds->isNotEmpty()) {
+                $visible->orWhereHas('user', function ($applicant) use ($branchIds) {
+                    $applicant->whereIn('branch_id', $branchIds);
                 });
             }
         });
@@ -125,7 +138,7 @@ class ShowLeaveApplications extends Component
     {
         $application = $this->visibleApplicationsQuery(auth()->user())->with([
             'user', 'leaveType', 'reviewer',
-            'currentStage.role.users', 'workflow.stages.role.users',
+            'currentStage.role', 'workflow.stages.role',
             'approvalHistory.actor', 'approvalHistory.stage',
         ])->findOrFail($id);
 
@@ -151,16 +164,7 @@ class ShowLeaveApplications extends Component
             return false;
         }
 
-        $stageRole = $application->currentStage->role;
-        if (!$stageRole || !$actor->roles->contains('id', $stageRole->id)) {
-            return false;
-        }
-
-        if (strtolower($stageRole->slug) === 'supervisor') {
-            return $actor->hasRole('supervisor') && (int) $application->user->supervisor_id === (int) $actor->id;
-        }
-
-        return true;
+        return app(LeaveApproverResolver::class)->canAct($actor, $application);
     }
 
     public function startReview($id, $action)
@@ -314,160 +318,11 @@ class ShowLeaveApplications extends Component
         $this->cancelReview();
     }
 
-    /* ---- Admin status override ---- */
+    /* ---- Admin status override: see Concerns\OverridesLeaveStatus ---- */
 
-    public function canOverrideStatus(): bool
+    protected function afterStatusOverride()
     {
-        $actor = auth()->user();
-
-        return $actor && $actor->can('override-leave-status');
-    }
-
-    public function startOverride($id)
-    {
-        if (!$this->canOverrideStatus()) {
-            abort(403);
-        }
-
-        $application = LeaveApplication::findOrFail($id);
-
-        $this->overridingId = $application->id;
-        $this->overrideStatus = '';
-        $this->overrideComment = '';
-    }
-
-    public function cancelOverride()
-    {
-        $this->overridingId = null;
-        $this->overrideStatus = '';
-        $this->overrideComment = '';
-        $this->resetErrorBag();
-    }
-
-    public function submitOverride()
-    {
-        if (!$this->canOverrideStatus()) {
-            abort(403);
-        }
-
-        $this->validate([
-            'overrideStatus' => 'required|in:pending,approved,rejected,cancelled',
-            'overrideComment' => 'required|string|min:3|max:1000',
-        ], [
-            'overrideStatus.required' => 'Please select the new status.',
-            'overrideComment.required' => 'Please provide a reason for changing the status.',
-        ]);
-
-        $newStatus = $this->overrideStatus;
-        $comment = $this->overrideComment;
-        $actor = auth()->user();
-
-        $result = DB::transaction(function () use ($newStatus, $comment, $actor) {
-            return $this->applyStatusOverride((int) $this->overridingId, $newStatus, $comment, $actor);
-        });
-
-        if (!$result) {
-            session()->flash('error', 'The application is already ' . $newStatus . '. No change made.');
-            $this->cancelOverride();
-            return;
-        }
-
-        [$application, $oldStatus] = $result;
-        $summary = 'Status changed from ' . ucfirst($oldStatus) . ' to ' . ucfirst($newStatus) . '. Reason: ' . $comment;
-
-        $this->notifyApplicant($application, 'overridden', $summary, $actor->name, 'Administrator Override');
-
-        if ($newStatus === 'pending' && $application->currentStage) {
-            $this->notifyStageApprovers($application, $application->currentStage);
-        }
-
-        session()->flash('success', 'Leave application status changed from ' . ucfirst($oldStatus) . ' to ' . ucfirst($newStatus) . '.');
-
-        $this->cancelOverride();
         $this->viewingApplication = null;
-    }
-
-    /**
-     * Apply the override inside a transaction.
-     *
-     * @return array|null [LeaveApplication, oldStatus], or null when nothing changed.
-     */
-    private function applyStatusOverride(int $id, string $newStatus, string $comment, User $actor): ?array
-    {
-        $application = LeaveApplication::with(['workflow', 'user', 'leaveType'])
-            ->lockForUpdate()
-            ->findOrFail($id);
-
-        $oldStatus = $application->status;
-        if ($oldStatus === $newStatus) {
-            return null;
-        }
-
-        $historyStageId = $application->current_stage_id;
-        if (!$historyStageId && $application->workflow) {
-            $endStage = $application->workflow->endStage();
-            $historyStageId = $endStage ? $endStage->id : null;
-        }
-
-        $this->adjustBalanceForOverride($application, $oldStatus, $newStatus);
-
-        $update = ['status' => $newStatus];
-        if ($newStatus === 'pending') {
-            // Re-open: send it back to the first workflow stage.
-            $startStage = $application->workflow ? $application->workflow->startStage() : null;
-            $update['current_stage_id'] = $startStage ? $startStage->id : null;
-            $update['reviewed_by'] = null;
-            $update['reviewed_at'] = null;
-            $update['review_comment'] = null;
-        } else {
-            $update['current_stage_id'] = null;
-            $update['reviewed_by'] = $actor->id;
-            $update['reviewed_at'] = now();
-            $update['review_comment'] = $comment;
-        }
-        $application->update($update);
-
-        ApprovalHistory::create([
-            'leave_application_id' => $application->id,
-            'stage_id' => $historyStageId,
-            'acted_by' => $actor->id,
-            'action' => 'overridden',
-            'comment' => 'Status changed from ' . ucfirst($oldStatus) . ' to ' . ucfirst($newStatus) . '. Reason: ' . $comment,
-        ]);
-
-        return [$application->fresh(['currentStage', 'user', 'leaveType']), $oldStatus];
-    }
-
-    /**
-     * Keep the leave balance consistent with an admin status change.
-     */
-    private function adjustBalanceForOverride(LeaveApplication $application, string $oldStatus, string $newStatus): void
-    {
-        $year = $application->start_date->year;
-
-        if ($oldStatus === 'approved') {
-            $balance = LeaveBalance::where('user_id', $application->user_id)
-                ->where('leave_type_id', $application->leave_type_id)
-                ->where('year', $year)
-                ->lockForUpdate()
-                ->first();
-            if ($balance) {
-                $balance->update(['used_days' => max(0, $balance->used_days - $application->days_requested)]);
-            }
-            return;
-        }
-
-        if ($newStatus === 'approved') {
-            $balance = LeaveBalance::firstOrCreate(
-                ['user_id' => $application->user_id, 'leave_type_id' => $application->leave_type_id, 'year' => $year],
-                [
-                    'total_days' => LeaveType::find($application->leave_type_id)->default_days ?? 0,
-                    'used_days' => 0,
-                    'carried_over' => 0,
-                ]
-            );
-            $balance->increment('used_days', $application->days_requested);
-        }
     }
 
     public function destroy($id)
@@ -512,23 +367,9 @@ class ShowLeaveApplications extends Component
     private function notifyStageApprovers(LeaveApplication $application, $stage)
     {
         try {
-            $stage->loadMissing('role');
-            if ($stage->role && strtolower($stage->role->slug) === 'supervisor') {
-                $supervisorId = $application->user()->value('supervisor_id');
-                $approvers = $supervisorId
-                    ? User::whereKey($supervisorId)->whereHas('roles', function ($query) {
-                        $query->where('roles.slug', 'supervisor');
-                    })->get()->filter(function ($user) {
-                        return $user->can('approve-reject-leave');
-                    })
-                    : collect();
-            } else {
-                $approvers = User::whereHas('roles', function ($query) use ($stage) {
-                    $query->where('roles.id', $stage->role_id);
-                })->get()->filter(function ($user) {
-                    return $user->can('approve-reject-leave');
-                });
-            }
+            // Only the people who can really act on this application (direct supervisor,
+            // branch-assigned approvers, or everyone with the role when no branch is set).
+            $approvers = app(LeaveApproverResolver::class)->approversFor($application, $stage);
 
             foreach ($approvers as $approver) {
                 Mail::to($approver->email)->send(new LeaveApprovalRequestMail($application, $stage));
