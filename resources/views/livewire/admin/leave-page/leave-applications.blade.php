@@ -291,6 +291,8 @@
                                                         <span class="badge bg-success text-white">Approved</span>
                                                     @elseif ($hist->action === 'rejected')
                                                         <span class="badge bg-danger text-white">Rejected</span>
+                                                    @elseif ($hist->action === 'overridden')
+                                                        <span class="badge bg-dark text-white">Admin Override</span>
                                                     @else
                                                         <span class="badge bg-warning text-dark">{{ ucfirst($hist->action) }}</span>
                                                     @endif
@@ -329,7 +331,12 @@
     @if ($this->canActOnApplication($viewingApplication))
                                                 <button wire:click="startReview({{ $viewingApplication->id }}, 'approved')" class="btn btn-success btn-sm no-print">Approve</button>
                                                 <button wire:click="startReview({{ $viewingApplication->id }}, 'rejected')" class="btn btn-danger btn-sm no-print">Reject</button>
-                                            @endif 
+                                            @endif
+                                            @can('override-leave-status')
+                                                <button wire:click="startOverride({{ $viewingApplication->id }})" class="btn btn-warning btn-sm no-print">
+                                                    <i class="fas fa-undo-alt mr-1"></i> Change / Reverse Status
+                                                </button>
+                                            @endcan
 
           
 
@@ -361,6 +368,49 @@
                 </div>
             </div>
         </div>
+        @endif
+
+        {{-- Admin Status Override --}}
+        @if ($overridingId && $viewingApplication && (int) $viewingApplication->id === (int) $overridingId)
+        @can('override-leave-status')
+        <div class="col-md-12 mb-3">
+            <div class="card shadow-sm border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-undo-alt"></i> Change Status — Leave Application #{{ $overridingId }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">Current status: <strong>{{ ucfirst($viewingApplication->status) }}</strong></p>
+                    <div class="alert alert-info small">
+                        This overrides the normal approval workflow. Leave balances are adjusted automatically, the change is logged in the approval history, and the applicant is notified. Setting the status to Pending re-opens the application at the first workflow stage.
+                    </div>
+                    <div class="mb-3">
+                        <label class="font-weight-bold">New Status</label>
+                        <select class="form-control" wire:model.defer="overrideStatus">
+                            <option value="">-- Select new status --</option>
+                            @foreach (['pending' => 'Pending (re-open)', 'approved' => 'Approved', 'rejected' => 'Rejected', 'cancelled' => 'Cancelled'] as $value => $label)
+                                @if ($value !== $viewingApplication->status)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        @error('overrideStatus') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="font-weight-bold">Reason (required)</label>
+                        <textarea class="form-control" wire:model.defer="overrideComment" rows="3" placeholder="Explain why the status is being changed..."></textarea>
+                        @error('overrideComment') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button wire:click="submitOverride" class="btn btn-warning m-1" wire:loading.attr="disabled">
+                            <span wire:loading.remove wire:target="submitOverride">Confirm Status Change</span>
+                            <span wire:loading wire:target="submitOverride"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                        </button>
+                        <button wire:click="cancelOverride" class="btn btn-outline-secondary m-1" wire:loading.attr="disabled" wire:target="submitOverride">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endcan
         @endif
 
         @endif

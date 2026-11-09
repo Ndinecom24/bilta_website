@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Bilta\ApprovalWorkflow;
 use App\Models\Bilta\Department;
 use App\Models\Bilta\Position;
 use Illuminate\Support\Str;
@@ -16,6 +17,7 @@ class ShowPositions extends Component
     public $code;
     public $description;
     public $department_id;
+    public $leave_workflow_id;
     public $status_id = 1;
     public $position_id;
 
@@ -43,6 +45,7 @@ class ShowPositions extends Component
             'name'          => 'required|string|max:100',
             'code'          => 'nullable|string|max:20',
             'department_id' => 'nullable|exists:departments,id',
+            'leave_workflow_id' => 'nullable|exists:approval_workflows,id',
             'description'   => 'nullable|string|max:5000',
             'status_id'     => 'required|integer',
         ];
@@ -50,7 +53,7 @@ class ShowPositions extends Component
 
     public function render()
     {
-        $query = Position::with(['department', 'status'])
+        $query = Position::with(['department', 'status', 'leaveWorkflow'])
             ->withCount('users');
 
         if (!empty($this->search)) {
@@ -68,8 +71,9 @@ class ShowPositions extends Component
 
         $positions = $query->orderBy('name')->paginate(15);
         $departments = Department::orderBy('name')->get();
+        $workflows = ApprovalWorkflow::where('form_type', 'leave')->orderBy('name')->get(['id', 'name', 'is_active']);
 
-        return view('livewire.admin.positions', compact('positions', 'departments'));
+        return view('livewire.admin.positions', compact('positions', 'departments', 'workflows'));
     }
 
     public function toggleForm()
@@ -101,6 +105,7 @@ class ShowPositions extends Component
             'slug'          => $slug,
             'code'          => $this->code ? strtoupper(trim($this->code)) : null,
             'department_id' => $this->department_id ?: null,
+            'leave_workflow_id' => $this->leave_workflow_id ?: null,
             'description'   => $this->description,
             'status_id'     => $this->status_id,
         ]);
@@ -122,6 +127,7 @@ class ShowPositions extends Component
         $this->name          = $pos->name;
         $this->code          = $pos->code;
         $this->department_id = $pos->department_id;
+        $this->leave_workflow_id = $pos->leave_workflow_id;
         $this->description   = $pos->description;
         $this->status_id     = $pos->status_id;
         $this->isEdit        = true;
@@ -151,6 +157,7 @@ class ShowPositions extends Component
             'slug'          => $slug,
             'code'          => $this->code ? strtoupper(trim($this->code)) : null,
             'department_id' => $this->department_id ?: null,
+            'leave_workflow_id' => $this->leave_workflow_id ?: null,
             'description'   => $this->description,
             'status_id'     => $this->status_id,
         ]);
@@ -182,6 +189,7 @@ class ShowPositions extends Component
         $this->name = '';
         $this->code = '';
         $this->department_id = '';
+        $this->leave_workflow_id = '';
         $this->description = '';
         $this->status_id = 1;
         $this->position_id = null;

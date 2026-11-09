@@ -14,12 +14,18 @@ class Position extends Model
         'code',
         'description',
         'department_id',
+        'leave_workflow_id',
         'status_id',
     ];
 
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function leaveWorkflow()
+    {
+        return $this->belongsTo(ApprovalWorkflow::class, 'leave_workflow_id');
     }
 
     public function users()

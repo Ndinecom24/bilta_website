@@ -38,6 +38,21 @@ class ShowTrainingCenter extends Component
                 'title' => 'Content Management',
                 'color' => '#059669',
             ],
+            'announcements' => [
+                'icon' => 'fas fa-bullhorn',
+                'title' => 'Announcements & Memos',
+                'color' => '#ea580c',
+            ],
+            'documents' => [
+                'icon' => 'fas fa-folder-open',
+                'title' => 'Document Repository',
+                'color' => '#0d9488',
+            ],
+            'newsletters-enquiries' => [
+                'icon' => 'fas fa-envelope-open-text',
+                'title' => 'Newsletters & Enquiries',
+                'color' => '#7c3aed',
+            ],
             'leave-application' => [
                 'icon' => 'fas fa-calendar-check',
                 'title' => 'Applying for Leave',
@@ -58,9 +73,14 @@ class ShowTrainingCenter extends Component
                 'title' => 'Departments',
                 'color' => '#4f46e5',
             ],
+            'positions' => [
+                'icon' => 'fas fa-id-badge',
+                'title' => 'Positions',
+                'color' => '#0284c7',
+            ],
             'user-management' => [
                 'icon' => 'fas fa-users-cog',
-                'title' => 'User Management',
+                'title' => 'User Accounts',
                 'color' => '#be185d',
             ],
             'roles-permissions' => [

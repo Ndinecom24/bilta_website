@@ -171,6 +171,7 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         // Departments & Positions
         Route::get('/departments', \App\Http\Livewire\Admin\ShowDepartments::class)->middleware('permission:manage-departments')->name('admin.departments');
         Route::get('/positions', \App\Http\Livewire\Admin\ShowPositions::class)->middleware('permission:manage-positions')->name('admin.positions');
+        Route::get('/branches', \App\Http\Livewire\Admin\ShowBranches::class)->middleware('permission:manage-branches')->name('admin.branches');
 
         // Leave Management — permission-protected
         Route::get('/leave/types', ShowLeaveTypes::class)->middleware('permission:manage-leave-types')->name('admin.leave.types');
@@ -179,6 +180,22 @@ Route::middleware(['auth'])->prefix('bilta/zadmin')->group(function () {
         Route::get('/leave/my-applications', MyLeaveApplications::class)->middleware('permission:apply-leave')->name('admin.leave.my-applications');
         Route::get('/leave/balances', ShowLeaveBalances::class)->middleware('permission:manage-leave-balances')->name('admin.leave.balances');
         Route::get('/leave/workflows', ShowApprovalWorkflows::class)->middleware('permission:manage-approval-workflows')->name('admin.leave.workflows');
+
+        // System Support & Ticketing
+        Route::prefix('support')->group(function () {
+            Route::get('/submit', \App\Http\Livewire\Admin\Support\SubmitTicket::class)->middleware('permission:submit-support-tickets')->name('admin.support.submit');
+            Route::get('/my-tickets', \App\Http\Livewire\Admin\Support\MyTickets::class)->middleware('permission:submit-support-tickets')->name('admin.support.my');
+            Route::get('/workspace', \App\Http\Livewire\Admin\Support\DeveloperWorkspace::class)->middleware('permission:work-support-tickets')->name('admin.support.workspace');
+            Route::get('/dashboard', \App\Http\Livewire\Admin\Support\SupportDashboard::class)->middleware('permission:view-support-dashboard')->name('admin.support.dashboard');
+            Route::get('/reports', \App\Http\Livewire\Admin\Support\SupportReports::class)->middleware('permission:view-support-reports')->name('admin.support.reports');
+            Route::get('/reports/export', [\App\Http\Controllers\SupportReportController::class, 'export'])->middleware(['permission:view-support-reports', 'throttle:20,1'])->name('admin.support.reports.export');
+            Route::get('/billing', \App\Http\Livewire\Admin\Support\BillingReview::class)->middleware('permission:manage-support-billing')->name('admin.support.billing');
+            Route::get('/settings', \App\Http\Livewire\Admin\Support\SupportSettings::class)->middleware('permission:manage-support-settings,manage-support-billing')->name('admin.support.settings');
+            Route::get('/tickets', \App\Http\Livewire\Admin\Support\AllTickets::class)->middleware('permission:view-all-support-tickets,work-support-tickets,assign-support-tickets')->name('admin.support.all');
+            // Visibility of an individual ticket is enforced by TicketPolicy (404 when not allowed)
+            Route::get('/tickets/{ticket}', \App\Http\Livewire\Admin\Support\TicketShow::class)->whereNumber('ticket')->name('admin.support.show');
+            Route::get('/attachments/{attachment}', [\App\Http\Controllers\SupportAttachmentController::class, 'show'])->whereNumber('attachment')->name('admin.support.attachment');
+        });
 
         // Training Center — accessible to all authenticated users with training permission
         Route::get('/training', ShowTrainingCenter::class)->middleware('permission:view-training')->name('admin.training');

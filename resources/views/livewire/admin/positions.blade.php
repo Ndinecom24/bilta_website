@@ -66,6 +66,17 @@
                                 </select>
                                 @error('status_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <label class="font-weight-bold">Leave Approval Workflow</label>
+                                <select class="form-control" wire:model.defer="leave_workflow_id">
+                                    <option value="">— Default workflow —</option>
+                                    @foreach ($workflows as $wf)
+                                        <option value="{{ $wf->id }}">{{ $wf->name }}{{ $wf->is_active ? '' : ' (inactive)' }}</option>
+                                    @endforeach
+                                </select>
+                                <small class="text-muted">Staff in this position follow this workflow when applying for leave.</small>
+                                @error('leave_workflow_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
                             <div class="col-lg-12 mb-3">
                                 <label class="font-weight-bold">Job Description / Responsibilities</label>
                                 <textarea class="form-control" wire:model.defer="description" rows="2" placeholder="Brief overview of responsibilities and scope for this position"></textarea>
@@ -111,6 +122,7 @@
                                     <th>Title</th>
                                     <th>Code</th>
                                     <th>Department</th>
+                                    <th>Leave Workflow</th>
                                     <th>Assigned Staff</th>
                                     <th>Status</th>
                                     <th style="width: 180px;">Actions</th>
@@ -135,6 +147,13 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @if ($pos->leaveWorkflow)
+                                                <span class="badge bg-{{ $pos->leaveWorkflow->is_active ? 'info' : 'secondary' }} text-white">{{ $pos->leaveWorkflow->name }}</span>
+                                            @else
+                                                <span class="text-muted">Default</span>
+                                            @endif
+                                        </td>
+                                        <td>
                                             <span class="badge bg-info text-white">{{ $pos->users_count }} staff</span>
                                         </td>
                                         <td>
@@ -155,7 +174,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted">No positions found.</td>
+                                        <td colspan="8" class="text-center text-muted">No positions found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

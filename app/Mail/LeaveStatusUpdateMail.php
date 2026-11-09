@@ -28,6 +28,11 @@ class LeaveStatusUpdateMail extends Mailable
 
     public function build()
     {
+        if ($this->action === 'overridden') {
+            return $this->subject('Leave Application Status Changed')
+                        ->view('emails.leave-status-update');
+        }
+
         $status = ucfirst($this->action);
         return $this->subject("Leave Application {$status} — {$this->stageName}")
                     ->view('emails.leave-status-update');

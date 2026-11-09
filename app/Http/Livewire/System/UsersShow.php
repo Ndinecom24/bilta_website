@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\System;
 
+use App\Models\Bilta\Branch;
 use App\Models\Bilta\Department;
 use App\Models\Bilta\Position;
 use App\Models\System\Role;
@@ -27,7 +28,7 @@ class UsersShow extends Component
     public $user, $user_id, $email, $name, $phone, $status_id, $password, $password_confirmation, $password_change, $role_id;
 
     // HR fields
-    public $position, $position_id, $department_id, $nrc, $man_number, $employee_id;
+    public $position, $position_id, $department_id, $branch_id, $nrc, $man_number, $employee_id;
     public $additionalResponsibilities = [];
     public $date_of_birth, $gender, $date_joined, $contract_type;
     public $address, $emergency_contact_name, $emergency_contact_phone;
@@ -110,6 +111,7 @@ class UsersShow extends Component
             'position' => 'nullable|string|max:100',
             'position_id' => 'nullable|exists:positions,id',
             'department_id' => 'nullable|exists:departments,id',
+            'branch_id' => 'nullable|exists:branches,id',
             'additionalResponsibilities' => 'array',
             'additionalResponsibilities.*.department_id' => 'required|exists:departments,id',
             'additionalResponsibilities.*.position' => 'nullable|string|max:100',
@@ -171,6 +173,7 @@ class UsersShow extends Component
         $this->position = $user->position;
         $this->position_id = $user->position_id;
         $this->department_id = $user->department_id;
+        $this->branch_id = $user->branch_id;
         $this->additionalResponsibilities = $user->departmentResponsibilities
             ->map(function ($department) {
                 return [
@@ -202,6 +205,10 @@ class UsersShow extends Component
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
         $positions = Position::where('status_id', 1)->orderBy('name')->get();
+        $branches = Branch::where('status_id', 1)
+            ->orWhere('id', $this->branch_id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'code']);
         $supervisors = User::where('id', '!=', $this->user_id)
             ->whereHas('roles', function ($query) {
                 $query->whereRaw('LOWER(roles.slug) = ?', ['supervisor']);
@@ -209,7 +216,7 @@ class UsersShow extends Component
             ->orderBy('name')
             ->select('id', 'name', 'position', 'position_id')
             ->get();
-        return view('livewire.system.user.show')->with(compact('roles', 'statuses', 'departments', 'positions', 'supervisors'));
+        return view('livewire.system.user.show')->with(compact('roles', 'statuses', 'departments', 'positions', 'branches', 'supervisors'));
     }
 
     public function updatedPositionId($value)
@@ -477,6 +484,7 @@ class UsersShow extends Component
                 'position' => $posName,
                 'position_id' => $posId,
                 'department_id' => $this->department_id ?: null,
+                'branch_id' => $this->branch_id ?: null,
                 'nrc' => $this->nrc ?: null,
                 'man_number' => $this->man_number ?: null,
                 'employee_id' => $this->employee_id ?: null,

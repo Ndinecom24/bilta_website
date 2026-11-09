@@ -900,6 +900,16 @@
     </li>
     @endcanany
 
+    <!-- BRANCHES -->
+    @canany(['manage-branches', 'create-branches', 'edit-branches'])
+    <li class="nav-item {{ request()->routeIs('admin.branches') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.branches') }}">
+            <i class="fas fa-fw fa-code-branch"></i>
+            <span>Branches</span>
+        </a>
+    </li>
+    @endcanany
+
     <!-- INTERNAL COMMUNICATIONS -->
     @canany(['view-announcements', 'view-documents', 'manage-announcements', 'manage-documents'])
     <hr class="sidebar-divider">
@@ -1011,6 +1021,94 @@
                     Approval Workflows
                 </a>
                 @endcan
+
+            </div>
+
+        </div>
+
+    </li>
+    @endcanany
+
+    <!-- SYSTEM SUPPORT -->
+    @canany(['submit-support-tickets', 'view-all-support-tickets', 'work-support-tickets', 'assign-support-tickets', 'view-support-dashboard', 'view-support-reports', 'manage-support-settings', 'manage-support-billing'])
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
+        System Support
+    </div>
+
+    <li class="nav-item {{ request()->routeIs('admin.support.*') ? 'active' : '' }}">
+
+        <a class="nav-link collapsed"
+            href="#"
+            data-toggle="collapse"
+            data-target="#collapseSupport"
+            aria-expanded="{{ request()->routeIs('admin.support.*') ? 'true' : 'false' }}"
+            aria-controls="collapseSupport">
+            <i class="fas fa-fw fa-life-ring"></i>
+            <span>Support Tickets</span>
+            <i class="fas fa-chevron-down menu-arrow"></i>
+        </a>
+
+        <div id="collapseSupport"
+            class="collapse {{ request()->routeIs('admin.support.*') ? 'show' : '' }}"
+            aria-labelledby="headingSupport"
+            data-parent="#accordionSidebar">
+
+            <div class="bg-white py-2 collapse-inner rounded">
+
+                @can('submit-support-tickets')
+                <a class="collapse-item {{ request()->routeIs('admin.support.submit') ? 'active' : '' }}" href="{{ route('admin.support.submit') }}">
+                    <i class="fas fa-plus-circle"></i>
+                    Submit a Ticket
+                </a>
+                <a class="collapse-item {{ request()->routeIs('admin.support.my') ? 'active' : '' }}" href="{{ route('admin.support.my') }}">
+                    <i class="fas fa-ticket-alt"></i>
+                    My Tickets
+                </a>
+                @endcan
+
+                @can('work-support-tickets')
+                <a class="collapse-item {{ request()->routeIs('admin.support.workspace') ? 'active' : '' }}" href="{{ route('admin.support.workspace') }}">
+                    <i class="fas fa-laptop-code"></i>
+                    Developer Workspace
+                </a>
+                @endcan
+
+                @canany(['view-all-support-tickets', 'work-support-tickets', 'assign-support-tickets'])
+                <a class="collapse-item {{ request()->routeIs('admin.support.all') ? 'active' : '' }}" href="{{ route('admin.support.all') }}">
+                    <i class="fas fa-inbox"></i>
+                    All Tickets
+                </a>
+                @endcanany
+
+                @can('view-support-dashboard')
+                <a class="collapse-item {{ request()->routeIs('admin.support.dashboard') ? 'active' : '' }}" href="{{ route('admin.support.dashboard') }}">
+                    <i class="fas fa-chart-pie"></i>
+                    Support Dashboard
+                </a>
+                @endcan
+
+                @can('view-support-reports')
+                <a class="collapse-item {{ request()->routeIs('admin.support.reports*') ? 'active' : '' }}" href="{{ route('admin.support.reports') }}">
+                    <i class="fas fa-chart-line"></i>
+                    Reports
+                </a>
+                @endcan
+
+                @can('manage-support-billing')
+                <a class="collapse-item {{ request()->routeIs('admin.support.billing') ? 'active' : '' }}" href="{{ route('admin.support.billing') }}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Billing Review
+                </a>
+                @endcan
+
+                @canany(['manage-support-settings', 'manage-support-billing'])
+                <a class="collapse-item {{ request()->routeIs('admin.support.settings') ? 'active' : '' }}" href="{{ route('admin.support.settings') }}">
+                    <i class="fas fa-cog"></i>
+                    Support Settings
+                </a>
+                @endcanany
 
             </div>
 

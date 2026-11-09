@@ -46,7 +46,7 @@ class ShowApprovalWorkflows extends Component
 
     public function render()
     {
-        $workflows = ApprovalWorkflow::withCount('stages')->orderBy('created_at', 'desc')->paginate(10);
+        $workflows = ApprovalWorkflow::withCount('stages')->with('positions:id,name,leave_workflow_id')->orderBy('created_at', 'desc')->paginate(10);
         $roles = Role::orderBy('name')->get();
 
         $managingWorkflow = null;

@@ -141,6 +141,17 @@
                                 </select>
                                 @error('department_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
+
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <label class="font-weight-bold">Branch</label>
+                                <select class="form-control" wire:model.defer="branch_id">
+                                    <option value="">-- No branch --</option>
+                                    @foreach($branches as $branch)
+                                        <option value="{{ $branch->id }}">{{ $branch->name }}{{ $branch->code ? ' ('.$branch->code.')' : '' }}</option>
+                                    @endforeach
+                                </select>
+                                @error('branch_id') <span class="text-danger d-block">{{ $message }}</span> @enderror
+                            </div>
                             <div class="col-12 mb-3">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <span class="font-weight-bold mb-0">Added responsibilities</span>

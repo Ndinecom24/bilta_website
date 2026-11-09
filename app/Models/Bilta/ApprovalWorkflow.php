@@ -28,6 +28,11 @@ class ApprovalWorkflow extends Model
         return $this->hasMany(LeaveApplication::class, 'workflow_id');
     }
 
+    public function positions()
+    {
+        return $this->hasMany(Position::class, 'leave_workflow_id');
+    }
+
     /* ---- Helpers ---- */
 
     public function startStage()
@@ -46,5 +51,35 @@ class ApprovalWorkflow extends Model
     public static function activeForLeave()
     {
         return static::where('form_type', 'leave')->where('is_active', true)->first();
+    }
+
+    /**
+     * Resolve the leave workflow a given employee must follow.
+     *
+     * 1. The workflow linked to the employee's position (if active and it has stages).
+     * 2. Otherwise the default: an active leave workflow not linked to any position.
+     * Returns null when neither exists.
+     */
+    public static function forUser($user)
+    {
+        $position = $user ? $user->positionRelation : null;
+
+        if ($position && $position->leave_workflow_id) {
+            $workflow = static::where('id', $position->leave_workflow_id)
+                ->where('form_type', 'leave')
+                ->where('is_active', true)
+                ->first();
+
+            if ($workflow && $workflow->stages()->exists()) {
+                return $workflow;
+            }
+        }
+
+        return static::where('form_type', 'leave')
+            ->where('is_active', true)
+            ->whereDoesntHave('positions')
+            ->whereHas('stages')
+            ->orderBy('id')
+            ->first();
     }
 }

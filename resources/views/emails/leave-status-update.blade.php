@@ -10,6 +10,7 @@
         .email-header { color: #fff; padding: 18px 22px; }
         .email-header.approved { background: linear-gradient(135deg, #166534, #22c55e); }
         .email-header.rejected { background: linear-gradient(135deg, #991b1b, #ef4444); }
+        .email-header.overridden { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
         .email-header.returned { background: linear-gradient(135deg, #92400e, #c33205); }
         .email-header h2 { margin: 0; font-size: 20px; font-weight: 700; }
         .email-header p { margin: 6px 0 0; font-size: 13px; color: rgba(255,255,255,.84); }
@@ -25,8 +26,13 @@
 <body>
     <div class="email-container">
         <div class="email-header {{ $action }}">
-            <h2>Leave Application {{ ucfirst($action) }}</h2>
-            <p>Stage: {{ $stageName }}</p>
+            @if ($action === 'overridden')
+                <h2>Leave Status Changed</h2>
+                <p>{{ $stageName }}</p>
+            @else
+                <h2>Leave Application {{ ucfirst($action) }}</h2>
+                <p>Stage: {{ $stageName }}</p>
+            @endif
         </div>
         <div class="email-body">
             <p style="color: #334155; font-size: 15px;">
@@ -39,6 +45,8 @@
                     @endif
                 @elseif ($action === 'rejected')
                     Your leave application has been <strong>rejected</strong> at the "{{ $stageName }}" stage by {{ $actorName }}.
+                @elseif ($action === 'overridden')
+                    The status of your leave application was changed by {{ $actorName }}. It is now <strong>{{ ucfirst($application->status) }}</strong>.
                 @else
                     Your leave application has been <strong>returned</strong> at the "{{ $stageName }}" stage by {{ $actorName }}.
                 @endif
@@ -63,7 +71,7 @@
 
             @if ($comment)
                 <div class="comment-box">
-                    <strong>Reviewer's Comment:</strong><br>
+                    <strong>{{ $action === 'overridden' ? 'Details' : "Reviewer's Comment" }}:</strong><br>
                     {{ $comment }}
                 </div>
             @endif

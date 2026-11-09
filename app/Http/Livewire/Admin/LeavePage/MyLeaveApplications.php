@@ -147,10 +147,10 @@ class MyLeaveApplications extends Component
             return;
         }
 
-        // Check for active workflow
-        $workflow = ApprovalWorkflow::activeForLeave();
+        // Resolve the workflow from the applicant's job position
+        $workflow = ApprovalWorkflow::forUser(auth()->user());
         if (!$workflow || $workflow->stages()->count() === 0) {
-            session()->flash('error', 'No active approval workflow is configured. Please contact your administrator.');
+            session()->flash('error', 'No approval workflow is configured for your position. Please contact your administrator.');
             return;
         }
 

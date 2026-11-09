@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\System;
 
+use App\Models\Bilta\Branch;
 use App\Models\Bilta\Department;
 use App\Models\Bilta\Position;
 use App\Models\System\Role;
@@ -29,7 +30,7 @@ class UsersIndex extends Component
     public  $user_id, $email, $name, $phone, $status_id, $password_change, $role_id ;
 
     // HR fields
-    public $position, $position_id, $department_id, $nrc, $man_number, $employee_id;
+    public $position, $position_id, $department_id, $branch_id, $nrc, $man_number, $employee_id;
     public $additionalResponsibilities = [];
     public $date_of_birth, $gender, $date_joined, $contract_type;
     public $address, $emergency_contact_name, $emergency_contact_phone;
@@ -49,6 +50,7 @@ class UsersIndex extends Component
         'position' => 'nullable|string|max:100',
         'position_id' => 'nullable|exists:positions,id',
         'department_id' => 'nullable|exists:departments,id',
+        'branch_id' => 'nullable|exists:branches,id',
         'additionalResponsibilities' => 'array',
         'additionalResponsibilities.*.department_id' => 'required|exists:departments,id',
         'additionalResponsibilities.*.position' => 'nullable|string|max:100',
@@ -80,6 +82,7 @@ class UsersIndex extends Component
         $statuses = Status::get();
         $departments = Department::where('status_id', 1)->orderBy('name')->get();
         $positions = Position::where('status_id', 1)->orderBy('name')->get();
+        $branches = Branch::where('status_id', 1)->orderBy('name')->get(['id', 'name', 'code']);
         $supervisors = User::whereHas('roles', function ($query) {
             $query->whereRaw('LOWER(roles.slug) = ?', ['supervisor']);
             })
@@ -91,7 +94,7 @@ class UsersIndex extends Component
         $inactiveUsersDueForReset = $passwordEnforcement->countInactiveUsersDueForReset();
 
         return view('livewire.system.user.index')->with(compact(
-            'users', 'statuses', 'departments', 'positions', 'supervisors',
+            'users', 'statuses', 'departments', 'positions', 'branches', 'supervisors',
             'pendingPasswordChanges', 'inactiveUsersDueForReset'
         ));
     }
@@ -178,6 +181,7 @@ class UsersIndex extends Component
         $this->position = '';
         $this->position_id = null;
         $this->department_id = '';
+        $this->branch_id = '';
         $this->additionalResponsibilities = [];
         $this->nrc = '';
         $this->man_number = '';
@@ -246,6 +250,7 @@ class UsersIndex extends Component
                 'position' => $posName,
                 'position_id' => $posId,
                 'department_id' => $this->department_id ?: null,
+                'branch_id' => $this->branch_id ?: null,
                 'nrc' => $this->nrc ?: null,
                 'man_number' => $this->man_number ?: null,
                 'employee_id' => $this->employee_id ?: null,

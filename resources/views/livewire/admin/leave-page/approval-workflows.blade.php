@@ -79,6 +79,7 @@
                                     <th>Name</th>
                                     <th>Form Type</th>
                                     <th>Stages</th>
+                                    <th>Positions</th>
                                     <th>Status</th>
                                     <th style="width: 280px;">Action</th>
                                 </tr>
@@ -94,6 +95,13 @@
                                         </td>
                                         <td><span class="badge bg-info text-white">{{ ucfirst($wf->form_type) }}</span></td>
                                         <td><span class="badge bg-primary text-white">{{ $wf->stages_count }} stages</span></td>
+                                        <td>
+                                            @forelse ($wf->positions as $pos)
+                                                <span class="badge bg-secondary text-white">{{ $pos->name }}</span>
+                                            @empty
+                                                <span class="text-muted small">Default (all unassigned positions)</span>
+                                            @endforelse
+                                        </td>
                                         <td>
                                             @if ($wf->is_active)
                                                 <span class="badge bg-success text-white">Active</span>
@@ -114,7 +122,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">No workflows defined yet.</td>
+                                        <td colspan="6" class="text-center">No workflows defined yet.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

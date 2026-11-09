@@ -104,6 +104,11 @@ return [
             'slug' => 'leave-manager',
             'description' => 'Full leave-management access across applications, types, balances, and workflows.',
         ],
+        [
+            'name' => 'Support Developer',
+            'slug' => 'support-developer',
+            'description' => 'Technical support team member who works System Support tickets, records work and resolves issues.',
+        ],
     ],
 
     /*
@@ -162,6 +167,10 @@ return [
         ['name' => 'Edit Positions', 'slug' => 'edit-positions'],
         ['name' => 'Delete Positions', 'slug' => 'delete-positions'],
         ['name' => 'Manage HR Profiles', 'slug' => 'manage-hr-profiles'],
+        ['name' => 'Manage Branches', 'slug' => 'manage-branches'],
+        ['name' => 'Create Branches', 'slug' => 'create-branches'],
+        ['name' => 'Edit Branches', 'slug' => 'edit-branches'],
+        ['name' => 'Delete Branches', 'slug' => 'delete-branches'],
 
         // --- Leave Management & Workflow ---
         ['name' => 'Apply for Leave', 'slug' => 'apply-leave'],
@@ -169,6 +178,7 @@ return [
         ['name' => 'View All Leave Applications', 'slug' => 'view-all-leave-applications'],
         ['name' => 'Approve or Reject Leave Applications', 'slug' => 'approve-reject-leave'],
         ['name' => 'Delete Leave Applications', 'slug' => 'delete-leave-applications'],
+        ['name' => 'Override Leave Status', 'slug' => 'override-leave-status'],
         ['name' => 'Manage Leave Types', 'slug' => 'manage-leave-types'],
         ['name' => 'Manage Leave Balances', 'slug' => 'manage-leave-balances'],
         ['name' => 'Manage Approval Workflows', 'slug' => 'manage-approval-workflows'],
@@ -186,6 +196,16 @@ return [
         ['name' => 'Manage Finance', 'slug' => 'manage-finance'],
         ['name' => 'View Financials', 'slug' => 'view-financials'],
         ['name' => 'Approve Financials', 'slug' => 'approve-financials'],
+
+        // --- System Support & Ticketing ---
+        ['name' => 'Submit Support Tickets', 'slug' => 'submit-support-tickets'],
+        ['name' => 'View All Support Tickets', 'slug' => 'view-all-support-tickets'],
+        ['name' => 'Work Support Tickets (Developer)', 'slug' => 'work-support-tickets'],
+        ['name' => 'Assign Support Tickets', 'slug' => 'assign-support-tickets'],
+        ['name' => 'View Support Dashboard', 'slug' => 'view-support-dashboard'],
+        ['name' => 'View Support Reports', 'slug' => 'view-support-reports'],
+        ['name' => 'Manage Support Settings', 'slug' => 'manage-support-settings'],
+        ['name' => 'Manage Support Billing', 'slug' => 'manage-support-billing'],
     ],
 
     /*
@@ -216,11 +236,13 @@ return [
             'manage-documents',
             'apply-leave',
             'view-training',
+            'submit-support-tickets',
         ],
 
         // Content Manager: Public website, media, communications, publication
         'content-manager' => [
             'view-dashboard',
+            'submit-support-tickets',
             'manage-home-intro',
             'manage-about-us',
             'manage-values',
@@ -254,6 +276,7 @@ return [
         // HR Manager: Full human resources management, departments, leave configuration and approvals
         'hr-manager' => [
             'view-dashboard',
+            'submit-support-tickets',
             'manage-users',
             'manage-hr-profiles',
             'manage-departments',
@@ -264,6 +287,10 @@ return [
             'create-positions',
             'edit-positions',
             'delete-positions',
+            'manage-branches',
+            'create-branches',
+            'edit-branches',
+            'delete-branches',
             'apply-leave',
             'manage-leave-applications',
             'view-all-leave-applications',
@@ -283,10 +310,12 @@ return [
         // HR Officer: HR operations, employee leaves, leave balances, department records
         'hr-officer' => [
             'view-dashboard',
+            'submit-support-tickets',
             'manage-users',
             'manage-hr-profiles',
             'manage-departments',
             'manage-positions',
+            'manage-branches',
             'apply-leave',
             'manage-leave-applications',
             'view-all-leave-applications',
@@ -301,6 +330,7 @@ return [
         // Finance: Financial operations, financial reports, allowances and approvals
         'finance' => [
             'view-dashboard',
+            'submit-support-tickets',
             'manage-finance',
             'view-financials',
             'approve-financials',
@@ -313,6 +343,7 @@ return [
         // Employee: Baseline role granted to EVERY staff member
         'employee' => [
             'view-dashboard',
+            'submit-support-tickets',
             'apply-leave',
             'view-announcements',
             'view-documents',
@@ -322,6 +353,7 @@ return [
         // Supervisor: Line manager approving direct subordinates
         'supervisor' => [
             'view-dashboard',
+            'submit-support-tickets',
             'apply-leave',
             'approve-reject-leave',
             'view-announcements',
@@ -332,6 +364,7 @@ return [
         // Company Secretariat: Corporate governance, institutional sign-off on leave & policy
         'company-secretariat' => [
             'view-dashboard',
+            'submit-support-tickets',
             'apply-leave',
             'approve-reject-leave',
             'view-all-leave-applications',
@@ -345,6 +378,7 @@ return [
         // Senior Executive: Executive visibility across all employee applications & company operations
         'senior-executive' => [
             'view-dashboard',
+            'submit-support-tickets',
             'apply-leave',
             'view-all-leave-applications',
             'approve-reject-leave',
@@ -358,6 +392,7 @@ return [
         // Editor: Content creation and editing
         'editor' => [
             'view-dashboard',
+            'submit-support-tickets',
             'manage-home-intro',
             'manage-about-us',
             'manage-values',
@@ -382,6 +417,7 @@ return [
         // Viewer: Basic dashboard and enquiry read-only access
         'viewer' => [
             'view-dashboard',
+            'submit-support-tickets',
             'view-emails',
             'view-front-requests',
             'view-analytics',
@@ -450,6 +486,18 @@ return [
             'apply-leave',
             'manage-leave-balances',
             'manage-approval-workflows',
+            'view-announcements',
+            'view-documents',
+            'view-training',
+        ],
+
+        // Support developers work tickets; admins/super-admins already receive everything via '*'
+        'support-developer' => [
+            'view-dashboard',
+            'submit-support-tickets',
+            'work-support-tickets',
+            'view-support-dashboard',
+            'apply-leave',
             'view-announcements',
             'view-documents',
             'view-training',

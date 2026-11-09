@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Bilta\Department;
+use App\Models\Bilta\Branch;
 use App\Models\Bilta\Position;
 use App\Models\Bilta\Click;
 use App\Models\System\UserFile;
@@ -35,7 +36,7 @@ class User extends Authenticatable
         'position_id',
         'department',
         'department_id',
-        'nrc',
+        'branch_id',
         'man_number',
         'employee_id',
         'date_of_birth',
@@ -96,6 +97,25 @@ class User extends Authenticatable
     public function positionRelation()
     {
         return $this->belongsTo(Position::class, 'position_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    /**
+     * Users holding a permission, either through a role or directly.
+     */
+    public function scopeWithPermission($query, string $slug)
+    {
+        return $query->where(function ($q) use ($slug) {
+            $q->whereHas('roles.permissions', function ($p) use ($slug) {
+                $p->where('permissions.slug', $slug);
+            })->orWhereHas('permissions', function ($p) use ($slug) {
+                $p->where('permissions.slug', $slug);
+            });
+        });
     }
 
     public function departmentResponsibilities()
