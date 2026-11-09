@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             PositionSeeder::class,
             LeaveTypeSeeder::class,
-            SupportLookupSeeder::class,
+            SupportSettingsSeeder::class,
         ]);
     }
 }

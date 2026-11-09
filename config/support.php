@@ -14,6 +14,9 @@ return [
     // Currency shown on billing rates and reports (ISO 4217)
     'currency' => env('SUPPORT_CURRENCY', 'USD'),
 
+    // Default hourly rate created by SupportSettingsSeeder (editable in Support > Settings)
+    'default_hourly_rate' => env('SUPPORT_DEFAULT_HOURLY_RATE', 25),
+
     // Work logs are recorded in these increments (0.25 = quarter hour)
     'hours_step' => 0.25,
 
